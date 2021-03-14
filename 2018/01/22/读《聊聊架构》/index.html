@@ -1,37 +1,776 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+  
 
 
-{% block content %}
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="架构," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="认识架构生命周期时间为什么会产生架构什么是架构概念什么是抽象识别问题遇到问题时，要识别出问题的主题，划分出问题的边界约束。当遇到问题时，如果发现自己正在致力于把自己的工作完成，就要马上警惕起来，因为这样下去会演变成没有主人翁精神的工作态度。在面对概念的时候，也会不求甚解，最终导致无法真正的理解概念。作为软件工程师或架构师，我们大部分时候是要去解决别人的问题（用户的问题），“别人”是谁，是值得好好考">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读《聊聊架构》">
+<meta property="og:url" content="http://fhclk.github.io/2018/01/22/%E8%AF%BB%E3%80%8A%E8%81%8A%E8%81%8A%E6%9E%B6%E6%9E%84%E3%80%8B/index.html">
+<meta property="og:site_name" content="幸福的拾荒者">
+<meta property="og:description" content="认识架构生命周期时间为什么会产生架构什么是架构概念什么是抽象识别问题遇到问题时，要识别出问题的主题，划分出问题的边界约束。当遇到问题时，如果发现自己正在致力于把自己的工作完成，就要马上警惕起来，因为这样下去会演变成没有主人翁精神的工作态度。在面对概念的时候，也会不求甚解，最终导致无法真正的理解概念。作为软件工程师或架构师，我们大部分时候是要去解决别人的问题（用户的问题），“别人”是谁，是值得好好考">
+<meta property="og:locale">
+<meta property="og:image" content="http://fhclk.github.io/.io//p1.png">
+<meta property="og:image" content="http://fhclk.github.io/.io//p2.png">
+<meta property="og:image" content="http://fhclk.github.io/.io//p3.png">
+<meta property="og:image" content="http://fhclk.github.io/.io//p4.png">
+<meta property="og:image" content="http://fhclk.github.io/.io//p5.png">
+<meta property="article:published_time" content="2018-01-22T09:36:14.000Z">
+<meta property="article:modified_time" content="2019-05-29T06:30:54.000Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="架构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/.io//p1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://fhclk.github.io/2018/01/22/读《聊聊架构》/"/>
+
+
+
+
+
+  <title>读《聊聊架构》 | 幸福的拾荒者</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">幸福的拾荒者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2018/01/22/%E8%AF%BB%E3%80%8A%E8%81%8A%E8%81%8A%E6%9E%B6%E6%9E%84%E3%80%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幸福的拾荒者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">读《聊聊架构》</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-22T17:36:14+08:00">
+                2018-01-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="认识架构"><a href="#认识架构" class="headerlink" title="认识架构"></a>认识架构</h2><h3 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h3><h3 id="时间"><a href="#时间" class="headerlink" title="时间"></a>时间</h3><h3 id="为什么会产生架构"><a href="#为什么会产生架构" class="headerlink" title="为什么会产生架构"></a>为什么会产生架构</h3><h3 id="什么是架构"><a href="#什么是架构" class="headerlink" title="什么是架构"></a>什么是架构</h3><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><h3 id="什么是抽象"><a href="#什么是抽象" class="headerlink" title="什么是抽象"></a>什么是抽象</h3><h3 id="识别问题"><a href="#识别问题" class="headerlink" title="识别问题"></a>识别问题</h3><p>遇到问题时，要识别出问题的主题，划分出问题的边界约束。<br>当遇到问题时，如果发现自己正在致力于把自己的工作完成，就要马上警惕起来，因为这样下去会演变成没有主人翁精神的工作态度。在面对概念的时候，也会不求甚解，最终导致无法真正的理解概念。作为软件工程师或架构师，我们大部分时候是要去解决别人的问题（用户的问题），“别人”是谁，是值得好好考虑的。</p>
+<blockquote>
+<p>发现问题永远比解决问题更加重要</p>
+</blockquote>
+<p>问题的主题是用户</p>
+<h3 id="切分的原则"><a href="#切分的原则" class="headerlink" title="切分的原则"></a>切分的原则</h3><p>确定问题主题后，在解决问题的过程中，产生新的问题，需要做调整，而要采取新的行动解决问题，解决的方式就是架构拆分</p>
+<h4 id="切分原则"><a href="#切分原则" class="headerlink" title="切分原则"></a>切分原则</h4><ol>
+<li>被切分的生命周期，如果必须要生命周期的主题在连续时间内持续执行，而且不能够被打断并更换生命周期主体的话，就不能切分出去。这类生命周期是切分的最小粒度，受限于当前的技术水平无法进一步切分。（比如十月怀胎，不能10人怀胎1人1月）</li>
+<li>每个生命周期的负责人，对所负责生命周期的权利和义务必须是对等的。</li>
+<li>切分出来的生命周期，不应该超出一个自然人的负载。根据没人能力实际情况实际情况进行调整。切分出来的只能是非核心生命周期，这些生命周期必须是完整的，内聚的。</li>
+<li>切分是内部活动，内部切分对整个系统的外部都是透明的</li>
+</ol>
+<h4 id="树和分层"><a href="#树和分层" class="headerlink" title="树和分层"></a>树和分层</h4><p>所有的架构拆分都应该形成树的结构，并且层次越少越好。其中节点的权责对等，如果出现不对等的情况要及时调整，保持效率。</p>
+<h4 id="切分和建模"><a href="#切分和建模" class="headerlink" title="切分和建模"></a>切分和建模</h4><p>架构切分的过程就是建模的过程。随着业务和规模的增加，就要进行拆分。拆分就需要识别核心生命周期和非核心生命周期，把非核心生命周期切分出来。切分出来的非核心生命周期形成新的模型，核心生命周期模型把所有的模型通过树组织起来，形成新的模型</p>
+<p>总结. </p>
+<blockquote><p>1.架构切分的导火索是人的负载太重，也就是时间不够。<br>2.架构的切分实际就是对利益相关人的利益进行切分和合并，使得每个利益相关人的权责是对等的，每个利益相关人可以为自己的利益负责。<br>3.架构切分的最终结果都会体现在组织架构上，只有这样才能够让架构落地进行。<br>4.架构切分的结果一定是一棵树状，这也是为什么会产生分层。层数越多沟通越多，效率越低，分层要越少越好。尽可能变成一棵平衡树，才能让整个系统的效率最大化。</p>
+</blockquote>
+
+<h3 id="架构与流程"><a href="#架构与流程" class="headerlink" title="架构与流程"></a>架构与流程</h3><h3 id="什么是架构师"><a href="#什么是架构师" class="headerlink" title="什么是架构师"></a>什么是架构师</h3><p>架构师需要了解清楚业务，挖掘出核心生命周期，并确定核心生命周期的主体（架构师要发现问题主体，并确定核心问题）。在确定业务核心生命周期及核心生命周期主体之后，需要对核心生命周期进行分析，剥离非核心生命周期，根据当前人员状况，合理分配非核心生命周期的权责。<br>架构师要具备调动资源的能力。架构包括设计和执行层面。架构师需要有调动资源执行项目的权力，同时也有识别项目核心生命周期，思考核心生命周期主体，合理分配权力，保证效率。</p>
+<h2 id="软件架构"><a href="#软件架构" class="headerlink" title="软件架构"></a>软件架构</h2><h3 id="什么是软件"><a href="#什么是软件" class="headerlink" title="什么是软件"></a>什么是软件</h3><h3 id="软件的生命周期"><a href="#软件的生命周期" class="headerlink" title="软件的生命周期"></a>软件的生命周期</h3><p>软件的整个生命周期会发生切分，从而形成两个子生命周期：软件开发生命周期和软件运行生命周期。<br>软件运行生命周期才是核心生命周期，因为软件运行生命周期的主体和大的生命周期一致。<br>围绕软件的生命周期，可以切分出很多非核心生命周期：    </p>
+<ol>
+<li>软件开发生命周期，其中又可以切分出需求生命周期、代码开发生命周期、测试生命周期。</li>
+<li>软件的运行生命周期。其中包含：<br>&emsp;&emsp;&emsp;&emsp;a.软件的访问生命周期。<br>&emsp;&emsp;&emsp;&emsp;b.软件的功能生命周期。<br>&emsp;&emsp;&emsp;&emsp;c.软件的监控生命周期。</li>
+</ol>
+<h4 id="软件开发生命周期"><a href="#软件开发生命周期" class="headerlink" title="软件开发生命周期"></a>软件开发生命周期</h4><blockquote>
+<p>从软件的运行生命周期角度来说，一个可运行的独立部署单元才算是一个软件。</p>
+</blockquote>
+<h5 id="软件开发的增长"><a href="#软件开发的增长" class="headerlink" title="软件开发的增长"></a>软件开发的增长</h5><p>一个软件项目需要多人分工合作，就需要架构切分，软件开发的核心生命周期是编写代码，在这个核心生命周期下，软件开发生命周期可被切分成不同的非核心生命周期，每个非核心生命周期围绕核心生命周期组成树状架构，在时间和空间上并行开展工作，提升产量和速度。<br>不同的拆分方式，形成了不同的软件开发模式</p>
+<h5 id="软件开发的迭代"><a href="#软件开发的迭代" class="headerlink" title="软件开发的迭代"></a>软件开发的迭代</h5><h4 id="软件开发的运行生命周期"><a href="#软件开发的运行生命周期" class="headerlink" title="软件开发的运行生命周期"></a>软件开发的运行生命周期</h4><p>软件功能的使用情况，会形成功能的访问生命周期，这个生命周期和业务的子生命周期相关。<br>软件启动后，运维要对系统进行监控，如zabbix。   </p>
+<h3 id="什么是软件架构"><a href="#什么是软件架构" class="headerlink" title="什么是软件架构"></a>什么是软件架构</h3><p>软件架构就是通过对软件生命周期的拆分，在符合业务架构的前提下，以达到软件本身访问增长目的的方式。这个增长需要软件开发的增长，也需要软件运行的增长，由此达到所支撑业务的增长。<br>软件架构离不开软件开发团队的组织架构，这个组织架构是软件开发生命周期和软件运行生命周期的执行者。架构的核心生命周期就是架构的执行。    </p>
+<h3 id="什么是软件架构师"><a href="#什么是软件架构师" class="headerlink" title="什么是软件架构师"></a>什么是软件架构师</h3><blockquote>
+<p> 技术人员如果要成为架构师，就必须跳出技术的视角，换一个角度去看技术。要把时间花在研究生命周期规律和业务的增长上，花在选择合适的技术上，而不只是追求新潮的或自己喜欢的技术。     </p>
+</blockquote>
+<h3 id="业务、架构和技术三者的关系"><a href="#业务、架构和技术三者的关系" class="headerlink" title="业务、架构和技术三者的关系"></a>业务、架构和技术三者的关系</h3><p>先有业务问题，才会有技术来解决业务问题。而业务的长大要求，提高了对技术的要求，导致了对业务生命周期的拆分，以并行的方式提升效率，形成了架构，也形成了新的技术。所以在三者的关系里：<br>业务是核心，技术是解决业务问题的工具，而架构师让业务长大的组织方法。<br>架构需要用技术来实现拆分，而技术需要架构来合理组织，以提升效率。</p>
+<p>选择技术时需要考虑的点：<br>1.当技术所要解决的问题和拆分出来要解决的问题完全匹配时，这是最完美的。<br>2.当技术所提供的能力远远超过需要解决的问题时，往往掌握技术和维护技术就会成为负担。<br>3.当技术所提供的能力和我们所要解决的问题部分匹配时，要判断是否要采用，最终还是要看成本。<br>所以，在架构拆分的基础之上，识别并平衡技术的能力，也是架构师所需要具备的能力之一。考虑的主要因素是长期的成本和收益。    </p>
+<h3 id="软件研发"><a href="#软件研发" class="headerlink" title="软件研发"></a>软件研发</h3><p>软件所面对的共有三大业务领域及其所对应的架构。    </p>
+<ol>
+<li>业务领域，由业务组织架构来推动业务的架构，即业务生命周期的拆分。</li>
+<li>软件开发业务领域，由软件开发的业务组织架构来推动软件的业务架构，如软件的研发流程、角色分工等。所形成的是软件开发模式，不同角色的分工模型。</li>
+<li>软件运行业务领域，由软件的开发工程师来负责编写代码，形成软件的架构，并支撑软件的运行。对不同的软件开发工程师进行分工，形成不同的软件开发工程师组织架构，以支撑不同的软件，与软件的架构相匹配。</li>
+</ol>
+<p>在软件开发生命周期中，软件工程师和软件架构师是最重要的两个角色，软件工程师负责建设，软件架构师负责组织。<br>为了支持软件工程师的工作，软件架构师的主要职责包括以下几点：     </p>
+<ol>
+<li>理解业务组织架构，业务组织架构支撑并推进业务架构，背后的原因是对业务生命周期的拆分。     </li>
+<li>根据业务生命周期的特点和软件开发生命周期的特点，形成软件开发本身的业务体系，以及对软件开发生命周期的拆分，也就是软件开发的业务架构。    </li>
+<li>根据对业务生命周期以及软件开发生命周期的拆分，形成了和两者都相匹配的软件开发团队的组织架构。    </li>
+<li>对软件进行架构拆分，匹配业务架构和软件开发的业务架构。<br><img src="/.io//p1.png" alt="业务、软件开发业务和软件运行业务三者间的关系">.    <h3 id="软件的架构拆分"><a href="#软件的架构拆分" class="headerlink" title="软件的架构拆分"></a>软件的架构拆分</h3><h4 id="软件团队拆分"><a href="#软件团队拆分" class="headerlink" title="软件团队拆分"></a>软件团队拆分</h4>比较好的拆分方式：一个业务团队对应一个软件开发团队。<br>这个方式要求每个业务部门都有独立的软件开发团队来配合。每个软件开发团队只对应一个业务团队，这样所形成的软件边界都很清楚，沟通也很高效。业务团队和对应的软件开发团队能够形成合力，共同解决该团队的业务问题。<br>这种方式会让软件开发团队的组织也形成一棵组织架构树，并且这棵树和业务团队的组织架构是匹配的。      <h4 id="软件的拆分"><a href="#软件的拆分" class="headerlink" title="软件的拆分"></a>软件的拆分</h4>一个软件开发团队开发一个软件。这样每个软件的职责非常明确，沟通也会比较简单，这是最好的。这时形成的还是一棵树。软件和软件之间的关系，反映的就是组织和组织之间的关系，一一对应，还是一棵树。 </li>
+</ol>
+<p>在拆分过程中，要避免不同的用户访问通道相互影响。因此，软件在访问通道的问题上不能重用。重用访问通道的结果，既损伤用户的利益，也损伤软件的利益，还会损伤软件开发团队和企业的利益。    </p>
+<h4 id="软件开发的基础技术"><a href="#软件开发的基础技术" class="headerlink" title="软件开发的基础技术"></a>软件开发的基础技术</h4><p><img src="/.io//p2.png" alt="企业组织架构和软件架构_图片"><br>架构拆分的原则来源于业务自身的组织架构，使得软件架构保持和业务组织架构的匹配关系；其次来源于软件开发团队自身的组织架构；最后来源于用户的流量对软件本身的冲击。如果软件开发团队的组织架构和业务的组织架构一致，这就是损耗最小的方式，软件的架构也会更简单。</p>
+<h3 id="如何写好代码"><a href="#如何写好代码" class="headerlink" title="如何写好代码"></a>如何写好代码</h3><p>内聚：内聚就是要确保一个事物的生命周期是完整的，而不是分裂的。所谓完整，就是指一个生命周期的主体，从生到死之间的整个过程中，所发生的行为和状态是累积在一个主体上的。<br>从流程角度讲，访问逻辑实际上就是实现业务流程的基础。每次访问都通过对不同角色的生命周期，也就是不同的业务逻辑进行访问，访问其实就是遍历架构树，形成业务流程，完成用户生命周期活动的推进。     </p>
+<h4 id="业务逻辑分散的危害"><a href="#业务逻辑分散的危害" class="headerlink" title="业务逻辑分散的危害"></a>业务逻辑分散的危害</h4><ol>
+<li>如果服务代码中混入了业务逻辑，则服务做了两件或者两件以上的事情。服务本身的责任是逻辑，这是顺序执行。加入了业务逻辑就表明做了两件或者两件以上的事情。可以分为以下两种情况：<br>&emsp;&emsp;&emsp;&emsp;a.两个不同的访问生命周期合并在一个服务中实现。<br>&emsp;&emsp;&emsp;&emsp;b.如果是有计算的逻辑的话，比如受益计算、订单金额计算等，那么这部分应该是业务代码需要完成的，不能交给服务代码来实现。这部分代码是需要单元测试的，而服务代码要和用户打交道就会有上下文相关的代码，因此不适合做单元测试。</li>
+<li>黏合代码里面包含业务逻辑的话，也会做两件或者两件以上的事情，会和业务代码一样，遇到同样的问题。</li>
+<li>存储代码里面如果混入了业务逻辑，则会导致业务逻辑进入到存储设备中。<br>存储一旦变成了逻辑计算的主体，绑定数据的逻辑计算就成了一个巨大的限制，会导致存储设备无法通过增加机器的方式横向扩展长大，只能换性能更好的机器纵向扩展，而纵向扩展不仅程度有限而且成本也较高。     </li>
+</ol>
+<h4 id="业务逻辑内聚的好处"><a href="#业务逻辑内聚的好处" class="headerlink" title="业务逻辑内聚的好处"></a>业务逻辑内聚的好处</h4><h4 id="代码架构的实例"><a href="#代码架构的实例" class="headerlink" title="代码架构的实例"></a>代码架构的实例</h4><p>如图所示，Manager类实际就是黏合代码。<br>注意事项：      </p>
+<ol>
+<li>不能把业务模型当做数据对象来处理。业务模型关心的是其生命周期，数据是这些生命周期行为的状态。所以黏合代码需要把业务模型转换成存储设备的实体(entity)，实体和存储设备里面的存储粒度一一对应。比如在数据库中，每个实体对应一张表，并且跟着表的变化而变化，这样就保证存储设备的变更不会影响业务模型。同样业务模型不能拿来用作服务和用户之间的数据交换媒介，只能转换为DTO（Data Transfer Object）来使用。也就是说业务模型对用户是不可见的。DTO的目的是在用户的访问操作中传输数据，并和用户交互的视图保持一致。通过增加DTO可以保证用户的访问生命周期需求变化，并不会影响到业务模型，虽然用户的访问生命周期需要变化是最频繁的，但DTO解决了这个难题。     </li>
+<li>服务代码里不要考虑代码的重用。针对不同的用户提供不同的服务，确保他们之间的访问生命周期是隔离的，避免相互影响。多个角色访问同一个接口，其中一个角色改了共有接口，势必会影响其他角色对该接口的正常使用。尽量给不同的角色不同的服务，既避免通道重用又降低沟通成本。服务多不是问题，服务的生命周期管理才是问题。    </li>
+<li>业务模型是必须要重用的，因为这是所有用户访问的目标。业务模型总是围绕着核心生命周期展开的一棵树状结构。<br><img src="/.io//p3.png" alt="案例">          <h4 id="代码误解"><a href="#代码误解" class="headerlink" title="代码误解"></a>代码误解</h4>服务代码、黏合代码和存储代码不能有逻辑。<h4 id="软件的拆分-1"><a href="#软件的拆分-1" class="headerlink" title="软件的拆分"></a>软件的拆分</h4>软件的拆分必须要和业务的拆分对应起来，此时就可看出业务生命周期分析的好处。软件的核心是模拟业务，而业务代码是按照业务的生命周期组织的，软件拆分的目的就是把软件的业务生命周期代码进行生命周期拆分。<br>不仅仅代码内部可以进行拆分，还可以直接把某些业务生命周期的代码拆分到另外一个软件中，并把相应的服务代码、管理者代码和存储代码一起拆分过去。这个拆分方式就形成了新的软件，而对原软件的影响仅仅是对被拆分出去的业务调用方式发生了变化而已，从本地调用变成了服务调用。<br>业务生命周期的分析既是软件拆分的大前提又是架构的基因。<h3 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h3>单元测试是一种白盒测试，集成测试是一种黑盒测试。<h4 id="单元测试测什么"><a href="#单元测试测什么" class="headerlink" title="单元测试测什么"></a>单元测试测什么</h4>服务代码、管理者代码和存储代码都是不需要写单元测试的。单元测试是用来测试软件工程师自己写的逻辑，如果代码里面没有逻辑就不需要写单元测试。<h4 id="如何改造代码"><a href="#如何改造代码" class="headerlink" title="如何改造代码"></a>如何改造代码</h4>只要出现了模拟，单元测试就开始失效了。<br>对于一个逻辑“单元”，也就是方法，所依赖两个方面：一个是输入的参数，另一个是内部对外部的方法调用。只要确保输入参数不包含外部环境的上下文，同时内部代码对外部的调用也不包含对环境上下文的访问，这个方法就是可以单元测试的。<h4 id="如何做单元测试"><a href="#如何做单元测试" class="headerlink" title="如何做单元测试"></a>如何做单元测试</h4></li>
+<li>构建输入参数，并预测该输入所产生的输出。</li>
+<li>调用要测试的目标方法，获取输出。</li>
+<li>检测目标方法的输出是否和预测的输出一致。<h3 id="软件架构和面向对象"><a href="#软件架构和面向对象" class="headerlink" title="软件架构和面向对象"></a>软件架构和面向对象</h3></li>
+</ol>
+<h3 id="软件架构和设计模式"><a href="#软件架构和设计模式" class="headerlink" title="软件架构和设计模式"></a>软件架构和设计模式</h3><h4 id="设计模式和架构"><a href="#设计模式和架构" class="headerlink" title="设计模式和架构"></a>设计模式和架构</h4><p>创建型模式用生命周期来理解，就是把产生对象的生命周期单独拆分出来，即发生了架构分析。结构型模式则专注于对象的不同组合方式，而行为型则主要针对对象之间的沟通。<br>软件设计模式本身就是一个架构拆分的结果，只是这个拆分被标准化了，可以被重复使用而已。而设计模式在被使用的时候，则不需要再进行设计，直接使用即可。因此设计模式就变成了一个成熟的技巧或者技术了。软件设计模式这部分的代码其实是有自己的业务领域的，这个领域就是软件的访问生命周期。<br>只有从访问代码中剥离了所有服务业务的逻辑，才有可能讨论软件访问生命周期自身的业务模型。</p>
+<h4 id="设计模式的误区"><a href="#设计模式的误区" class="headerlink" title="设计模式的误区"></a>设计模式的误区</h4><p>对于业务对象来说，业务对象表达的是业务的核心分工，是不同用户所访问的目标，这部分自然是要重用的。因为现实生活中，业务的分工就是这样的，执行业务的时候按照业务的访问流程组合不同的对象即可。但对于服务、黏合代码和存储而言，它们都有自己独特的业务问题，即它们处理访问通道的，目的并不是给大家共享，也不是访问的目标。而处理好通道问题，则是按照不同角度的用户来进行分析，提供不同的通道，让他们之间的访问互不影响，才能够服务好不同的要求。访问通道是不重用的。</p>
+<h3 id="软件架构和软件框架"><a href="#软件架构和软件框架" class="headerlink" title="软件架构和软件框架"></a>软件架构和软件框架</h3><h4 id="访问类框架"><a href="#访问类框架" class="headerlink" title="访问类框架"></a>访问类框架</h4><p>MVC中的模型（Model）更多的是指对试图（View）的数据支持，一般用DTO（data transfer Object）来表达。而业务模型关注的是业务生命周期及其行为，业务模型的内部数据只是这些行为的结果。MVC中的模型和业务模型是连个不同的概念，不可混用。但是两者可以通过数据转换结合起来连接沟通使用，需要类似于适配器（Adapter）的模式（如ORM）来解决这个问题。</p>
+<h4 id="业务类框架"><a href="#业务类框架" class="headerlink" title="业务类框架"></a>业务类框架</h4><p>为整个行业提供解决方案，而形成的一个行业的框架。如CRM（Customer Relationship Management），CRM把和用户打交道的基本规则封装起来，然后留给各企业按照自己企业的特点做一定变化的空间，最终所形成的就是一个行业的框架。</p>
+<h4 id="什么是框架"><a href="#什么是框架" class="headerlink" title="什么是框架"></a>什么是框架</h4><p>框架基本上都是根据业务模型，或者设计模式等，把模型中稳定的部分进行封装，形成一个大的边界，但是具体内容仍留有余地。由于业务模型或者设计模式也是架构拆分的结果，因此框架同时也属于业务架构的一个具体实现。框架对业务模型中变化的部分，一般都会提供很容易的扩展方式，使得框架使用者可以根据自己业务的特殊性对框架进行扩展，而不需要全部从头开始编码。</p>
+<h4 id="框架的特点"><a href="#框架的特点" class="headerlink" title="框架的特点"></a>框架的特点</h4><p>框架往往都是无法单独运行的。软件框架基本都是一个留有扩展余地，为其他代码所引用的代码或类库。<br>框架为方便本地定制，在本地进行改造，和自己的软件结合在一起。框架和服务的另一个区别：软件引用框架是本地引用的方式，而服务是用来远程调用的。<br>框架的背后总有一个模式存在，这个模式是来解决共同问题。    </p>
+<h3 id="软件运维"><a href="#软件运维" class="headerlink" title="软件运维"></a>软件运维</h3><p>运维是软件真正的核心竞争力。</p>
+<h4 id="软件运行生命周期"><a href="#软件运行生命周期" class="headerlink" title="软件运行生命周期"></a>软件运行生命周期</h4><p>软件的目的是为用户提供持续不断额访问，软件运行生命周期的核心是软件访问生命周期。<br>下图所示，软件生命周期分拆树，树的遍历顺序从左至右。<br><img src="/.io//p4.png" alt="软件生命周期分拆树">     </p>
+<h4 id="什么是软件运维"><a href="#什么是软件运维" class="headerlink" title="什么是软件运维"></a>什么是软件运维</h4><p>软件运行生命周期可以拆分成：软件运维生命周期和软件访问生命周期。其中软件访问生命周期是核心生命周期。运维生命周期是从软件开始部署开始，到软件结束服务为止。<br><img src="/.io//p5.png" alt="软件生命周期分拆树">    </p>
+<h4 id="运维的业务模型"><a href="#运维的业务模型" class="headerlink" title="运维的业务模型"></a>运维的业务模型</h4><p>运维的业务目标是保证用户的访问生命周期不受影响。     </p>
+<h4 id="控制变化"><a href="#控制变化" class="headerlink" title="控制变化"></a>控制变化</h4><p>任何对软件的改变，都是风险，都需要运维的关注。<br>要做好变化的控制，首先要做的是：在软件周围设立隔离区，避免软件出现在不安全的地方。其中包括软件本身、硬件、网络和电力等。     </p>
+<h6 id="如何隔离"><a href="#如何隔离" class="headerlink" title="如何隔离"></a>如何隔离</h6><p>拆分软件的运行环境，区分办公环境（开发）和生产环境（运行），生产环境是一套单独的设备环境。      </p>
+<h6 id="控制变更"><a href="#控制变更" class="headerlink" title="控制变更"></a>控制变更</h6><ul>
+<li>软件的变更    </li>
+<li>硬件的变更</li>
+<li>网络的变更</li>
+<li>电力的变更</li>
+</ul>
+<h4 id="监控变更"><a href="#监控变更" class="headerlink" title="监控变更"></a>监控变更</h4><p>监控的目的实际上就是把系统内不同生命周期的当前运行状态，通过探测器传输出来，展示到可视或可感知的设备上，来供人查看。监控非常重要的指标是实时度。      </p>
+<h4 id="预警变更"><a href="#预警变更" class="headerlink" title="预警变更"></a>预警变更</h4><p>预警内容分为两部分：    </p>
+<ol>
+<li>软件本身业务的预警，主要包括软件、硬件、网络和电力等设备。</li>
+<li>软件所实现业务的预警。<blockquote>
+<p>监控是生成预警的数据基础。对业务生命周期的理解则是生成预警的规则基础。<br>预警软件本身也是需要监控和预警的，也是预警的业务。</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="主导变更"><a href="#主导变更" class="headerlink" title="主导变更"></a>主导变更</h4><p>在生成系统做变更，也需要有一个正向反馈环，这个正向反馈环核心环节就是监控和预警。   </p>
+<h6 id="发布"><a href="#发布" class="headerlink" title="发布."></a>发布.</h6><p>一般第一次发布，就是该变更第一次在生产环境的应用，此时风险最大。因此要确保被影响的机器越少越好，把风险降到最低。首次发布时一般都选择可发布的最小单位，也就是一台机器。对于特别重要的软件，往往会在发布50%之后，经历一次业务高峰后再发布剩余的机器。因为即使该变更有问题，导致50%的机器在高峰期的压力下无法正常工作，还有剩下50%的机器能够支撑业务的运作。这意味着在建立集群的时候，必须要留有50%的冗余容量来做缓冲。</p>
+<h3 id="软件访问生命周期"><a href="#软件访问生命周期" class="headerlink" title="软件访问生命周期"></a>软件访问生命周期</h3><h4 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h4><p>集群就是组装有相同的软件，具备同样功能的一组计算机，组织在一起共同服务于客户的访问，它以横向扩展的方式提升软件访问能力。<br>应用集群后，所有用户不再只访问一台机器，变成了用户分散访问不同的机器，但还是访问同一个软件。因为集群内的机器功能都是一样的，相当于增加了访问通道，使得软件的访问容量得到了增长。<br>集群通过路由来指定用户对某一台计算机的访问。用户访问到达集群前端时做一个路由，把每个用户的请求按照预设的规则转发到集群中的某台机器，即可让用户的访问自动到达某台机器上的软件，转发预设的规则还需要考虑某台机器是否过忙，否则把用户的请求转发到过载的机器上反而影响用户的访问。<br>集群的路由主要考虑的因素是集群内机器的负载均衡问题，为了实现对集群内机器负载的感知，路由必须定时的检查集群内机器的健康和剩余访问容量。路由的引入使得用户并不知道自己访问的是一个集群，因为每次访问都只是访问一台机器，集群对用户是透明的。<br>集群出现后，用户的访问路径又做了一次架构拆分，在软件所部署的计算机之前增加了一个访问路由，这个路由负责把用户的请求按照转发规则转发给集群内的某台计算机。转发规则有很多种，比如按照访问的权重来路由，随机路由、散列路由等，各有各的优势和缺点。<br>集群虽好，但是要实现集群，对软件本身则有一个限制：要能够在不同的计算机之间保持用户的状态。比如用户本次访问的机器和上次不同，这个机器就不知道用户是谁，从而无法给用户服务，就要求用户再次登录。在这种情况下，用户感知到了集群的存在，集群就失去了意义。要做到集群对用户透明，软件本身还需要在用户的访问路径上做一个架构拆分，使得同一个集群的不同机器之间，能够共享用户的状态。只有做到这一点，才能够真正地让集群对用户透明。当然，还有一种路由转发规则是按照用户的来源固定给某台机器来服务，确保单个用户上次访问的目标计算机和当前要访问的目标计算机是同一台来避免这个问题。实现方式是按照访问来源地址对集群内机器数量做散列，这样某个来源地址所访问的机器就是固定的。   </p>
+<h4 id="数据中心"><a href="#数据中心" class="headerlink" title="数据中心"></a>数据中心</h4><p>多数据中心可以看成是集群的集群，装有同一个软件的集群会同时部署在多个不同的数据中心，集群在不同的数据中心各复制了一份。<br>当一个数据中心出了问题，其他的数据中心可以接管，可以让软件保持持续运行，获得很长的运行生命周期，不会对用户的访问造成影响。<br>要做到用户在不同数据中心访问同一个软件，就必须在不同数据中心的前端放置一个路由，类似于前述的集群做法，为部署了同一个软件但位于不同数据中心的各个集群做路由。用户访问软件的路径又做了一次架构拆分，增加了数据中心的路由生命周期。<br>数据中心前置路由的路由策略和集群的路由策略有不同之处。集群的路由策略保障的是集群内机器访问的均衡，而数据中心前置路由的路由策略则是把数据中心所覆盖地区的用户访问归属到相应的数据中心。这就意味着在建数据中心时，要考虑的实际上是物理空间维度上用户的覆盖面，避免数据中心过小而用户过多，导致数据中心之间的负载不均衡。<br>同一个软件部署在多个数据中心的不同集群上，一般会重新定义一个名字，叫做池(Pool)，比如有两个数据中心shanghai-dc和beijing-dc，都分别有订单集群，它们的名字会是order-shanghai-dc和order-beijing-dc，但是它们都属于订单的集群，会有一个统一的名字，叫做订单池(Order Pool)，相当于一个集群池，方便和集群分开。多数据中心出现后，软件发布的目标不再是针对集群，而是针对池，集群是物理的，池可以认为是逻辑上的集群，多个数据中心里部署了同一个软件的计算机都属于同一个池。<br>多个数据中心的出现，对变更的发布也会造成影响。一个池会同时部署在多个数据中心，发布变更的时候不能把一个数据中心的集群全部关闭。比如上例中订单池在两个数据中心分别有一个集群，各100台机器。在软件发布到50%的时候，不能让某个数据中心的100台机器全部下线，这会让一个数据中心的订单集群变成完全不可用，这是不可接受的。发布50%的时候应该是让两个数据中心各发布50%。<br>当一个用户从一个数据中心迁移到另一个数据中心时，可以按照用户维度存储数据，也可以通过数据同步保证两个数据中心的数据一致。</p>
+<h3 id="软件架构和大数据"><a href="#软件架构和大数据" class="headerlink" title="软件架构和大数据"></a>软件架构和大数据</h3><h3 id="软件架构和建筑架构"><a href="#软件架构和建筑架构" class="headerlink" title="软件架构和建筑架构"></a>软件架构和建筑架构</h3><h2 id="软件架构的应用"><a href="#软件架构的应用" class="headerlink" title="软件架构的应用"></a>软件架构的应用</h2><h3 id="交易"><a href="#交易" class="headerlink" title="交易"></a>交易</h3><h3 id="产品"><a href="#产品" class="headerlink" title="产品"></a>产品</h3><h3 id="用户"><a href="#用户" class="headerlink" title="用户"></a>用户</h3><h3 id="订单"><a href="#订单" class="headerlink" title="订单"></a>订单</h3><h3 id="交易系统"><a href="#交易系统" class="headerlink" title="交易系统"></a>交易系统</h3><h3 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h3>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"># 架构</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/16/5-minutes-docker/" rel="next" title="读《每天5分钟玩转Docker容器技术》">
+                <i class="fa fa-chevron-left"></i> 读《每天5分钟玩转Docker容器技术》
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/05/wx-applet/" rel="prev" title="微信.小程序">
+                微信.小程序 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
 
     <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+      
     </div>
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+          </div>
+          
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A4%E8%AF%86%E6%9E%B6%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">认识架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">1.1.</span> <span class="nav-text">生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4"><span class="nav-number">1.2.</span> <span class="nav-text">时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E4%BA%A7%E7%94%9F%E6%9E%B6%E6%9E%84"><span class="nav-number">1.3.</span> <span class="nav-text">为什么会产生架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%9E%B6%E6%9E%84"><span class="nav-number">1.4.</span> <span class="nav-text">什么是架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">1.5.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%8A%BD%E8%B1%A1"><span class="nav-number">1.6.</span> <span class="nav-text">什么是抽象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%86%E5%88%AB%E9%97%AE%E9%A2%98"><span class="nav-number">1.7.</span> <span class="nav-text">识别问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%87%E5%88%86%E7%9A%84%E5%8E%9F%E5%88%99"><span class="nav-number">1.8.</span> <span class="nav-text">切分的原则</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%87%E5%88%86%E5%8E%9F%E5%88%99"><span class="nav-number">1.8.1.</span> <span class="nav-text">切分原则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%91%E5%92%8C%E5%88%86%E5%B1%82"><span class="nav-number">1.8.2.</span> <span class="nav-text">树和分层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%87%E5%88%86%E5%92%8C%E5%BB%BA%E6%A8%A1"><span class="nav-number">1.8.3.</span> <span class="nav-text">切分和建模</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E4%B8%8E%E6%B5%81%E7%A8%8B"><span class="nav-number">1.9.</span> <span class="nav-text">架构与流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%9E%B6%E6%9E%84%E5%B8%88"><span class="nav-number">1.10.</span> <span class="nav-text">什么是架构师</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">软件架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%BD%AF%E4%BB%B6"><span class="nav-number">2.1.</span> <span class="nav-text">什么是软件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">2.2.</span> <span class="nav-text">软件的生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">2.2.1.</span> <span class="nav-text">软件开发生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E7%9A%84%E5%A2%9E%E9%95%BF"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">软件开发的增长</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E7%9A%84%E8%BF%AD%E4%BB%A3"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">软件开发的迭代</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E7%9A%84%E8%BF%90%E8%A1%8C%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">2.2.2.</span> <span class="nav-text">软件开发的运行生命周期</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84"><span class="nav-number">2.3.</span> <span class="nav-text">什么是软件架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84%E5%B8%88"><span class="nav-number">2.4.</span> <span class="nav-text">什么是软件架构师</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%9A%E5%8A%A1%E3%80%81%E6%9E%B6%E6%9E%84%E5%92%8C%E6%8A%80%E6%9C%AF%E4%B8%89%E8%80%85%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">2.5.</span> <span class="nav-text">业务、架构和技术三者的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E7%A0%94%E5%8F%91"><span class="nav-number">2.6.</span> <span class="nav-text">软件研发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E7%9A%84%E6%9E%B6%E6%9E%84%E6%8B%86%E5%88%86"><span class="nav-number">2.7.</span> <span class="nav-text">软件的架构拆分</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E5%9B%A2%E9%98%9F%E6%8B%86%E5%88%86"><span class="nav-number">2.7.1.</span> <span class="nav-text">软件团队拆分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E7%9A%84%E6%8B%86%E5%88%86"><span class="nav-number">2.7.2.</span> <span class="nav-text">软件的拆分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E7%9A%84%E5%9F%BA%E7%A1%80%E6%8A%80%E6%9C%AF"><span class="nav-number">2.7.3.</span> <span class="nav-text">软件开发的基础技术</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%86%99%E5%A5%BD%E4%BB%A3%E7%A0%81"><span class="nav-number">2.8.</span> <span class="nav-text">如何写好代码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91%E5%88%86%E6%95%A3%E7%9A%84%E5%8D%B1%E5%AE%B3"><span class="nav-number">2.8.1.</span> <span class="nav-text">业务逻辑分散的危害</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91%E5%86%85%E8%81%9A%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="nav-number">2.8.2.</span> <span class="nav-text">业务逻辑内聚的好处</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84%E7%9A%84%E5%AE%9E%E4%BE%8B"><span class="nav-number">2.8.3.</span> <span class="nav-text">代码架构的实例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E8%AF%AF%E8%A7%A3"><span class="nav-number">2.8.4.</span> <span class="nav-text">代码误解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E7%9A%84%E6%8B%86%E5%88%86-1"><span class="nav-number">2.8.5.</span> <span class="nav-text">软件的拆分</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95"><span class="nav-number">2.9.</span> <span class="nav-text">单元测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E6%B5%8B%E4%BB%80%E4%B9%88"><span class="nav-number">2.9.1.</span> <span class="nav-text">单元测试测什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%94%B9%E9%80%A0%E4%BB%A3%E7%A0%81"><span class="nav-number">2.9.2.</span> <span class="nav-text">如何改造代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%81%9A%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95"><span class="nav-number">2.9.3.</span> <span class="nav-text">如何做单元测试</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84%E5%92%8C%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="nav-number">2.10.</span> <span class="nav-text">软件架构和面向对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.11.</span> <span class="nav-text">软件架构和设计模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%92%8C%E6%9E%B6%E6%9E%84"><span class="nav-number">2.11.1.</span> <span class="nav-text">设计模式和架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E7%9A%84%E8%AF%AF%E5%8C%BA"><span class="nav-number">2.11.2.</span> <span class="nav-text">设计模式的误区</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84%E5%92%8C%E8%BD%AF%E4%BB%B6%E6%A1%86%E6%9E%B6"><span class="nav-number">2.12.</span> <span class="nav-text">软件架构和软件框架</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E7%B1%BB%E6%A1%86%E6%9E%B6"><span class="nav-number">2.12.1.</span> <span class="nav-text">访问类框架</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%9A%E5%8A%A1%E7%B1%BB%E6%A1%86%E6%9E%B6"><span class="nav-number">2.12.2.</span> <span class="nav-text">业务类框架</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%A1%86%E6%9E%B6"><span class="nav-number">2.12.3.</span> <span class="nav-text">什么是框架</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A1%86%E6%9E%B6%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-number">2.12.4.</span> <span class="nav-text">框架的特点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E8%BF%90%E7%BB%B4"><span class="nav-number">2.13.</span> <span class="nav-text">软件运维</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E8%BF%90%E8%A1%8C%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">2.13.1.</span> <span class="nav-text">软件运行生命周期</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%BD%AF%E4%BB%B6%E8%BF%90%E7%BB%B4"><span class="nav-number">2.13.2.</span> <span class="nav-text">什么是软件运维</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E7%BB%B4%E7%9A%84%E4%B8%9A%E5%8A%A1%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.13.3.</span> <span class="nav-text">运维的业务模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%98%E5%8C%96"><span class="nav-number">2.13.4.</span> <span class="nav-text">控制变化</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%9A%94%E7%A6%BB"><span class="nav-number">2.13.4.0.1.</span> <span class="nav-text">如何隔离</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%98%E6%9B%B4"><span class="nav-number">2.13.4.0.2.</span> <span class="nav-text">控制变更</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7%E5%8F%98%E6%9B%B4"><span class="nav-number">2.13.5.</span> <span class="nav-text">监控变更</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%84%E8%AD%A6%E5%8F%98%E6%9B%B4"><span class="nav-number">2.13.6.</span> <span class="nav-text">预警变更</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BB%E5%AF%BC%E5%8F%98%E6%9B%B4"><span class="nav-number">2.13.7.</span> <span class="nav-text">主导变更</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%8F%91%E5%B8%83"><span class="nav-number">2.13.7.0.1.</span> <span class="nav-text">发布.</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E8%AE%BF%E9%97%AE%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">2.14.</span> <span class="nav-text">软件访问生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4"><span class="nav-number">2.14.1.</span> <span class="nav-text">集群</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83"><span class="nav-number">2.14.2.</span> <span class="nav-text">数据中心</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84%E5%92%8C%E5%A4%A7%E6%95%B0%E6%8D%AE"><span class="nav-number">2.15.</span> <span class="nav-text">软件架构和大数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84%E5%92%8C%E5%BB%BA%E7%AD%91%E6%9E%B6%E6%9E%84"><span class="nav-number">2.16.</span> <span class="nav-text">软件架构和建筑架构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">软件架构的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E6%98%93"><span class="nav-number">3.1.</span> <span class="nav-text">交易</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A7%E5%93%81"><span class="nav-number">3.2.</span> <span class="nav-text">产品</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7"><span class="nav-number">3.3.</span> <span class="nav-text">用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A2%E5%8D%95"><span class="nav-number">3.4.</span> <span class="nav-text">订单</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E6%98%93%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.5.</span> <span class="nav-text">交易系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1"><span class="nav-number">3.6.</span> <span class="nav-text">事务</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

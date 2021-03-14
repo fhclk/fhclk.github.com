@@ -1,37 +1,731 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+  
 
 
-{% block content %}
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Spark," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Spark的安装与使用Mac下安装Spark配置ssh系统偏好设置-&gt;选择共享-&gt;勾选远程登录。配置ssh，使ssh localhost不需要输入密码。        123$ ssh-keygen -t rsa    $ cat ~&#x2F;.ssh&#x2F;id_rsa.pub &gt;&gt; ~&#x2F;.ssh&#x2F;authorized_keys     $ ss">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark入门(python)2 - Spark的安装与使用">
+<meta property="og:url" content="http://fhclk.github.io/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/index.html">
+<meta property="og:site_name" content="幸福的拾荒者">
+<meta property="og:description" content="Spark的安装与使用Mac下安装Spark配置ssh系统偏好设置-&gt;选择共享-&gt;勾选远程登录。配置ssh，使ssh localhost不需要输入密码。        123$ ssh-keygen -t rsa    $ cat ~&#x2F;.ssh&#x2F;id_rsa.pub &gt;&gt; ~&#x2F;.ssh&#x2F;authorized_keys     $ ss">
+<meta property="og:locale">
+<meta property="og:image" content="http://fhclk.github.io/.io//%E4%B8%8B%E8%BD%BDSpark.png">
+<meta property="og:image" content="http://fhclk.github.io/.io//Spark%E5%AE%89%E8%A3%85%E7%BB%93%E6%9E%9C.png">
+<meta property="og:image" content="http://fhclk.github.io/.io//%E8%BF%90%E8%A1%8Cpyspark.png">
+<meta property="og:image" content="http://fhclk.github.io/.io//Spark%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81.png">
+<meta property="og:image" content="http://fhclk.github.io/.io//%E8%AF%BB%E5%86%99%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6.png">
+<meta property="og:image" content="http://fhclk.github.io/.io//%E8%AF%BB%E5%86%99%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%9C.png">
+<meta property="article:published_time" content="2019-04-02T08:06:15.000Z">
+<meta property="article:modified_time" content="2019-06-04T08:27:16.000Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="Spark">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/.io//%E4%B8%8B%E8%BD%BDSpark.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://fhclk.github.io/2019/04/02/spark入门-python-2/"/>
+
+
+
+
+
+  <title>Spark入门(python)2 - Spark的安装与使用 | 幸福的拾荒者</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">幸福的拾荒者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幸福的拾荒者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spark入门(python)2 - Spark的安装与使用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-02T16:06:15+08:00">
+                2019-04-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Spark的安装与使用"><a href="#Spark的安装与使用" class="headerlink" title="Spark的安装与使用"></a>Spark的安装与使用</h2><h3 id="Mac下安装Spark"><a href="#Mac下安装Spark" class="headerlink" title="Mac下安装Spark"></a>Mac下安装Spark</h3><h4 id="配置ssh"><a href="#配置ssh" class="headerlink" title="配置ssh"></a>配置ssh</h4><p>系统偏好设置-&gt;选择共享-&gt;勾选远程登录。<br>配置ssh，使<code>ssh localhost</code>不需要输入密码。       </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa    </span><br><span class="line">$ cat ~&#x2F;.ssh&#x2F;id_rsa.pub &gt;&gt; ~&#x2F;.ssh&#x2F;authorized_keys     </span><br><span class="line">$ ssh localhost</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装scala"><a href="#安装scala" class="headerlink" title="安装scala"></a>安装scala</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install scala</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装Spark"><a href="#安装Spark" class="headerlink" title="安装Spark"></a>安装Spark</h4><ol>
+<li><p>到<a target="_blank" rel="noopener" href="http://spark.apache.org/downloads.html">http://spark.apache.org/downloads.html</a>下载Spark<br><img src="/.io//%E4%B8%8B%E8%BD%BDSpark.png" alt="下载Spark"></p>
+</li>
+<li><p>解压到目录下</p>
+</li>
+<li><p>配置.zshrc或者.bashrc</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export SPARK_HOME&#x3D;&#x2F;Users&#x2F;xy&#x2F;Documents&#x2F;bigData&#x2F;spark-2.4.3-bin-hadoop2.7</span><br><span class="line">export PATH&#x3D;$&#123;PATH&#125;:$&#123;SPARK_HOME&#125;&#x2F;bin</span><br></pre></td></tr></table></figure></li>
+<li><p>到Spark解压路径下，执行<code>./sbin/start-all.sh</code>，在浏览器中访问<code>http://localhost:8080/</code>，看是否可以访问。<br><img src="/.io//Spark%E5%AE%89%E8%A3%85%E7%BB%93%E6%9E%9C.png" alt="Spark安装结果"></p>
+</li>
+<li><p>运行pyspark<br><img src="/.io//%E8%BF%90%E8%A1%8Cpyspark.png" alt="运行pyspark"></p>
+</li>
+</ol>
+<h3 id="在pyspark中运行代码-本地"><a href="#在pyspark中运行代码-本地" class="headerlink" title="在pyspark中运行代码(本地)"></a>在pyspark中运行代码(本地)</h3><p>pyspark命令及其常用的参数如下：       </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pyspark --master &lt;master-url&gt;</span><br></pre></td></tr></table></figure>
+<p>Spark的运行模式取决于传递给SparkContext的Master URL的值。Master URL可以是以下任一种形式：  </p>
+<ul>
+<li>local 使用一个Worker线程本地化运行SPARK(完全不并行)</li>
+<li>local[*] 使用逻辑CPU个数数量的线程来本地化运行Spark</li>
+<li>local[K] 使用K个Worker线程本地化运行Spark（理想情况下，K应该根据运行机器的CPU核数设定）</li>
+<li>spark://HOST:PORT 连接到指定的Spark standalone master。默认端口是7077.</li>
+<li>yarn-client 以客户端模式连接YARN集群。集群的位置可以在HADOOP_CONF_DIR 环境变量中找到。</li>
+<li>yarn-cluster 以集群模式连接YARN集群。集群的位置可以在HADOOP_CONF_DIR 环境变量中找到。</li>
+<li>mesos://HOST:PORT 连接到指定的Mesos集群。默认接口是5050。</li>
+</ul>
+<p>在Spark中采用本地模式启动pyspark的命令主要包含以下参数：</p>
+<ul>
+<li>–master：这个参数表示当前的pyspark要连接到哪个master，如果是local[*]，就是使用本地模式启动pyspark，其中，中括号内的星号表示需要使用几个CPU核心(core)；</li>
+<li>–jars： 这个参数用于把相关的JAR包添加到CLASSPATH中；如果有多个jar包，可以使用逗号分隔符连接它们；</li>
+</ul>
+<h4 id="Spark运行独立的python代码"><a href="#Spark运行独立的python代码" class="headerlink" title="Spark运行独立的python代码"></a>Spark运行独立的python代码</h4><ol>
+<li><p>使用virtualenv创立独立python环境</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">virtualent spark-py3 --python&#x3D;python3</span><br><span class="line">cd spark-py3</span><br><span class="line">source .&#x2F;bin&#x2F;activate</span><br><span class="line">pip install pyspark</span><br></pre></td></tr></table></figure></li>
+<li><p>在test.py中编写代码</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">from pyspark import SparkContext</span><br><span class="line">sc &#x3D; SparkContext( &#39;local&#39;, &#39;test&#39;)</span><br><span class="line">logFile &#x3D; &quot;file:&#x2F;&#x2F;&#x2F;Users&#x2F;xy&#x2F;Documents&#x2F;bigData&#x2F;spark-2.4.3-bin-hadoop2.7&#x2F;README.md&quot;</span><br><span class="line">logData &#x3D; sc.textFile(logFile, 2).cache()</span><br><span class="line">numAs &#x3D; logData.filter(lambda line: &#39;a&#39; in line).count()</span><br><span class="line">numBs &#x3D; logData.filter(lambda line: &#39;b&#39; in line).count()</span><br><span class="line">print(&#39;Lines with a: %s, Lines with b: %s&#39; % (numAs, numBs))</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>运行代码<code>python3 test.py</code></li>
+</ol>
+<p><img src="/.io//Spark%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81.png" alt="Spark测试代码"></p>
+<h2 id="Spark应用程序"><a href="#Spark应用程序" class="headerlink" title="Spark应用程序"></a>Spark应用程序</h2><h3 id="加载本地文件"><a href="#加载本地文件" class="headerlink" title="加载本地文件"></a>加载本地文件</h3><p>运行pyspark <code>pyspark --master local[4]</code>        </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from pyspark import SparkContext</span><br><span class="line">&gt;&gt;&gt; #排除异常</span><br><span class="line">&gt;&gt;&gt; try:</span><br><span class="line">...     sc.stop()</span><br><span class="line">... except:</span><br><span class="line">...     pass</span><br><span class="line">... </span><br><span class="line">&gt;&gt;&gt; sc &#x3D; SparkContext(&#39;local[2]&#39;,&#39;First Spark App&#39;)</span><br><span class="line">&gt;&gt;&gt; textFile &#x3D; sc.textFile(&#39;file:&#x2F;&#x2F;&#x2F;Users&#x2F;xy&#x2F;Documents&#x2F;develop&#x2F;study&#x2F;bigData&#x2F;spark-2.4.3-bin-hadoop2.7&#x2F;README.md&#39;)</span><br><span class="line">&gt;&gt;&gt; textFile.first()</span><br><span class="line">u&#39;# Apache Spark&#39;</span><br><span class="line">&gt;&gt;&gt; textFile.saveAsTextFile(&#39;file:&#x2F;&#x2F;&#x2F;Users&#x2F;xy&#x2F;Documents&#x2F;writeback&#39;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/.io//%E8%AF%BB%E5%86%99%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6.png" alt="读写本地文件"></p>
+<p>运行结果<br><img src="/.io//%E8%AF%BB%E5%86%99%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%9C.png" alt="读写本地文件结果"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spark/" rel="tag"># Spark</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/31/spark%E5%85%A5%E9%97%A8-python/" rel="next" title="Spark入门(python)1 - Spark的设计与运行原理">
+                <i class="fa fa-chevron-left"></i> Spark入门(python)1 - Spark的设计与运行原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/04/spark%E5%85%A5%E9%97%A8-python-3/" rel="prev" title="spark入门(python)3 - RDD">
+                spark入门(python)3 - RDD <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
 
     <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+      
     </div>
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+          </div>
+          
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spark%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">Spark的安装与使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Mac%E4%B8%8B%E5%AE%89%E8%A3%85Spark"><span class="nav-number">1.1.</span> <span class="nav-text">Mac下安装Spark</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEssh"><span class="nav-number">1.1.1.</span> <span class="nav-text">配置ssh</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85scala"><span class="nav-number">1.1.2.</span> <span class="nav-text">安装scala</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Spark"><span class="nav-number">1.1.3.</span> <span class="nav-text">安装Spark</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8pyspark%E4%B8%AD%E8%BF%90%E8%A1%8C%E4%BB%A3%E7%A0%81-%E6%9C%AC%E5%9C%B0"><span class="nav-number">1.2.</span> <span class="nav-text">在pyspark中运行代码(本地)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Spark%E8%BF%90%E8%A1%8C%E7%8B%AC%E7%AB%8B%E7%9A%84python%E4%BB%A3%E7%A0%81"><span class="nav-number">1.2.1.</span> <span class="nav-text">Spark运行独立的python代码</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spark%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F"><span class="nav-number">2.</span> <span class="nav-text">Spark应用程序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6"><span class="nav-number">2.1.</span> <span class="nav-text">加载本地文件</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

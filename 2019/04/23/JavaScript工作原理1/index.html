@@ -1,37 +1,712 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+  
 
 
-{% block content %}
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="JavaScript," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引擎，运行时和调用堆栈的概述JavaScript引擎JavaScript引擎的一个流行示例是Google的V8引擎，在Chrome和Node.js中使用V8引擎。V8引擎由两个主要的部件组成：       Memory Heap（内存堆） -   内存分配地址的地方 Call Stack （调用堆栈）  -  代码执行的地方  Runtime(运行时) 调用栈JavaScript是一种单线程编程语">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript工作原理1">
+<meta property="og:url" content="http://fhclk.github.io/2019/04/23/JavaScript%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%861/index.html">
+<meta property="og:site_name" content="幸福的拾荒者">
+<meta property="og:description" content="引擎，运行时和调用堆栈的概述JavaScript引擎JavaScript引擎的一个流行示例是Google的V8引擎，在Chrome和Node.js中使用V8引擎。V8引擎由两个主要的部件组成：       Memory Heap（内存堆） -   内存分配地址的地方 Call Stack （调用堆栈）  -  代码执行的地方  Runtime(运行时) 调用栈JavaScript是一种单线程编程语">
+<meta property="og:locale">
+<meta property="og:image" content="http://fhclk.github.io/.io//runtime.png">
+<meta property="og:image" content="http://fhclk.github.io/.io//callStackExample.png">
+<meta property="og:image" content="http://fhclk.github.io/.io//inlineOptimize.png">
+<meta property="article:published_time" content="2019-04-23T05:50:06.000Z">
+<meta property="article:modified_time" content="2019-04-29T07:49:36.000Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="JavaScript">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/.io//runtime.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://fhclk.github.io/2019/04/23/JavaScript工作原理1/"/>
+
+
+
+
+
+  <title>JavaScript工作原理1 | 幸福的拾荒者</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">幸福的拾荒者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/04/23/JavaScript%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%861/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幸福的拾荒者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JavaScript工作原理1</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-23T13:50:06+08:00">
+                2019-04-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="引擎，运行时和调用堆栈的概述"><a href="#引擎，运行时和调用堆栈的概述" class="headerlink" title="引擎，运行时和调用堆栈的概述"></a>引擎，运行时和调用堆栈的概述</h2><h4 id="JavaScript引擎"><a href="#JavaScript引擎" class="headerlink" title="JavaScript引擎"></a>JavaScript引擎</h4><p>JavaScript引擎的一个流行示例是Google的V8引擎，在Chrome和Node.js中使用V8引擎。<br>V8引擎由两个主要的部件组成：     </p>
+<ul>
+<li>Memory Heap（内存堆） -   内存分配地址的地方</li>
+<li>Call Stack （调用堆栈）  -  代码执行的地方</li>
+</ul>
+<h4 id="Runtime-运行时"><a href="#Runtime-运行时" class="headerlink" title="Runtime(运行时)"></a>Runtime(运行时)</h4><p><img src="/.io//runtime.png"></p>
+<h4 id="调用栈"><a href="#调用栈" class="headerlink" title="调用栈"></a>调用栈</h4><p>JavaScript是一种单线程编程语言，它只有一个调用堆栈。因此，它一次只能做一件事。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">function multiply(x, y) &#123;</span><br><span class="line">	return x * y;</span><br><span class="line">&#125;</span><br><span class="line">function printSquare(x) &#123;</span><br><span class="line">	var s &#x3D; multiply(x, x);</span><br><span class="line">	console.log(s);</span><br><span class="line">&#125;</span><br><span class="line">printSquare(5);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/.io//callStackExample.png"></p>
+<h2 id="深入V8引擎"><a href="#深入V8引擎" class="headerlink" title="深入V8引擎"></a>深入V8引擎</h2><p>JavaScript引擎是执行JavaScript代码的程序和解释器。JavaScript引擎可以实现为标准解释器，或者以某种形式将JavaScript编译为字节码的即时编译器。<br>V8最初被设计用来提高web浏览器中JavaScript执行的性能。为了获得速度，V8 将 JavaScript 代码转换成更高效的机器码，而不是使用解释器。它通过实现 JIT (Just-In-Time) 编译器将 JavaScript 代码编译为执行时的机器码，就像许多现代 JavaScript 引擎(如SpiderMonkey或Rhino (Mozilla)) 所做的那样。这里的主要区别是 V8 不生成字节码或任何中间代码。<br>在V8的5.9版本出来之前，V8引擎使用了两个编译器：    </p>
+<ul>
+<li>full-codegen 一个简单和非常快的编译器，产生简单和相对较慢的机器码。</li>
+<li>Crankshaft 一种更复杂（Just-in-Time）的优化编译器，生成高度优化的代码。</li>
+</ul>
+<p>V8引擎也在内部使用多个线程：</p>
+<ul>
+<li>主线程执行你所期望的操作：获取代码、编译代码并执行它</li>
+<li>还有一个单独的线程用于编译，因此主线程可以在前者优化代码的同时继续执行</li>
+<li>一个Profiler线程，它会告诉运行时我们花了很多时间，让Crankshaft可以优化它们</li>
+<li>一些线程处理垃圾收集器</li>
+</ul>
+<p>当第一次执行 JavaScript 代码时，V8 利用 full-codegen 编译器，直接将解析的 JavaScript 翻译成机器代码而不进行任何转换。这使得它可以非常快速地开始执行机器代码。请注意，V8 不使用中间字节码，从而不需要解释器。</p>
+<p>当代码已经运行一段时间后，分析线程已经收集了足够的数据来判断应该优化哪个方法。</p>
+<p>接下来，Crankshaft  从另一个线程开始优化。它将 JavaScript 抽象语法树转换为被称为 Hydrogen 的高级静态单分配（SSA）表示，并尝试优化 Hydrogen 图，大多数优化都是在这个级别完成的。</p>
+<h3 id="优化代码"><a href="#优化代码" class="headerlink" title="优化代码"></a>优化代码</h3><h4 id="内联优化"><a href="#内联优化" class="headerlink" title="内联优化"></a>内联优化</h4><p>第一个优化是提前内联尽可能多的代码。内联是用被调用函数的主体替换调用点（调用函数的代码行）的过程。</p>
+<p><img src="/.io//inlineOptimize.png"></p>
+<h4 id="隐藏类"><a href="#隐藏类" class="headerlink" title="隐藏类"></a>隐藏类</h4><h4 id="内联缓存"><a href="#内联缓存" class="headerlink" title="内联缓存"></a>内联缓存</h4><h4 id="编译成机器语言"><a href="#编译成机器语言" class="headerlink" title="编译成机器语言"></a>编译成机器语言</h4><h4 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h4><h4 id="点火和涡轮风扇"><a href="#点火和涡轮风扇" class="headerlink" title="点火和涡轮风扇"></a>点火和涡轮风扇</h4><h4 id="如何写出优化的JavaScript"><a href="#如何写出优化的JavaScript" class="headerlink" title="如何写出优化的JavaScript"></a>如何写出优化的JavaScript</h4><ol>
+<li>对象属性的顺序：永远用相同的顺序为您的对象属性实例化，这样隐藏类和随后的优化代码才能共享。    </li>
+<li>动态属性：在对象实例化后为其新增属性会导致隐藏类变化，从而会减慢为旧隐藏类所优化的方法的执行。所以，尽量在构造函数中分配对象的所有属性。</li>
+<li>方法：重复执行相同方法的代码会比不同的方法只执行一次的代码运行的更快（由于内联缓存）。</li>
+<li>数组：避免使用keys不是递增数字的稀疏数组（sparse arrays）。并不为每个元素分配内存的稀疏数组实质上是一个hash表。这种数组中的元素比通常数组的元素会花销更大才能获取到。此外，避免使用预申请的大型数组。最好随着需要慢慢增加数组的大小。最后，不要删除数组中的元素，因这会使得keys变得稀疏。</li>
+<li>标记值（Tagged values）: V8用32个比特来表示对象和数字。它使用1个比特来区分是一个对象（flag = 1）还是一个整型（flag = 0）（被称为SMI或SMall Integer，小整型，因其只有31比特来表示值）。然后，如果一个数值大于31比特，V8就会给这个数字进行装箱操作（boxing），将其变成double型，并创建一个新的对象将这个double型数字放入其中。所以，为了避免代价很高的boxing操作，尽量使用31比特的有符号数。</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/04/spark%E5%85%A5%E9%97%A8-python-3/" rel="next" title="spark入门(python)3 - RDD">
+                <i class="fa fa-chevron-left"></i> spark入门(python)3 - RDD
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/01/webpack4/" rel="prev" title="webpack4">
+                webpack4 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
 
     <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+      
     </div>
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+          </div>
+          
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E6%93%8E%EF%BC%8C%E8%BF%90%E8%A1%8C%E6%97%B6%E5%92%8C%E8%B0%83%E7%94%A8%E5%A0%86%E6%A0%88%E7%9A%84%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">引擎，运行时和调用堆栈的概述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#JavaScript%E5%BC%95%E6%93%8E"><span class="nav-number">1.0.1.</span> <span class="nav-text">JavaScript引擎</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Runtime-%E8%BF%90%E8%A1%8C%E6%97%B6"><span class="nav-number">1.0.2.</span> <span class="nav-text">Runtime(运行时)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E6%A0%88"><span class="nav-number">1.0.3.</span> <span class="nav-text">调用栈</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B1%E5%85%A5V8%E5%BC%95%E6%93%8E"><span class="nav-number">2.</span> <span class="nav-text">深入V8引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E4%BB%A3%E7%A0%81"><span class="nav-number">2.1.</span> <span class="nav-text">优化代码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E8%81%94%E4%BC%98%E5%8C%96"><span class="nav-number">2.1.1.</span> <span class="nav-text">内联优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9A%90%E8%97%8F%E7%B1%BB"><span class="nav-number">2.1.2.</span> <span class="nav-text">隐藏类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E8%81%94%E7%BC%93%E5%AD%98"><span class="nav-number">2.1.3.</span> <span class="nav-text">内联缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E6%88%90%E6%9C%BA%E5%99%A8%E8%AF%AD%E8%A8%80"><span class="nav-number">2.1.4.</span> <span class="nav-text">编译成机器语言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6"><span class="nav-number">2.1.5.</span> <span class="nav-text">垃圾回收</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%82%B9%E7%81%AB%E5%92%8C%E6%B6%A1%E8%BD%AE%E9%A3%8E%E6%89%87"><span class="nav-number">2.1.6.</span> <span class="nav-text">点火和涡轮风扇</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%86%99%E5%87%BA%E4%BC%98%E5%8C%96%E7%9A%84JavaScript"><span class="nav-number">2.1.7.</span> <span class="nav-text">如何写出优化的JavaScript</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

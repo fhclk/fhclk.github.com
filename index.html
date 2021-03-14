@@ -1,23 +1,2030 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
-{% block title %}{{ config.title }}{% if theme.index_with_subtitle and config.subtitle %} - {{config.subtitle }}{% endif %}{% endblock %}
 
-{% block page_class %}
-  {% if is_home() %}page-home{% endif -%}
-{% endblock %}
 
-{% block content %}
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="幸福的拾荒者">
+<meta property="og:url" content="http://fhclk.github.io/index.html">
+<meta property="og:site_name" content="幸福的拾荒者">
+<meta property="og:locale">
+<meta property="article:author" content="fhclk">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://fhclk.github.io/"/>
+
+
+
+
+
+  <title>幸福的拾荒者</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left 
+  page-home">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">幸福的拾荒者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
   <section id="posts" class="posts-expand">
-    {% for post in page.posts %}
-      {{ post_template.render(post, true) }}
-    {% endfor %}
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/12/03/Solidity%E7%B1%BB%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幸福的拾荒者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/12/03/Solidity%E7%B1%BB%E5%9E%8B/" itemprop="url">Solidity类型</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-03T08:35:12+08:00">
+                2019-12-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h3><p>Solidity是一种静态类型语言，这意味着每个变量（状态量和局部变量）都需要在编译时指定变量的类型（或至少可以推导出变量类型）。类型之间可以在包含运算符号的表达式中进行交互。</p>
+<h4 id="值类型"><a href="#值类型" class="headerlink" title="值类型"></a>值类型</h4><h5 id="布尔类型"><a href="#布尔类型" class="headerlink" title="布尔类型"></a>布尔类型</h5><p><code>bool</code>: 可能的取值为字面常数值 <code>true</code> 和 <code>false</code>   </p>
+<p>运算符</p>
+<ul>
+<li><code>!</code>  逻辑非</li>
+<li><code>&amp;&amp;</code> 逻辑与</li>
+<li><code>||</code> 逻辑或</li>
+<li><code>==</code> 等于</li>
+<li><code>!=</code> 不等于</li>
+</ul>
+<p>运算符<code>||</code>和<code>&amp;&amp;</code>遵循短路运算</p>
+<h5 id="整型"><a href="#整型" class="headerlink" title="整型"></a>整型</h5><p><code>int</code>/<code>uint</code>：分别表示有符号和无符号的不同位数的整型变量。支持关键字<code>uint8</code>到<code>uint256</code>(无符号，从8位到256位)以及<code>int8</code>到<code>int256</code>，以8位为步长递增。<code>uint</code>和<code>int</code>分别是<code>uint256</code>和<code>int256</code>的别名    </p>
+<p>运算符：</p>
+<ul>
+<li>比较运算符： &lt;= ， &lt; ， == ， != ， &gt;= ， &gt; （返回布尔值）</li>
+<li>位运算符： &amp; ， | ， ^ （异或）， ~ （位取反）</li>
+<li>算数运算符： + ， - ， 一元运算 - ， 一元运算 + ， * ， / ， % （取余） ， ** （幂）， &lt;&lt; （左移位） ， &gt;&gt; （右移位）</li>
+</ul>
+<p>除法总是会截断的（仅被编译为 EVM 中的 DIV 操作码）， 但如果操作数都是 字面常数（或者字面常数表达式），则不会截断。</p>
+<p>除以零或者模零运算都会引发运行时异常。</p>
+<p>移位运算的结果取决于运算符左边的类型。 表达式 x &lt;&lt; y 与 x * 2**y 是等价的， x &gt;&gt; y 与 x / 2**y 是等价的。这意味对一个负数进行移位会导致其符号消失。 按负数位移动会引发运行时异常。</p>
+<p>警告：<br>由有符号整数类型负值右移所产生的结果跟其它语言中所产生的结果是不同的。 在 Solidity 中，右移和除是等价的，因此对一个负数进行右移操作会导致向 0 的取整（截断）。 而在其它语言中， 对负数进行右移类似于（向负无穷）取整。</p>
+<h5 id="定长浮点数"><a href="#定长浮点数" class="headerlink" title="定长浮点数"></a>定长浮点数</h5><p>Solidity还没有完全支持定长浮点数。可以声明定长浮点型的变量，但不能给它们赋值或把它们赋值给其他变量。     </p>
+<p><code>fixed</code> / <code>ufixed</code>：表示各种大小的有符号和无符号的定长浮点型。 在关键字 <code>ufixedMxN</code> 和 <code>fixedMxN</code> 中，M 表示该类型占用的位数，N 表示可用的小数位数。 M 必须能整除 8，即 8 到 256 位。 N 则可以是从 0 到 80 之间的任意数。 ufixed 和 fixed 分别是 <code>ufixed128x19</code> 和 <code>fixed128x19</code> 的别名。</p>
+<p>运算符： </p>
+<ul>
+<li>比较运算符：&lt;=， &lt;， ==， !=， &gt;=， &gt; （返回值是布尔型）</li>
+<li>算术运算符：+， -， 一元运算 -， 一元运算 +， *， /， % （取余数）</li>
+</ul>
+<h5 id="地址类型"><a href="#地址类型" class="headerlink" title="地址类型"></a>地址类型</h5><p><code>address</code>：地址类型存储一个20字节的值（以太坊地址的大小）。地址类型也有成员变量，并作为所有合约的基础。    </p>
+<p>运算符：</p>
+<ul>
+<li><code>&lt;=</code>, <code>&lt;</code>, <code>==</code>, <code>!=</code>, ‘&gt;=<code>, </code>&gt;`</li>
+</ul>
+<p>从 0.5.0 版本开始，合约不会从地址类型派生，但仍然可以显式地转换成地址类型。</p>
+<h6 id="地址类型成员变量"><a href="#地址类型成员变量" class="headerlink" title="地址类型成员变量"></a>地址类型成员变量</h6><ul>
+<li><code>balance</code> 和 <code>transfer</code>   </li>
+</ul>
+<p>可以使用 <code>balance</code> 属性来查询一个地址的余额，也可以使用 <code>transfer</code> 函数向一个地址发送以太币Ether （以 wei 为单位）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">address x &#x3D; 0x123;</span><br><span class="line">address myAddress &#x3D; this;</span><br><span class="line">if (x.balance &lt; 10 &amp;&amp; myAddress.balance &gt;&#x3D; 10)</span><br><span class="line">	x.transfer(10);</span><br></pre></td></tr></table></figure>
+
+<p>如果 x 是一个合约地址，它的代码（更具体来说是它的 fallback 函数，如果有的话）会跟 transfer 函数调用一起执行（这是 EVM 的一个特性，无法阻止）。 如果在执行过程中用光了 gas 或者因为任何原因执行失败，以太币Ether 交易会被打回，当前的合约也会在终止的同时抛出异常。</p>
+<ul>
+<li><code>send</code></li>
+</ul>
+<p><code>send</code> 是 <code>transfer</code> 的低级版本。如果执行失败，当前的合约不会因为异常而终止，但<code>send</code> 会返回false。</p>
+<p>在使用 send 的时候会有些风险：如果调用栈深度是 1024 会导致发送失败（这总是可以被调用者强制），如果接收者用光了 gas 也会导致发送失败。 所以为了保证 以太币Ether 发送的安全，一定要检查 send 的返回值，使用 transfer 或者更好的办法： 使用一种接收者可以取回资金的模式。</p>
+<ul>
+<li><code>call</code>, <code>callcode</code>和<code>delegatecall</code></li>
+</ul>
+<p>为了与不符合 应用二进制接口的合约交互，于是就有了可以接受任意类型任意数量参数的 call 函数。 这些参数会被打包到以 32 字节为单位的连续区域中存放。 其中一个例外是当第一个参数被编码成正好 4 个字节的情况。 在这种情况下，这个参数后边不会填充后续参数编码，以允许使用函数签名。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">address nameReg &#x3D; 0x72ba7d8e73fe8eb666ea66babc8116a41bfb10e2;</span><br><span class="line">nameReg.call(&quot;register&quot;, &quot;MyName&quot;);</span><br><span class="line">nameReg.call(bytes4(keccak256(&quot;fun(uint256)&quot;)), a);</span><br></pre></td></tr></table></figure>
+
+<p>call 返回的布尔值表明了被调用的函数已经执行完毕（true）或者引发了一个 EVM 异常（false）。 无法访问返回的真实数据（为此我们需要事先知道编码和大小）。</p>
+<p>可以使用 .gas() 修饰器调整提供的 gas 数量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">namReg.call.gas(1000000)(&quot;register&quot;, &quot;MyName&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>类似地，也能控制提供的 以太币Ether 的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nameReg.call.value(1 ether)(&quot;register&quot;, &quot;MyName&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>最后一点，这些 修饰器modifier 可以联合使用。每个修改器出现的顺序不重要</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nameReg.call.gas(1000000).value(1 ether)(&quot;register&quot;, &quot;MyName&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>目前还不能在重载函数中使用 gas 或者 value 修饰器。<br>一种解决方案是给 gas 和值引入一个特例，并重新检查它们是否在重载的地方出现。</p>
+<p>类似地，也可以使用 delegatecall： 区别在于只使用给定地址的代码，其它属性（存储，余额，……）都取自当前合约。 delegatecall 的目的是使用存储在另外一个合约中的库代码。 用户必须确保两个合约中的存储结构都适用于 delegatecall。 在 homestead 版本之前，只有一个功能类似但作用有限的 callcode 的函数可用，但它不能获取委托方的 msg.sender 和 msg.value。</p>
+<p>这三个函数 call， delegatecall 和 callcode 都是非常低级的函数，应该只把它们当作 最后一招 来使用，因为它们破坏了 Solidity 的类型安全性。</p>
+<p>所有合约都继承了地址（address）的成员变量，因此可以使用 this.balance 查询当前合约的余额。</p>
+<p>不鼓励使用 callcode，在未来也会将其移除。</p>
+<p>这三个函数都属于低级函数，需要谨慎使用。 具体来说，任何未知的合约都可能是恶意的。 你在调用一个合约的同时就将控制权交给了它，它可以反过来调用你的合约， 因此，当调用返回时要为你的状态变量的改变做好准备。</p>
+<h5 id="定长字节数组"><a href="#定长字节数组" class="headerlink" title="定长字节数组"></a>定长字节数组</h5><p>关键字有：bytes1， bytes2， bytes3， …， bytes32。byte 是 bytes1 的别名。</p>
+<p>运算符：</p>
+<ul>
+<li>比较运算符：&lt;=， &lt;， ==， !=， &gt;=， &gt; （返回布尔型）</li>
+<li>位运算符： &amp;， |， ^ （按位异或）， ~ （按位取反）， &lt;&lt; （左移位）， &gt;&gt; （右移位）</li>
+<li>索引访问：如果 x 是 bytesI 类型，那么 x[k] （其中 0 &lt;= k &lt; I）返回第 k 个字节（只读）。</li>
+<li>该类型可以和作为右操作数的任何整数类型进行移位运算（但返回结果的类型和左操作数类型相同），右操作数表示需要移动的位数。 进行负数位移运算会引发运行时异常。</li>
+</ul>
+<p>可以将 byte[] 当作字节数组使用，但这种方式非常浪费存储空间，准确来说，是在传入调用时，每个元素会浪费 31 字节。 更好地做法是使用 bytes。</p>
+<h5 id="变长字节数组"><a href="#变长字节数组" class="headerlink" title="变长字节数组"></a>变长字节数组</h5><p><code>bytes</code>：变长字节数组，它不是值类型</p>
+<p><code>string</code>：变长UTF-8编码字符串类型，不是值类型</p>
+<h5 id="地址字面常数"><a href="#地址字面常数" class="headerlink" title="地址字面常数"></a>地址字面常数</h5><p>比如像 <code>0xdCad3a6d3569DF655070DEd06cb7A1b2Ccd1D3AF</code> 这样的通过了地址校验和测试的十六进制字面常数属于 address 类型。 长度在 39 到 41 个数字的，没有通过校验和测试而产生了一个警告的十六进制字面常数视为正常的有理数字面常数。</p>
+<h5 id="有理数和整数字面常数"><a href="#有理数和整数字面常数" class="headerlink" title="有理数和整数字面常数"></a>有理数和整数字面常数</h5><p>Solidity中没有八进制</p>
+<h5 id="字符串字面常数"><a href="#字符串字面常数" class="headerlink" title="字符串字面常数"></a>字符串字面常数</h5><p>字符串字面常数是指由双引号或单引号引起来的字符串（”foo” 或者 ‘bar’）。 不像在 C 语言中那样带有结束符；”foo” 相当于 3 个字节而不是 4 个。 和整数字面常数一样，字符串字面常数的类型也可以发生改变，但它们可以隐式地转换成 bytes1，……，bytes32，如果合适的话，还可以转换成 bytes 以及 string。</p>
+<p>字符串字面常数支持转义字符，例如 \n，\xNN 和 \uNNNN。\xNN 表示一个 16 进制值，最终转换成合适的字节， 而 \uNNNN 表示 Unicode 编码值，最终会转换为 UTF-8 的序列。</p>
+<h5 id="十六进制字面常数"><a href="#十六进制字面常数" class="headerlink" title="十六进制字面常数"></a>十六进制字面常数</h5><p>十六进制字面常数以关键字 hex 打头，后面紧跟着用单引号或双引号引起来的字符串（例如，hex”001122FF”）。 字符串的内容必须是一个十六进制的字符串，它们的值将使用二进制表示。</p>
+<p>十六进制字面常数跟字符串字面常数很类似，具有相同的转换规则。</p>
+<h5 id="枚举类型"><a href="#枚举类型" class="headerlink" title="枚举类型"></a>枚举类型</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.16;</span><br><span class="line"></span><br><span class="line">contract test &#123;</span><br><span class="line">    enum ActionChoices &#123; GoLeft, GoRight, GoStraight, SitStill &#125;</span><br><span class="line">    ActionChoices choice;</span><br><span class="line">    ActionChoices constant defaultChoice &#x3D; ActionChoices.GoStraight;</span><br><span class="line"></span><br><span class="line">    function setGoStraight() public &#123;</span><br><span class="line">        choice &#x3D; ActionChoices.GoStraight;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 由于枚举类型不属于 |ABI| 的一部分，因此对于所有来自 Solidity 外部的调用，</span><br><span class="line">    &#x2F;&#x2F; &quot;getChoice&quot; 的签名会自动被改成 &quot;getChoice() returns (uint8)&quot;。</span><br><span class="line">    &#x2F;&#x2F; 整数类型的大小已经足够存储所有枚举类型的值，随着值的个数增加，</span><br><span class="line">    &#x2F;&#x2F; 可以逐渐使用 &#96;uint16&#96; 或更大的整数类型。</span><br><span class="line">    function getChoice() public view returns (ActionChoices) &#123;</span><br><span class="line">        return choice;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function getDefaultChoice() public pure returns (uint) &#123;</span><br><span class="line">        return uint(defaultChoice);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="函数类型"><a href="#函数类型" class="headerlink" title="函数类型"></a>函数类型</h5><p>函数类型是一种表示函数的类型。可以将一个函数赋值给另一个函数类型的变量，也可以将一个函数作为参数进行传递，还能在函数调用中返回函数类型变量。 函数类型有两类：- 内部（internal） 函数和 外部（external） 函数：</p>
+<p>内部函数只能在当前合约内被调用（更具体来说，在当前代码块内，包括内部库函数和继承的函数中），因为它们不能在当前合约上下文的外部被执行。 调用一个内部函数是通过跳转到它的入口标签来实现的，就像在当前合约的内部调用一个函数。</p>
+<p>外部函数由一个地址和一个函数签名组成，可以通过外部函数调用传递或者返回。</p>
+<p>函数类型表示成如下的形式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function (&lt;parameter types&gt;) &#123;internal|external&#125; [pure|constant|view|payable] [returns (&lt;return types&gt;)]</span><br></pre></td></tr></table></figure>
+
+<p>与参数类型相反，返回类型不能为空 —— 如果函数类型不需要返回，则需要删除整个 returns (<return types>) 部分。</return></p>
+<p>函数类型默认是内部函数，因此不需要声明 internal 关键字。 与此相反的是，合约中的函数本身默认是 public 的，只有当它被当做类型名称时，默认才是内部函数。</p>
+<p>有两种方法可以访问当前合约中的函数：一种是直接使用它的名字，f ，另一种是使用 this.f 。 前者适用于内部函数，后者适用于外部函数。</p>
+<p>如果当函数类型的变量还没有初始化时就调用它的话会引发一个异常。 如果在一个函数被 delete 之后调用它也会发生相同的情况。</p>
+<p>如果外部函数类型在 Solidity 的上下文环境以外的地方使用，它们会被视为 function 类型。 该类型将函数地址紧跟其函数标识一起编码为一个 bytes24 类型。。</p>
+<p>请注意，当前合约的 public 函数既可以被当作内部函数也可以被当作外部函数使用。 如果想将一个函数当作内部函数使用，就用 f 调用，如果想将其当作外部函数，使用 this.f 。</p>
+<p>除此之外，public（或 external）函数也有一个特殊的成员变量称作 selector，可以返回 ABI 函数选择器:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.16;</span><br><span class="line"></span><br><span class="line">contract Selector &#123;</span><br><span class="line">  function f() public view returns (bytes4) &#123;</span><br><span class="line">    return this.f.selector;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用内部函数类型的例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.16;</span><br><span class="line"></span><br><span class="line">library ArrayUtils &#123;</span><br><span class="line">  &#x2F;&#x2F; 内部函数可以在内部库函数中使用，</span><br><span class="line">  &#x2F;&#x2F; 因为它们会成为同一代码上下文的一部分</span><br><span class="line">  function map(uint[] memory self, function (uint) pure returns (uint) f)</span><br><span class="line">    internal</span><br><span class="line">    pure</span><br><span class="line">    returns (uint[] memory r)</span><br><span class="line">  &#123;</span><br><span class="line">    r &#x3D; new uint[](self.length);</span><br><span class="line">    for (uint i &#x3D; 0; i &lt; self.length; i++) &#123;</span><br><span class="line">      r[i] &#x3D; f(self[i]);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  function reduce(</span><br><span class="line">    uint[] memory self,</span><br><span class="line">    function (uint, uint) pure returns (uint) f</span><br><span class="line">  )</span><br><span class="line">    internal</span><br><span class="line">    pure</span><br><span class="line">    returns (uint r)</span><br><span class="line">  &#123;</span><br><span class="line">    r &#x3D; self[0];</span><br><span class="line">    for (uint i &#x3D; 1; i &lt; self.length; i++) &#123;</span><br><span class="line">      r &#x3D; f(r, self[i]);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  function range(uint length) internal pure returns (uint[] memory r) &#123;</span><br><span class="line">    r &#x3D; new uint[](length);</span><br><span class="line">    for (uint i &#x3D; 0; i &lt; r.length; i++) &#123;</span><br><span class="line">      r[i] &#x3D; i;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract Pyramid &#123;</span><br><span class="line">  using ArrayUtils for *;</span><br><span class="line">  function pyramid(uint l) public pure returns (uint) &#123;</span><br><span class="line">    return ArrayUtils.range(l).map(square).reduce(sum);</span><br><span class="line">  &#125;</span><br><span class="line">  function square(uint x) internal pure returns (uint) &#123;</span><br><span class="line">    return x * x;</span><br><span class="line">  &#125;</span><br><span class="line">  function sum(uint x, uint y) internal pure returns (uint) &#123;</span><br><span class="line">    return x + y;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>使用外部函数类型的例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.11;</span><br><span class="line"></span><br><span class="line">contract Oracle &#123;</span><br><span class="line">  struct Request &#123;</span><br><span class="line">    bytes data;</span><br><span class="line">    function(bytes memory) external callback;</span><br><span class="line">  &#125;</span><br><span class="line">  Request[] requests;</span><br><span class="line">  event NewRequest(uint);</span><br><span class="line">  function query(bytes data, function(bytes memory) external callback) public &#123;</span><br><span class="line">    requests.push(Request(data, callback));</span><br><span class="line">    NewRequest(requests.length - 1);</span><br><span class="line">  &#125;</span><br><span class="line">  function reply(uint requestID, bytes response) public &#123;</span><br><span class="line">    &#x2F;&#x2F; 这里要验证 reply 来自可信的源</span><br><span class="line">    requests[requestID].callback(response);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract OracleUser &#123;</span><br><span class="line">  Oracle constant oracle &#x3D; Oracle(0x1234567); &#x2F;&#x2F; 已知的合约</span><br><span class="line">  function buySomething() &#123;</span><br><span class="line">    oracle.query(&quot;USD&quot;, this.oracleResponse);</span><br><span class="line">  &#125;</span><br><span class="line">  function oracleResponse(bytes response) public &#123;</span><br><span class="line">    require(msg.sender &#x3D;&#x3D; address(oracle));</span><br><span class="line">    &#x2F;&#x2F; 使用数据</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h3><h4 id="数据位置"><a href="#数据位置" class="headerlink" title="数据位置"></a>数据位置</h4><p>所有的复杂类型，即 数组 和 结构 类型，都有一个额外属性，“数据位置”，说明数据是保存在 内存memory 中还是 存储storage 中。 根据上下文不同，大多数时候数据有默认的位置，但也可以通过在类型名后增加关键字 storage 或 memory 进行修改。 函数参数（包括返回的参数）的数据位置默认是 memory， 局部变量的数据位置默认是 storage，状态变量的数据位置强制是 storage （这是显而易见的）。</p>
+<p>也存在第三种数据位置， calldata ，这是一块只读的，且不会永久存储的位置，用来存储函数参数。 外部函数的参数（非返回参数）的数据位置被强制指定为 calldata ，效果跟 memory 差不多。</p>
+<p>数据位置的指定非常重要，因为它们影响着赋值行为： 在 存储storage 和 内存memory 之间两两赋值，或者 存储storage 向状态变量（甚至是从其它状态变量）赋值都会创建一份独立的拷贝。 然而状态变量向局部变量赋值时仅仅传递一个引用，而且这个引用总是指向状态变量，因此后者改变的同时前者也会发生改变。 另一方面，从一个 内存memory 存储的引用类型向另一个 内存memory 存储的引用类型赋值并不会创建拷贝。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0;</span><br><span class="line">contract C &#123;</span><br><span class="line">    uint[] x; &#x2F;&#x2F; x的数据存储位置是storage</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; memoryArray的数据存储位置是memory</span><br><span class="line">    function f(uint[] memoryArray) public &#123;</span><br><span class="line">        x &#x3D; memoryArray;  &#x2F;&#x2F; 将整个数组拷贝到storage中，可行</span><br><span class="line">        var y &#x3D; x; &#x2F;&#x2F; 分配一个指针（其中y的数据存储位置是storage），可行</span><br><span class="line"></span><br><span class="line">        y[7]; &#x2F;&#x2F; 返回第8个元素，可行</span><br><span class="line">        y.length &#x3D; 2;  &#x2F;&#x2F; 通过y修改x，可行</span><br><span class="line">        delete x; &#x2F;&#x2F; 清除数组，同时修改y，可行</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; 下面的就不可行了；需要在storage中创建新的未命名的临时数组，但storage是“临时”分配的</span><br><span class="line">        &#x2F;&#x2F; y &#x3D; memoryArray;</span><br><span class="line">        &#x2F;&#x2F; 下面这一行也不可行，因为这会“重置”指针</span><br><span class="line">        &#x2F;&#x2F; 但并没有可以让它指向的合适的存储位置。</span><br><span class="line">        &#x2F;&#x2F; delete y;</span><br><span class="line"></span><br><span class="line">        g(x); &#x2F;&#x2F; 调用g函数，同时移交对x的引用</span><br><span class="line">        h(x); &#x2F;&#x2F; 调用h函数，同时在memory中创建一个独立的临时拷贝</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function g(uint[] storage storageArray) internal &#123;&#125;</span><br><span class="line"></span><br><span class="line">    function h(uint[] memoryArray) public &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>强制指定的数据位置：</p>
+<ul>
+<li>外部函数的参数（不包括返回参数）： calldata</li>
+<li>状态变量： storage</li>
+</ul>
+<p>默认数据位置：</p>
+<ul>
+<li>函数参数（包括返回参数）： memory</li>
+<li>所有其它局部变量： storage</li>
+</ul>
+<h4 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h4><p>数组可以在声明时指定长度，也可以动态调整大小。对于storage的数组来说，元素类型可以是任意的（即元素可以是数组类型，映射类型或者结构体）。对于memory的数组来说，元素类型不能是映射类型，如果作为public函数的参数，它只能是ABI类型。</p>
+<p>一个元素类型为 T，固定长度为 k 的数组可以声明为 T[k]，而动态数组声明为 T[]。 举个例子，一个长度为 5，元素类型为 uint 的动态数组的数组，应声明为 uint[][5] （注意这里跟其它语言比，数组长度的声明位置是反的）。 要访问第三个动态数组的第二个元素，你应该使用 x[2][1]（数组下标是从 0 开始的，且访问数组时的下标顺序与声明时相反，也就是说，x[2] 是从右边减少了一级）。</p>
+<h6 id="创建内存数组"><a href="#创建内存数组" class="headerlink" title="创建内存数组"></a>创建内存数组</h6><p>可使用new关键字在内存中创建变长数组。与storage数组相反的是，不能通过修改成员变量.length改变memory数组的大小。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.16;</span><br><span class="line"></span><br><span class="line">contract D &#123;</span><br><span class="line">    function f(uint len) public pure &#123;</span><br><span class="line">        uint[] memory a &#x3D; new uint[](7);</span><br><span class="line">        bytes memory b &#x3D; new bytes(len);</span><br><span class="line">        &#x2F;&#x2F; a.length &#x3D;&#x3D; 7 b.length &#x3D;&#x3D; len</span><br><span class="line">        a[6] &#x3D; 8;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="数组字面常数-内联数组"><a href="#数组字面常数-内联数组" class="headerlink" title="数组字面常数/内联数组"></a>数组字面常数/内联数组</h6><p>数组字面常数是写作表达式形式的数组，并且不会立即赋值给变量。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.16;</span><br><span class="line"></span><br><span class="line">contract C &#123;</span><br><span class="line">    function f() public pure &#123;</span><br><span class="line">        g([uint(1), 2, 3]);</span><br><span class="line">    &#125;</span><br><span class="line">    function g(uint[3] _data) public pure &#123;</span><br><span class="line">        &#x2F;&#x2F; ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>数组字面常数是一种定长的 内存memory 数组类型，它的基础类型由其中元素的普通类型决定。 例如，[1, 2, 3] 的类型是 uint8[3] memory，因为其中的每个字面常数的类型都是 uint8。 正因为如此，有必要将上面这个例子中的第一个元素转换成 uint 类型。 目前需要注意的是，定长的 内存memory 数组并不能赋值给变长的 内存memory 数组，下面是个反例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 这段代码并不能编译。</span><br><span class="line">pragma solidity ^0.4.0;</span><br><span class="line"></span><br><span class="line">contract C &#123;</span><br><span class="line">    function f() public &#123;</span><br><span class="line">        &#x2F;&#x2F; 这一行引发了一个类型错误，因为 unint[3] memory</span><br><span class="line">        &#x2F;&#x2F; 不能转换成 uint[] memory。</span><br><span class="line">        uint[] x &#x3D; [uint(1), 3, 4];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>####### 成员</p>
+<ul>
+<li>length:</li>
+</ul>
+<p>数组有 length 成员变量表示当前数组的长度。 动态数组可以在 存储storage （而不是 内存memory ）中通过改变成员变量 .length 改变数组大小。 并不能通过访问超出当前数组长度的方式实现自动扩展数组的长度。 一经创建，内存memory 数组的大小就是固定的（但却是动态的，也就是说，它依赖于运行时的参数）。</p>
+<ul>
+<li>push:</li>
+</ul>
+<p>变长的 存储storage 数组以及 bytes 类型（而不是 string 类型）都有一个叫做 push 的成员函数，它用来附加新的元素到数组末尾。 这个函数将返回新的数组长度。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/12/02/Solidity%E5%90%88%E7%BA%A6%E7%BB%93%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幸福的拾荒者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/12/02/Solidity%E5%90%88%E7%BA%A6%E7%BB%93%E6%9E%84/" itemprop="url">Solidity合约结构</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-02T15:03:45+08:00">
+                2019-12-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="合约结构"><a href="#合约结构" class="headerlink" title="合约结构"></a>合约结构</h3><p>合约中可以包含状态变量、函数、函数修饰器、事件、结构类型、枚举类型的声明，并且可以从其他合约继承。</p>
+<h4 id="状态变量"><a href="#状态变量" class="headerlink" title="状态变量"></a>状态变量</h4><p>状态变量是永久地存储在合约存储中的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0;</span><br><span class="line"></span><br><span class="line">contract SimpleStorage &#123;</span><br><span class="line">	uint storedData; &#x2F;&#x2F;状态变量</span><br><span class="line">	&#x2F;&#x2F; ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h4><p>函数是合约中代码的可执行单元。<br>函数调用可发生在合约内部或外部，且函数对其他合约有不同程度的可见性。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0;</span><br><span class="line"></span><br><span class="line">contract SimpleAuction &#123;</span><br><span class="line">	function bid() public payable &#123;  &#x2F;&#x2F; 函数</span><br><span class="line">		&#x2F;&#x2F; ...</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="函数修饰器"><a href="#函数修饰器" class="headerlink" title="函数修饰器"></a>函数修饰器</h4><p>函数修饰器可以用来以声明的方式改良函数语义</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0;</span><br><span class="line"></span><br><span class="line">contract Purchase &#123;</span><br><span class="line">	address public seller;</span><br><span class="line">	</span><br><span class="line">	modifier onlySeller() &#123; &#x2F;&#x2F; 修饰器</span><br><span class="line">		require(</span><br><span class="line">			msg.sender &#x3D;&#x3D; seller,</span><br><span class="line">			&quot;Only seller can call this.&quot;</span><br><span class="line">		);</span><br><span class="line">		_;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	function abort() public onlySeller &#123; &#x2F;&#x2F; Modifier usage</span><br><span class="line">		&#x2F;&#x2F; ...</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h4><p>事件是能方便地调用以太坊虚拟机日志功能的接口。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.21;</span><br><span class="line"></span><br><span class="line">contract SimpleAuction &#123;</span><br><span class="line">	event HighestBidIncreased(address bidder, uint amount);  &#x2F;&#x2F; 事件</span><br><span class="line">	</span><br><span class="line">	function bid() public payable &#123;</span><br><span class="line">		&#x2F;&#x2F; ...</span><br><span class="line">		emit HighestBidIncreased(msg.sender, msg.value);  &#x2F;&#x2F; 触发事件</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="结构类型"><a href="#结构类型" class="headerlink" title="结构类型"></a>结构类型</h3><p>结构是可以将几个变量分组的自定义类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0;</span><br><span class="line"></span><br><span class="line">contract Ballot &#123;</span><br><span class="line">	struct Voter &#123; &#x2F;&#x2F; 结构</span><br><span class="line">		uint weight;</span><br><span class="line">		bool boted;</span><br><span class="line">		address delegate;</span><br><span class="line">		uint vote;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="枚举类型"><a href="#枚举类型" class="headerlink" title="枚举类型"></a>枚举类型</h4><p>枚举可以用来创建由一定数量的”常量值“构成的自定义类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0;</span><br><span class="line"></span><br><span class="line">contract Purchase &#123;</span><br><span class="line">	enum State &#123; Created, Locked, Inactive &#125; &#x2F;&#x2F; 枚举</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/11/18/%E5%8C%BA%E5%9D%97%E9%93%BE%E6%8A%80%E6%9C%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幸福的拾荒者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/11/18/%E5%8C%BA%E5%9D%97%E9%93%BE%E6%8A%80%E6%9C%AF/" itemprop="url">区块链技术</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-18T09:47:12+08:00">
+                2019-11-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="BTC-密码学原理"><a href="#BTC-密码学原理" class="headerlink" title="BTC-密码学原理"></a>BTC-密码学原理</h1><h3 id><a href="#" class="headerlink" title></a></h3>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/10/16/MetaMask%E7%9A%84%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幸福的拾荒者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/16/MetaMask%E7%9A%84%E4%BD%BF%E7%94%A8/" itemprop="url">MetaMask的使用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-16T15:05:01+08:00">
+                2019-10-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>MetaMask是一款在谷歌浏览器Chrome上使用的插件类型的以太坊钱包，该钱包不需要下载，只需要在谷歌浏览器添加对应的扩展程序即可，非常轻量级，使用起来也非常方便。</p>
+<p>“文中的图片后面有过更新”</p>
+<p>###安装MetaMask<br>进入到MetaMask官网<a target="_blank" rel="noopener" href="https://metamask.io/">https://metamask.io/</a></p>
+<p><img src="/.io//metaMaskExtension1.png" alt="MetaMask插件"></p>
+<p>点击 “GET CHROME EXTENSION”按钮下载Chrome版本的插件，网站也提供了火狐浏览器的插件。</p>
+<p>###MetaMask使用方法<br>点击MetaMask的狐狸头图标，安装后首次使用时会展示隐私提示</p>
+<p><img src="/.io//metaMaskUse1.png" alt="MetaMask隐私提示"></p>
+<p>为了你的隐私起见，在使用完MetaMask之后最好退出登录。</p>
+<p>在默认情况下MetaMask会登录到一个测试网络，如果要使用真实的以太网络，需要用户手动连接到以太坊的主网络，本文教程后面部分会提到。</p>
+<p>点击“Accept”按钮之后，会显示MetaMask的服务条款，基本上看看就好，有兴趣的可以详细阅读。</p>
+<p><img src="/.io//metaMaskUse2.png" alt="MetaMask服务条款"></p>
+<p>进入钱包登录页面有2个入口，第一个比较显眼的是创建新的DEN（DEN是在MetaMask用密码加密存储的钱包），第二个是导入已有的DEN。这里先以创建新的DEN为例，在上面的密码框输入密码，点击“CREATE”图标，就成功创建了一个MetaMask钱包。</p>
+<p><img src="/.io//metaMaskLogin.png" alt="MetaMask登录"></p>
+<p>MetaMask会默认为用户创建12个英文助记词，这些助记词一定要保存好，建议复制保存到安全的地方，这个是确认钱包账户所有者的凭证，在其他钱包导入这个新创建的账户的时候或者修改免的时候有可能需要用到这些助记词。也可以直接点击“SAVE SEED WORDS AS FILE”，会自动给你生成一份文件保存在本地。点击“I’VE COPYED SOMEWHERE SAFE”按钮就进入钱包主界面。</p>
+<p><img src="/.io//metaMaskSafeWords.png" alt="MetaMask助记词"></p>
+<p>MetaMask会自动为用户创建了一个钱包地址，默认会将钱包地址缩略显示，想要看完整的地址，点击右面的三个圆点，可以打开一个钱包地址相关的菜单。</p>
+<p><img src="/.io//accountOperation.png" alt="MetaMask钱包地址相关的菜单"></p>
+<p>###网络选择<br>点击钱包首页左上角绿色的“Main Network”，可以选择钱包使用的网络。</p>
+<p><img src="/.io//selectNetwork.png" alt="MetaMask选择网络"></p>
+<p>###购买Eth<br>点击钱包上的“Buy”按钮，进入购买Eth的页面</p>
+<p><img src="/.io//buyEth.png" alt="MetaMask购买Eth"></p>
+<p>###MetaMask账户管理<br>账户管理就是对eTH地址的管理，除了默认的地址之外，还可以创建新的账户或者导入已有的账户。</p>
+<p><img src="/.io//accountManage.png" alt="MetaMask购买Eth"></p>
+<p>###选择测试网络，获得测试以太币<br>真实的以太币很贵，现在1000人民币一个以太币，使用真实以太币开发如果出现了错误会造成很大的损失，所以以太坊也提供了测试网络，在测试网络上可以免费获取测试用的以太币。<br>点击 Main Network弹出网络选择列表，可以看到有三个测试网络可以选，这里我们选择“Ropsten Test Network”</p>
+<p><img src="/.io//selectNetwork2.png" alt="MetaMask测试网络"></p>
+<p>获取测试以太币，点击“buy”</p>
+<p><img src="/.io//obtainTestEth.png" alt="MetaMask获取测试以太币"></p>
+<p>通过“测试测试水管”获取</p>
+<p><img src="/.io//obtainTestEth2.png" alt="MetaMask获取测试以太币"></p>
+<p>点击“request 1 ether from faucet”获取以太币，可点击多次获取多个以太币。</p>
+<p><img src="/.io//obtainTestEth3.png" alt="MetaMask获取测试以太币"></p>
+<p>###转账<br>切换到Account2，复制地址</p>
+<p><img src="/.io//copyAddress.png" alt="MetaMask复制地址"></p>
+<p>在切换回Account1，点击send按钮</p>
+<p><img src="/.io//transaction1.png" alt="MetaMask交易"></p>
+<p>填写交易以太币数量</p>
+<p><img src="/.io//transaction2.png" alt="MetaMask交易"></p>
+<p>确认交易</p>
+<p><img src="/.io//transaction3.png" alt="MetaMask交易"></p>
+<p>交易结果</p>
+<p><img src="/.io//transaction4.png" alt="MetaMask交易"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/05/23/React%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93%E6%94%B6%E9%9B%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幸福的拾荒者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/23/React%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93%E6%94%B6%E9%9B%86/" itemprop="url">React第三方库收集</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-23T14:55:48+08:00">
+                2019-05-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/dawiwt/react-component-echarts">react-component-echarts</a><br>组件式百度图表</li>
+<li><a target="_blank" rel="noopener" href="http://recharts.org/">ReCharts</a><br>ReCharts 是一个 React 图表组件库</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/react-bootstrap/react-bootstrap">React-Bootstrap</a><br>React 构建的 Bootstrap 3 组件</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/react-toolbox/react-toolbox">React-Toolbox</a><br>React Toolbox 可以使用 Google 的 Material Design 组件启动 ReactJS 应用。React Toolbox 是实现 Google Material Design 规范的 React 组件集合。React Toobox 基于 ES6，Webpack 和 CSS 模块(使用 SASS 编写)构建。React Toolbox 很好的集成了 Webpack 工作流，非常容易定制也非常灵活。</li>
+<li><a target="_blank" rel="noopener" href="https://gideonshils.com/Belle-With-Bit/">Belle React Components</a><br>React Belle 是一套经过优化的 React 组件库，可以在移动设备和桌面设备上使用。 样式是高度可定制的，因此你可以配置所有组件的基本样式，也可以单独修改其中的每一个</li>
+<li><a target="_blank" rel="noopener" href="https://onsen.io/react/">Onsen UI</a><br>结合 React 和 Onsen UI 框架，以最快的方式构建漂亮的高品质混合移动应用程序。这是一个值得考虑的有趣的库。 </li>
+<li><a target="_blank" rel="noopener" href="https://v2.grommet.io/">React Grommet</a><br>React Grommet 号称企业应用最先进的 UX 框架，它提供丰富的用户分类组件，所有组件都简单易用，跨浏览器兼容，且支持主题自定义。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/bvaughn/react-virtualized">React Virtualized</a><br>一个可以高效地渲染大型列表和表格数据的 React 组件库，具有很少的依赖性，大多数都是由 NPM 自动管理。</li>
+<li>…</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/05/01/webpack4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幸福的拾荒者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/01/webpack4/" itemprop="url">webpack4</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-01T16:49:27+08:00">
+                2019-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>webpack是一个JavaScript应用程序的静态模块打包器，当webpack处理应用程序时，它会递归构建一个依赖关系图，其中包含应用程序需要的每个模块，然后将所有这些模块打包成一个或多个bundle</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/04/23/JavaScript%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%861/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幸福的拾荒者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/04/23/JavaScript%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%861/" itemprop="url">JavaScript工作原理1</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-23T13:50:06+08:00">
+                2019-04-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="引擎，运行时和调用堆栈的概述"><a href="#引擎，运行时和调用堆栈的概述" class="headerlink" title="引擎，运行时和调用堆栈的概述"></a>引擎，运行时和调用堆栈的概述</h2><h4 id="JavaScript引擎"><a href="#JavaScript引擎" class="headerlink" title="JavaScript引擎"></a>JavaScript引擎</h4><p>JavaScript引擎的一个流行示例是Google的V8引擎，在Chrome和Node.js中使用V8引擎。<br>V8引擎由两个主要的部件组成：     </p>
+<ul>
+<li>Memory Heap（内存堆） -   内存分配地址的地方</li>
+<li>Call Stack （调用堆栈）  -  代码执行的地方</li>
+</ul>
+<h4 id="Runtime-运行时"><a href="#Runtime-运行时" class="headerlink" title="Runtime(运行时)"></a>Runtime(运行时)</h4><p><img src="/.io//runtime.png"></p>
+<h4 id="调用栈"><a href="#调用栈" class="headerlink" title="调用栈"></a>调用栈</h4><p>JavaScript是一种单线程编程语言，它只有一个调用堆栈。因此，它一次只能做一件事。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">function multiply(x, y) &#123;</span><br><span class="line">	return x * y;</span><br><span class="line">&#125;</span><br><span class="line">function printSquare(x) &#123;</span><br><span class="line">	var s &#x3D; multiply(x, x);</span><br><span class="line">	console.log(s);</span><br><span class="line">&#125;</span><br><span class="line">printSquare(5);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/.io//callStackExample.png"></p>
+<h2 id="深入V8引擎"><a href="#深入V8引擎" class="headerlink" title="深入V8引擎"></a>深入V8引擎</h2><p>JavaScript引擎是执行JavaScript代码的程序和解释器。JavaScript引擎可以实现为标准解释器，或者以某种形式将JavaScript编译为字节码的即时编译器。<br>V8最初被设计用来提高web浏览器中JavaScript执行的性能。为了获得速度，V8 将 JavaScript 代码转换成更高效的机器码，而不是使用解释器。它通过实现 JIT (Just-In-Time) 编译器将 JavaScript 代码编译为执行时的机器码，就像许多现代 JavaScript 引擎(如SpiderMonkey或Rhino (Mozilla)) 所做的那样。这里的主要区别是 V8 不生成字节码或任何中间代码。<br>在V8的5.9版本出来之前，V8引擎使用了两个编译器：    </p>
+<ul>
+<li>full-codegen 一个简单和非常快的编译器，产生简单和相对较慢的机器码。</li>
+<li>Crankshaft 一种更复杂（Just-in-Time）的优化编译器，生成高度优化的代码。</li>
+</ul>
+<p>V8引擎也在内部使用多个线程：</p>
+<ul>
+<li>主线程执行你所期望的操作：获取代码、编译代码并执行它</li>
+<li>还有一个单独的线程用于编译，因此主线程可以在前者优化代码的同时继续执行</li>
+<li>一个Profiler线程，它会告诉运行时我们花了很多时间，让Crankshaft可以优化它们</li>
+<li>一些线程处理垃圾收集器</li>
+</ul>
+<p>当第一次执行 JavaScript 代码时，V8 利用 full-codegen 编译器，直接将解析的 JavaScript 翻译成机器代码而不进行任何转换。这使得它可以非常快速地开始执行机器代码。请注意，V8 不使用中间字节码，从而不需要解释器。</p>
+<p>当代码已经运行一段时间后，分析线程已经收集了足够的数据来判断应该优化哪个方法。</p>
+<p>接下来，Crankshaft  从另一个线程开始优化。它将 JavaScript 抽象语法树转换为被称为 Hydrogen 的高级静态单分配（SSA）表示，并尝试优化 Hydrogen 图，大多数优化都是在这个级别完成的。</p>
+<h3 id="优化代码"><a href="#优化代码" class="headerlink" title="优化代码"></a>优化代码</h3><h4 id="内联优化"><a href="#内联优化" class="headerlink" title="内联优化"></a>内联优化</h4><p>第一个优化是提前内联尽可能多的代码。内联是用被调用函数的主体替换调用点（调用函数的代码行）的过程。</p>
+<p><img src="/.io//inlineOptimize.png"></p>
+<h4 id="隐藏类"><a href="#隐藏类" class="headerlink" title="隐藏类"></a>隐藏类</h4><h4 id="内联缓存"><a href="#内联缓存" class="headerlink" title="内联缓存"></a>内联缓存</h4><h4 id="编译成机器语言"><a href="#编译成机器语言" class="headerlink" title="编译成机器语言"></a>编译成机器语言</h4><h4 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h4><h4 id="点火和涡轮风扇"><a href="#点火和涡轮风扇" class="headerlink" title="点火和涡轮风扇"></a>点火和涡轮风扇</h4><h4 id="如何写出优化的JavaScript"><a href="#如何写出优化的JavaScript" class="headerlink" title="如何写出优化的JavaScript"></a>如何写出优化的JavaScript</h4><ol>
+<li>对象属性的顺序：永远用相同的顺序为您的对象属性实例化，这样隐藏类和随后的优化代码才能共享。    </li>
+<li>动态属性：在对象实例化后为其新增属性会导致隐藏类变化，从而会减慢为旧隐藏类所优化的方法的执行。所以，尽量在构造函数中分配对象的所有属性。</li>
+<li>方法：重复执行相同方法的代码会比不同的方法只执行一次的代码运行的更快（由于内联缓存）。</li>
+<li>数组：避免使用keys不是递增数字的稀疏数组（sparse arrays）。并不为每个元素分配内存的稀疏数组实质上是一个hash表。这种数组中的元素比通常数组的元素会花销更大才能获取到。此外，避免使用预申请的大型数组。最好随着需要慢慢增加数组的大小。最后，不要删除数组中的元素，因这会使得keys变得稀疏。</li>
+<li>标记值（Tagged values）: V8用32个比特来表示对象和数字。它使用1个比特来区分是一个对象（flag = 1）还是一个整型（flag = 0）（被称为SMI或SMall Integer，小整型，因其只有31比特来表示值）。然后，如果一个数值大于31比特，V8就会给这个数字进行装箱操作（boxing），将其变成double型，并创建一个新的对象将这个double型数字放入其中。所以，为了避免代价很高的boxing操作，尽量使用31比特的有符号数。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/04/04/spark%E5%85%A5%E9%97%A8-python-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幸福的拾荒者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/04/04/spark%E5%85%A5%E9%97%A8-python-3/" itemprop="url">spark入门(python)3 - RDD</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-04T19:17:33+08:00">
+                2019-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="RDD的设计与运行原理"><a href="#RDD的设计与运行原理" class="headerlink" title="RDD的设计与运行原理"></a>RDD的设计与运行原理</h2><h3 id="RDD设计背景"><a href="#RDD设计背景" class="headerlink" title="RDD设计背景"></a>RDD设计背景</h3><p>在实际应用中，存在许多迭代式算法，在不同计算阶段之间会重用中间结果，即一个阶段的输出结果会作为下一个阶段的输入。但是，目前的MapReduce框架都是把中间结果写入到HDFS中，带来了大量的数据复制、磁盘IO和序列化开销。虽然，类似Pregel等图计算框架也是将结果保存在内存当中，但是，这些框架只能支持一些特定的计算模式，并没有提供一种通用的数据抽象。RDD就是为了满足这种需求而出现的，它提供了一个抽象的数据架构，我们不必担心底层数据的分布式特性，只需将具体的应用逻辑表达为一系列转换处理，不同RDD之间的转换操作形成依赖关系，可以实现管道化，从而避免了中间结果的存储，大大降低了数据复制、磁盘IO和序列化开销。</p>
+<h3 id="RDD概念"><a href="#RDD概念" class="headerlink" title="RDD概念"></a>RDD概念</h3><p>一个RDD就是一个分布式对象集合，本质上是一个只读的分区记录集合，每个RDD可以分成多个分区，每个分区就是一个数据集片段，并且一个RDD的不同分区可以被保存到集群中不同的节点上，从而可以在集群中的不同节点上进行并行计算。RDD提供了一种高度受限的共享内存模型，即RDD是只读的记录分区的集合，不能直接修改，只能基于稳定的物理存储中的数据集来创建RDD，或者通过在其他RDD上执行确定的转换操作（如map、join和groupBy）而创建得到新的RDD。RDD提供了一组丰富的操作以支持常见的数据运算，分为“行动”（Action）和“转换”（Transformation）两种类型，前者用于执行计算并指定输出的形式，后者指定RDD之间的相互依赖关系。两类操作的主要区别是，转换操作（比如map、filter、groupBy、join等）接受RDD并返回RDD，而行动操作（比如count、collect等）接受RDD但返回非RDD（即输出一个值或结果）。RDD提供的转换接口都非常简单，都是类似map、filter、groupBy、join等粗粒度的数据转换操作，而不是针对某个数据项的细粒度修改。因此，RDD比较适合对于数据集中元素执行相同操作的批处理式应用，而不适合用于需要异步、细粒度状态的应用，比如Web应用系统、增量式的网页爬虫等。正因为这样，这种粗粒度转换接口设计，会使人直觉上认为RDD的功能很受限、不够强大。但是，实际上RDD已经被实践证明可以很好地应用于许多并行计算应用中，可以具备很多现有计算框架（比如MapReduce、SQL、Pregel等）的表达能力，并且可以应用于这些框架处理不了的交互式数据挖掘应用。</p>
+<p>RDD典型的执行过程如下：       </p>
+<ol>
+<li>RDD读入外部数据源（或者内存中的集合）进行创建</li>
+<li>RDD经过一些列的“转换”操作，每一次都会产生不同的RDD，提供下一个“转换”使用</li>
+<li>最后一个RDD经“行动”操作进行处理，并输出到外部数据源（或者变成Scala集合或标量）</li>
+</ol>
+<p>需要说明的是，RDD采用了惰性调用，即在RDD的执行过程中，真正的计算发生在RDD的“行动”操作，对于“行动”之前的所有“转换”操作，Spark只是记录下“转换”操作应用的一些基础数据集以及RDD生成的轨迹，即相互之间的依赖关系，而不会触发真正的计算。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幸福的拾荒者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/" itemprop="url">Spark入门(python)2 - Spark的安装与使用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-02T16:06:15+08:00">
+                2019-04-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Spark的安装与使用"><a href="#Spark的安装与使用" class="headerlink" title="Spark的安装与使用"></a>Spark的安装与使用</h2><h3 id="Mac下安装Spark"><a href="#Mac下安装Spark" class="headerlink" title="Mac下安装Spark"></a>Mac下安装Spark</h3><h4 id="配置ssh"><a href="#配置ssh" class="headerlink" title="配置ssh"></a>配置ssh</h4><p>系统偏好设置-&gt;选择共享-&gt;勾选远程登录。<br>配置ssh，使<code>ssh localhost</code>不需要输入密码。       </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa    </span><br><span class="line">$ cat ~&#x2F;.ssh&#x2F;id_rsa.pub &gt;&gt; ~&#x2F;.ssh&#x2F;authorized_keys     </span><br><span class="line">$ ssh localhost</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装scala"><a href="#安装scala" class="headerlink" title="安装scala"></a>安装scala</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install scala</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装Spark"><a href="#安装Spark" class="headerlink" title="安装Spark"></a>安装Spark</h4><ol>
+<li><p>到<a target="_blank" rel="noopener" href="http://spark.apache.org/downloads.html">http://spark.apache.org/downloads.html</a>下载Spark<br><img src="/.io//%E4%B8%8B%E8%BD%BDSpark.png" alt="下载Spark"></p>
+</li>
+<li><p>解压到目录下</p>
+</li>
+<li><p>配置.zshrc或者.bashrc</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export SPARK_HOME&#x3D;&#x2F;Users&#x2F;xy&#x2F;Documents&#x2F;bigData&#x2F;spark-2.4.3-bin-hadoop2.7</span><br><span class="line">export PATH&#x3D;$&#123;PATH&#125;:$&#123;SPARK_HOME&#125;&#x2F;bin</span><br></pre></td></tr></table></figure></li>
+<li><p>到Spark解压路径下，执行<code>./sbin/start-all.sh</code>，在浏览器中访问<code>http://localhost:8080/</code>，看是否可以访问。<br><img src="/.io//Spark%E5%AE%89%E8%A3%85%E7%BB%93%E6%9E%9C.png" alt="Spark安装结果"></p>
+</li>
+<li><p>运行pyspark<br><img src="/.io//%E8%BF%90%E8%A1%8Cpyspark.png" alt="运行pyspark"></p>
+</li>
+</ol>
+<h3 id="在pyspark中运行代码-本地"><a href="#在pyspark中运行代码-本地" class="headerlink" title="在pyspark中运行代码(本地)"></a>在pyspark中运行代码(本地)</h3><p>pyspark命令及其常用的参数如下：       </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pyspark --master &lt;master-url&gt;</span><br></pre></td></tr></table></figure>
+<p>Spark的运行模式取决于传递给SparkContext的Master URL的值。Master URL可以是以下任一种形式：  </p>
+<ul>
+<li>local 使用一个Worker线程本地化运行SPARK(完全不并行)</li>
+<li>local[*] 使用逻辑CPU个数数量的线程来本地化运行Spark</li>
+<li>local[K] 使用K个Worker线程本地化运行Spark（理想情况下，K应该根据运行机器的CPU核数设定）</li>
+<li>spark://HOST:PORT 连接到指定的Spark standalone master。默认端口是7077.</li>
+<li>yarn-client 以客户端模式连接YARN集群。集群的位置可以在HADOOP_CONF_DIR 环境变量中找到。</li>
+<li>yarn-cluster 以集群模式连接YARN集群。集群的位置可以在HADOOP_CONF_DIR 环境变量中找到。</li>
+<li>mesos://HOST:PORT 连接到指定的Mesos集群。默认接口是5050。</li>
+</ul>
+<p>在Spark中采用本地模式启动pyspark的命令主要包含以下参数：</p>
+<ul>
+<li>–master：这个参数表示当前的pyspark要连接到哪个master，如果是local[*]，就是使用本地模式启动pyspark，其中，中括号内的星号表示需要使用几个CPU核心(core)；</li>
+<li>–jars： 这个参数用于把相关的JAR包添加到CLASSPATH中；如果有多个jar包，可以使用逗号分隔符连接它们；</li>
+</ul>
+<h4 id="Spark运行独立的python代码"><a href="#Spark运行独立的python代码" class="headerlink" title="Spark运行独立的python代码"></a>Spark运行独立的python代码</h4><ol>
+<li><p>使用virtualenv创立独立python环境</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">virtualent spark-py3 --python&#x3D;python3</span><br><span class="line">cd spark-py3</span><br><span class="line">source .&#x2F;bin&#x2F;activate</span><br><span class="line">pip install pyspark</span><br></pre></td></tr></table></figure></li>
+<li><p>在test.py中编写代码</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">from pyspark import SparkContext</span><br><span class="line">sc &#x3D; SparkContext( &#39;local&#39;, &#39;test&#39;)</span><br><span class="line">logFile &#x3D; &quot;file:&#x2F;&#x2F;&#x2F;Users&#x2F;xy&#x2F;Documents&#x2F;bigData&#x2F;spark-2.4.3-bin-hadoop2.7&#x2F;README.md&quot;</span><br><span class="line">logData &#x3D; sc.textFile(logFile, 2).cache()</span><br><span class="line">numAs &#x3D; logData.filter(lambda line: &#39;a&#39; in line).count()</span><br><span class="line">numBs &#x3D; logData.filter(lambda line: &#39;b&#39; in line).count()</span><br><span class="line">print(&#39;Lines with a: %s, Lines with b: %s&#39; % (numAs, numBs))</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>运行代码<code>python3 test.py</code></li>
+</ol>
+<p><img src="/.io//Spark%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81.png" alt="Spark测试代码"></p>
+<h2 id="Spark应用程序"><a href="#Spark应用程序" class="headerlink" title="Spark应用程序"></a>Spark应用程序</h2><h3 id="加载本地文件"><a href="#加载本地文件" class="headerlink" title="加载本地文件"></a>加载本地文件</h3><p>运行pyspark <code>pyspark --master local[4]</code>        </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from pyspark import SparkContext</span><br><span class="line">&gt;&gt;&gt; #排除异常</span><br><span class="line">&gt;&gt;&gt; try:</span><br><span class="line">...     sc.stop()</span><br><span class="line">... except:</span><br><span class="line">...     pass</span><br><span class="line">... </span><br><span class="line">&gt;&gt;&gt; sc &#x3D; SparkContext(&#39;local[2]&#39;,&#39;First Spark App&#39;)</span><br><span class="line">&gt;&gt;&gt; textFile &#x3D; sc.textFile(&#39;file:&#x2F;&#x2F;&#x2F;Users&#x2F;xy&#x2F;Documents&#x2F;develop&#x2F;study&#x2F;bigData&#x2F;spark-2.4.3-bin-hadoop2.7&#x2F;README.md&#39;)</span><br><span class="line">&gt;&gt;&gt; textFile.first()</span><br><span class="line">u&#39;# Apache Spark&#39;</span><br><span class="line">&gt;&gt;&gt; textFile.saveAsTextFile(&#39;file:&#x2F;&#x2F;&#x2F;Users&#x2F;xy&#x2F;Documents&#x2F;writeback&#39;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/.io//%E8%AF%BB%E5%86%99%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6.png" alt="读写本地文件"></p>
+<p>运行结果<br><img src="/.io//%E8%AF%BB%E5%86%99%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%9C.png" alt="读写本地文件结果"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/03/31/spark%E5%85%A5%E9%97%A8-python/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幸福的拾荒者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/31/spark%E5%85%A5%E9%97%A8-python/" itemprop="url">Spark入门(python)1 - Spark的设计与运行原理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-31T11:57:31+08:00">
+                2019-03-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Spark运行架构"><a href="#Spark运行架构" class="headerlink" title="Spark运行架构"></a>Spark运行架构</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
+<li>RDD 弹性分布数据集（Resilient Distributed Dataset），是分布式内存的一个抽象概念，提供了一种高度受限的共享内存模型</li>
+<li>DAG 有向无环图（Directed Acyclic Graph），反映RDD之间的依赖关系</li>
+<li>Executor 运行在工作节点上的一个进程，负责运行任务，并为应用程序存储数据</li>
+<li>应用 用户编写的Spark应用程序</li>
+<li>任务 运行在Executor上的工作单元</li>
+<li>作业 一个作业包含多个RDD及作用于相应RDD上的各种操作</li>
+<li>阶段 是作业的基本调度单位，一个作业会分为多组任务，每组任务被称为“阶段”，或者也被称为“任务集”</li>
+</ul>
+<h3 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h3><p><img src="/.io//Spark%E8%BF%90%E8%A1%8C%E6%9E%B6%E6%9E%84.jpg" alt="Spark运行架构"><br>&emsp;Spark运行架构包括集群资源管理器（Cluster Manager）、运行作业任务的工作节点（Worker Node）、每个应用的任务控制节点（Driver）和每个工作节点上负责具体任务的执行进程（Executor）。其中，集群资源管理器可以是Spark自带的资源管理器，也可以是YARN或Mesos等资源管理框架。<br>与Hadoop MapReduce计算框架相比，Spark所采用的Executor有两个优点：      </p>
+<ol>
+<li>利用多线程来执行具体的任务（Hadoop MapReduce采用的是进程模型），减少任务的启动开销；      </li>
+<li>Executor中有一个BlockManager存储模块，会将内存和磁盘共同作为存储设备，当需要多轮迭代计算时，可以将中间结果存储到这个存储模块里，下次需要时，就可以直接读该存储模块里的数据，而不需要读写到HDFS等文件系统里，因而有效减少了IO开销；或者在交互式查询场景下，预先将表缓存到该存储系统上，从而可以提高读写IO性能。</li>
+</ol>
+<p><img src="/.io//Spark%E4%B8%AD%E5%90%84%E7%A7%8D%E6%A6%82%E5%BF%B5%E4%B9%8B%E9%97%B4%E7%9A%84%E7%9B%B8%E4%BA%92%E5%85%B3%E7%B3%BB.jpg" alt="Spark中各种概念之间的相互关系"><br>如上图，在Spark中，一个应用（Application）由一个任务控制节点（Driver）和若干个作业（Job）构成，一个作业由多个阶段（Stage）构成，一个阶段由多个任务（Task）组成。当执行一个应用时，任务控制节点会向集群管理器（Cluster Manager）申请资源，启动Executor，并向Executor发送应用程序代码和文件，然后在Executor上执行任务，运行结束后，执行结果会返回给任务控制节点，或者写到HDFS或者其他数据库中。       </p>
+<h3 id="Spark运行基本流程"><a href="#Spark运行基本流程" class="headerlink" title="Spark运行基本流程"></a>Spark运行基本流程</h3><p><img src="/.io//Spark%E8%BF%90%E8%A1%8C%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B.jpg" alt="Spark运行基本流程"><br>Spark的基本运行流程如下：     </p>
+<ol>
+<li>当一个Spark应用被提交时，首先需要为这个应用构建起基本的运行环境，即由任务控制节点（Driver）创建一个SparkContext，由SparkContext负责和资源管理器（Cluster Manager）的通信以及进行资源的申请、任务的分配和监控等。SparkContext会向资源管理器注册并申请运行Executor的资源；    </li>
+<li>资源管理器为Executor分配资源，并启动Executor进程，Executor运行情况将随着“心跳”发送到资源管理器上；       </li>
+<li>SparkContext根据RDD的依赖关系构建DAG图，DAG图提交给DAG调度器（DAGScheduler）进行解析，将DAG图分解成多个“阶段”（每个阶段都是一个任务集），并且计算出各个阶段之间的依赖关系，然后把一个个“任务集”提交给底层的任务调度器（TaskScheduler）进行处理；Executor向SparkContext申请任务，任务调度器将任务分发给Executor运行，同时，SparkContext将应用程序代码发放给Executor；       </li>
+<li>任务在Executor上运行，把执行结果反馈给任务调度器，然后反馈给DAG调度器，运行完毕后写入数据并释放所有资源。</li>
+</ol>
+<p>Spark运行架构的特点：        </p>
+<ol>
+<li>每个应用都有自己专属的Executor进程，并且该进程在应用运行期间一直驻留。Executor进程以多线程的方式运行任务，减少了多进程任务频繁的启动开销，使得任务执行变得非常高效和可靠；          </li>
+<li>Spark运行过程与资源管理器无关，只要能够获取Executor进程并保持通信即可；       </li>
+<li>Executor上有一个BlockManager存储模块，类似于键值存储系统（把内存和磁盘共同作为存储设备），在处理迭代计算任务时，不需要把中间结果写入到HDFS等文件系统，而是直接放在这个存储系统上，后续有需要时就可以直接读取；在交互式查询场景下，也可以把表提前缓存到这个存储系统上，提高读写IO性能；             </li>
+<li>任务采用了数据本地性和推测执行等优化机制。数据本地性是尽量将计算移到数据所在的节点上进行，即“计算向数据靠拢”，因为移动计算比移动数据所占的网络资源要少得多。而且，Spark采用了延时调度机制，可以在更大的程度上实现执行过程优化。比如，拥有数据的节点当前正被其他的任务占用，那么，在这种情况下是否需要将数据移动到其他的空闲节点呢？答案是不一定。因为，如果经过预测发现当前节点结束当前任务的时间要比移动数据的时间还要少，那么，调度就会等待，直到当前节点可用。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
-  {% include '_partials/pagination.swig' %}
-{% endblock %}
+  
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">&lt;i class&#x3D;&quot;fa fa-angle-right&quot;&gt;&lt;&#x2F;i&gt;</a>
+  </nav>
 
-{% block sidebar %}
-  {{ sidebar_template.render(false) }}
-{% endblock %}
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

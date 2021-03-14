@@ -1,37 +1,716 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+  
 
 
-{% block content %}
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="基本node和npm node      node包管理器  npm  npm install -g &lt;package&gt; 安装全局包 npm install &lt;package&gt; 安装本地包  node包安装完后会保存在node_modules&#x2F;文件夹下，并且会添加到package.json中  npm init -y 创建npm项目和package.json文件  npm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React">
+<meta property="og:url" content="http://fhclk.github.io/2017/08/24/read-react/index.html">
+<meta property="og:site_name" content="幸福的拾荒者">
+<meta property="og:description" content="基本node和npm node      node包管理器  npm  npm install -g &lt;package&gt; 安装全局包 npm install &lt;package&gt; 安装本地包  node包安装完后会保存在node_modules&#x2F;文件夹下，并且会添加到package.json中  npm init -y 创建npm项目和package.json文件  npm">
+<meta property="og:locale">
+<meta property="og:image" content="http://fhclk.github.io/.io//lifecycle.png">
+<meta property="article:published_time" content="2017-08-24T15:52:48.000Z">
+<meta property="article:modified_time" content="2019-03-08T08:01:02.000Z">
+<meta property="article:author" content="fhclk">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/.io//lifecycle.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://fhclk.github.io/2017/08/24/read-react/"/>
+
+
+
+
+
+  <title>React | 幸福的拾荒者</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">幸福的拾荒者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2017/08/24/read-react/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幸福的拾荒者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">React</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-24T23:52:48+08:00">
+                2017-08-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="基本"><a href="#基本" class="headerlink" title="基本"></a>基本</h2><h3 id="node和npm"><a href="#node和npm" class="headerlink" title="node和npm"></a>node和npm</h3><ol>
+<li><p>node    </p>
+<p> node包管理器</p>
+</li>
+<li><p>npm</p>
+<p> <code>npm install -g &lt;package&gt;</code> 安装全局包<br> <code>npm install &lt;package&gt;</code> 安装本地包</p>
+<p> node包安装完后会保存在node_modules/文件夹下，并且会添加到package.json中</p>
+<p> <code>npm init -y</code> 创建npm项目和package.json文件</p>
+<p> <code>npm install</code> 从依赖文件package.json中安装node包</p>
+<p> <code>npm install --save-dev</code> –save-dev 标记该node包只是用作开发环境的一部分，并不会作为产品代码发布</p>
+</li>
+</ol>
+<h2 id="react"><a href="#react" class="headerlink" title="react"></a>react</h2><h3 id="创建react项目"><a href="#创建react项目" class="headerlink" title="创建react项目"></a>创建react项目</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npx create-react-app my-app</span><br><span class="line">cd my-app</span><br><span class="line">yarn start</span><br></pre></td></tr></table></figure>
+<h3 id="JSX"><a href="#JSX" class="headerlink" title="JSX"></a>JSX</h3><h4 id="模块热替换"><a href="#模块热替换" class="headerlink" title="模块热替换"></a>模块热替换</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import React from &#39;react&#39;;</span><br><span class="line">import ReactDOM from &#39;react-dom&#39;;</span><br><span class="line">import App from &#39;.&#x2F;App&#39;;</span><br><span class="line">import &#39;.&#x2F;index.css&#39;;</span><br><span class="line"></span><br><span class="line">ReactDOM.reander(</span><br><span class="line">	&lt;App &#x2F;&gt;,</span><br><span class="line">	document.getElementById(&#39;root&#39;)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">if (module.hot) &#123;</span><br><span class="line">	module.hot.accept();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="创建组件"><a href="#创建组件" class="headerlink" title="创建组件"></a>创建组件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class ShoppingList extends React.Component &#123;</span><br><span class="line">	render() &#123;</span><br><span class="line">		&lt;div className&#x3D;&quot;shopping-list&quot;&gt;</span><br><span class="line">			&lt;h1&gt;Shopping List for &#123;this.props.name&#125;&lt;&#x2F;h1&gt;</span><br><span class="line">			&lt;ul&gt;</span><br><span class="line">				&lt;li&gt;Instagram&lt;&#x2F;li&gt;</span><br><span class="line">				&lt;li&gt;WhatsApp&lt;&#x2F;li&gt;</span><br><span class="line">				&lt;li&gt;Oculus&lt;&#x2F;li&gt;</span><br><span class="line">			&lt;&#x2F;ul&gt;</span><br><span class="line">		&lt;&#x2F;div&gt;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;用法： &lt;ShoppingList name&#x3D;&quot;mark&quot; &#x2F;&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="函数定义组件"><a href="#函数定义组件" class="headerlink" title="函数定义组件"></a>函数定义组件</h4><p>为只有render方法的组件提供的一种简便的定义组件的方法。     </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function Square(props) &#123;</span><br><span class="line">	return (</span><br><span class="line">		&lt;button className&#x3D;&quot;square&quot; onClick&#x3D;&#123;props.onClick&#125;&gt;</span><br><span class="line">			&#123;props.value&#125;</span><br><span class="line">		&lt;&#x2F;button&gt;</span><br><span class="line">	);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>简化事件处理函数。这里把 <code>onClick=&#123; () =&gt; props.onClick() &#125;</code> 直接修改为 <code>onClick=&#123;props.onClick&#125;</code> ，注意不能写成 <code>onClick=&#123;props.onClick()&#125;</code>否则<code>porps.onClick</code>方法会在Square组件渲染时被直接触发而不是等到Board组件渲染完成时通过点击触发，又因为此时Board组件正在渲染中（即Board组件的render方法正在调用），又触发父组件onClick中调用setState()会再次调用render方法导致死循环。     </p>
+<h4 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h4><p><img src="/.io//lifecycle.png" alt="生命周期">     </p>
+<h4 id="正确使用state"><a href="#正确使用state" class="headerlink" title="正确使用state"></a>正确使用state</h4><p>构造函数是唯一能够初始化state的地方。</p>
+<ul>
+<li><p>不要直接更新状态，应当使用setState()</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Wrong，此代码不会重新渲染组件</span><br><span class="line">this.state.comment &#x3D; &#39;Hello&#39;;</span><br><span class="line">&#x2F;&#x2F; Correct</span><br><span class="line">this.setState(&#123;comment: &#39;Hello&#39;&#125;);</span><br></pre></td></tr></table></figure></li>
+<li><p>状态更新可能是异步的<br>  React可以将多个setState()调用合并成一个调用来提高性能。<br>  因为this.props和this.state可能是异步更新的，你不应该依靠它们的值来计算下一个状态。      </p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Wrong</span><br><span class="line">this.setState(&#123;</span><br><span class="line">	counter: this.state.counter + this.props.increment,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Correct</span><br><span class="line">this.setState((prevState, props) &#x3D;&gt; &#123;</span><br><span class="line">	counter: prevState.counter + props.increment</span><br><span class="line">&#125;);</span><br><span class="line">&#x2F;&#x2F; Correct</span><br><span class="line">this.setState(function(prevState, props) &#123;</span><br><span class="line">	return &#123;</span><br><span class="line">		counter: prevState.counter + props.increment</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
+<li><p>状态更新合并</p>
+<p>  当调用setState()时，React将提供的对象合并到当前状态。 </p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">constructor(props) &#123;</span><br><span class="line">	super(props);</span><br><span class="line">	this.state &#x3D; &#123;</span><br><span class="line">		posts: [],</span><br><span class="line">		comments: []</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;</span><br><span class="line">componentDidMount() &#123;</span><br><span class="line">	fetchPost().then(response &#x3D;&gt; &#123;</span><br><span class="line">		this.setState(&#123;</span><br><span class="line">			posts: response.posts</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;;</span><br><span class="line">	</span><br><span class="line">	fetchPost().then(response &#x3D;&gt; &#123;</span><br><span class="line">		this.setState(&#123;</span><br><span class="line">			comments: response.comments</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  这里的合并是浅合并，也就是说this.setState({comments})完整保留了this.state.posts，但完全替换了this.state.comments。</p>
+</li>
+</ul>
+<h3 id="事件处理"><a href="#事件处理" class="headerlink" title="事件处理"></a>事件处理</h3><p>React元素的事件处理和DOM元素的很相似。但是有一些语法上的不同：</p>
+<ul>
+<li>React事件绑定属性的命名采用驼峰式写法，而不是小写。   </li>
+<li>如果采用JSX的语法需要传入一个函数作为事件处理函数，而不是一个字符串（DOM元素的写法）</li>
+<li>在React中，不能使用返回false的方式阻止默认行为，必须明确使用preventDefault</li>
+</ul>
+<p>在React中，JSX回调函数中的this，类方法默认不会绑定this的。如果忘记绑定this.handleClick并把它传入onClick，当你调用这个函数的时候，this的值是undefined。<br>两种不用绑定this的方法，属性初始化器语法和箭头函数。      </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">class Toggle extends React.component &#123;</span><br><span class="line">	constructor(props) &#123;</span><br><span class="line">		super(props);</span><br><span class="line">		this.state &#x3D; &#123;</span><br><span class="line">			isToggleOn: true</span><br><span class="line">		&#125;;</span><br><span class="line">		this.handleClick1 &#x3D; this.handleClick1.bind(this);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	handleClick1() &#123;</span><br><span class="line">		this.setState((prevState) &#x3D;&gt; &#123;</span><br><span class="line">			isToggleOn: !prevState.isToggleOn</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	handleClick2 &#x3D; (e) &#x3D;&gt; &#123;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	handleClick3(e) &#123;</span><br><span class="line">	</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	render() &#123;</span><br><span class="line">		return (</span><br><span class="line">			&lt;div&gt;</span><br><span class="line">				&lt;button onClick&#x3D;&#123;this.handleClick1&#125;&gt;</span><br><span class="line">					&#123;this.state.isToggleOn ? &#39;ON&#39; : &#39;OFF&#39;&#125;</span><br><span class="line">				&lt;&#x2F;button&gt;</span><br><span class="line">				&lt;button onClick&#x3D;&#123;this.handleClick2&#125;&gt;</span><br><span class="line">					click me</span><br><span class="line">				&lt;&#x2F;button&gt;</span><br><span class="line">				&lt;button onClick&#x3D;&#123;(e) &#x3D;&gt; this.handleClick3(e)&#125;&gt;</span><br><span class="line">					click me</span><br><span class="line">				&lt;&#x2F;button&gt;</span><br><span class="line">			&lt;&#x2F;div&gt;</span><br><span class="line">		)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用箭头函数，每次Toggle渲染的时候都会创建一个不同的回调函数。在大多数情况下，这没有问题。然而如果这个回调函数作为一个属性值传入低阶组件，这些组件可能会进行额外的重新渲染。通常建议在构造函数中绑定或使用属性初始化器语法来避免这类性能问题。      </p>
+<h4 id="向事件处理程序传递参数"><a href="#向事件处理程序传递参数" class="headerlink" title="向事件处理程序传递参数"></a>向事件处理程序传递参数</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">deleteRow(rowId, event) &#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">&lt;button onClick&#x3D;&#123;(e) &#x3D;&gt; this.deleteRow(id, e)&#125;&gt;Delete Row&lt;&#x2F;button&gt;</span><br><span class="line">&lt;button onClick&#x3D;&#123;this.deleteRow.bind(this, id)&#125;&gt;Delete Row&lt;&#x2F;button&gt;</span><br></pre></td></tr></table></figure>
+<p>箭头函数的方式，事件对象必须显式的进行传递，但是通过 bind 的方式，事件对象以及更多的参数将会被隐式的进行传递。</p>
+<h3 id="列表和keys"><a href="#列表和keys" class="headerlink" title="列表和keys"></a>列表和keys</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const todoItems &#x3D; todos.map((todo) &#x3D;&gt;</span><br><span class="line">  &lt;li key&#x3D;&#123;todo.id&#125;&gt;</span><br><span class="line">    &#123;todo.text&#125;</span><br><span class="line">  &lt;&#x2F;li&gt;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>当元素没有确定的id时，你可以使用他的序列号索引index作为key。     </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const todoItems &#x3D; todos.map((todo, index) &#x3D;&gt;</span><br><span class="line">  &lt;li key&#x3D;&#123;index&#125;&gt;</span><br><span class="line">    &#123;todo.text&#125;</span><br><span class="line">  &lt;&#x2F;li&gt;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>如果列表项目的顺序可能会变化，我们不建议使用索引来用作键值，因为这样做会导致性能的负面影响，还可能引起组件状态问题。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/21/%E8%AF%BB%E3%80%8A%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E3%80%8B/" rel="next" title="读《大型网站技术架构：核心原理与案例分析》">
+                <i class="fa fa-chevron-left"></i> 读《大型网站技术架构：核心原理与案例分析》
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/15/react-native/" rel="prev" title="React Native">
+                React Native <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
 
     <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+      
     </div>
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+          </div>
+          
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC"><span class="nav-number">1.</span> <span class="nav-text">基本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#node%E5%92%8Cnpm"><span class="nav-number">1.1.</span> <span class="nav-text">node和npm</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#react"><span class="nav-number">2.</span> <span class="nav-text">react</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAreact%E9%A1%B9%E7%9B%AE"><span class="nav-number">2.1.</span> <span class="nav-text">创建react项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSX"><span class="nav-number">2.2.</span> <span class="nav-text">JSX</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A8%A1%E5%9D%97%E7%83%AD%E6%9B%BF%E6%8D%A2"><span class="nav-number">2.2.1.</span> <span class="nav-text">模块热替换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%BB%84%E4%BB%B6"><span class="nav-number">2.2.2.</span> <span class="nav-text">创建组件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6"><span class="nav-number">2.2.3.</span> <span class="nav-text">函数定义组件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">2.2.4.</span> <span class="nav-text">生命周期</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8state"><span class="nav-number">2.2.5.</span> <span class="nav-text">正确使用state</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86"><span class="nav-number">2.3.</span> <span class="nav-text">事件处理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%91%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F%E4%BC%A0%E9%80%92%E5%8F%82%E6%95%B0"><span class="nav-number">2.3.1.</span> <span class="nav-text">向事件处理程序传递参数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%97%E8%A1%A8%E5%92%8Ckeys"><span class="nav-number">2.4.</span> <span class="nav-text">列表和keys</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

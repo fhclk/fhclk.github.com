@@ -1,37 +1,748 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+  
 
 
-{% block content %}
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="大数据," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="YARN概述Apache Hadoop YARN (Yet Another Resource Negotiator，另 一种资源协调者)是一种新的Hadoop资源管理器，是一个通用资源管理系统，可为上层应用提供统一的资源管理和调度，它的引入为集群在利用率、资源统一管理和数据共享等方面带来了巨大好处。 YARN 是随着Hadoop发展而催生的新框架，取代了以前Hadoop1.x中 JobTracke">
+<meta property="og:type" content="article">
+<meta property="og:title" content="资源管理器YARN">
+<meta property="og:url" content="http://fhclk.github.io/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/index.html">
+<meta property="og:site_name" content="幸福的拾荒者">
+<meta property="og:description" content="YARN概述Apache Hadoop YARN (Yet Another Resource Negotiator，另 一种资源协调者)是一种新的Hadoop资源管理器，是一个通用资源管理系统，可为上层应用提供统一的资源管理和调度，它的引入为集群在利用率、资源统一管理和数据共享等方面带来了巨大好处。 YARN 是随着Hadoop发展而催生的新框架，取代了以前Hadoop1.x中 JobTracke">
+<meta property="og:locale">
+<meta property="og:image" content="http://fhclk.github.io/.io//YARN%E6%9E%B6%E6%9E%84.png">
+<meta property="og:image" content="http://fhclk.github.io/.io//YARN%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png">
+<meta property="og:image" content="http://fhclk.github.io/.io//YARN%E6%A0%B8%E5%BF%83%E7%9A%84%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F.png">
+<meta property="article:published_time" content="2019-03-16T13:16:52.000Z">
+<meta property="article:modified_time" content="2019-06-14T09:58:28.000Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="大数据">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/.io//YARN%E6%9E%B6%E6%9E%84.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://fhclk.github.io/2019/03/16/资源管理器YARN/"/>
+
+
+
+
+
+  <title>资源管理器YARN | 幸福的拾荒者</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">幸福的拾荒者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幸福的拾荒者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">资源管理器YARN</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-16T21:16:52+08:00">
+                2019-03-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="YARN概述"><a href="#YARN概述" class="headerlink" title="YARN概述"></a>YARN概述</h4><p>Apache Hadoop YARN (Yet Another Resource Negotiator，另 一种资源协调者)是一种新的Hadoop资源管理器，是一个通用资源管理系统，可为上层应用提供统一的资源管理和调度，它的引入为集群在利用率、资源统一管理和数据共享等方面带来了巨大好处。</p>
+<p>YARN 是随着Hadoop发展而催生的新框架，取代了以前Hadoop1.x中 JobTracker的角色，因为以前JobTracker的任务过重，负责任务的调度、跟踪和失败重启等过程，而且只能运行MapReduce作业，不支持其他编程模式，这也限制了JobTracker的使用范围，于是YARN应运而生。</p>
+<h4 id="YARN架构"><a href="#YARN架构" class="headerlink" title="YARN架构"></a>YARN架构</h4><p>YARN由Client、ResourceManager、NodeManager、ApplicationMaster组成；YARN也是采用Master/Slave结构，一个ResourceManager对应多个NodeManager。</p>
+<p><img src="/.io//YARN%E6%9E%B6%E6%9E%84.png" alt="YARN架构"></p>
+<p>Client向ResourceManager提交任务、终止任务等。</p>
+<p>ApplicationMaster由对应的应用程序完成；每个应用程序对应一个 Application­ Master, ApplicationMaster向ResourceManager 申请资源用于在NodeManager上启动相应的任务。</p>
+<p>NodeManager向ResourceManager通过心跳信息，汇报NodeManager健康状况、任务执行状况、领取任务等。</p>
+<p>MapTask对应的是MapReduce作业启动时产生的Map任务，MPI Task是 MPI框架(MPI是消息传递接口，可以理解为更原生的一种分布式模型)对应的执行任务。</p>
+<h4 id="YARN核心组件功能"><a href="#YARN核心组件功能" class="headerlink" title="YARN核心组件功能"></a>YARN核心组件功能</h4><ol>
+<li>ResourceManager<br> 整个集群只有一个，负责集群资源的统一管理和调度。<ul>
+<li>处理来自客户端的请求(启动/终止应用程序〉。</li>
+<li>启动/监控 ApplicationMaster; 一旦某个 AM 挂了之后，RM 将会在另外一个节点上启动该 AM。</li>
+<li>监控 NodeManager，接收 NodeManager 的心跳汇报信息并分配任务到NodeManager去执行; 一旦某个 NM 挂了，标志下该 NM 上的任务，来告诉对应的 AM 如何处理。</li>
+<li>负责整个集群的资源分配和调度。</li>
+</ul>
+</li>
+<li>NodeManager<br> 整个集群中有多个，负责单节点资源管理和使用。      <ul>
+<li>周期性向 ResourceManager汇报本节点上的资源使用情况和各个 Container的运行状态。</li>
+<li>接收井处理来自 ResourceManager 的 Container 启动/停止的各种命令。</li>
+<li>处理来自 ApplicationMaster 的命令。</li>
+<li>负责单个节点上的资源管理和任务调度 。</li>
+</ul>
+</li>
+<li>ApplicationMaster<br> 每个应用一个，负责应用程序的管理。<ul>
+<li>数据切分。</li>
+<li>为应用程序/作业向 ResourceManager 申请资源(Container)，并分配给内部任务 </li>
+<li>与 NodeManager通信以启动/停止任务。</li>
+<li>任务监控和容错(在任务执行失败时重新为该任务申请资源以重启任务)。</li>
+<li>处理ResourceManager发过来的命令:终止 Container、让 NodeManager重启等。</li>
+</ul>
+</li>
+<li>Container<br> 对任务运行环境的抽象。<ul>
+<li>任务运行资源(节点、内存、 CPU)。</li>
+<li>任务启动命令。</li>
+<li>任务运行环境。</li>
+<li>任务是运行在 Container 中， 一个 Container 中既可以运行 ApplicationMaster,也可以运行具体的Map/Reduce/MPl/SparkTask。</li>
+</ul>
+</li>
+</ol>
+<h3 id="YARN运行机制"><a href="#YARN运行机制" class="headerlink" title="YARN运行机制"></a>YARN运行机制</h3><h4 id="YARN工作原理"><a href="#YARN工作原理" class="headerlink" title="YARN工作原理"></a>YARN工作原理</h4><p><img src="/.io//YARN%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png" alt="YARN工作原理"></p>
+<p>执行步骤：</p>
+<ol>
+<li>用户向 Y础N 中提交应用程序/作业，其中包括 ApplicationMaster程序、启动 ApplicationMaster的命令、用户程序等 。</li>
+<li>ResourceManager为作业分配第一个Container，并与对应的 NodeMaoager通信，要求它在这个Container中启动该作业的 ApplicationMaster。</li>
+<li>ApplicationMaster首先向 ResourceManager注册，这样用户可以直接通过 ResourceManager 查询作业的运行状态；然后它将为各个任务申请资源并监控任务的运行状态，直到运行结束。即重复步骤(7)。</li>
+<li>ApplicationMaster采用轮询的方式通过 RPC 请求向 ResourceManager申请和获取资源。</li>
+<li>一旦 ApplicationMaster 申请到资源后，便与对应的 NodeManager通信，要求它启动任务。</li>
+<li>NodeManager启动任务。</li>
+<li>各个任务通过 RPC 协议向 ApplicationMaster 汇报自己的状态和进度，以便 ApplicaitonMaster 随时掌握各个任务的运行状态，从而可以在任务失败时重新启动任务;在作业运行过程中，用户可随时通过 RPC 向 AppIicationMaster查询作业当前运行状态；</li>
+<li>作业完成后，ApplicationMaster 向 ResourceManager注销并关闭自己。</li>
+</ol>
+<h4 id="YARN容错性"><a href="#YARN容错性" class="headerlink" title="YARN容错性"></a>YARN容错性</h4><ol>
+<li>ResourceMananger: 基于ZooKeeper实现HA(High Available:高可用)避免单点故障。</li>
+<li>NodeManager: 执行失败后，ResourceManager将失败任务告诉对应的ApplicationMaster，由Applicatio出faster决定如何处理失败的任务。</li>
+<li>ApplicationMaster: 执行失败后，由 ResourceManager 负责重启；ApplicationMaster需处理内部任务的容错问题，会保存己经运行完成的Task，重启后无需重新运行。</li>
+</ol>
+<h4 id="YARN设计目标"><a href="#YARN设计目标" class="headerlink" title="YARN设计目标"></a>YARN设计目标</h4><p>通用的统一的资源管理系统:</p>
+<ol>
+<li>同时运行长应用程序(永不停止的程序: Service、 HTTP Server)</li>
+<li>短应用程序(秒、分、小时级内运行结束的程序: MR job、Spark job等)  </li>
+<li>打造以YARN为核心的生态系统</li>
+</ol>
+<p>YARN核心的生态系统<br><img src="/.io//YARN%E6%A0%B8%E5%BF%83%E7%9A%84%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F.png" alt="YARN核心的生态系统"><br>图中的 HDFS2 值的是在基于HDFS之上的HA和Federation等新特性。</p>
+<p>在引入YARN之后，可以在YARN上运行各种不同框架的作业:</p>
+<ul>
+<li>离线计算框架: MapReduce</li>
+<li>DAG计算框架: Tez</li>
+<li>流式计算框架: Storm</li>
+<li>内存计算框架: Spark</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/" rel="next" title="分布式文件系统HDFS ">
+                <i class="fa fa-chevron-left"></i> 分布式文件系统HDFS 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/23/React%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" rel="prev" title="React高阶组件">
+                React高阶组件 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
 
     <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+      
     </div>
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+          </div>
+          
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#YARN%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">YARN概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#YARN%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">YARN架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#YARN%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6%E5%8A%9F%E8%83%BD"><span class="nav-number">3.</span> <span class="nav-text">YARN核心组件功能</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#YARN%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6"><span class="nav-number"></span> <span class="nav-text">YARN运行机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#YARN%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">YARN工作原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#YARN%E5%AE%B9%E9%94%99%E6%80%A7"><span class="nav-number">2.</span> <span class="nav-text">YARN容错性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#YARN%E8%AE%BE%E8%AE%A1%E7%9B%AE%E6%A0%87"><span class="nav-number">3.</span> <span class="nav-text">YARN设计目标</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
