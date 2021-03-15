@@ -1,130 +1,50 @@
 <!DOCTYPE html>
-
-
-
-  
-
-
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
 
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
-
-
-
-
-
-  <meta name="keywords" content="架构," />
-
-
-
-
-
-
-
-
-
-
-<meta name="description" content="概述大型网站架构演化大型网站软件系统的特点大型网站架构演化发展历程初始阶段的网站架构应用服务和数据服务分离使用缓存改善网站性能使用应用服务器集群改善网站的并发处理能力数据库读写分离使用反向代理和CDN加速网站响应使用分布式文件系统和分布式数据库系统使用NoSQL和搜索引擎业务拆分分布式服务大型网站架构演化的价值观大型网站架构技术的核心价值是随网站所需灵活应对驱动大型网站技术发展的主要力量是网站的业">
+  <meta name="description" content="概述大型网站架构演化大型网站软件系统的特点大型网站架构演化发展历程初始阶段的网站架构应用服务和数据服务分离使用缓存改善网站性能使用应用服务器集群改善网站的并发处理能力数据库读写分离使用反向代理和CDN加速网站响应使用分布式文件系统和分布式数据库系统使用NoSQL和搜索引擎业务拆分分布式服务大型网站架构演化的价值观大型网站架构技术的核心价值是随网站所需灵活应对驱动大型网站技术发展的主要力量是网站的业">
 <meta property="og:type" content="article">
 <meta property="og:title" content="读《大型网站技术架构：核心原理与案例分析》">
 <meta property="og:url" content="http://fhclk.github.io/2017/06/21/%E8%AF%BB%E3%80%8A%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E3%80%8B/index.html">
 <meta property="og:site_name" content="幸福的拾荒者">
 <meta property="og:description" content="概述大型网站架构演化大型网站软件系统的特点大型网站架构演化发展历程初始阶段的网站架构应用服务和数据服务分离使用缓存改善网站性能使用应用服务器集群改善网站的并发处理能力数据库读写分离使用反向代理和CDN加速网站响应使用分布式文件系统和分布式数据库系统使用NoSQL和搜索引擎业务拆分分布式服务大型网站架构演化的价值观大型网站架构技术的核心价值是随网站所需灵活应对驱动大型网站技术发展的主要力量是网站的业">
-<meta property="og:locale">
+<meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2017-06-21T06:10:13.000Z">
 <meta property="article:modified_time" content="2019-01-31T14:10:46.000Z">
 <meta property="article:author" content="fhclk">
 <meta property="article:tag" content="架构">
 <meta name="twitter:card" content="summary">
 
+<link rel="canonical" href="http://fhclk.github.io/2017/06/21/%E8%AF%BB%E3%80%8A%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E3%80%8B/">
 
 
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '',
-    scheme: 'Muse',
-    version: '5.1.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: true,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
-
-
-
-  <link rel="canonical" href="http://fhclk.github.io/2017/06/21/读《大型网站技术架构》/"/>
-
-
-
-
 
   <title>读《大型网站技术架构：核心原理与案例分析》 | 幸福的拾荒者</title>
   
@@ -134,172 +54,145 @@
 
 
 
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
 
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+</head>
 
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">幸福的拾荒者</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
-      
-        <p class="site-subtitle"></p>
-      
   </div>
 
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">幸福的拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
   </div>
 </div>
 
+
+
+
 <nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
+  <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
-          <a href="/%20" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            首页
-          </a>
-        </li>
-      
-        
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
         <li class="menu-item menu-item-tags">
-          <a href="/tags/%20" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            标签
-          </a>
-        </li>
-      
-        
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
-          <a href="/archives/%20" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            归档
-          </a>
-        </li>
-      
 
-      
-    </ul>
-  
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
-  
+  </li>
+  </ul>
 </nav>
 
 
 
- </div>
+
+</div>
     </header>
 
-    <main id="main" class="main">
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          <div id="content" class="content">
+          
+
+          <div class="content post posts-expand">
             
 
-  <div id="posts" class="posts-expand">
     
-
-  
-
   
   
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2017/06/21/%E8%AF%BB%E3%80%8A%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E3%80%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="幸福的拾荒者">
     </span>
-
-    
       <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">读《大型网站技术架构：核心原理与案例分析》</h1>
-        
+        <h1 class="post-title" itemprop="name headline">
+          读《大型网站技术架构：核心原理与案例分析》
+        </h1>
 
         <div class="post-meta">
-          <span class="post-time">
-            
+            <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-21T14:10:13+08:00">
-                2017-06-21
-              </time>
-            
+              <span class="post-meta-item-text">发表于</span>
 
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
+              <time title="创建时间：2017-06-21 14:10:13" itemprop="dateCreated datePublished" datetime="2017-06-21T14:10:13+08:00">2017-06-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-01-31 22:10:46" itemprop="dateModified" datetime="2019-01-31T22:10:46+08:00">2019-01-31</time>
+              </span>
 
           
 
         </div>
       </header>
-    
 
     
     
@@ -307,252 +200,179 @@
     <div class="post-body" itemprop="articleBody">
 
       
-      
-
-      
         <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><h2 id="大型网站架构演化"><a href="#大型网站架构演化" class="headerlink" title="大型网站架构演化"></a>大型网站架构演化</h2><h3 id="大型网站软件系统的特点"><a href="#大型网站软件系统的特点" class="headerlink" title="大型网站软件系统的特点"></a>大型网站软件系统的特点</h3><h3 id="大型网站架构演化发展历程"><a href="#大型网站架构演化发展历程" class="headerlink" title="大型网站架构演化发展历程"></a>大型网站架构演化发展历程</h3><h4 id="初始阶段的网站架构"><a href="#初始阶段的网站架构" class="headerlink" title="初始阶段的网站架构"></a>初始阶段的网站架构</h4><h4 id="应用服务和数据服务分离"><a href="#应用服务和数据服务分离" class="headerlink" title="应用服务和数据服务分离"></a>应用服务和数据服务分离</h4><h4 id="使用缓存改善网站性能"><a href="#使用缓存改善网站性能" class="headerlink" title="使用缓存改善网站性能"></a>使用缓存改善网站性能</h4><h4 id="使用应用服务器集群改善网站的并发处理能力"><a href="#使用应用服务器集群改善网站的并发处理能力" class="headerlink" title="使用应用服务器集群改善网站的并发处理能力"></a>使用应用服务器集群改善网站的并发处理能力</h4><h4 id="数据库读写分离"><a href="#数据库读写分离" class="headerlink" title="数据库读写分离"></a>数据库读写分离</h4><h4 id="使用反向代理和CDN加速网站响应"><a href="#使用反向代理和CDN加速网站响应" class="headerlink" title="使用反向代理和CDN加速网站响应"></a>使用反向代理和CDN加速网站响应</h4><h4 id="使用分布式文件系统和分布式数据库系统"><a href="#使用分布式文件系统和分布式数据库系统" class="headerlink" title="使用分布式文件系统和分布式数据库系统"></a>使用分布式文件系统和分布式数据库系统</h4><h4 id="使用NoSQL和搜索引擎"><a href="#使用NoSQL和搜索引擎" class="headerlink" title="使用NoSQL和搜索引擎"></a>使用NoSQL和搜索引擎</h4><h4 id="业务拆分"><a href="#业务拆分" class="headerlink" title="业务拆分"></a>业务拆分</h4><h4 id="分布式服务"><a href="#分布式服务" class="headerlink" title="分布式服务"></a>分布式服务</h4><h3 id="大型网站架构演化的价值观"><a href="#大型网站架构演化的价值观" class="headerlink" title="大型网站架构演化的价值观"></a>大型网站架构演化的价值观</h3><h4 id="大型网站架构技术的核心价值是随网站所需灵活应对"><a href="#大型网站架构技术的核心价值是随网站所需灵活应对" class="headerlink" title="大型网站架构技术的核心价值是随网站所需灵活应对"></a>大型网站架构技术的核心价值是随网站所需灵活应对</h4><h4 id="驱动大型网站技术发展的主要力量是网站的业务发展"><a href="#驱动大型网站技术发展的主要力量是网站的业务发展" class="headerlink" title="驱动大型网站技术发展的主要力量是网站的业务发展"></a>驱动大型网站技术发展的主要力量是网站的业务发展</h4><h3 id="网站架构设计误区"><a href="#网站架构设计误区" class="headerlink" title="网站架构设计误区"></a>网站架构设计误区</h3><h4 id="一味追随大公司的解决方案"><a href="#一味追随大公司的解决方案" class="headerlink" title="一味追随大公司的解决方案"></a>一味追随大公司的解决方案</h4><h4 id="为了技术而技术"><a href="#为了技术而技术" class="headerlink" title="为了技术而技术"></a>为了技术而技术</h4><h4 id="企图用技术解决所有问题"><a href="#企图用技术解决所有问题" class="headerlink" title="企图用技术解决所有问题"></a>企图用技术解决所有问题</h4><h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><h2 id="大型网站架构模式"><a href="#大型网站架构模式" class="headerlink" title="大型网站架构模式"></a>大型网站架构模式</h2><h3 id="网站架构模式"><a href="#网站架构模式" class="headerlink" title="网站架构模式"></a>网站架构模式</h3><h4 id="分层"><a href="#分层" class="headerlink" title="分层"></a>分层</h4><h4 id="分割"><a href="#分割" class="headerlink" title="分割"></a>分割</h4><h4 id="分布式"><a href="#分布式" class="headerlink" title="分布式"></a>分布式</h4><h4 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h4><h4 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h4><h4 id="异步"><a href="#异步" class="headerlink" title="异步"></a>异步</h4><h4 id="冗余"><a href="#冗余" class="headerlink" title="冗余"></a>冗余</h4><h4 id="自动化"><a href="#自动化" class="headerlink" title="自动化"></a>自动化</h4><h4 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h4><h3 id="架构模式在新浪微博的应用"><a href="#架构模式在新浪微博的应用" class="headerlink" title="架构模式在新浪微博的应用"></a>架构模式在新浪微博的应用</h3><h3 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h3><h2 id="大型网站核心架构要素"><a href="#大型网站核心架构要素" class="headerlink" title="大型网站核心架构要素"></a>大型网站核心架构要素</h2><h3 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h3><h3 id="可用性"><a href="#可用性" class="headerlink" title="可用性"></a>可用性</h3><h3 id="伸缩性"><a href="#伸缩性" class="headerlink" title="伸缩性"></a>伸缩性</h3><h3 id="扩展性"><a href="#扩展性" class="headerlink" title="扩展性"></a>扩展性</h3><h3 id="安全性"><a href="#安全性" class="headerlink" title="安全性"></a>安全性</h3><h3 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a>小结</h3><h1 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h1><h2 id="瞬间响应：网站的高性能架构"><a href="#瞬间响应：网站的高性能架构" class="headerlink" title="瞬间响应：网站的高性能架构"></a>瞬间响应：网站的高性能架构</h2><h3 id="网站性能测试"><a href="#网站性能测试" class="headerlink" title="网站性能测试"></a>网站性能测试</h3><h4 id="不同视角下的网站性能"><a href="#不同视角下的网站性能" class="headerlink" title="不同视角下的网站性能"></a>不同视角下的网站性能</h4><h4 id="性能测试指标"><a href="#性能测试指标" class="headerlink" title="性能测试指标"></a>性能测试指标</h4><h4 id="性能测试方法"><a href="#性能测试方法" class="headerlink" title="性能测试方法"></a>性能测试方法</h4><h4 id="性能测试报告"><a href="#性能测试报告" class="headerlink" title="性能测试报告"></a>性能测试报告</h4><h4 id="性能测试策略"><a href="#性能测试策略" class="headerlink" title="性能测试策略"></a>性能测试策略</h4><h3 id="Web前端性能优化"><a href="#Web前端性能优化" class="headerlink" title="Web前端性能优化"></a>Web前端性能优化</h3><h4 id="浏览器访问优化"><a href="#浏览器访问优化" class="headerlink" title="浏览器访问优化"></a>浏览器访问优化</h4><h4 id="CDN加速"><a href="#CDN加速" class="headerlink" title="CDN加速"></a>CDN加速</h4><h4 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h4><h3 id="应用服务器性能优化"><a href="#应用服务器性能优化" class="headerlink" title="应用服务器性能优化"></a>应用服务器性能优化</h3><h4 id="分布式缓存"><a href="#分布式缓存" class="headerlink" title="分布式缓存"></a>分布式缓存</h4><h4 id="异步操作"><a href="#异步操作" class="headerlink" title="异步操作"></a>异步操作</h4><h4 id="使用集群"><a href="#使用集群" class="headerlink" title="使用集群"></a>使用集群</h4><h4 id="代码优化"><a href="#代码优化" class="headerlink" title="代码优化"></a>代码优化</h4><h3 id="存储性能优化"><a href="#存储性能优化" class="headerlink" title="存储性能优化"></a>存储性能优化</h3><h4 id="机械硬盘-vs-固态硬盘"><a href="#机械硬盘-vs-固态硬盘" class="headerlink" title="机械硬盘 vs 固态硬盘"></a>机械硬盘 vs 固态硬盘</h4><h4 id="B-树-vs-LSM树"><a href="#B-树-vs-LSM树" class="headerlink" title="B+树 vs LSM树"></a>B+树 vs LSM树</h4><h4 id="RAID-vs-HDFS"><a href="#RAID-vs-HDFS" class="headerlink" title="RAID vs HDFS"></a>RAID vs HDFS</h4><h3 id="小结-3"><a href="#小结-3" class="headerlink" title="小结"></a>小结</h3><h2 id="万无一失：网站的高可用框架"><a href="#万无一失：网站的高可用框架" class="headerlink" title="万无一失：网站的高可用框架"></a>万无一失：网站的高可用框架</h2><h3 id="网站可用性的度量与考核"><a href="#网站可用性的度量与考核" class="headerlink" title="网站可用性的度量与考核"></a>网站可用性的度量与考核</h3><h4 id="网站可用性度量"><a href="#网站可用性度量" class="headerlink" title="网站可用性度量"></a>网站可用性度量</h4><h4 id="网站可用性考核"><a href="#网站可用性考核" class="headerlink" title="网站可用性考核"></a>网站可用性考核</h4><h3 id="高可用的网站架构"><a href="#高可用的网站架构" class="headerlink" title="高可用的网站架构"></a>高可用的网站架构</h3><h3 id="高可用的应用"><a href="#高可用的应用" class="headerlink" title="高可用的应用"></a>高可用的应用</h3><h4 id="通过负载均衡进行无状态服务的失效转移"><a href="#通过负载均衡进行无状态服务的失效转移" class="headerlink" title="通过负载均衡进行无状态服务的失效转移"></a>通过负载均衡进行无状态服务的失效转移</h4><h4 id="应用服务器集群的Session管理"><a href="#应用服务器集群的Session管理" class="headerlink" title="应用服务器集群的Session管理"></a>应用服务器集群的Session管理</h4><h3 id="高可用的服务"><a href="#高可用的服务" class="headerlink" title="高可用的服务"></a>高可用的服务</h3><h3 id="高可用的数据"><a href="#高可用的数据" class="headerlink" title="高可用的数据"></a>高可用的数据</h3><h4 id="CAP原理"><a href="#CAP原理" class="headerlink" title="CAP原理"></a>CAP原理</h4><h4 id="数据备份"><a href="#数据备份" class="headerlink" title="数据备份"></a>数据备份</h4><h4 id="失效转移"><a href="#失效转移" class="headerlink" title="失效转移"></a>失效转移</h4><h3 id="高可用网站的软件质量保证"><a href="#高可用网站的软件质量保证" class="headerlink" title="高可用网站的软件质量保证"></a>高可用网站的软件质量保证</h3><h4 id="网站发布"><a href="#网站发布" class="headerlink" title="网站发布"></a>网站发布</h4><h4 id="自动化测试"><a href="#自动化测试" class="headerlink" title="自动化测试"></a>自动化测试</h4><h4 id="预发布验证"><a href="#预发布验证" class="headerlink" title="预发布验证"></a>预发布验证</h4><h4 id="代码控制"><a href="#代码控制" class="headerlink" title="代码控制"></a>代码控制</h4><h4 id="自动化发布"><a href="#自动化发布" class="headerlink" title="自动化发布"></a>自动化发布</h4><h4 id="灰度发布"><a href="#灰度发布" class="headerlink" title="灰度发布"></a>灰度发布</h4><h3 id="网站运行监控"><a href="#网站运行监控" class="headerlink" title="网站运行监控"></a>网站运行监控</h3><h4 id="监控数据采集"><a href="#监控数据采集" class="headerlink" title="监控数据采集"></a>监控数据采集</h4><h4 id="监控管理"><a href="#监控管理" class="headerlink" title="监控管理"></a>监控管理</h4><h3 id="小结-4"><a href="#小结-4" class="headerlink" title="小结"></a>小结</h3><h2 id="永无止境：网站的伸缩性架构"><a href="#永无止境：网站的伸缩性架构" class="headerlink" title="永无止境：网站的伸缩性架构"></a>永无止境：网站的伸缩性架构</h2><h3 id="网站架构的伸缩性设计"><a href="#网站架构的伸缩性设计" class="headerlink" title="网站架构的伸缩性设计"></a>网站架构的伸缩性设计</h3><h4 id="不同功能进行物理分离实现伸缩"><a href="#不同功能进行物理分离实现伸缩" class="headerlink" title="不同功能进行物理分离实现伸缩"></a>不同功能进行物理分离实现伸缩</h4><h4 id="单一功能通过集群规模实现伸缩"><a href="#单一功能通过集群规模实现伸缩" class="headerlink" title="单一功能通过集群规模实现伸缩"></a>单一功能通过集群规模实现伸缩</h4><h3 id="应用服务器集群的伸缩性设计"><a href="#应用服务器集群的伸缩性设计" class="headerlink" title="应用服务器集群的伸缩性设计"></a>应用服务器集群的伸缩性设计</h3><h4 id="HTTP重定向负载均衡"><a href="#HTTP重定向负载均衡" class="headerlink" title="HTTP重定向负载均衡"></a>HTTP重定向负载均衡</h4><h4 id="DNS域名解析负载均衡"><a href="#DNS域名解析负载均衡" class="headerlink" title="DNS域名解析负载均衡"></a>DNS域名解析负载均衡</h4><h4 id="反向代理负载均衡"><a href="#反向代理负载均衡" class="headerlink" title="反向代理负载均衡"></a>反向代理负载均衡</h4><h4 id="IP负载均衡"><a href="#IP负载均衡" class="headerlink" title="IP负载均衡"></a>IP负载均衡</h4><h4 id="数据链路层负载均衡"><a href="#数据链路层负载均衡" class="headerlink" title="数据链路层负载均衡"></a>数据链路层负载均衡</h4><h4 id="负载均衡算法"><a href="#负载均衡算法" class="headerlink" title="负载均衡算法"></a>负载均衡算法</h4><h3 id="分布式缓存集群的伸缩性设计"><a href="#分布式缓存集群的伸缩性设计" class="headerlink" title="分布式缓存集群的伸缩性设计"></a>分布式缓存集群的伸缩性设计</h3><h4 id="Memcached分布式缓存集群的访问模型"><a href="#Memcached分布式缓存集群的访问模型" class="headerlink" title="Memcached分布式缓存集群的访问模型"></a>Memcached分布式缓存集群的访问模型</h4><h4 id="Memcached分布式缓存集群的伸缩性挑战"><a href="#Memcached分布式缓存集群的伸缩性挑战" class="headerlink" title="Memcached分布式缓存集群的伸缩性挑战"></a>Memcached分布式缓存集群的伸缩性挑战</h4><h4 id="分布式缓存的一致性Hash算法"><a href="#分布式缓存的一致性Hash算法" class="headerlink" title="分布式缓存的一致性Hash算法"></a>分布式缓存的一致性Hash算法</h4><h3 id="数据存储服务器集群的伸缩性设计"><a href="#数据存储服务器集群的伸缩性设计" class="headerlink" title="数据存储服务器集群的伸缩性设计"></a>数据存储服务器集群的伸缩性设计</h3><h4 id="关系数据库集群的伸缩性设计"><a href="#关系数据库集群的伸缩性设计" class="headerlink" title="关系数据库集群的伸缩性设计"></a>关系数据库集群的伸缩性设计</h4><h4 id="NoSQL数据库的伸缩性设计"><a href="#NoSQL数据库的伸缩性设计" class="headerlink" title="NoSQL数据库的伸缩性设计"></a>NoSQL数据库的伸缩性设计</h4><h3 id="小结-5"><a href="#小结-5" class="headerlink" title="小结"></a>小结</h3><h2 id="随需应变：网站的可扩展架构"><a href="#随需应变：网站的可扩展架构" class="headerlink" title="随需应变：网站的可扩展架构"></a>随需应变：网站的可扩展架构</h2><h3 id="构建可扩展的网站架构"><a href="#构建可扩展的网站架构" class="headerlink" title="构建可扩展的网站架构"></a>构建可扩展的网站架构</h3><h3 id="利用分布式消息队列降低系统耦合性"><a href="#利用分布式消息队列降低系统耦合性" class="headerlink" title="利用分布式消息队列降低系统耦合性"></a>利用分布式消息队列降低系统耦合性</h3><h4 id="事件驱动架构"><a href="#事件驱动架构" class="headerlink" title="事件驱动架构"></a>事件驱动架构</h4><h4 id="分布式消息队列"><a href="#分布式消息队列" class="headerlink" title="分布式消息队列"></a>分布式消息队列</h4><h3 id="利用分布式服务打造可复用的业务平台"><a href="#利用分布式服务打造可复用的业务平台" class="headerlink" title="利用分布式服务打造可复用的业务平台"></a>利用分布式服务打造可复用的业务平台</h3><h4 id="Web-Service-与企业级分布式服务"><a href="#Web-Service-与企业级分布式服务" class="headerlink" title="Web Service 与企业级分布式服务"></a>Web Service 与企业级分布式服务</h4><h4 id="大型网站分布式服务的需求与特点"><a href="#大型网站分布式服务的需求与特点" class="headerlink" title="大型网站分布式服务的需求与特点"></a>大型网站分布式服务的需求与特点</h4><h4 id="分布式服务框架设计"><a href="#分布式服务框架设计" class="headerlink" title="分布式服务框架设计"></a>分布式服务框架设计</h4><h3 id="可扩展的数据结构"><a href="#可扩展的数据结构" class="headerlink" title="可扩展的数据结构"></a>可扩展的数据结构</h3><h3 id="利用开放平台建设网站生态圈"><a href="#利用开放平台建设网站生态圈" class="headerlink" title="利用开放平台建设网站生态圈"></a>利用开放平台建设网站生态圈</h3><h3 id="小结-6"><a href="#小结-6" class="headerlink" title="小结"></a>小结</h3><h2 id="固若金汤：网站的安全架构"><a href="#固若金汤：网站的安全架构" class="headerlink" title="固若金汤：网站的安全架构"></a>固若金汤：网站的安全架构</h2><h3 id="道高一尺魔高一丈的网站应用攻击与防御"><a href="#道高一尺魔高一丈的网站应用攻击与防御" class="headerlink" title="道高一尺魔高一丈的网站应用攻击与防御"></a>道高一尺魔高一丈的网站应用攻击与防御</h3><h4 id="XSS攻击"><a href="#XSS攻击" class="headerlink" title="XSS攻击"></a>XSS攻击</h4><h4 id="注入攻击"><a href="#注入攻击" class="headerlink" title="注入攻击"></a>注入攻击</h4><h4 id="CSRF攻击"><a href="#CSRF攻击" class="headerlink" title="CSRF攻击"></a>CSRF攻击</h4><h4 id="其他攻击和漏洞"><a href="#其他攻击和漏洞" class="headerlink" title="其他攻击和漏洞"></a>其他攻击和漏洞</h4><h4 id="Web应用防火墙"><a href="#Web应用防火墙" class="headerlink" title="Web应用防火墙"></a>Web应用防火墙</h4><h4 id="网站安全漏铜扫描"><a href="#网站安全漏铜扫描" class="headerlink" title="网站安全漏铜扫描"></a>网站安全漏铜扫描</h4><h3 id="信息加密技术及密钥安全管理"><a href="#信息加密技术及密钥安全管理" class="headerlink" title="信息加密技术及密钥安全管理"></a>信息加密技术及密钥安全管理</h3><h4 id="单向三列加密"><a href="#单向三列加密" class="headerlink" title="单向三列加密"></a>单向三列加密</h4><h4 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密"></a>对称加密</h4><h4 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h4><h4 id="密钥安全管理"><a href="#密钥安全管理" class="headerlink" title="密钥安全管理"></a>密钥安全管理</h4><h3 id="信息过滤与反垃圾"><a href="#信息过滤与反垃圾" class="headerlink" title="信息过滤与反垃圾"></a>信息过滤与反垃圾</h3><h4 id="文本匹配"><a href="#文本匹配" class="headerlink" title="文本匹配"></a>文本匹配</h4><h4 id="分类算法"><a href="#分类算法" class="headerlink" title="分类算法"></a>分类算法</h4><h4 id="黑名单"><a href="#黑名单" class="headerlink" title="黑名单"></a>黑名单</h4><h3 id="电子商务风险控制"><a href="#电子商务风险控制" class="headerlink" title="电子商务风险控制"></a>电子商务风险控制</h3><h4 id="风险"><a href="#风险" class="headerlink" title="风险"></a>风险</h4><h4 id="风控"><a href="#风控" class="headerlink" title="风控"></a>风控</h4><h3 id="小结-7"><a href="#小结-7" class="headerlink" title="小结"></a>小结</h3><h1 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h1><h2 id="淘宝网的架构演化案例分析"><a href="#淘宝网的架构演化案例分析" class="headerlink" title="淘宝网的架构演化案例分析"></a>淘宝网的架构演化案例分析</h2><h3 id="淘宝网的业务发展历程"><a href="#淘宝网的业务发展历程" class="headerlink" title="淘宝网的业务发展历程"></a>淘宝网的业务发展历程</h3><h3 id="淘宝网技术架构演化"><a href="#淘宝网技术架构演化" class="headerlink" title="淘宝网技术架构演化"></a>淘宝网技术架构演化</h3><h3 id="小结-8"><a href="#小结-8" class="headerlink" title="小结"></a>小结</h3><h2 id="维基百科的高性能架构设计分析"><a href="#维基百科的高性能架构设计分析" class="headerlink" title="维基百科的高性能架构设计分析"></a>维基百科的高性能架构设计分析</h2><h3 id="Wikipedia-网站整体架构"><a href="#Wikipedia-网站整体架构" class="headerlink" title="Wikipedia 网站整体架构"></a>Wikipedia 网站整体架构</h3><h3 id="Wikipedia-性能优化策略"><a href="#Wikipedia-性能优化策略" class="headerlink" title="Wikipedia 性能优化策略"></a>Wikipedia 性能优化策略</h3><h4 id="Wikipedia-前端性能优化"><a href="#Wikipedia-前端性能优化" class="headerlink" title="Wikipedia 前端性能优化"></a>Wikipedia 前端性能优化</h4><h4 id="Wikipedia-服务端性能优化"><a href="#Wikipedia-服务端性能优化" class="headerlink" title="Wikipedia 服务端性能优化"></a>Wikipedia 服务端性能优化</h4><h4 id="Wikipedia-后端性能优化"><a href="#Wikipedia-后端性能优化" class="headerlink" title="Wikipedia 后端性能优化"></a>Wikipedia 后端性能优化</h4><h2 id="海量分布式存储系统Doris的高可用架构设计分析"><a href="#海量分布式存储系统Doris的高可用架构设计分析" class="headerlink" title="海量分布式存储系统Doris的高可用架构设计分析"></a>海量分布式存储系统Doris的高可用架构设计分析</h2><h3 id="分布式存储系统的高可用架构"><a href="#分布式存储系统的高可用架构" class="headerlink" title="分布式存储系统的高可用架构"></a>分布式存储系统的高可用架构</h3><h3 id="不同故障情况下的高可用解决方案"><a href="#不同故障情况下的高可用解决方案" class="headerlink" title="不同故障情况下的高可用解决方案"></a>不同故障情况下的高可用解决方案</h3><h4 id="分布式存储系统的故障分类"><a href="#分布式存储系统的故障分类" class="headerlink" title="分布式存储系统的故障分类"></a>分布式存储系统的故障分类</h4><h4 id="正常情况下系统访问结构"><a href="#正常情况下系统访问结构" class="headerlink" title="正常情况下系统访问结构"></a>正常情况下系统访问结构</h4><h4 id="瞬时故障的高可用解决方案"><a href="#瞬时故障的高可用解决方案" class="headerlink" title="瞬时故障的高可用解决方案"></a>瞬时故障的高可用解决方案</h4><h4 id="临时故障的高可用解决方案"><a href="#临时故障的高可用解决方案" class="headerlink" title="临时故障的高可用解决方案"></a>临时故障的高可用解决方案</h4><h4 id="永久故障的高可用解决方案"><a href="#永久故障的高可用解决方案" class="headerlink" title="永久故障的高可用解决方案"></a>永久故障的高可用解决方案</h4><h2 id="网购秒杀系统架构设计案例分析"><a href="#网购秒杀系统架构设计案例分析" class="headerlink" title="网购秒杀系统架构设计案例分析"></a>网购秒杀系统架构设计案例分析</h2><h3 id="秒杀活动的技术挑战"><a href="#秒杀活动的技术挑战" class="headerlink" title="秒杀活动的技术挑战"></a>秒杀活动的技术挑战</h3><h3 id="秒杀系统的应对策略"><a href="#秒杀系统的应对策略" class="headerlink" title="秒杀系统的应对策略"></a>秒杀系统的应对策略</h3><h3 id="秒杀系统架构设计"><a href="#秒杀系统架构设计" class="headerlink" title="秒杀系统架构设计"></a>秒杀系统架构设计</h3><h3 id="小结-9"><a href="#小结-9" class="headerlink" title="小结"></a>小结</h3><h2 id="大型网站典型故障案例分析"><a href="#大型网站典型故障案例分析" class="headerlink" title="大型网站典型故障案例分析"></a>大型网站典型故障案例分析</h2><h3 id="写日志也会引发故障"><a href="#写日志也会引发故障" class="headerlink" title="写日志也会引发故障"></a>写日志也会引发故障</h3><h3 id="高并发访问数据库引发的故障"><a href="#高并发访问数据库引发的故障" class="headerlink" title="高并发访问数据库引发的故障"></a>高并发访问数据库引发的故障</h3><h3 id="高并发情况下锁引发的故障"><a href="#高并发情况下锁引发的故障" class="headerlink" title="高并发情况下锁引发的故障"></a>高并发情况下锁引发的故障</h3><h3 id="缓存引发的故障"><a href="#缓存引发的故障" class="headerlink" title="缓存引发的故障"></a>缓存引发的故障</h3><h3 id="应用启动不同步引发的故障"><a href="#应用启动不同步引发的故障" class="headerlink" title="应用启动不同步引发的故障"></a>应用启动不同步引发的故障</h3><h3 id="大文件读写独占磁盘引发的故障"><a href="#大文件读写独占磁盘引发的故障" class="headerlink" title="大文件读写独占磁盘引发的故障"></a>大文件读写独占磁盘引发的故障</h3><h3 id="滥用生产环境引发的故障"><a href="#滥用生产环境引发的故障" class="headerlink" title="滥用生产环境引发的故障"></a>滥用生产环境引发的故障</h3><h3 id="不规范的流程引发的故障"><a href="#不规范的流程引发的故障" class="headerlink" title="不规范的流程引发的故障"></a>不规范的流程引发的故障</h3><h3 id="不好的编程习惯引发的故障"><a href="#不好的编程习惯引发的故障" class="headerlink" title="不好的编程习惯引发的故障"></a>不好的编程习惯引发的故障</h3><h3 id="小结-10"><a href="#小结-10" class="headerlink" title="小结"></a>小结</h3><h1 id="架构师"><a href="#架构师" class="headerlink" title="架构师"></a>架构师</h1><h2 id="架构师领导艺术"><a href="#架构师领导艺术" class="headerlink" title="架构师领导艺术"></a>架构师领导艺术</h2><h3 id="关注人而不是产品"><a href="#关注人而不是产品" class="headerlink" title="关注人而不是产品"></a>关注人而不是产品</h3><h3 id="发掘人的优秀"><a href="#发掘人的优秀" class="headerlink" title="发掘人的优秀"></a>发掘人的优秀</h3><h3 id="共享美好蓝图"><a href="#共享美好蓝图" class="headerlink" title="共享美好蓝图"></a>共享美好蓝图</h3><h3 id="共同参与架构"><a href="#共同参与架构" class="headerlink" title="共同参与架构"></a>共同参与架构</h3><h3 id="学会妥协"><a href="#学会妥协" class="headerlink" title="学会妥协"></a>学会妥协</h3><h3 id="成就他人"><a href="#成就他人" class="headerlink" title="成就他人"></a>成就他人</h3><h2 id="网站架构师职场攻略"><a href="#网站架构师职场攻略" class="headerlink" title="网站架构师职场攻略"></a>网站架构师职场攻略</h2><h3 id="发现问题，寻找突破"><a href="#发现问题，寻找突破" class="headerlink" title="发现问题，寻找突破"></a>发现问题，寻找突破</h3><h3 id="提出问题，寻求支持"><a href="#提出问题，寻求支持" class="headerlink" title="提出问题，寻求支持"></a>提出问题，寻求支持</h3><h3 id="解决问题，达成绩效"><a href="#解决问题，达成绩效" class="headerlink" title="解决问题，达成绩效"></a>解决问题，达成绩效</h3><h2 id="漫话网站架构师"><a href="#漫话网站架构师" class="headerlink" title="漫话网站架构师"></a>漫话网站架构师</h2><h3 id="按作用划分架构师"><a href="#按作用划分架构师" class="headerlink" title="按作用划分架构师"></a>按作用划分架构师</h3><h3 id="按效果划分架构师"><a href="#按效果划分架构师" class="headerlink" title="按效果划分架构师"></a>按效果划分架构师</h3><h3 id="按职责角色划分架构师"><a href="#按职责角色划分架构师" class="headerlink" title="按职责角色划分架构师"></a>按职责角色划分架构师</h3><h3 id="安关注层次划分架构师"><a href="#安关注层次划分架构师" class="headerlink" title="安关注层次划分架构师"></a>安关注层次划分架构师</h3><h3 id="安关注层次划分架构师-1"><a href="#安关注层次划分架构师-1" class="headerlink" title="安关注层次划分架构师"></a>安关注层次划分架构师</h3><h3 id="安口碑划分架构师"><a href="#安口碑划分架构师" class="headerlink" title="安口碑划分架构师"></a>安口碑划分架构师</h3><h3 id="非主流方式划分架构师"><a href="#非主流方式划分架构师" class="headerlink" title="非主流方式划分架构师"></a>非主流方式划分架构师</h3>
-      
     </div>
+
     
     
     
 
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"># 架构</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/06/05/JavaScript%E9%97%AD%E5%8C%85%E5%92%8C%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0/" rel="next" title="JavaScript闭包和高阶函数">
-                <i class="fa fa-chevron-left"></i> JavaScript闭包和高阶函数
-              </a>
-            
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"># 架构</a> -->
+              <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"><i class="fa fa-tag"></i>  架构</a>
           </div>
 
-          <span class="post-nav-divider"></span>
+        
 
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/08/24/read-react/" rel="prev" title="React">
-                React <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
 
-      
-      
-    </footer>
-  </div>
-  
-  
-  
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/06/05/JavaScript%E9%97%AD%E5%8C%85%E5%92%8C%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0/" rel="prev" title="JavaScript闭包和高阶函数">
+      <i class="fa fa-chevron-left"></i> JavaScript闭包和高阶函数
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/08/24/read-react/" rel="next" title="React">
+      React <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
   </article>
+  
+  
+  
 
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
 
 
           </div>
           
 
-
-          
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <p class="site-author-name" itemprop="name"></p>
-              <p class="site-description motion-element" itemprop="description"></p>
-          </div>
-
-          <nav class="site-state motion-element">
-
-            
-              <div class="site-state-item site-state-posts">
-              
-                <a href="/archives/%20%7C%7C%20archive">
-              
-                  <span class="site-state-item-count">36</span>
-                  <span class="site-state-item-name">日志</span>
-                </a>
-              </div>
-            
-
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-tags">
-                
-                  <span class="site-state-item-count">8</span>
-                  <span class="site-state-item-name">标签</span>
-                
-              </div>
-            
-
-          </nav>
-
-          
-
-          
-
-          
-          
-
-          
-          
-
-          
-
-        </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%BC%94%E5%8C%96"><span class="nav-number">1.1.</span> <span class="nav-text">大型网站架构演化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E8%BD%AF%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-number">1.1.1.</span> <span class="nav-text">大型网站软件系统的特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%BC%94%E5%8C%96%E5%8F%91%E5%B1%95%E5%8E%86%E7%A8%8B"><span class="nav-number">1.1.2.</span> <span class="nav-text">大型网站架构演化发展历程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E9%98%B6%E6%AE%B5%E7%9A%84%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">初始阶段的网站架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%92%8C%E6%95%B0%E6%8D%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E7%A6%BB"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">应用服务和数据服务分离</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%BC%93%E5%AD%98%E6%94%B9%E5%96%84%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">使用缓存改善网站性能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%BA%94%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%9B%86%E7%BE%A4%E6%94%B9%E5%96%84%E7%BD%91%E7%AB%99%E7%9A%84%E5%B9%B6%E5%8F%91%E5%A4%84%E7%90%86%E8%83%BD%E5%8A%9B"><span class="nav-number">1.1.2.4.</span> <span class="nav-text">使用应用服务器集群改善网站的并发处理能力</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB"><span class="nav-number">1.1.2.5.</span> <span class="nav-text">数据库读写分离</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E5%92%8CCDN%E5%8A%A0%E9%80%9F%E7%BD%91%E7%AB%99%E5%93%8D%E5%BA%94"><span class="nav-number">1.1.2.6.</span> <span class="nav-text">使用反向代理和CDN加速网站响应</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.2.7.</span> <span class="nav-text">使用分布式文件系统和分布式数据库系统</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8NoSQL%E5%92%8C%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E"><span class="nav-number">1.1.2.8.</span> <span class="nav-text">使用NoSQL和搜索引擎</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%9A%E5%8A%A1%E6%8B%86%E5%88%86"><span class="nav-number">1.1.2.9.</span> <span class="nav-text">业务拆分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.1.2.10.</span> <span class="nav-text">分布式服务</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%BC%94%E5%8C%96%E7%9A%84%E4%BB%B7%E5%80%BC%E8%A7%82"><span class="nav-number">1.1.3.</span> <span class="nav-text">大型网站架构演化的价值观</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%8A%80%E6%9C%AF%E7%9A%84%E6%A0%B8%E5%BF%83%E4%BB%B7%E5%80%BC%E6%98%AF%E9%9A%8F%E7%BD%91%E7%AB%99%E6%89%80%E9%9C%80%E7%81%B5%E6%B4%BB%E5%BA%94%E5%AF%B9"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">大型网站架构技术的核心价值是随网站所需灵活应对</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A9%B1%E5%8A%A8%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%8A%80%E6%9C%AF%E5%8F%91%E5%B1%95%E7%9A%84%E4%B8%BB%E8%A6%81%E5%8A%9B%E9%87%8F%E6%98%AF%E7%BD%91%E7%AB%99%E7%9A%84%E4%B8%9A%E5%8A%A1%E5%8F%91%E5%B1%95"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">驱动大型网站技术发展的主要力量是网站的业务发展</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E8%AF%AF%E5%8C%BA"><span class="nav-number">1.1.4.</span> <span class="nav-text">网站架构设计误区</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E5%91%B3%E8%BF%BD%E9%9A%8F%E5%A4%A7%E5%85%AC%E5%8F%B8%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">一味追随大公司的解决方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BA%86%E6%8A%80%E6%9C%AF%E8%80%8C%E6%8A%80%E6%9C%AF"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">为了技术而技术</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%81%E5%9B%BE%E7%94%A8%E6%8A%80%E6%9C%AF%E8%A7%A3%E5%86%B3%E6%89%80%E6%9C%89%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.4.3.</span> <span class="nav-text">企图用技术解决所有问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">1.1.5.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">大型网站架构模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.2.1.</span> <span class="nav-text">网站架构模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B1%82"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">分层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%89%B2"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">分割</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">分布式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4"><span class="nav-number">1.2.1.4.</span> <span class="nav-text">集群</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%93%E5%AD%98"><span class="nav-number">1.2.1.5.</span> <span class="nav-text">缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5"><span class="nav-number">1.2.1.6.</span> <span class="nav-text">异步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%97%E4%BD%99"><span class="nav-number">1.2.1.7.</span> <span class="nav-text">冗余</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="nav-number">1.2.1.8.</span> <span class="nav-text">自动化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E5%85%A8"><span class="nav-number">1.2.1.9.</span> <span class="nav-text">安全</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F%E5%9C%A8%E6%96%B0%E6%B5%AA%E5%BE%AE%E5%8D%9A%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">1.2.2.</span> <span class="nav-text">架构模式在新浪微博的应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-1"><span class="nav-number">1.2.3.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%E8%A6%81%E7%B4%A0"><span class="nav-number">1.3.</span> <span class="nav-text">大型网站核心架构要素</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%83%BD"><span class="nav-number">1.3.1.</span> <span class="nav-text">性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E7%94%A8%E6%80%A7"><span class="nav-number">1.3.2.</span> <span class="nav-text">可用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%B8%E7%BC%A9%E6%80%A7"><span class="nav-number">1.3.3.</span> <span class="nav-text">伸缩性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E6%80%A7"><span class="nav-number">1.3.4.</span> <span class="nav-text">扩展性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E6%80%A7"><span class="nav-number">1.3.5.</span> <span class="nav-text">安全性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-2"><span class="nav-number">1.3.6.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9E%AC%E9%97%B4%E5%93%8D%E5%BA%94%EF%BC%9A%E7%BD%91%E7%AB%99%E7%9A%84%E9%AB%98%E6%80%A7%E8%83%BD%E6%9E%B6%E6%9E%84"><span class="nav-number">2.1.</span> <span class="nav-text">瞬间响应：网站的高性能架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95"><span class="nav-number">2.1.1.</span> <span class="nav-text">网站性能测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E8%A7%86%E8%A7%92%E4%B8%8B%E7%9A%84%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">不同视角下的网站性能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95%E6%8C%87%E6%A0%87"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">性能测试指标</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95"><span class="nav-number">2.1.1.3.</span> <span class="nav-text">性能测试方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95%E6%8A%A5%E5%91%8A"><span class="nav-number">2.1.1.4.</span> <span class="nav-text">性能测试报告</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95%E7%AD%96%E7%95%A5"><span class="nav-number">2.1.1.5.</span> <span class="nav-text">性能测试策略</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Web%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">2.1.2.</span> <span class="nav-text">Web前端性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%AE%BF%E9%97%AE%E4%BC%98%E5%8C%96"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">浏览器访问优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CDN%E5%8A%A0%E9%80%9F"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">CDN加速</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="nav-number">2.1.2.3.</span> <span class="nav-text">反向代理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">2.1.3.</span> <span class="nav-text">应用服务器性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">分布式缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E6%93%8D%E4%BD%9C"><span class="nav-number">2.1.3.2.</span> <span class="nav-text">异步操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E9%9B%86%E7%BE%A4"><span class="nav-number">2.1.3.3.</span> <span class="nav-text">使用集群</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96"><span class="nav-number">2.1.3.4.</span> <span class="nav-text">代码优化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">2.1.4.</span> <span class="nav-text">存储性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%BA%E6%A2%B0%E7%A1%AC%E7%9B%98-vs-%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98"><span class="nav-number">2.1.4.1.</span> <span class="nav-text">机械硬盘 vs 固态硬盘</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-%E6%A0%91-vs-LSM%E6%A0%91"><span class="nav-number">2.1.4.2.</span> <span class="nav-text">B+树 vs LSM树</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RAID-vs-HDFS"><span class="nav-number">2.1.4.3.</span> <span class="nav-text">RAID vs HDFS</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-3"><span class="nav-number">2.1.5.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%87%E6%97%A0%E4%B8%80%E5%A4%B1%EF%BC%9A%E7%BD%91%E7%AB%99%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8%E6%A1%86%E6%9E%B6"><span class="nav-number">2.2.</span> <span class="nav-text">万无一失：网站的高可用框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E5%8F%AF%E7%94%A8%E6%80%A7%E7%9A%84%E5%BA%A6%E9%87%8F%E4%B8%8E%E8%80%83%E6%A0%B8"><span class="nav-number">2.2.1.</span> <span class="nav-text">网站可用性的度量与考核</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E5%8F%AF%E7%94%A8%E6%80%A7%E5%BA%A6%E9%87%8F"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">网站可用性度量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E5%8F%AF%E7%94%A8%E6%80%A7%E8%80%83%E6%A0%B8"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">网站可用性考核</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84"><span class="nav-number">2.2.2.</span> <span class="nav-text">高可用的网站架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">2.2.3.</span> <span class="nav-text">高可用的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E8%BF%9B%E8%A1%8C%E6%97%A0%E7%8A%B6%E6%80%81%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%A4%B1%E6%95%88%E8%BD%AC%E7%A7%BB"><span class="nav-number">2.2.3.1.</span> <span class="nav-text">通过负载均衡进行无状态服务的失效转移</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%9B%86%E7%BE%A4%E7%9A%84Session%E7%AE%A1%E7%90%86"><span class="nav-number">2.2.3.2.</span> <span class="nav-text">应用服务器集群的Session管理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.2.4.</span> <span class="nav-text">高可用的服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="nav-number">2.2.5.</span> <span class="nav-text">高可用的数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CAP%E5%8E%9F%E7%90%86"><span class="nav-number">2.2.5.1.</span> <span class="nav-text">CAP原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD"><span class="nav-number">2.2.5.2.</span> <span class="nav-text">数据备份</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%B1%E6%95%88%E8%BD%AC%E7%A7%BB"><span class="nav-number">2.2.5.3.</span> <span class="nav-text">失效转移</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E7%BD%91%E7%AB%99%E7%9A%84%E8%BD%AF%E4%BB%B6%E8%B4%A8%E9%87%8F%E4%BF%9D%E8%AF%81"><span class="nav-number">2.2.6.</span> <span class="nav-text">高可用网站的软件质量保证</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E5%8F%91%E5%B8%83"><span class="nav-number">2.2.6.1.</span> <span class="nav-text">网站发布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95"><span class="nav-number">2.2.6.2.</span> <span class="nav-text">自动化测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%84%E5%8F%91%E5%B8%83%E9%AA%8C%E8%AF%81"><span class="nav-number">2.2.6.3.</span> <span class="nav-text">预发布验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%8E%A7%E5%88%B6"><span class="nav-number">2.2.6.4.</span> <span class="nav-text">代码控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8F%91%E5%B8%83"><span class="nav-number">2.2.6.5.</span> <span class="nav-text">自动化发布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83"><span class="nav-number">2.2.6.6.</span> <span class="nav-text">灰度发布</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E8%BF%90%E8%A1%8C%E7%9B%91%E6%8E%A7"><span class="nav-number">2.2.7.</span> <span class="nav-text">网站运行监控</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86"><span class="nav-number">2.2.7.1.</span> <span class="nav-text">监控数据采集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7%E7%AE%A1%E7%90%86"><span class="nav-number">2.2.7.2.</span> <span class="nav-text">监控管理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-4"><span class="nav-number">2.2.8.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B0%B8%E6%97%A0%E6%AD%A2%E5%A2%83%EF%BC%9A%E7%BD%91%E7%AB%99%E7%9A%84%E4%BC%B8%E7%BC%A9%E6%80%A7%E6%9E%B6%E6%9E%84"><span class="nav-number">2.3.</span> <span class="nav-text">永无止境：网站的伸缩性架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E7%9A%84%E4%BC%B8%E7%BC%A9%E6%80%A7%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.3.1.</span> <span class="nav-text">网站架构的伸缩性设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E5%8A%9F%E8%83%BD%E8%BF%9B%E8%A1%8C%E7%89%A9%E7%90%86%E5%88%86%E7%A6%BB%E5%AE%9E%E7%8E%B0%E4%BC%B8%E7%BC%A9"><span class="nav-number">2.3.1.1.</span> <span class="nav-text">不同功能进行物理分离实现伸缩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E4%B8%80%E5%8A%9F%E8%83%BD%E9%80%9A%E8%BF%87%E9%9B%86%E7%BE%A4%E8%A7%84%E6%A8%A1%E5%AE%9E%E7%8E%B0%E4%BC%B8%E7%BC%A9"><span class="nav-number">2.3.1.2.</span> <span class="nav-text">单一功能通过集群规模实现伸缩</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%9B%86%E7%BE%A4%E7%9A%84%E4%BC%B8%E7%BC%A9%E6%80%A7%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.3.2.</span> <span class="nav-text">应用服务器集群的伸缩性设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP%E9%87%8D%E5%AE%9A%E5%90%91%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">2.3.2.1.</span> <span class="nav-text">HTTP重定向负载均衡</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DNS%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">2.3.2.2.</span> <span class="nav-text">DNS域名解析负载均衡</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">2.3.2.3.</span> <span class="nav-text">反向代理负载均衡</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IP%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">2.3.2.4.</span> <span class="nav-text">IP负载均衡</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">2.3.2.5.</span> <span class="nav-text">数据链路层负载均衡</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AE%97%E6%B3%95"><span class="nav-number">2.3.2.6.</span> <span class="nav-text">负载均衡算法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98%E9%9B%86%E7%BE%A4%E7%9A%84%E4%BC%B8%E7%BC%A9%E6%80%A7%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.3.3.</span> <span class="nav-text">分布式缓存集群的伸缩性设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Memcached%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98%E9%9B%86%E7%BE%A4%E7%9A%84%E8%AE%BF%E9%97%AE%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.3.3.1.</span> <span class="nav-text">Memcached分布式缓存集群的访问模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Memcached%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98%E9%9B%86%E7%BE%A4%E7%9A%84%E4%BC%B8%E7%BC%A9%E6%80%A7%E6%8C%91%E6%88%98"><span class="nav-number">2.3.3.2.</span> <span class="nav-text">Memcached分布式缓存集群的伸缩性挑战</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%AE%97%E6%B3%95"><span class="nav-number">2.3.3.3.</span> <span class="nav-text">分布式缓存的一致性Hash算法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%9B%86%E7%BE%A4%E7%9A%84%E4%BC%B8%E7%BC%A9%E6%80%A7%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.3.4.</span> <span class="nav-text">数据存储服务器集群的伸缩性设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9B%86%E7%BE%A4%E7%9A%84%E4%BC%B8%E7%BC%A9%E6%80%A7%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.3.4.1.</span> <span class="nav-text">关系数据库集群的伸缩性设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NoSQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BC%B8%E7%BC%A9%E6%80%A7%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.3.4.2.</span> <span class="nav-text">NoSQL数据库的伸缩性设计</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-5"><span class="nav-number">2.3.5.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%8F%E9%9C%80%E5%BA%94%E5%8F%98%EF%BC%9A%E7%BD%91%E7%AB%99%E7%9A%84%E5%8F%AF%E6%89%A9%E5%B1%95%E6%9E%B6%E6%9E%84"><span class="nav-number">2.4.</span> <span class="nav-text">随需应变：网站的可扩展架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E5%8F%AF%E6%89%A9%E5%B1%95%E7%9A%84%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84"><span class="nav-number">2.4.1.</span> <span class="nav-text">构建可扩展的网站架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E5%88%86%E5%B8%83%E5%BC%8F%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E9%99%8D%E4%BD%8E%E7%B3%BB%E7%BB%9F%E8%80%A6%E5%90%88%E6%80%A7"><span class="nav-number">2.4.2.</span> <span class="nav-text">利用分布式消息队列降低系统耦合性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8%E6%9E%B6%E6%9E%84"><span class="nav-number">2.4.2.1.</span> <span class="nav-text">事件驱动架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97"><span class="nav-number">2.4.2.2.</span> <span class="nav-text">分布式消息队列</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E6%89%93%E9%80%A0%E5%8F%AF%E5%A4%8D%E7%94%A8%E7%9A%84%E4%B8%9A%E5%8A%A1%E5%B9%B3%E5%8F%B0"><span class="nav-number">2.4.3.</span> <span class="nav-text">利用分布式服务打造可复用的业务平台</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Web-Service-%E4%B8%8E%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.4.3.1.</span> <span class="nav-text">Web Service 与企业级分布式服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E7%9A%84%E9%9C%80%E6%B1%82%E4%B8%8E%E7%89%B9%E7%82%B9"><span class="nav-number">2.4.3.2.</span> <span class="nav-text">大型网站分布式服务的需求与特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.4.3.3.</span> <span class="nav-text">分布式服务框架设计</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E6%89%A9%E5%B1%95%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">2.4.4.</span> <span class="nav-text">可扩展的数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E5%BB%BA%E8%AE%BE%E7%BD%91%E7%AB%99%E7%94%9F%E6%80%81%E5%9C%88"><span class="nav-number">2.4.5.</span> <span class="nav-text">利用开放平台建设网站生态圈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-6"><span class="nav-number">2.4.6.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BA%E8%8B%A5%E9%87%91%E6%B1%A4%EF%BC%9A%E7%BD%91%E7%AB%99%E7%9A%84%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84"><span class="nav-number">2.5.</span> <span class="nav-text">固若金汤：网站的安全架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%93%E9%AB%98%E4%B8%80%E5%B0%BA%E9%AD%94%E9%AB%98%E4%B8%80%E4%B8%88%E7%9A%84%E7%BD%91%E7%AB%99%E5%BA%94%E7%94%A8%E6%94%BB%E5%87%BB%E4%B8%8E%E9%98%B2%E5%BE%A1"><span class="nav-number">2.5.1.</span> <span class="nav-text">道高一尺魔高一丈的网站应用攻击与防御</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#XSS%E6%94%BB%E5%87%BB"><span class="nav-number">2.5.1.1.</span> <span class="nav-text">XSS攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E5%85%A5%E6%94%BB%E5%87%BB"><span class="nav-number">2.5.1.2.</span> <span class="nav-text">注入攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CSRF%E6%94%BB%E5%87%BB"><span class="nav-number">2.5.1.3.</span> <span class="nav-text">CSRF攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%94%BB%E5%87%BB%E5%92%8C%E6%BC%8F%E6%B4%9E"><span class="nav-number">2.5.1.4.</span> <span class="nav-text">其他攻击和漏洞</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Web%E5%BA%94%E7%94%A8%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">2.5.1.5.</span> <span class="nav-text">Web应用防火墙</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E6%BC%8F%E9%93%9C%E6%89%AB%E6%8F%8F"><span class="nav-number">2.5.1.6.</span> <span class="nav-text">网站安全漏铜扫描</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E5%8A%A0%E5%AF%86%E6%8A%80%E6%9C%AF%E5%8F%8A%E5%AF%86%E9%92%A5%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86"><span class="nav-number">2.5.2.</span> <span class="nav-text">信息加密技术及密钥安全管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E5%90%91%E4%B8%89%E5%88%97%E5%8A%A0%E5%AF%86"><span class="nav-number">2.5.2.1.</span> <span class="nav-text">单向三列加密</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86"><span class="nav-number">2.5.2.2.</span> <span class="nav-text">对称加密</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86"><span class="nav-number">2.5.2.3.</span> <span class="nav-text">非对称加密</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%86%E9%92%A5%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86"><span class="nav-number">2.5.2.4.</span> <span class="nav-text">密钥安全管理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E8%BF%87%E6%BB%A4%E4%B8%8E%E5%8F%8D%E5%9E%83%E5%9C%BE"><span class="nav-number">2.5.3.</span> <span class="nav-text">信息过滤与反垃圾</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D"><span class="nav-number">2.5.3.1.</span> <span class="nav-text">文本匹配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95"><span class="nav-number">2.5.3.2.</span> <span class="nav-text">分类算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%BB%91%E5%90%8D%E5%8D%95"><span class="nav-number">2.5.3.3.</span> <span class="nav-text">黑名单</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E5%AD%90%E5%95%86%E5%8A%A1%E9%A3%8E%E9%99%A9%E6%8E%A7%E5%88%B6"><span class="nav-number">2.5.4.</span> <span class="nav-text">电子商务风险控制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A3%8E%E9%99%A9"><span class="nav-number">2.5.4.1.</span> <span class="nav-text">风险</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A3%8E%E6%8E%A7"><span class="nav-number">2.5.4.2.</span> <span class="nav-text">风控</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-7"><span class="nav-number">2.5.5.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B"><span class="nav-number">3.</span> <span class="nav-text">案例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%98%E5%AE%9D%E7%BD%91%E7%9A%84%E6%9E%B6%E6%9E%84%E6%BC%94%E5%8C%96%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90"><span class="nav-number">3.1.</span> <span class="nav-text">淘宝网的架构演化案例分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%98%E5%AE%9D%E7%BD%91%E7%9A%84%E4%B8%9A%E5%8A%A1%E5%8F%91%E5%B1%95%E5%8E%86%E7%A8%8B"><span class="nav-number">3.1.1.</span> <span class="nav-text">淘宝网的业务发展历程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%98%E5%AE%9D%E7%BD%91%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E6%BC%94%E5%8C%96"><span class="nav-number">3.1.2.</span> <span class="nav-text">淘宝网技术架构演化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-8"><span class="nav-number">3.1.3.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E7%9A%84%E9%AB%98%E6%80%A7%E8%83%BD%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%88%86%E6%9E%90"><span class="nav-number">3.2.</span> <span class="nav-text">维基百科的高性能架构设计分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Wikipedia-%E7%BD%91%E7%AB%99%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="nav-number">3.2.1.</span> <span class="nav-text">Wikipedia 网站整体架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Wikipedia-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5"><span class="nav-number">3.2.2.</span> <span class="nav-text">Wikipedia 性能优化策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Wikipedia-%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">3.2.2.1.</span> <span class="nav-text">Wikipedia 前端性能优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Wikipedia-%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">3.2.2.2.</span> <span class="nav-text">Wikipedia 服务端性能优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Wikipedia-%E5%90%8E%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">3.2.2.3.</span> <span class="nav-text">Wikipedia 后端性能优化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%B7%E9%87%8F%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9FDoris%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%88%86%E6%9E%90"><span class="nav-number">3.3.</span> <span class="nav-text">海量分布式存储系统Doris的高可用架构设计分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84"><span class="nav-number">3.3.1.</span> <span class="nav-text">分布式存储系统的高可用架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E6%95%85%E9%9A%9C%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">3.3.2.</span> <span class="nav-text">不同故障情况下的高可用解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%95%85%E9%9A%9C%E5%88%86%E7%B1%BB"><span class="nav-number">3.3.2.1.</span> <span class="nav-text">分布式存储系统的故障分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5%E4%B8%8B%E7%B3%BB%E7%BB%9F%E8%AE%BF%E9%97%AE%E7%BB%93%E6%9E%84"><span class="nav-number">3.3.2.2.</span> <span class="nav-text">正常情况下系统访问结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9E%AC%E6%97%B6%E6%95%85%E9%9A%9C%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">3.3.2.3.</span> <span class="nav-text">瞬时故障的高可用解决方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%B4%E6%97%B6%E6%95%85%E9%9A%9C%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">3.3.2.4.</span> <span class="nav-text">临时故障的高可用解决方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B0%B8%E4%B9%85%E6%95%85%E9%9A%9C%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">3.3.2.5.</span> <span class="nav-text">永久故障的高可用解决方案</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E8%B4%AD%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90"><span class="nav-number">3.4.</span> <span class="nav-text">网购秒杀系统架构设计案例分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%92%E6%9D%80%E6%B4%BB%E5%8A%A8%E7%9A%84%E6%8A%80%E6%9C%AF%E6%8C%91%E6%88%98"><span class="nav-number">3.4.1.</span> <span class="nav-text">秒杀活动的技术挑战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%BA%94%E5%AF%B9%E7%AD%96%E7%95%A5"><span class="nav-number">3.4.2.</span> <span class="nav-text">秒杀系统的应对策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.4.3.</span> <span class="nav-text">秒杀系统架构设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-9"><span class="nav-number">3.4.4.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E5%85%B8%E5%9E%8B%E6%95%85%E9%9A%9C%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90"><span class="nav-number">3.5.</span> <span class="nav-text">大型网站典型故障案例分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E6%97%A5%E5%BF%97%E4%B9%9F%E4%BC%9A%E5%BC%95%E5%8F%91%E6%95%85%E9%9A%9C"><span class="nav-number">3.5.1.</span> <span class="nav-text">写日志也会引发故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%95%E5%8F%91%E7%9A%84%E6%95%85%E9%9A%9C"><span class="nav-number">3.5.2.</span> <span class="nav-text">高并发访问数据库引发的故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E5%B9%B6%E5%8F%91%E6%83%85%E5%86%B5%E4%B8%8B%E9%94%81%E5%BC%95%E5%8F%91%E7%9A%84%E6%95%85%E9%9A%9C"><span class="nav-number">3.5.3.</span> <span class="nav-text">高并发情况下锁引发的故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E5%BC%95%E5%8F%91%E7%9A%84%E6%95%85%E9%9A%9C"><span class="nav-number">3.5.4.</span> <span class="nav-text">缓存引发的故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%90%AF%E5%8A%A8%E4%B8%8D%E5%90%8C%E6%AD%A5%E5%BC%95%E5%8F%91%E7%9A%84%E6%95%85%E9%9A%9C"><span class="nav-number">3.5.5.</span> <span class="nav-text">应用启动不同步引发的故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99%E7%8B%AC%E5%8D%A0%E7%A3%81%E7%9B%98%E5%BC%95%E5%8F%91%E7%9A%84%E6%95%85%E9%9A%9C"><span class="nav-number">3.5.6.</span> <span class="nav-text">大文件读写独占磁盘引发的故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BB%A5%E7%94%A8%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E5%BC%95%E5%8F%91%E7%9A%84%E6%95%85%E9%9A%9C"><span class="nav-number">3.5.7.</span> <span class="nav-text">滥用生产环境引发的故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E8%A7%84%E8%8C%83%E7%9A%84%E6%B5%81%E7%A8%8B%E5%BC%95%E5%8F%91%E7%9A%84%E6%95%85%E9%9A%9C"><span class="nav-number">3.5.8.</span> <span class="nav-text">不规范的流程引发的故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%A5%BD%E7%9A%84%E7%BC%96%E7%A8%8B%E4%B9%A0%E6%83%AF%E5%BC%95%E5%8F%91%E7%9A%84%E6%95%85%E9%9A%9C"><span class="nav-number">3.5.9.</span> <span class="nav-text">不好的编程习惯引发的故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-10"><span class="nav-number">3.5.10.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E5%B8%88"><span class="nav-number">4.</span> <span class="nav-text">架构师</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E5%B8%88%E9%A2%86%E5%AF%BC%E8%89%BA%E6%9C%AF"><span class="nav-number">4.1.</span> <span class="nav-text">架构师领导艺术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E6%B3%A8%E4%BA%BA%E8%80%8C%E4%B8%8D%E6%98%AF%E4%BA%A7%E5%93%81"><span class="nav-number">4.1.1.</span> <span class="nav-text">关注人而不是产品</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E6%8E%98%E4%BA%BA%E7%9A%84%E4%BC%98%E7%A7%80"><span class="nav-number">4.1.2.</span> <span class="nav-text">发掘人的优秀</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E7%BE%8E%E5%A5%BD%E8%93%9D%E5%9B%BE"><span class="nav-number">4.1.3.</span> <span class="nav-text">共享美好蓝图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E5%90%8C%E5%8F%82%E4%B8%8E%E6%9E%B6%E6%9E%84"><span class="nav-number">4.1.4.</span> <span class="nav-text">共同参与架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%A6%E4%BC%9A%E5%A6%A5%E5%8D%8F"><span class="nav-number">4.1.5.</span> <span class="nav-text">学会妥协</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%90%E5%B0%B1%E4%BB%96%E4%BA%BA"><span class="nav-number">4.1.6.</span> <span class="nav-text">成就他人</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E5%B8%88%E8%81%8C%E5%9C%BA%E6%94%BB%E7%95%A5"><span class="nav-number">4.2.</span> <span class="nav-text">网站架构师职场攻略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E7%8E%B0%E9%97%AE%E9%A2%98%EF%BC%8C%E5%AF%BB%E6%89%BE%E7%AA%81%E7%A0%B4"><span class="nav-number">4.2.1.</span> <span class="nav-text">发现问题，寻找突破</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%EF%BC%8C%E5%AF%BB%E6%B1%82%E6%94%AF%E6%8C%81"><span class="nav-number">4.2.2.</span> <span class="nav-text">提出问题，寻求支持</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98%EF%BC%8C%E8%BE%BE%E6%88%90%E7%BB%A9%E6%95%88"><span class="nav-number">4.2.3.</span> <span class="nav-text">解决问题，达成绩效</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BC%AB%E8%AF%9D%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E5%B8%88"><span class="nav-number">4.3.</span> <span class="nav-text">漫话网站架构师</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%89%E4%BD%9C%E7%94%A8%E5%88%92%E5%88%86%E6%9E%B6%E6%9E%84%E5%B8%88"><span class="nav-number">4.3.1.</span> <span class="nav-text">按作用划分架构师</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%89%E6%95%88%E6%9E%9C%E5%88%92%E5%88%86%E6%9E%B6%E6%9E%84%E5%B8%88"><span class="nav-number">4.3.2.</span> <span class="nav-text">按效果划分架构师</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%89%E8%81%8C%E8%B4%A3%E8%A7%92%E8%89%B2%E5%88%92%E5%88%86%E6%9E%B6%E6%9E%84%E5%B8%88"><span class="nav-number">4.3.3.</span> <span class="nav-text">按职责角色划分架构师</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%B3%E6%B3%A8%E5%B1%82%E6%AC%A1%E5%88%92%E5%88%86%E6%9E%B6%E6%9E%84%E5%B8%88"><span class="nav-number">4.3.4.</span> <span class="nav-text">安关注层次划分架构师</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%B3%E6%B3%A8%E5%B1%82%E6%AC%A1%E5%88%92%E5%88%86%E6%9E%B6%E6%9E%84%E5%B8%88-1"><span class="nav-number">4.3.5.</span> <span class="nav-text">安关注层次划分架构师</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%8F%A3%E7%A2%91%E5%88%92%E5%88%86%E6%9E%B6%E6%9E%84%E5%B8%88"><span class="nav-number">4.3.6.</span> <span class="nav-text">安口碑划分架构师</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E4%B8%BB%E6%B5%81%E6%96%B9%E5%BC%8F%E5%88%92%E5%88%86%E6%9E%B6%E6%9E%84%E5%B8%88"><span class="nav-number">4.3.7.</span> <span class="nav-text">非主流方式划分架构师</span></a></li></ol></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">fhclk</span>
-
-  
-</div>
-
-
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
-
-
-
-
-        
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-    
-
-  </div>
-
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
   }
 </script>
 
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%BC%94%E5%8C%96"><span class="nav-number">1.1.</span> <span class="nav-text">大型网站架构演化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E8%BD%AF%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-number">1.1.1.</span> <span class="nav-text">大型网站软件系统的特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%BC%94%E5%8C%96%E5%8F%91%E5%B1%95%E5%8E%86%E7%A8%8B"><span class="nav-number">1.1.2.</span> <span class="nav-text">大型网站架构演化发展历程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E9%98%B6%E6%AE%B5%E7%9A%84%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">初始阶段的网站架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%92%8C%E6%95%B0%E6%8D%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E7%A6%BB"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">应用服务和数据服务分离</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%BC%93%E5%AD%98%E6%94%B9%E5%96%84%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">使用缓存改善网站性能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%BA%94%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%9B%86%E7%BE%A4%E6%94%B9%E5%96%84%E7%BD%91%E7%AB%99%E7%9A%84%E5%B9%B6%E5%8F%91%E5%A4%84%E7%90%86%E8%83%BD%E5%8A%9B"><span class="nav-number">1.1.2.4.</span> <span class="nav-text">使用应用服务器集群改善网站的并发处理能力</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB"><span class="nav-number">1.1.2.5.</span> <span class="nav-text">数据库读写分离</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E5%92%8CCDN%E5%8A%A0%E9%80%9F%E7%BD%91%E7%AB%99%E5%93%8D%E5%BA%94"><span class="nav-number">1.1.2.6.</span> <span class="nav-text">使用反向代理和CDN加速网站响应</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.2.7.</span> <span class="nav-text">使用分布式文件系统和分布式数据库系统</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8NoSQL%E5%92%8C%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E"><span class="nav-number">1.1.2.8.</span> <span class="nav-text">使用NoSQL和搜索引擎</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%9A%E5%8A%A1%E6%8B%86%E5%88%86"><span class="nav-number">1.1.2.9.</span> <span class="nav-text">业务拆分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.1.2.10.</span> <span class="nav-text">分布式服务</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%BC%94%E5%8C%96%E7%9A%84%E4%BB%B7%E5%80%BC%E8%A7%82"><span class="nav-number">1.1.3.</span> <span class="nav-text">大型网站架构演化的价值观</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%8A%80%E6%9C%AF%E7%9A%84%E6%A0%B8%E5%BF%83%E4%BB%B7%E5%80%BC%E6%98%AF%E9%9A%8F%E7%BD%91%E7%AB%99%E6%89%80%E9%9C%80%E7%81%B5%E6%B4%BB%E5%BA%94%E5%AF%B9"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">大型网站架构技术的核心价值是随网站所需灵活应对</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A9%B1%E5%8A%A8%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%8A%80%E6%9C%AF%E5%8F%91%E5%B1%95%E7%9A%84%E4%B8%BB%E8%A6%81%E5%8A%9B%E9%87%8F%E6%98%AF%E7%BD%91%E7%AB%99%E7%9A%84%E4%B8%9A%E5%8A%A1%E5%8F%91%E5%B1%95"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">驱动大型网站技术发展的主要力量是网站的业务发展</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E8%AF%AF%E5%8C%BA"><span class="nav-number">1.1.4.</span> <span class="nav-text">网站架构设计误区</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E5%91%B3%E8%BF%BD%E9%9A%8F%E5%A4%A7%E5%85%AC%E5%8F%B8%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">一味追随大公司的解决方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BA%86%E6%8A%80%E6%9C%AF%E8%80%8C%E6%8A%80%E6%9C%AF"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">为了技术而技术</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%81%E5%9B%BE%E7%94%A8%E6%8A%80%E6%9C%AF%E8%A7%A3%E5%86%B3%E6%89%80%E6%9C%89%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.4.3.</span> <span class="nav-text">企图用技术解决所有问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">1.1.5.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">大型网站架构模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.2.1.</span> <span class="nav-text">网站架构模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B1%82"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">分层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%89%B2"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">分割</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">分布式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4"><span class="nav-number">1.2.1.4.</span> <span class="nav-text">集群</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%93%E5%AD%98"><span class="nav-number">1.2.1.5.</span> <span class="nav-text">缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5"><span class="nav-number">1.2.1.6.</span> <span class="nav-text">异步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%97%E4%BD%99"><span class="nav-number">1.2.1.7.</span> <span class="nav-text">冗余</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="nav-number">1.2.1.8.</span> <span class="nav-text">自动化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E5%85%A8"><span class="nav-number">1.2.1.9.</span> <span class="nav-text">安全</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F%E5%9C%A8%E6%96%B0%E6%B5%AA%E5%BE%AE%E5%8D%9A%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">1.2.2.</span> <span class="nav-text">架构模式在新浪微博的应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-1"><span class="nav-number">1.2.3.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%E8%A6%81%E7%B4%A0"><span class="nav-number">1.3.</span> <span class="nav-text">大型网站核心架构要素</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%83%BD"><span class="nav-number">1.3.1.</span> <span class="nav-text">性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E7%94%A8%E6%80%A7"><span class="nav-number">1.3.2.</span> <span class="nav-text">可用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%B8%E7%BC%A9%E6%80%A7"><span class="nav-number">1.3.3.</span> <span class="nav-text">伸缩性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E6%80%A7"><span class="nav-number">1.3.4.</span> <span class="nav-text">扩展性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E6%80%A7"><span class="nav-number">1.3.5.</span> <span class="nav-text">安全性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-2"><span class="nav-number">1.3.6.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9E%AC%E9%97%B4%E5%93%8D%E5%BA%94%EF%BC%9A%E7%BD%91%E7%AB%99%E7%9A%84%E9%AB%98%E6%80%A7%E8%83%BD%E6%9E%B6%E6%9E%84"><span class="nav-number">2.1.</span> <span class="nav-text">瞬间响应：网站的高性能架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95"><span class="nav-number">2.1.1.</span> <span class="nav-text">网站性能测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E8%A7%86%E8%A7%92%E4%B8%8B%E7%9A%84%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">不同视角下的网站性能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95%E6%8C%87%E6%A0%87"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">性能测试指标</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95"><span class="nav-number">2.1.1.3.</span> <span class="nav-text">性能测试方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95%E6%8A%A5%E5%91%8A"><span class="nav-number">2.1.1.4.</span> <span class="nav-text">性能测试报告</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95%E7%AD%96%E7%95%A5"><span class="nav-number">2.1.1.5.</span> <span class="nav-text">性能测试策略</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Web%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">2.1.2.</span> <span class="nav-text">Web前端性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%AE%BF%E9%97%AE%E4%BC%98%E5%8C%96"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">浏览器访问优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CDN%E5%8A%A0%E9%80%9F"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">CDN加速</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="nav-number">2.1.2.3.</span> <span class="nav-text">反向代理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">2.1.3.</span> <span class="nav-text">应用服务器性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">分布式缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E6%93%8D%E4%BD%9C"><span class="nav-number">2.1.3.2.</span> <span class="nav-text">异步操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E9%9B%86%E7%BE%A4"><span class="nav-number">2.1.3.3.</span> <span class="nav-text">使用集群</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96"><span class="nav-number">2.1.3.4.</span> <span class="nav-text">代码优化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">2.1.4.</span> <span class="nav-text">存储性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%BA%E6%A2%B0%E7%A1%AC%E7%9B%98-vs-%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98"><span class="nav-number">2.1.4.1.</span> <span class="nav-text">机械硬盘 vs 固态硬盘</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-%E6%A0%91-vs-LSM%E6%A0%91"><span class="nav-number">2.1.4.2.</span> <span class="nav-text">B+树 vs LSM树</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RAID-vs-HDFS"><span class="nav-number">2.1.4.3.</span> <span class="nav-text">RAID vs HDFS</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-3"><span class="nav-number">2.1.5.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%87%E6%97%A0%E4%B8%80%E5%A4%B1%EF%BC%9A%E7%BD%91%E7%AB%99%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8%E6%A1%86%E6%9E%B6"><span class="nav-number">2.2.</span> <span class="nav-text">万无一失：网站的高可用框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E5%8F%AF%E7%94%A8%E6%80%A7%E7%9A%84%E5%BA%A6%E9%87%8F%E4%B8%8E%E8%80%83%E6%A0%B8"><span class="nav-number">2.2.1.</span> <span class="nav-text">网站可用性的度量与考核</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E5%8F%AF%E7%94%A8%E6%80%A7%E5%BA%A6%E9%87%8F"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">网站可用性度量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E5%8F%AF%E7%94%A8%E6%80%A7%E8%80%83%E6%A0%B8"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">网站可用性考核</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84"><span class="nav-number">2.2.2.</span> <span class="nav-text">高可用的网站架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">2.2.3.</span> <span class="nav-text">高可用的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E8%BF%9B%E8%A1%8C%E6%97%A0%E7%8A%B6%E6%80%81%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%A4%B1%E6%95%88%E8%BD%AC%E7%A7%BB"><span class="nav-number">2.2.3.1.</span> <span class="nav-text">通过负载均衡进行无状态服务的失效转移</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%9B%86%E7%BE%A4%E7%9A%84Session%E7%AE%A1%E7%90%86"><span class="nav-number">2.2.3.2.</span> <span class="nav-text">应用服务器集群的Session管理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.2.4.</span> <span class="nav-text">高可用的服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="nav-number">2.2.5.</span> <span class="nav-text">高可用的数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CAP%E5%8E%9F%E7%90%86"><span class="nav-number">2.2.5.1.</span> <span class="nav-text">CAP原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD"><span class="nav-number">2.2.5.2.</span> <span class="nav-text">数据备份</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%B1%E6%95%88%E8%BD%AC%E7%A7%BB"><span class="nav-number">2.2.5.3.</span> <span class="nav-text">失效转移</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E7%BD%91%E7%AB%99%E7%9A%84%E8%BD%AF%E4%BB%B6%E8%B4%A8%E9%87%8F%E4%BF%9D%E8%AF%81"><span class="nav-number">2.2.6.</span> <span class="nav-text">高可用网站的软件质量保证</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E5%8F%91%E5%B8%83"><span class="nav-number">2.2.6.1.</span> <span class="nav-text">网站发布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95"><span class="nav-number">2.2.6.2.</span> <span class="nav-text">自动化测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%84%E5%8F%91%E5%B8%83%E9%AA%8C%E8%AF%81"><span class="nav-number">2.2.6.3.</span> <span class="nav-text">预发布验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%8E%A7%E5%88%B6"><span class="nav-number">2.2.6.4.</span> <span class="nav-text">代码控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8F%91%E5%B8%83"><span class="nav-number">2.2.6.5.</span> <span class="nav-text">自动化发布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83"><span class="nav-number">2.2.6.6.</span> <span class="nav-text">灰度发布</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E8%BF%90%E8%A1%8C%E7%9B%91%E6%8E%A7"><span class="nav-number">2.2.7.</span> <span class="nav-text">网站运行监控</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86"><span class="nav-number">2.2.7.1.</span> <span class="nav-text">监控数据采集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7%E7%AE%A1%E7%90%86"><span class="nav-number">2.2.7.2.</span> <span class="nav-text">监控管理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-4"><span class="nav-number">2.2.8.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B0%B8%E6%97%A0%E6%AD%A2%E5%A2%83%EF%BC%9A%E7%BD%91%E7%AB%99%E7%9A%84%E4%BC%B8%E7%BC%A9%E6%80%A7%E6%9E%B6%E6%9E%84"><span class="nav-number">2.3.</span> <span class="nav-text">永无止境：网站的伸缩性架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E7%9A%84%E4%BC%B8%E7%BC%A9%E6%80%A7%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.3.1.</span> <span class="nav-text">网站架构的伸缩性设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E5%8A%9F%E8%83%BD%E8%BF%9B%E8%A1%8C%E7%89%A9%E7%90%86%E5%88%86%E7%A6%BB%E5%AE%9E%E7%8E%B0%E4%BC%B8%E7%BC%A9"><span class="nav-number">2.3.1.1.</span> <span class="nav-text">不同功能进行物理分离实现伸缩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E4%B8%80%E5%8A%9F%E8%83%BD%E9%80%9A%E8%BF%87%E9%9B%86%E7%BE%A4%E8%A7%84%E6%A8%A1%E5%AE%9E%E7%8E%B0%E4%BC%B8%E7%BC%A9"><span class="nav-number">2.3.1.2.</span> <span class="nav-text">单一功能通过集群规模实现伸缩</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%9B%86%E7%BE%A4%E7%9A%84%E4%BC%B8%E7%BC%A9%E6%80%A7%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.3.2.</span> <span class="nav-text">应用服务器集群的伸缩性设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP%E9%87%8D%E5%AE%9A%E5%90%91%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">2.3.2.1.</span> <span class="nav-text">HTTP重定向负载均衡</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DNS%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">2.3.2.2.</span> <span class="nav-text">DNS域名解析负载均衡</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">2.3.2.3.</span> <span class="nav-text">反向代理负载均衡</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IP%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">2.3.2.4.</span> <span class="nav-text">IP负载均衡</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">2.3.2.5.</span> <span class="nav-text">数据链路层负载均衡</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AE%97%E6%B3%95"><span class="nav-number">2.3.2.6.</span> <span class="nav-text">负载均衡算法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98%E9%9B%86%E7%BE%A4%E7%9A%84%E4%BC%B8%E7%BC%A9%E6%80%A7%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.3.3.</span> <span class="nav-text">分布式缓存集群的伸缩性设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Memcached%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98%E9%9B%86%E7%BE%A4%E7%9A%84%E8%AE%BF%E9%97%AE%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.3.3.1.</span> <span class="nav-text">Memcached分布式缓存集群的访问模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Memcached%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98%E9%9B%86%E7%BE%A4%E7%9A%84%E4%BC%B8%E7%BC%A9%E6%80%A7%E6%8C%91%E6%88%98"><span class="nav-number">2.3.3.2.</span> <span class="nav-text">Memcached分布式缓存集群的伸缩性挑战</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%AE%97%E6%B3%95"><span class="nav-number">2.3.3.3.</span> <span class="nav-text">分布式缓存的一致性Hash算法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%9B%86%E7%BE%A4%E7%9A%84%E4%BC%B8%E7%BC%A9%E6%80%A7%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.3.4.</span> <span class="nav-text">数据存储服务器集群的伸缩性设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9B%86%E7%BE%A4%E7%9A%84%E4%BC%B8%E7%BC%A9%E6%80%A7%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.3.4.1.</span> <span class="nav-text">关系数据库集群的伸缩性设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NoSQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BC%B8%E7%BC%A9%E6%80%A7%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.3.4.2.</span> <span class="nav-text">NoSQL数据库的伸缩性设计</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-5"><span class="nav-number">2.3.5.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%8F%E9%9C%80%E5%BA%94%E5%8F%98%EF%BC%9A%E7%BD%91%E7%AB%99%E7%9A%84%E5%8F%AF%E6%89%A9%E5%B1%95%E6%9E%B6%E6%9E%84"><span class="nav-number">2.4.</span> <span class="nav-text">随需应变：网站的可扩展架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E5%8F%AF%E6%89%A9%E5%B1%95%E7%9A%84%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84"><span class="nav-number">2.4.1.</span> <span class="nav-text">构建可扩展的网站架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E5%88%86%E5%B8%83%E5%BC%8F%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E9%99%8D%E4%BD%8E%E7%B3%BB%E7%BB%9F%E8%80%A6%E5%90%88%E6%80%A7"><span class="nav-number">2.4.2.</span> <span class="nav-text">利用分布式消息队列降低系统耦合性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8%E6%9E%B6%E6%9E%84"><span class="nav-number">2.4.2.1.</span> <span class="nav-text">事件驱动架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97"><span class="nav-number">2.4.2.2.</span> <span class="nav-text">分布式消息队列</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E6%89%93%E9%80%A0%E5%8F%AF%E5%A4%8D%E7%94%A8%E7%9A%84%E4%B8%9A%E5%8A%A1%E5%B9%B3%E5%8F%B0"><span class="nav-number">2.4.3.</span> <span class="nav-text">利用分布式服务打造可复用的业务平台</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Web-Service-%E4%B8%8E%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.4.3.1.</span> <span class="nav-text">Web Service 与企业级分布式服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E7%9A%84%E9%9C%80%E6%B1%82%E4%B8%8E%E7%89%B9%E7%82%B9"><span class="nav-number">2.4.3.2.</span> <span class="nav-text">大型网站分布式服务的需求与特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.4.3.3.</span> <span class="nav-text">分布式服务框架设计</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E6%89%A9%E5%B1%95%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">2.4.4.</span> <span class="nav-text">可扩展的数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E5%BB%BA%E8%AE%BE%E7%BD%91%E7%AB%99%E7%94%9F%E6%80%81%E5%9C%88"><span class="nav-number">2.4.5.</span> <span class="nav-text">利用开放平台建设网站生态圈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-6"><span class="nav-number">2.4.6.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BA%E8%8B%A5%E9%87%91%E6%B1%A4%EF%BC%9A%E7%BD%91%E7%AB%99%E7%9A%84%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84"><span class="nav-number">2.5.</span> <span class="nav-text">固若金汤：网站的安全架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%93%E9%AB%98%E4%B8%80%E5%B0%BA%E9%AD%94%E9%AB%98%E4%B8%80%E4%B8%88%E7%9A%84%E7%BD%91%E7%AB%99%E5%BA%94%E7%94%A8%E6%94%BB%E5%87%BB%E4%B8%8E%E9%98%B2%E5%BE%A1"><span class="nav-number">2.5.1.</span> <span class="nav-text">道高一尺魔高一丈的网站应用攻击与防御</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#XSS%E6%94%BB%E5%87%BB"><span class="nav-number">2.5.1.1.</span> <span class="nav-text">XSS攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E5%85%A5%E6%94%BB%E5%87%BB"><span class="nav-number">2.5.1.2.</span> <span class="nav-text">注入攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CSRF%E6%94%BB%E5%87%BB"><span class="nav-number">2.5.1.3.</span> <span class="nav-text">CSRF攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%94%BB%E5%87%BB%E5%92%8C%E6%BC%8F%E6%B4%9E"><span class="nav-number">2.5.1.4.</span> <span class="nav-text">其他攻击和漏洞</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Web%E5%BA%94%E7%94%A8%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">2.5.1.5.</span> <span class="nav-text">Web应用防火墙</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E6%BC%8F%E9%93%9C%E6%89%AB%E6%8F%8F"><span class="nav-number">2.5.1.6.</span> <span class="nav-text">网站安全漏铜扫描</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E5%8A%A0%E5%AF%86%E6%8A%80%E6%9C%AF%E5%8F%8A%E5%AF%86%E9%92%A5%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86"><span class="nav-number">2.5.2.</span> <span class="nav-text">信息加密技术及密钥安全管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E5%90%91%E4%B8%89%E5%88%97%E5%8A%A0%E5%AF%86"><span class="nav-number">2.5.2.1.</span> <span class="nav-text">单向三列加密</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86"><span class="nav-number">2.5.2.2.</span> <span class="nav-text">对称加密</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86"><span class="nav-number">2.5.2.3.</span> <span class="nav-text">非对称加密</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%86%E9%92%A5%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86"><span class="nav-number">2.5.2.4.</span> <span class="nav-text">密钥安全管理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E8%BF%87%E6%BB%A4%E4%B8%8E%E5%8F%8D%E5%9E%83%E5%9C%BE"><span class="nav-number">2.5.3.</span> <span class="nav-text">信息过滤与反垃圾</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D"><span class="nav-number">2.5.3.1.</span> <span class="nav-text">文本匹配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95"><span class="nav-number">2.5.3.2.</span> <span class="nav-text">分类算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%BB%91%E5%90%8D%E5%8D%95"><span class="nav-number">2.5.3.3.</span> <span class="nav-text">黑名单</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E5%AD%90%E5%95%86%E5%8A%A1%E9%A3%8E%E9%99%A9%E6%8E%A7%E5%88%B6"><span class="nav-number">2.5.4.</span> <span class="nav-text">电子商务风险控制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A3%8E%E9%99%A9"><span class="nav-number">2.5.4.1.</span> <span class="nav-text">风险</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A3%8E%E6%8E%A7"><span class="nav-number">2.5.4.2.</span> <span class="nav-text">风控</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-7"><span class="nav-number">2.5.5.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B"><span class="nav-number">3.</span> <span class="nav-text">案例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%98%E5%AE%9D%E7%BD%91%E7%9A%84%E6%9E%B6%E6%9E%84%E6%BC%94%E5%8C%96%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90"><span class="nav-number">3.1.</span> <span class="nav-text">淘宝网的架构演化案例分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%98%E5%AE%9D%E7%BD%91%E7%9A%84%E4%B8%9A%E5%8A%A1%E5%8F%91%E5%B1%95%E5%8E%86%E7%A8%8B"><span class="nav-number">3.1.1.</span> <span class="nav-text">淘宝网的业务发展历程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%98%E5%AE%9D%E7%BD%91%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E6%BC%94%E5%8C%96"><span class="nav-number">3.1.2.</span> <span class="nav-text">淘宝网技术架构演化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-8"><span class="nav-number">3.1.3.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E7%9A%84%E9%AB%98%E6%80%A7%E8%83%BD%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%88%86%E6%9E%90"><span class="nav-number">3.2.</span> <span class="nav-text">维基百科的高性能架构设计分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Wikipedia-%E7%BD%91%E7%AB%99%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="nav-number">3.2.1.</span> <span class="nav-text">Wikipedia 网站整体架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Wikipedia-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5"><span class="nav-number">3.2.2.</span> <span class="nav-text">Wikipedia 性能优化策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Wikipedia-%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">3.2.2.1.</span> <span class="nav-text">Wikipedia 前端性能优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Wikipedia-%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">3.2.2.2.</span> <span class="nav-text">Wikipedia 服务端性能优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Wikipedia-%E5%90%8E%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">3.2.2.3.</span> <span class="nav-text">Wikipedia 后端性能优化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%B7%E9%87%8F%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9FDoris%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%88%86%E6%9E%90"><span class="nav-number">3.3.</span> <span class="nav-text">海量分布式存储系统Doris的高可用架构设计分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84"><span class="nav-number">3.3.1.</span> <span class="nav-text">分布式存储系统的高可用架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E6%95%85%E9%9A%9C%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">3.3.2.</span> <span class="nav-text">不同故障情况下的高可用解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%95%85%E9%9A%9C%E5%88%86%E7%B1%BB"><span class="nav-number">3.3.2.1.</span> <span class="nav-text">分布式存储系统的故障分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5%E4%B8%8B%E7%B3%BB%E7%BB%9F%E8%AE%BF%E9%97%AE%E7%BB%93%E6%9E%84"><span class="nav-number">3.3.2.2.</span> <span class="nav-text">正常情况下系统访问结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9E%AC%E6%97%B6%E6%95%85%E9%9A%9C%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">3.3.2.3.</span> <span class="nav-text">瞬时故障的高可用解决方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%B4%E6%97%B6%E6%95%85%E9%9A%9C%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">3.3.2.4.</span> <span class="nav-text">临时故障的高可用解决方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B0%B8%E4%B9%85%E6%95%85%E9%9A%9C%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">3.3.2.5.</span> <span class="nav-text">永久故障的高可用解决方案</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E8%B4%AD%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90"><span class="nav-number">3.4.</span> <span class="nav-text">网购秒杀系统架构设计案例分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%92%E6%9D%80%E6%B4%BB%E5%8A%A8%E7%9A%84%E6%8A%80%E6%9C%AF%E6%8C%91%E6%88%98"><span class="nav-number">3.4.1.</span> <span class="nav-text">秒杀活动的技术挑战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%BA%94%E5%AF%B9%E7%AD%96%E7%95%A5"><span class="nav-number">3.4.2.</span> <span class="nav-text">秒杀系统的应对策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.4.3.</span> <span class="nav-text">秒杀系统架构设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-9"><span class="nav-number">3.4.4.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E5%85%B8%E5%9E%8B%E6%95%85%E9%9A%9C%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90"><span class="nav-number">3.5.</span> <span class="nav-text">大型网站典型故障案例分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E6%97%A5%E5%BF%97%E4%B9%9F%E4%BC%9A%E5%BC%95%E5%8F%91%E6%95%85%E9%9A%9C"><span class="nav-number">3.5.1.</span> <span class="nav-text">写日志也会引发故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%95%E5%8F%91%E7%9A%84%E6%95%85%E9%9A%9C"><span class="nav-number">3.5.2.</span> <span class="nav-text">高并发访问数据库引发的故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E5%B9%B6%E5%8F%91%E6%83%85%E5%86%B5%E4%B8%8B%E9%94%81%E5%BC%95%E5%8F%91%E7%9A%84%E6%95%85%E9%9A%9C"><span class="nav-number">3.5.3.</span> <span class="nav-text">高并发情况下锁引发的故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E5%BC%95%E5%8F%91%E7%9A%84%E6%95%85%E9%9A%9C"><span class="nav-number">3.5.4.</span> <span class="nav-text">缓存引发的故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%90%AF%E5%8A%A8%E4%B8%8D%E5%90%8C%E6%AD%A5%E5%BC%95%E5%8F%91%E7%9A%84%E6%95%85%E9%9A%9C"><span class="nav-number">3.5.5.</span> <span class="nav-text">应用启动不同步引发的故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99%E7%8B%AC%E5%8D%A0%E7%A3%81%E7%9B%98%E5%BC%95%E5%8F%91%E7%9A%84%E6%95%85%E9%9A%9C"><span class="nav-number">3.5.6.</span> <span class="nav-text">大文件读写独占磁盘引发的故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BB%A5%E7%94%A8%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E5%BC%95%E5%8F%91%E7%9A%84%E6%95%85%E9%9A%9C"><span class="nav-number">3.5.7.</span> <span class="nav-text">滥用生产环境引发的故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E8%A7%84%E8%8C%83%E7%9A%84%E6%B5%81%E7%A8%8B%E5%BC%95%E5%8F%91%E7%9A%84%E6%95%85%E9%9A%9C"><span class="nav-number">3.5.8.</span> <span class="nav-text">不规范的流程引发的故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%A5%BD%E7%9A%84%E7%BC%96%E7%A8%8B%E4%B9%A0%E6%83%AF%E5%BC%95%E5%8F%91%E7%9A%84%E6%95%85%E9%9A%9C"><span class="nav-number">3.5.9.</span> <span class="nav-text">不好的编程习惯引发的故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-10"><span class="nav-number">3.5.10.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E5%B8%88"><span class="nav-number">4.</span> <span class="nav-text">架构师</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E5%B8%88%E9%A2%86%E5%AF%BC%E8%89%BA%E6%9C%AF"><span class="nav-number">4.1.</span> <span class="nav-text">架构师领导艺术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E6%B3%A8%E4%BA%BA%E8%80%8C%E4%B8%8D%E6%98%AF%E4%BA%A7%E5%93%81"><span class="nav-number">4.1.1.</span> <span class="nav-text">关注人而不是产品</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E6%8E%98%E4%BA%BA%E7%9A%84%E4%BC%98%E7%A7%80"><span class="nav-number">4.1.2.</span> <span class="nav-text">发掘人的优秀</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E7%BE%8E%E5%A5%BD%E8%93%9D%E5%9B%BE"><span class="nav-number">4.1.3.</span> <span class="nav-text">共享美好蓝图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E5%90%8C%E5%8F%82%E4%B8%8E%E6%9E%B6%E6%9E%84"><span class="nav-number">4.1.4.</span> <span class="nav-text">共同参与架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%A6%E4%BC%9A%E5%A6%A5%E5%8D%8F"><span class="nav-number">4.1.5.</span> <span class="nav-text">学会妥协</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%90%E5%B0%B1%E4%BB%96%E4%BA%BA"><span class="nav-number">4.1.6.</span> <span class="nav-text">成就他人</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E5%B8%88%E8%81%8C%E5%9C%BA%E6%94%BB%E7%95%A5"><span class="nav-number">4.2.</span> <span class="nav-text">网站架构师职场攻略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E7%8E%B0%E9%97%AE%E9%A2%98%EF%BC%8C%E5%AF%BB%E6%89%BE%E7%AA%81%E7%A0%B4"><span class="nav-number">4.2.1.</span> <span class="nav-text">发现问题，寻找突破</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%EF%BC%8C%E5%AF%BB%E6%B1%82%E6%94%AF%E6%8C%81"><span class="nav-number">4.2.2.</span> <span class="nav-text">提出问题，寻求支持</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98%EF%BC%8C%E8%BE%BE%E6%88%90%E7%BB%A9%E6%95%88"><span class="nav-number">4.2.3.</span> <span class="nav-text">解决问题，达成绩效</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BC%AB%E8%AF%9D%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E5%B8%88"><span class="nav-number">4.3.</span> <span class="nav-text">漫话网站架构师</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%89%E4%BD%9C%E7%94%A8%E5%88%92%E5%88%86%E6%9E%B6%E6%9E%84%E5%B8%88"><span class="nav-number">4.3.1.</span> <span class="nav-text">按作用划分架构师</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%89%E6%95%88%E6%9E%9C%E5%88%92%E5%88%86%E6%9E%B6%E6%9E%84%E5%B8%88"><span class="nav-number">4.3.2.</span> <span class="nav-text">按效果划分架构师</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%89%E8%81%8C%E8%B4%A3%E8%A7%92%E8%89%B2%E5%88%92%E5%88%86%E6%9E%B6%E6%9E%84%E5%B8%88"><span class="nav-number">4.3.3.</span> <span class="nav-text">按职责角色划分架构师</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%B3%E6%B3%A8%E5%B1%82%E6%AC%A1%E5%88%92%E5%88%86%E6%9E%B6%E6%9E%84%E5%B8%88"><span class="nav-number">4.3.4.</span> <span class="nav-text">安关注层次划分架构师</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%B3%E6%B3%A8%E5%B1%82%E6%AC%A1%E5%88%92%E5%88%86%E6%9E%B6%E6%9E%84%E5%B8%88-1"><span class="nav-number">4.3.5.</span> <span class="nav-text">安关注层次划分架构师</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%8F%A3%E7%A2%91%E5%88%92%E5%88%86%E6%9E%B6%E6%9E%84%E5%B8%88"><span class="nav-number">4.3.6.</span> <span class="nav-text">安口碑划分架构师</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E4%B8%BB%E6%B5%81%E6%96%B9%E5%BC%8F%E5%88%92%E5%88%86%E6%9E%B6%E6%9E%84%E5%B8%88"><span class="nav-number">4.3.7.</span> <span class="nav-text">非主流方式划分架构师</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
 
 
 
 
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
 
 
 
@@ -570,98 +390,6 @@
 
 
 
-  
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-  
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
-
-
-
-  
-  
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  
-
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
 
 
 
@@ -669,16 +397,7 @@
 
   
 
-  
-
-  
-  
-
-  
-
-  
-
-  
-
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
 </body>
 </html>
