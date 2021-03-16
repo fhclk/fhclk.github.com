@@ -17,13 +17,13 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta property="og:type" content="website">
-<meta property="og:title" content="幸福的拾荒者">
+<meta property="og:title" content="拾荒者">
 <meta property="og:url" content="http://fhclk.github.io/page/2/index.html">
-<meta property="og:site_name" content="幸福的拾荒者">
+<meta property="og:site_name" content="拾荒者">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="fhclk">
 <meta name="twitter:card" content="summary">
@@ -41,7 +41,7 @@
   };
 </script>
 
-  <title>幸福的拾荒者</title>
+  <title>拾荒者</title>
   
 
 
@@ -92,9 +92,10 @@
 
     <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">幸福的拾荒者</h1>
+      <h1 class="site-title">拾荒者</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
   </div>
 
   <div class="site-nav-right">
@@ -159,7 +160,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="幸福的拾荒者">
+      <meta itemprop="name" content="拾荒者">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -245,6 +246,9 @@
         <div class="post-eof"></div>
       </footer>
   </article>
+  <div>
+  
+  </div>
   
   
   
@@ -262,7 +266,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="幸福的拾荒者">
+      <meta itemprop="name" content="拾荒者">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -301,7 +305,7 @@
           <h4 id="YARN概述"><a href="#YARN概述" class="headerlink" title="YARN概述"></a>YARN概述</h4><p>Apache Hadoop YARN (Yet Another Resource Negotiator，另 一种资源协调者)是一种新的Hadoop资源管理器，是一个通用资源管理系统，可为上层应用提供统一的资源管理和调度，它的引入为集群在利用率、资源统一管理和数据共享等方面带来了巨大好处。</p>
 <p>YARN 是随着Hadoop发展而催生的新框架，取代了以前Hadoop1.x中 JobTracker的角色，因为以前JobTracker的任务过重，负责任务的调度、跟踪和失败重启等过程，而且只能运行MapReduce作业，不支持其他编程模式，这也限制了JobTracker的使用范围，于是YARN应运而生。</p>
 <h4 id="YARN架构"><a href="#YARN架构" class="headerlink" title="YARN架构"></a>YARN架构</h4><p>YARN由Client、ResourceManager、NodeManager、ApplicationMaster组成；YARN也是采用Master/Slave结构，一个ResourceManager对应多个NodeManager。</p>
-<p><img src="/.io//YARN%E6%9E%B6%E6%9E%84.png" alt="YARN架构"></p>
+<p><img src="/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E6%9E%B6%E6%9E%84.png" alt="YARN架构"></p>
 <p>Client向ResourceManager提交任务、终止任务等。</p>
 <p>ApplicationMaster由对应的应用程序完成；每个应用程序对应一个 Application­ Master, ApplicationMaster向ResourceManager 申请资源用于在NodeManager上启动相应的任务。</p>
 <p>NodeManager向ResourceManager通过心跳信息，汇报NodeManager健康状况、任务执行状况、领取任务等。</p>
@@ -337,7 +341,7 @@
 </ul>
 </li>
 </ol>
-<h3 id="YARN运行机制"><a href="#YARN运行机制" class="headerlink" title="YARN运行机制"></a>YARN运行机制</h3><h4 id="YARN工作原理"><a href="#YARN工作原理" class="headerlink" title="YARN工作原理"></a>YARN工作原理</h4><p><img src="/.io//YARN%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png" alt="YARN工作原理"></p>
+<h3 id="YARN运行机制"><a href="#YARN运行机制" class="headerlink" title="YARN运行机制"></a>YARN运行机制</h3><h4 id="YARN工作原理"><a href="#YARN工作原理" class="headerlink" title="YARN工作原理"></a>YARN工作原理</h4><p><img src="/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png" alt="YARN工作原理"></p>
 <p>执行步骤：</p>
 <ol>
 <li>用户向 Y础N 中提交应用程序/作业，其中包括 ApplicationMaster程序、启动 ApplicationMaster的命令、用户程序等 。</li>
@@ -360,7 +364,7 @@
 <li>短应用程序(秒、分、小时级内运行结束的程序: MR job、Spark job等)  </li>
 <li>打造以YARN为核心的生态系统</li>
 </ol>
-<p>YARN核心的生态系统<br><img src="/.io//YARN%E6%A0%B8%E5%BF%83%E7%9A%84%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F.png" alt="YARN核心的生态系统"><br>图中的 HDFS2 值的是在基于HDFS之上的HA和Federation等新特性。</p>
+<p>YARN核心的生态系统<br><img src="/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E6%A0%B8%E5%BF%83%E7%9A%84%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F.png" alt="YARN核心的生态系统"><br>图中的 HDFS2 值的是在基于HDFS之上的HA和Federation等新特性。</p>
 <p>在引入YARN之后，可以在YARN上运行各种不同框架的作业:</p>
 <ul>
 <li>离线计算框架: MapReduce</li>
@@ -379,6 +383,9 @@
         <div class="post-eof"></div>
       </footer>
   </article>
+  <div>
+  
+  </div>
   
   
   
@@ -396,7 +403,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="幸福的拾荒者">
+      <meta itemprop="name" content="拾荒者">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -443,7 +450,7 @@
 <li>无法高效存储大量小文件</li>
 </ol>
 <h3 id="HDFS基本概念"><a href="#HDFS基本概念" class="headerlink" title="HDFS基本概念"></a>HDFS基本概念</h3><h4 id="数据块-Block"><a href="#数据块-Block" class="headerlink" title="数据块(Block)"></a>数据块(Block)</h4><p>HDFS默认的最基本的存储单位是数据块(Block)，默认的块大小(Block Size)是64M(有些发布版本是128M)。HDFS中文件被分割成以Block Size为大小的数据块存储的。HDFS中，如果一个文件小于一个数据块的大小，并不占用整个数据块存储空间，文件大小是多大就占用多少存储空间。</p>
-<h4 id="元数据节点-NameNode"><a href="#元数据节点-NameNode" class="headerlink" title="元数据节点(NameNode)"></a>元数据节点(NameNode)</h4><p>NameNode的职责是管理文件系统的命名空间，它将所有的文件和文件夹的元数据保存在一个文件系统树中，至于一个文件包括哪些数据块，分布在哪些数据节点上，这些信息都存储下来。<br>NameNode目录结构如下所示：<br><img src="/.io//nameNode.png" alt="NameNode目录结构"></p>
+<h4 id="元数据节点-NameNode"><a href="#元数据节点-NameNode" class="headerlink" title="元数据节点(NameNode)"></a>元数据节点(NameNode)</h4><p>NameNode的职责是管理文件系统的命名空间，它将所有的文件和文件夹的元数据保存在一个文件系统树中，至于一个文件包括哪些数据块，分布在哪些数据节点上，这些信息都存储下来。<br>NameNode目录结构如下所示：<br><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/nameNode.png" alt="NameNode目录结构"></p>
 <p>目录结构描述：   </p>
 <ol>
 <li>VERSION文件是存放版本的文件，保存了HDFS的版本号。</li>
@@ -451,7 +458,7 @@
 <li>fsimage文件即命名空间文件。</li>
 </ol>
 <h4 id="数据节点-DataNode"><a href="#数据节点-DataNode" class="headerlink" title="数据节点(DataNode)"></a>数据节点(DataNode)</h4><p>DataNode是文件系统中真正存储数据的地方，一个文件被拆分成多个Block后，会将这些Block存储在对应的数据节点上。客户端向NameNode发起请求后到对应的数据节点上写入或读取对应的数据Block。</p>
-<p>DataNode目录结构：<br><img src="/.io//dataNode.png" alt="DataNode目录结构"></p>
+<p>DataNode目录结构：<br><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/dataNode.png" alt="DataNode目录结构"></p>
 <p>目录结构描述：</p>
 <ol>
 <li>blk_<id>保存的是HDFS的数据块，其中保存了具体的二进制数据。</id></li>
@@ -459,10 +466,10 @@
 <li>subdirxx 当一个目录中的数据块达到一定数量的时候，则创建子文件夹来保存数据块及数据块属性信息。</li>
 </ol>
 <h4 id="从元数据节点-Secondary-NameNode"><a href="#从元数据节点-Secondary-NameNode" class="headerlink" title="从元数据节点(Secondary NameNode)"></a>从元数据节点(Secondary NameNode)</h4><p>从元数据节点并不是NameNode节点出现问题时的备用节点，它和元数据节点负责不同的功能。其主要功能就是周期性将NameNode的namespace image和edit log合并，以防日志文件过大。合并过后的namespace image也在元数据节点保存了一份，以防在NameNode失败的时候进行恢复。        </p>
-<p>Secondary NameNode目录结构：<br><img src="/.io//secondaryNameNode.png" alt="Secondary DataNode目录结构"></p>
+<p>Secondary NameNode目录结构：<br><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/secondaryNameNode.png" alt="Secondary DataNode目录结构"></p>
 <p>Secondary NameNode用来帮助NameNode将内存中的元数据信息checkpoint到硬盘上。</p>
 <h4 id="HDFS体系结构"><a href="#HDFS体系结构" class="headerlink" title="HDFS体系结构"></a>HDFS体系结构</h4><h5 id="体系架构概述"><a href="#体系架构概述" class="headerlink" title="体系架构概述"></a>体系架构概述</h5><p>HDFS采用master/slave的架构。一个HDFS集群是由一个NameNode和一定数量的DataNode组成。NameNode是一个中心服务器，负责管理文件系统的名字空间（namespace）以及客户端文件的访问。集群中的DataNode一般是一个节点对应一个，负责管理它所在节点上的存储数据。从内容上看，一个文件系统其实被分成一个或多个数据块，这些数据块存储在一组DataNode上。NameNode执行文件系统的名字空间操作，比如打开、关闭、重命名文件或目录，它也负责确定数据块到具体DataNode节点的映射。DataNode负责处理文件系统客户端的读写请求。在NameNode的统一调度下进行数据块的创建、删除和复制。</p>
-<p><img src="/.io//HDFS%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84.png" alt="HDFS体系结构"></p>
+<p><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/HDFS%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84.png" alt="HDFS体系结构"></p>
 <h5 id="架构组件功能"><a href="#架构组件功能" class="headerlink" title="架构组件功能"></a>架构组件功能</h5><p>NameNode和DataNode被设计成可以在普通的商用机器上运行。任何支持Java的机器都可以部署NameNode或DataNode。一个典型的部署场景是一台机器上运行一个NameNode实例，而集群中的其他机器分别运行一个DataNode实例。这种架构并不排斥在一台机器上运行多个DataNode，只不过这样的情况比较少。</p>
 <p>文件系统的名字空间（namespace）：HDFS支持传统的层次型文件组织结构。用户或者应用程序可以创建目录，然后将文件保存在这些目录里。文件系统名字空间的层次结构和大多数现有文件系统类似，用户可以创建、删除、移动或重命名文件。当前，HDFS不支持用户磁盘配额和访问权限控制，也不支持硬链接和软链接。但是HDFS架构并不妨碍实现这些特性。</p>
 <p>NameNode负责维护文件系统的名字空间，任何对文件系统名字空间或属性的修改都将被NameNode记录下来。应用程序可以设置HDFS保存的文件的副本数目，文件副本数目称为文件的副本系数，这个信息也是由NameNode保存的。</p>
@@ -506,7 +513,7 @@
 <li>当读取完所有的数据之后，DFSInputStream会关闭与DataNode的连接，然后寻找下一块的最佳位置，客户端只需要读取连续的流。</li>
 <li>一旦客户端完成读取操作后，就对DFSInputStream调用close方法来完成资源的关闭操作。</li>
 </ol>
-<p><img src="/.io//HDFS%E8%AF%BB%E6%B5%81%E7%A8%8B.png" alt="HDFS读取数据过程"></p>
+<p><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/HDFS%E8%AF%BB%E6%B5%81%E7%A8%8B.png" alt="HDFS读取数据过程"></p>
 <h5 id="HDFS文件写流程"><a href="#HDFS文件写流程" class="headerlink" title="HDFS文件写流程"></a>HDFS文件写流程</h5><p>客户端写数据的流程：</p>
 <ol>
 <li>客户端通过调用DistributeFileSystem的create方法来创建一个文件。</li>
@@ -515,7 +522,7 @@
 <li>FSDataOutputStream内部维护着一个确认队列，当接收到所有DataNode确认写完的消息后，该数据才会从确认队列中删除。</li>
 <li>当客户端完成数据的写入后，会对数据流调用close方法来关闭相关资源</li>
 </ol>
-<p><img src="/.io//HDFS%E5%86%99%E6%B5%81%E7%A8%8B.png" alt="HDFS写数据过程"></p>
+<p><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/HDFS%E5%86%99%E6%B5%81%E7%A8%8B.png" alt="HDFS写数据过程"></p>
 <h4 id="HDFS副本机制"><a href="#HDFS副本机制" class="headerlink" title="HDFS副本机制"></a>HDFS副本机制</h4><p>HDFS上的文件对应的Block保存多个副本，且提供容错机制，副本丢失或宕机自动恢复。默认3份副本。</p>
 <h5 id="副本摆放策略"><a href="#副本摆放策略" class="headerlink" title="副本摆放策略"></a>副本摆放策略</h5><ol>
 <li>第一副本：放置在上传文件的DataNode上；如果是集群外提交，则随机挑选一台磁盘不太慢、CPU不太忙的节点</li>
@@ -535,7 +542,7 @@
 </ol>
 <h4 id="机架感知"><a href="#机架感知" class="headerlink" title="机架感知"></a>机架感知</h4><p>通常大型Hadoop集群是以机架的形式来组织的，同一个机架上的不同节点间的网络状况比不同机架之间的更为理想，NameNode设法将数据块副本保存在不同的机架上以提高容错性。</p>
 <p>HDFS不能够自动判断集群中各个DataNode的网络拓扑情况，Hadoop允许集群的管理员通过配置dfs.network.script参数来确定节点所处的机架，配置文件提供了ip到rackid的翻译。NameNode通过这个配置知道集群中各个DataNode机器的rack.id。如果topology.script.file.name没有设定，则每个ip都会被翻译成/default-rack。 </p>
-<p><img src="/.io//%E6%9C%BA%E6%9E%B6%E6%84%9F%E7%9F%A5.png" alt="机架感知"></p>
+<p><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/%E6%9C%BA%E6%9E%B6%E6%84%9F%E7%9F%A5.png" alt="机架感知"></p>
 <p>说明:</p>
 <ol>
 <li>当没有配置机架信息时，所有的机器Hadoop都在同一个默认的机架下， 名为“/default-rack”，这种情况的任何一台DataNode机器，不管物理上是否属于同一个机架，都会被认为是在同一个机架下。</li>
@@ -549,7 +556,7 @@
 <p>注意:<br>对于一定大小的数据，比如说IOOGB，如果采用SequenceFile进行存储的话占用的空间是大于lOOGB的，因为SequenceFile的存储中为了查找方便添加了一些额外的信息。</p>
 <h5 id="SequenceFile特点"><a href="#SequenceFile特点" class="headerlink" title="SequenceFile特点"></a>SequenceFile特点</h5><ol>
 <li><p>支持压缩:可定制为基于Record(记录)和Block(块)压缩。无压缩类型:如果没有启动压缩(默认设置，那么每个记录就由它的记录长度(字节数)、键的长度，键和值组成，长度字段为4字节。</p>
-<p> <img src="/.io//SequenceFile%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png" alt="SequenceFile 内部结构"><br> Record针对行压缩，只压缩Value部分不压缩Key; Block对Key和Value都压缩。 </p>
+<p> <img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/SequenceFile%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png" alt="SequenceFile 内部结构"><br> Record针对行压缩，只压缩Value部分不压缩Key; Block对Key和Value都压缩。 </p>
 </li>
 <li><p>本地化任务支持: 因为文件可以被切分，因此在运行MapReduce任务时数据的本地化情况应该是非常好的； 尽可能多地发起Map Task来进行并行处理进而提高作业的执行效率。</p>
 </li>
@@ -607,6 +614,9 @@
         <div class="post-eof"></div>
       </footer>
   </article>
+  <div>
+  
+  </div>
   
   
   
@@ -624,7 +634,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="幸福的拾荒者">
+      <meta itemprop="name" content="拾荒者">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -670,6 +680,9 @@
         <div class="post-eof"></div>
       </footer>
   </article>
+  <div>
+  
+  </div>
   
   
   
@@ -687,7 +700,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="幸福的拾荒者">
+      <meta itemprop="name" content="拾荒者">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -727,6 +740,9 @@
         <div class="post-eof"></div>
       </footer>
   </article>
+  <div>
+  
+  </div>
   
   
   
@@ -744,7 +760,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="幸福的拾荒者">
+      <meta itemprop="name" content="拾荒者">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -864,6 +880,9 @@
         <div class="post-eof"></div>
       </footer>
   </article>
+  <div>
+  
+  </div>
   
   
   
@@ -881,7 +900,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="幸福的拾荒者">
+      <meta itemprop="name" content="拾荒者">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -928,6 +947,9 @@
         <div class="post-eof"></div>
       </footer>
   </article>
+  <div>
+  
+  </div>
   
   
   
@@ -945,7 +967,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="幸福的拾荒者">
+      <meta itemprop="name" content="拾荒者">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -993,6 +1015,9 @@
         <div class="post-eof"></div>
       </footer>
   </article>
+  <div>
+  
+  </div>
   
   
   
@@ -1010,7 +1035,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="幸福的拾荒者">
+      <meta itemprop="name" content="拾荒者">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -1046,7 +1071,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="计算机组成与体系结构"><a href="#计算机组成与体系结构" class="headerlink" title="计算机组成与体系结构"></a>计算机组成与体系结构</h2><h3 id="计算机系统组成"><a href="#计算机系统组成" class="headerlink" title="计算机系统组成"></a>计算机系统组成</h3><h4 id="计算机硬件的组成"><a href="#计算机硬件的组成" class="headerlink" title="计算机硬件的组成"></a>计算机硬件的组成</h4><p><img src="/.io//computerStruct.png"></p>
+          <h2 id="计算机组成与体系结构"><a href="#计算机组成与体系结构" class="headerlink" title="计算机组成与体系结构"></a>计算机组成与体系结构</h2><h3 id="计算机系统组成"><a href="#计算机系统组成" class="headerlink" title="计算机系统组成"></a>计算机系统组成</h3><h4 id="计算机硬件的组成"><a href="#计算机硬件的组成" class="headerlink" title="计算机硬件的组成"></a>计算机硬件的组成</h4><p><img src="/2018/03/25/read-xtjgsjsjc/computerStruct.png"></p>
 <ul>
 <li>控制器是分析和执行指令的部件，也是统一指挥并控制计算机各部件协 调工作的中心部件，所依据的是机器指令。</li>
 <li>运算器也称为算术逻辑单元(ArithmeticandLogicUnit，ALU)，其主要功能是在控制器的控制下完成各种算术运算和逻辑运算。</li>
@@ -1066,12 +1091,12 @@
 <h3 id="流水线"><a href="#流水线" class="headerlink" title="流水线"></a>流水线</h3><p>流水线技术把一个任务分解为若干顺序执行的子任务，不同的子任务由不同的执行机构 负责执行，而这些机构可以同时并行工作。在任一时刻，任一任务只占用其中一个执行机构， 这样就可以实现多个任务的重叠执行，以提高工作效率。</p>
 <h4 id="流水线周期"><a href="#流水线周期" class="headerlink" title="流水线周期"></a>流水线周期</h4><p>流水线应用过程中，会将需要处理的工作分为 N 个阶段，最耗时的那一段所消耗的时 间为流水线周期。</p>
 <h4 id="计算流水线执行时间"><a href="#计算流水线执行时间" class="headerlink" title="计算流水线执行时间"></a>计算流水线执行时间</h4><p>流水线执行时间=第 1 条指令的执行时间+(n-1)*流水线周期.<br>注:n 代表需要处理的任务数量。  </p>
-<h4 id="流水线的吞吐率"><a href="#流水线的吞吐率" class="headerlink" title="流水线的吞吐率"></a>流水线的吞吐率</h4><p>流水线的吞吐率(Though Put rate，TP)是指在单位时间内流水线所完成的任务数量或输出的结果数量。有些文献也称为平均吞吐率、实际吞率。计算流水线吞吐率的最基本的公式如下:<br><img src="/.io//thoughPutRate.png"></p>
+<h4 id="流水线的吞吐率"><a href="#流水线的吞吐率" class="headerlink" title="流水线的吞吐率"></a>流水线的吞吐率</h4><p>流水线的吞吐率(Though Put rate，TP)是指在单位时间内流水线所完成的任务数量或输出的结果数量。有些文献也称为平均吞吐率、实际吞率。计算流水线吞吐率的最基本的公式如下:<br><img src="/2018/03/25/read-xtjgsjsjc/thoughPutRate.png"></p>
 <h4 id="流水线的加速比"><a href="#流水线的加速比" class="headerlink" title="流水线的加速比"></a>流水线的加速比</h4><p>完成同样一批任务，不使用流水线所用的时间与使用流水线所用的时间之比称为流水线 的加速比(speedup ratio)。     </p>
 <h2 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h2><p>操作系统的基本类型有:批处理操作系统、分时操作系 统和实时操作系统。从资源管理的角度看，操作系统主要是对处理器、存储器、文件、设备 和作业进行管理。</p>
 <h3 id="操作系统的类型与结构"><a href="#操作系统的类型与结构" class="headerlink" title="操作系统的类型与结构"></a>操作系统的类型与结构</h3><h4 id="操作系统的分类"><a href="#操作系统的分类" class="headerlink" title="操作系统的分类"></a>操作系统的分类</h4><p>按照操作系统的功能划分，操作系统的基本类型有批处理操作系统、分时操作系统、实时操作系统、网络操作系统、分布式操作系统、嵌入式操作统、微内核操作系统等。</p>
 <h3 id="操作系统的基本原理"><a href="#操作系统的基本原理" class="headerlink" title="操作系统的基本原理"></a>操作系统的基本原理</h3><p>操作系统的主要功能是进行处理机与进程管理、存储管理、设备管理、文件管理和作业管理的工作</p>
-<h4 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h4><p><img src="/.io//progressStates.png"></p>
+<h4 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h4><p><img src="/2018/03/25/read-xtjgsjsjc/progressStates.png"></p>
 <h4 id="存储管理"><a href="#存储管理" class="headerlink" title="存储管理"></a>存储管理</h4><h4 id="设备管理"><a href="#设备管理" class="headerlink" title="设备管理"></a>设备管理</h4><h4 id="文件管理"><a href="#文件管理" class="headerlink" title="文件管理"></a>文件管理</h4><h4 id="作业管理"><a href="#作业管理" class="headerlink" title="作业管理"></a>作业管理</h4><h2 id="数据库系统"><a href="#数据库系统" class="headerlink" title="数据库系统"></a>数据库系统</h2><h3 id="数据库管理系统的类型"><a href="#数据库管理系统的类型" class="headerlink" title="数据库管理系统的类型"></a>数据库管理系统的类型</h3><h3 id="书籍模式与范式"><a href="#书籍模式与范式" class="headerlink" title="书籍模式与范式"></a>书籍模式与范式</h3><h4 id="数据库的结构与模式"><a href="#数据库的结构与模式" class="headerlink" title="数据库的结构与模式"></a>数据库的结构与模式</h4><h4 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h4><h4 id="关系代数"><a href="#关系代数" class="headerlink" title="关系代数"></a>关系代数</h4><h4 id="数据的规范化"><a href="#数据的规范化" class="headerlink" title="数据的规范化"></a>数据的规范化</h4><h4 id="反规范化"><a href="#反规范化" class="headerlink" title="反规范化"></a>反规范化</h4><h3 id="数据库设计"><a href="#数据库设计" class="headerlink" title="数据库设计"></a>数据库设计</h3><h4 id="数据库设计的方法"><a href="#数据库设计的方法" class="headerlink" title="数据库设计的方法"></a>数据库设计的方法</h4><h4 id="数据库设计的基础步骤"><a href="#数据库设计的基础步骤" class="headerlink" title="数据库设计的基础步骤"></a>数据库设计的基础步骤</h4><h4 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h4><h4 id="概念结构设计"><a href="#概念结构设计" class="headerlink" title="概念结构设计"></a>概念结构设计</h4><h4 id="逻辑结构设计"><a href="#逻辑结构设计" class="headerlink" title="逻辑结构设计"></a>逻辑结构设计</h4><h4 id="物理结构设计"><a href="#物理结构设计" class="headerlink" title="物理结构设计"></a>物理结构设计</h4><h3 id="事务管理"><a href="#事务管理" class="headerlink" title="事务管理"></a>事务管理</h3><h4 id="并发控制"><a href="#并发控制" class="headerlink" title="并发控制"></a>并发控制</h4><h4 id="故障与恢复"><a href="#故障与恢复" class="headerlink" title="故障与恢复"></a>故障与恢复</h4><h3 id="备份与恢复"><a href="#备份与恢复" class="headerlink" title="备份与恢复"></a>备份与恢复</h3><h3 id="分布式数据库系统"><a href="#分布式数据库系统" class="headerlink" title="分布式数据库系统"></a>分布式数据库系统</h3><h4 id="分布式数据库的概念"><a href="#分布式数据库的概念" class="headerlink" title="分布式数据库的概念"></a>分布式数据库的概念</h4><h4 id="分布式数据库的架构"><a href="#分布式数据库的架构" class="headerlink" title="分布式数据库的架构"></a>分布式数据库的架构</h4><h3 id="数据仓库"><a href="#数据仓库" class="headerlink" title="数据仓库"></a>数据仓库</h3><h4 id="数据仓库的概念"><a href="#数据仓库的概念" class="headerlink" title="数据仓库的概念"></a>数据仓库的概念</h4><h4 id="数据挖掘的功能"><a href="#数据挖掘的功能" class="headerlink" title="数据挖掘的功能"></a>数据挖掘的功能</h4><h4 id="数据挖掘常用技术"><a href="#数据挖掘常用技术" class="headerlink" title="数据挖掘常用技术"></a>数据挖掘常用技术</h4><h4 id="数据挖掘的流程"><a href="#数据挖掘的流程" class="headerlink" title="数据挖掘的流程"></a>数据挖掘的流程</h4><h3 id="NoSQL"><a href="#NoSQL" class="headerlink" title="NoSQL"></a>NoSQL</h3><h3 id="大数据"><a href="#大数据" class="headerlink" title="大数据"></a>大数据</h3><h2 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h2><h3 id="网络架构与协议"><a href="#网络架构与协议" class="headerlink" title="网络架构与协议"></a>网络架构与协议</h3><h4 id="网络互连模型"><a href="#网络互连模型" class="headerlink" title="网络互连模型"></a>网络互连模型</h4><h4 id="常见的网络协议"><a href="#常见的网络协议" class="headerlink" title="常见的网络协议"></a>常见的网络协议</h4><h4 id="IPv6"><a href="#IPv6" class="headerlink" title="IPv6"></a>IPv6</h4><h3 id="局域网与广域网"><a href="#局域网与广域网" class="headerlink" title="局域网与广域网"></a>局域网与广域网</h3><h4 id="局域网基础知识"><a href="#局域网基础知识" class="headerlink" title="局域网基础知识"></a>局域网基础知识</h4><h4 id="无线局域网"><a href="#无线局域网" class="headerlink" title="无线局域网"></a>无线局域网</h4><h4 id="广域网技术"><a href="#广域网技术" class="headerlink" title="广域网技术"></a>广域网技术</h4><h4 id="网络接入技术"><a href="#网络接入技术" class="headerlink" title="网络接入技术"></a>网络接入技术</h4><h3 id="网络互连与常用设备"><a href="#网络互连与常用设备" class="headerlink" title="网络互连与常用设备"></a>网络互连与常用设备</h3><h3 id="网络工程"><a href="#网络工程" class="headerlink" title="网络工程"></a>网络工程</h3><h4 id="网络规划"><a href="#网络规划" class="headerlink" title="网络规划"></a>网络规划</h4><h4 id="网络设计"><a href="#网络设计" class="headerlink" title="网络设计"></a>网络设计</h4><h4 id="网络实施"><a href="#网络实施" class="headerlink" title="网络实施"></a>网络实施</h4><h3 id="网络存储技术"><a href="#网络存储技术" class="headerlink" title="网络存储技术"></a>网络存储技术</h3><h3 id="综合布线"><a href="#综合布线" class="headerlink" title="综合布线"></a>综合布线</h3><h2 id="系统性能评价"><a href="#系统性能评价" class="headerlink" title="系统性能评价"></a>系统性能评价</h2><h3 id="性能指标"><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h3><h4 id="计算机"><a href="#计算机" class="headerlink" title="计算机"></a>计算机</h4><h4 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h4><h4 id="操作系统-1"><a href="#操作系统-1" class="headerlink" title="操作系统"></a>操作系统</h4><h4 id="数据库管理系统"><a href="#数据库管理系统" class="headerlink" title="数据库管理系统"></a>数据库管理系统</h4><h4 id="Web服务器"><a href="#Web服务器" class="headerlink" title="Web服务器"></a>Web服务器</h4><h3 id="性能计算"><a href="#性能计算" class="headerlink" title="性能计算"></a>性能计算</h3><h3 id="性能设计"><a href="#性能设计" class="headerlink" title="性能设计"></a>性能设计</h3><h4 id="阿姆达尔解决方案"><a href="#阿姆达尔解决方案" class="headerlink" title="阿姆达尔解决方案"></a>阿姆达尔解决方案</h4><h4 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h4><h3 id="性能评估"><a href="#性能评估" class="headerlink" title="性能评估"></a>性能评估</h3><h4 id="基准测试程序"><a href="#基准测试程序" class="headerlink" title="基准测试程序"></a>基准测试程序</h4><h4 id="Web服务器的性能评估"><a href="#Web服务器的性能评估" class="headerlink" title="Web服务器的性能评估"></a>Web服务器的性能评估</h4><h4 id="系统监视"><a href="#系统监视" class="headerlink" title="系统监视"></a>系统监视</h4><h2 id="开发方法"><a href="#开发方法" class="headerlink" title="开发方法"></a>开发方法</h2><h3 id="软件生命周期"><a href="#软件生命周期" class="headerlink" title="软件生命周期"></a>软件生命周期</h3><h3 id="软件开发模型"><a href="#软件开发模型" class="headerlink" title="软件开发模型"></a>软件开发模型</h3><h4 id="瀑布模型"><a href="#瀑布模型" class="headerlink" title="瀑布模型"></a>瀑布模型</h4><h4 id="演化模型"><a href="#演化模型" class="headerlink" title="演化模型"></a>演化模型</h4><h4 id="螺旋模型"><a href="#螺旋模型" class="headerlink" title="螺旋模型"></a>螺旋模型</h4><h4 id="增量模型"><a href="#增量模型" class="headerlink" title="增量模型"></a>增量模型</h4><h4 id="构件组装模型"><a href="#构件组装模型" class="headerlink" title="构件组装模型"></a>构件组装模型</h4><h3 id="统一过程"><a href="#统一过程" class="headerlink" title="统一过程"></a>统一过程</h3><h3 id="敏捷方法"><a href="#敏捷方法" class="headerlink" title="敏捷方法"></a>敏捷方法</h3><h4 id="极限编程"><a href="#极限编程" class="headerlink" title="极限编程"></a>极限编程</h4><h4 id="特征驱动开发"><a href="#特征驱动开发" class="headerlink" title="特征驱动开发"></a>特征驱动开发</h4><h4 id="Scrum"><a href="#Scrum" class="headerlink" title="Scrum"></a>Scrum</h4><h4 id="水晶方法"><a href="#水晶方法" class="headerlink" title="水晶方法"></a>水晶方法</h4><h4 id="其他敏捷方法"><a href="#其他敏捷方法" class="headerlink" title="其他敏捷方法"></a>其他敏捷方法</h4><h3 id="软件重用"><a href="#软件重用" class="headerlink" title="软件重用"></a>软件重用</h3><h4 id="软件重用-1"><a href="#软件重用-1" class="headerlink" title="软件重用"></a>软件重用</h4><h4 id="构件技术"><a href="#构件技术" class="headerlink" title="构件技术"></a>构件技术</h4><h3 id="基于架构的软件设计"><a href="#基于架构的软件设计" class="headerlink" title="基于架构的软件设计"></a>基于架构的软件设计</h3><h4 id="ABSD方法与生命周期"><a href="#ABSD方法与生命周期" class="headerlink" title="ABSD方法与生命周期"></a>ABSD方法与生命周期</h4><h4 id="基于架构的软件开发模型"><a href="#基于架构的软件开发模型" class="headerlink" title="基于架构的软件开发模型"></a>基于架构的软件开发模型</h4><h3 id="形式化方法"><a href="#形式化方法" class="headerlink" title="形式化方法"></a>形式化方法</h3><h2 id="系统规划"><a href="#系统规划" class="headerlink" title="系统规划"></a>系统规划</h2><h3 id="项目的提出与选择"><a href="#项目的提出与选择" class="headerlink" title="项目的提出与选择"></a>项目的提出与选择</h3><h4 id="项目的立项目标和动机"><a href="#项目的立项目标和动机" class="headerlink" title="项目的立项目标和动机"></a>项目的立项目标和动机</h4><h4 id="项目的选择和确定"><a href="#项目的选择和确定" class="headerlink" title="项目的选择和确定"></a>项目的选择和确定</h4><h4 id="项目提出和选择的结果"><a href="#项目提出和选择的结果" class="headerlink" title="项目提出和选择的结果"></a>项目提出和选择的结果</h4><h3 id="可行性研究与效益分析"><a href="#可行性研究与效益分析" class="headerlink" title="可行性研究与效益分析"></a>可行性研究与效益分析</h3><h4 id="可行性研究的内容"><a href="#可行性研究的内容" class="headerlink" title="可行性研究的内容"></a>可行性研究的内容</h4><h4 id="成本效益分析"><a href="#成本效益分析" class="headerlink" title="成本效益分析"></a>成本效益分析</h4><h4 id="可行性分析报告"><a href="#可行性分析报告" class="headerlink" title="可行性分析报告"></a>可行性分析报告</h4><h3 id="方案的制订和改进"><a href="#方案的制订和改进" class="headerlink" title="方案的制订和改进"></a>方案的制订和改进</h3><h3 id="新旧系统的分析和比较"><a href="#新旧系统的分析和比较" class="headerlink" title="新旧系统的分析和比较"></a>新旧系统的分析和比较</h3><h4 id="遗留系统的评估方法"><a href="#遗留系统的评估方法" class="headerlink" title="遗留系统的评估方法"></a>遗留系统的评估方法</h4><h4 id="遗留系统的演化策略"><a href="#遗留系统的演化策略" class="headerlink" title="遗留系统的演化策略"></a>遗留系统的演化策略</h4><h2 id="系统分析与设计方法"><a href="#系统分析与设计方法" class="headerlink" title="系统分析与设计方法"></a>系统分析与设计方法</h2><h3 id="定义问题与归结模型"><a href="#定义问题与归结模型" class="headerlink" title="定义问题与归结模型"></a>定义问题与归结模型</h3><h4 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h4><h4 id="问题定义"><a href="#问题定义" class="headerlink" title="问题定义"></a>问题定义</h4><h3 id="需求分析与软件设计"><a href="#需求分析与软件设计" class="headerlink" title="需求分析与软件设计"></a>需求分析与软件设计</h3><h4 id="需求分析的任务与过程"><a href="#需求分析的任务与过程" class="headerlink" title="需求分析的任务与过程"></a>需求分析的任务与过程</h4><h4 id="如何进行系统设计"><a href="#如何进行系统设计" class="headerlink" title="如何进行系统设计"></a>如何进行系统设计</h4><h4 id="软件设计的任务与活动"><a href="#软件设计的任务与活动" class="headerlink" title="软件设计的任务与活动"></a>软件设计的任务与活动</h4><h3 id="结构化分析与设计"><a href="#结构化分析与设计" class="headerlink" title="结构化分析与设计"></a>结构化分析与设计</h3><h4 id="结构化分析"><a href="#结构化分析" class="headerlink" title="结构化分析"></a>结构化分析</h4><h4 id="结构化设计"><a href="#结构化设计" class="headerlink" title="结构化设计"></a>结构化设计</h4><h4 id="模块设计"><a href="#模块设计" class="headerlink" title="模块设计"></a>模块设计</h4><h3 id="面向对象的分析与设计"><a href="#面向对象的分析与设计" class="headerlink" title="面向对象的分析与设计"></a>面向对象的分析与设计</h3><h4 id="面向对象的概念"><a href="#面向对象的概念" class="headerlink" title="面向对象的概念"></a>面向对象的概念</h4><h4 id="面向对象分析"><a href="#面向对象分析" class="headerlink" title="面向对象分析"></a>面向对象分析</h4><h4 id="统一建模语言"><a href="#统一建模语言" class="headerlink" title="统一建模语言"></a>统一建模语言</h4><h3 id="用户界面设计"><a href="#用户界面设计" class="headerlink" title="用户界面设计"></a>用户界面设计</h3><h4 id="用户界面设计的原则"><a href="#用户界面设计的原则" class="headerlink" title="用户界面设计的原则"></a>用户界面设计的原则</h4><h4 id="用户界面设计过程"><a href="#用户界面设计过程" class="headerlink" title="用户界面设计过程"></a>用户界面设计过程</h4><h3 id="工作流设计"><a href="#工作流设计" class="headerlink" title="工作流设计"></a>工作流设计</h3><h4 id="工作流设计概述"><a href="#工作流设计概述" class="headerlink" title="工作流设计概述"></a>工作流设计概述</h4><h4 id="工作流管理系统"><a href="#工作流管理系统" class="headerlink" title="工作流管理系统"></a>工作流管理系统</h4><h3 id="简单分布式计算机应用系统的设计"><a href="#简单分布式计算机应用系统的设计" class="headerlink" title="简单分布式计算机应用系统的设计"></a>简单分布式计算机应用系统的设计</h3><h3 id="系统运行环境的集成与设计"><a href="#系统运行环境的集成与设计" class="headerlink" title="系统运行环境的集成与设计"></a>系统运行环境的集成与设计</h3><h3 id="系统过渡计划"><a href="#系统过渡计划" class="headerlink" title="系统过渡计划"></a>系统过渡计划</h3><h2 id="软件架构设计"><a href="#软件架构设计" class="headerlink" title="软件架构设计"></a>软件架构设计</h2><h3 id="软件架构概述"><a href="#软件架构概述" class="headerlink" title="软件架构概述"></a>软件架构概述</h3><h4 id="软件架构的定义"><a href="#软件架构的定义" class="headerlink" title="软件架构的定义"></a>软件架构的定义</h4><h4 id="软件架构的重要性"><a href="#软件架构的重要性" class="headerlink" title="软件架构的重要性"></a>软件架构的重要性</h4><h4 id="架构的模型"><a href="#架构的模型" class="headerlink" title="架构的模型"></a>架构的模型</h4><h3 id="架构需求与软件质量属性"><a href="#架构需求与软件质量属性" class="headerlink" title="架构需求与软件质量属性"></a>架构需求与软件质量属性</h3><h4 id="软件质量属性"><a href="#软件质量属性" class="headerlink" title="软件质量属性"></a>软件质量属性</h4><h4 id="6个质量属性及实现"><a href="#6个质量属性及实现" class="headerlink" title="6个质量属性及实现"></a>6个质量属性及实现</h4><h3 id="软件架构风格"><a href="#软件架构风格" class="headerlink" title="软件架构风格"></a>软件架构风格</h3><h4 id="软件架构风格分类"><a href="#软件架构风格分类" class="headerlink" title="软件架构风格分类"></a>软件架构风格分类</h4><h4 id="数据流风格"><a href="#数据流风格" class="headerlink" title="数据流风格"></a>数据流风格</h4><h4 id="调用-返回风格"><a href="#调用-返回风格" class="headerlink" title="调用/返回风格"></a>调用/返回风格</h4><h4 id="虚拟机风格"><a href="#虚拟机风格" class="headerlink" title="虚拟机风格"></a>虚拟机风格</h4><h4 id="仓库风格"><a href="#仓库风格" class="headerlink" title="仓库风格"></a>仓库风格</h4><h3 id="层次系统架构风格"><a href="#层次系统架构风格" class="headerlink" title="层次系统架构风格"></a>层次系统架构风格</h3><h4 id="二层及三层C-S架构风格"><a href="#二层及三层C-S架构风格" class="headerlink" title="二层及三层C/S架构风格"></a>二层及三层C/S架构风格</h4><h4 id="B-S架构风格"><a href="#B-S架构风格" class="headerlink" title="B/S架构风格"></a>B/S架构风格</h4><h4 id="MVC架构风格"><a href="#MVC架构风格" class="headerlink" title="MVC架构风格"></a>MVC架构风格</h4><h4 id="MVP架构风格"><a href="#MVP架构风格" class="headerlink" title="MVP架构风格"></a>MVP架构风格</h4><h3 id="面向服务的架构"><a href="#面向服务的架构" class="headerlink" title="面向服务的架构"></a>面向服务的架构</h3><h4 id="SOA概述"><a href="#SOA概述" class="headerlink" title="SOA概述"></a>SOA概述</h4><h4 id="SOA的关键技术"><a href="#SOA的关键技术" class="headerlink" title="SOA的关键技术"></a>SOA的关键技术</h4><h4 id="SOA的实现方法"><a href="#SOA的实现方法" class="headerlink" title="SOA的实现方法"></a>SOA的实现方法</h4><h4 id="微服务"><a href="#微服务" class="headerlink" title="微服务"></a>微服务</h4><h3 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h3><h3 id="软件架构文档化"><a href="#软件架构文档化" class="headerlink" title="软件架构文档化"></a>软件架构文档化</h3><h3 id="软件架构评估"><a href="#软件架构评估" class="headerlink" title="软件架构评估"></a>软件架构评估</h3><h4 id="软件架构评估的方法"><a href="#软件架构评估的方法" class="headerlink" title="软件架构评估的方法"></a>软件架构评估的方法</h4><h4 id="架构的权衡分析法"><a href="#架构的权衡分析法" class="headerlink" title="架构的权衡分析法"></a>架构的权衡分析法</h4><h4 id="成本效益分析法"><a href="#成本效益分析法" class="headerlink" title="成本效益分析法"></a>成本效益分析法</h4><h3 id="构件及其复用"><a href="#构件及其复用" class="headerlink" title="构件及其复用"></a>构件及其复用</h3><h4 id="商用构件标准规范"><a href="#商用构件标准规范" class="headerlink" title="商用构件标准规范"></a>商用构件标准规范</h4><h4 id="应用系统簇与构件系统"><a href="#应用系统簇与构件系统" class="headerlink" title="应用系统簇与构件系统"></a>应用系统簇与构件系统</h4><h4 id="基于复用开发的组织结构"><a href="#基于复用开发的组织结构" class="headerlink" title="基于复用开发的组织结构"></a>基于复用开发的组织结构</h4><h3 id="产品线及系统演化"><a href="#产品线及系统演化" class="headerlink" title="产品线及系统演化"></a>产品线及系统演化</h3><h4 id="复用及产品线"><a href="#复用及产品线" class="headerlink" title="复用及产品线"></a>复用及产品线</h4><h4 id="基于产品线的架构"><a href="#基于产品线的架构" class="headerlink" title="基于产品线的架构"></a>基于产品线的架构</h4><h4 id="产品线的开发模型"><a href="#产品线的开发模型" class="headerlink" title="产品线的开发模型"></a>产品线的开发模型</h4><h4 id="特定领域软件架构"><a href="#特定领域软件架构" class="headerlink" title="特定领域软件架构"></a>特定领域软件架构</h4><h4 id="架构及系统演化"><a href="#架构及系统演化" class="headerlink" title="架构及系统演化"></a>架构及系统演化</h4><h3 id="软件架构视图"><a href="#软件架构视图" class="headerlink" title="软件架构视图"></a>软件架构视图</h3><h4 id="软件视图的分类"><a href="#软件视图的分类" class="headerlink" title="软件视图的分类"></a>软件视图的分类</h4><h4 id="模块视图类型及其风格"><a href="#模块视图类型及其风格" class="headerlink" title="模块视图类型及其风格"></a>模块视图类型及其风格</h4><h4 id="C-amp-C视图类型及其风格"><a href="#C-amp-C视图类型及其风格" class="headerlink" title="C&amp;C视图类型及其风格"></a>C&amp;C视图类型及其风格</h4><h4 id="分配视图类型及其风格"><a href="#分配视图类型及其风格" class="headerlink" title="分配视图类型及其风格"></a>分配视图类型及其风格</h4><h4 id="各视图类型间的映射关系"><a href="#各视图类型间的映射关系" class="headerlink" title="各视图类型间的映射关系"></a>各视图类型间的映射关系</h4><h3 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h3><h4 id="设计模式的概念"><a href="#设计模式的概念" class="headerlink" title="设计模式的概念"></a>设计模式的概念</h4><h4 id="设计模式的组成"><a href="#设计模式的组成" class="headerlink" title="设计模式的组成"></a>设计模式的组成</h4><h4 id="GoF设计模式"><a href="#GoF设计模式" class="headerlink" title="GoF设计模式"></a>GoF设计模式</h4><h4 id="其他设计模式"><a href="#其他设计模式" class="headerlink" title="其他设计模式"></a>其他设计模式</h4><h4 id="设计模式与软件架构"><a href="#设计模式与软件架构" class="headerlink" title="设计模式与软件架构"></a>设计模式与软件架构</h4><h4 id="设计模式分类"><a href="#设计模式分类" class="headerlink" title="设计模式分类"></a>设计模式分类</h4><h3 id="设计模式及实现"><a href="#设计模式及实现" class="headerlink" title="设计模式及实现"></a>设计模式及实现</h3><h3 id="设计模式总结"><a href="#设计模式总结" class="headerlink" title="设计模式总结"></a>设计模式总结</h3><h2 id="测试评审方法"><a href="#测试评审方法" class="headerlink" title="测试评审方法"></a>测试评审方法</h2><h3 id="测试方法"><a href="#测试方法" class="headerlink" title="测试方法"></a>测试方法</h3><h4 id="软件测试阶段"><a href="#软件测试阶段" class="headerlink" title="软件测试阶段"></a>软件测试阶段</h4><h4 id="白盒测试和黑盒测试"><a href="#白盒测试和黑盒测试" class="headerlink" title="白盒测试和黑盒测试"></a>白盒测试和黑盒测试</h4><h4 id="缺陷的分类和级别"><a href="#缺陷的分类和级别" class="headerlink" title="缺陷的分类和级别"></a>缺陷的分类和级别</h4><h4 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h4><h3 id="评审方法"><a href="#评审方法" class="headerlink" title="评审方法"></a>评审方法</h3><h3 id="验证与确认"><a href="#验证与确认" class="headerlink" title="验证与确认"></a>验证与确认</h3><h3 id="测试自动化"><a href="#测试自动化" class="headerlink" title="测试自动化"></a>测试自动化</h3><h3 id="面向对象测试"><a href="#面向对象测试" class="headerlink" title="面向对象测试"></a>面向对象测试</h3><h2 id="嵌入式系统设计"><a href="#嵌入式系统设计" class="headerlink" title="嵌入式系统设计"></a>嵌入式系统设计</h2><h3 id="嵌入式系统概论"><a href="#嵌入式系统概论" class="headerlink" title="嵌入式系统概论"></a>嵌入式系统概论</h3><h3 id="嵌入式系统的组成"><a href="#嵌入式系统的组成" class="headerlink" title="嵌入式系统的组成"></a>嵌入式系统的组成</h3><h4 id="硬件架构"><a href="#硬件架构" class="headerlink" title="硬件架构"></a>硬件架构</h4><h4 id="软件架构"><a href="#软件架构" class="headerlink" title="软件架构"></a>软件架构</h4><h3 id="嵌入式开发平台与调试环境"><a href="#嵌入式开发平台与调试环境" class="headerlink" title="嵌入式开发平台与调试环境"></a>嵌入式开发平台与调试环境</h3><h4 id="嵌入式系统软件开发平台"><a href="#嵌入式系统软件开发平台" class="headerlink" title="嵌入式系统软件开发平台"></a>嵌入式系统软件开发平台</h4><h4 id="嵌入式开发调试"><a href="#嵌入式开发调试" class="headerlink" title="嵌入式开发调试"></a>嵌入式开发调试</h4><h3 id="嵌入式网络系统"><a href="#嵌入式网络系统" class="headerlink" title="嵌入式网络系统"></a>嵌入式网络系统</h3><h4 id="现场总线网"><a href="#现场总线网" class="headerlink" title="现场总线网"></a>现场总线网</h4><h4 id="家庭信息网"><a href="#家庭信息网" class="headerlink" title="家庭信息网"></a>家庭信息网</h4><h4 id="无线数据通信网"><a href="#无线数据通信网" class="headerlink" title="无线数据通信网"></a>无线数据通信网</h4><h4 id="嵌入式Internet"><a href="#嵌入式Internet" class="headerlink" title="嵌入式Internet"></a>嵌入式Internet</h4><h3 id="嵌入式数据库管理系统"><a href="#嵌入式数据库管理系统" class="headerlink" title="嵌入式数据库管理系统"></a>嵌入式数据库管理系统</h3><h4 id="使用环境的特点"><a href="#使用环境的特点" class="headerlink" title="使用环境的特点"></a>使用环境的特点</h4><h4 id="系统组成与关键技术"><a href="#系统组成与关键技术" class="headerlink" title="系统组成与关键技术"></a>系统组成与关键技术</h4><h3 id="实时系统与嵌入式操作系统"><a href="#实时系统与嵌入式操作系统" class="headerlink" title="实时系统与嵌入式操作系统"></a>实时系统与嵌入式操作系统</h3><h4 id="嵌入式系统的实时概念"><a href="#嵌入式系统的实时概念" class="headerlink" title="嵌入式系统的实时概念"></a>嵌入式系统的实时概念</h4><h4 id="嵌入式操作系统概述"><a href="#嵌入式操作系统概述" class="headerlink" title="嵌入式操作系统概述"></a>嵌入式操作系统概述</h4><h4 id="实时嵌入式操作系统"><a href="#实时嵌入式操作系统" class="headerlink" title="实时嵌入式操作系统"></a>实时嵌入式操作系统</h4><h4 id="主流嵌入式操作系统介绍"><a href="#主流嵌入式操作系统介绍" class="headerlink" title="主流嵌入式操作系统介绍"></a>主流嵌入式操作系统介绍</h4><h3 id="嵌入式系统开发设计"><a href="#嵌入式系统开发设计" class="headerlink" title="嵌入式系统开发设计"></a>嵌入式系统开发设计</h3><h4 id="嵌入式系统设计概述"><a href="#嵌入式系统设计概述" class="headerlink" title="嵌入式系统设计概述"></a>嵌入式系统设计概述</h4><h4 id="开发模型与设计流程"><a href="#开发模型与设计流程" class="headerlink" title="开发模型与设计流程"></a>开发模型与设计流程</h4><h4 id="嵌入式系统设计和核心技术"><a href="#嵌入式系统设计和核心技术" class="headerlink" title="嵌入式系统设计和核心技术"></a>嵌入式系统设计和核心技术</h4><h4 id="嵌入式开发设计环境"><a href="#嵌入式开发设计环境" class="headerlink" title="嵌入式开发设计环境"></a>嵌入式开发设计环境</h4><h4 id="嵌入式软件设计模型"><a href="#嵌入式软件设计模型" class="headerlink" title="嵌入式软件设计模型"></a>嵌入式软件设计模型</h4><h4 id="需求分析-1"><a href="#需求分析-1" class="headerlink" title="需求分析"></a>需求分析</h4><h4 id="系统设计"><a href="#系统设计" class="headerlink" title="系统设计"></a>系统设计</h4><h4 id="系统集成与测试"><a href="#系统集成与测试" class="headerlink" title="系统集成与测试"></a>系统集成与测试</h4><h2 id="开发管理"><a href="#开发管理" class="headerlink" title="开发管理"></a>开发管理</h2><h3 id="项目的范围、时间和成本"><a href="#项目的范围、时间和成本" class="headerlink" title="项目的范围、时间和成本"></a>项目的范围、时间和成本</h3><h4 id="项目范围管理"><a href="#项目范围管理" class="headerlink" title="项目范围管理"></a>项目范围管理</h4><h4 id="项目成本管理"><a href="#项目成本管理" class="headerlink" title="项目成本管理"></a>项目成本管理</h4><h4 id="项目时间管理"><a href="#项目时间管理" class="headerlink" title="项目时间管理"></a>项目时间管理</h4><h3 id="配置管理与文档管理"><a href="#配置管理与文档管理" class="headerlink" title="配置管理与文档管理"></a>配置管理与文档管理</h3><h4 id="软件配置管理的概念"><a href="#软件配置管理的概念" class="headerlink" title="软件配置管理的概念"></a>软件配置管理的概念</h4><h4 id="软件配置管理的解决方案"><a href="#软件配置管理的解决方案" class="headerlink" title="软件配置管理的解决方案"></a>软件配置管理的解决方案</h4><h4 id="软件文档管理"><a href="#软件文档管理" class="headerlink" title="软件文档管理"></a>软件文档管理</h4><h3 id="软件需求管理"><a href="#软件需求管理" class="headerlink" title="软件需求管理"></a>软件需求管理</h3><h4 id="需求变更"><a href="#需求变更" class="headerlink" title="需求变更"></a>需求变更</h4><h4 id="需求跟踪"><a href="#需求跟踪" class="headerlink" title="需求跟踪"></a>需求跟踪</h4><h3 id="软件开发的质量与风险"><a href="#软件开发的质量与风险" class="headerlink" title="软件开发的质量与风险"></a>软件开发的质量与风险</h3><h4 id="软件质量管理"><a href="#软件质量管理" class="headerlink" title="软件质量管理"></a>软件质量管理</h4><h4 id="项目风险管理"><a href="#项目风险管理" class="headerlink" title="项目风险管理"></a>项目风险管理</h4><h3 id="人力资源管理"><a href="#人力资源管理" class="headerlink" title="人力资源管理"></a>人力资源管理</h3><h4 id="软件的运行与评价"><a href="#软件的运行与评价" class="headerlink" title="软件的运行与评价"></a>软件的运行与评价</h4><h4 id="软件过程改进"><a href="#软件过程改进" class="headerlink" title="软件过程改进"></a>软件过程改进</h4><h2 id="信息系统基础知识"><a href="#信息系统基础知识" class="headerlink" title="信息系统基础知识"></a>信息系统基础知识</h2><h3 id="信息系统概述"><a href="#信息系统概述" class="headerlink" title="信息系统概述"></a>信息系统概述</h3><h4 id="信息系统的组成"><a href="#信息系统的组成" class="headerlink" title="信息系统的组成"></a>信息系统的组成</h4><h4 id="信息系统的生命周期"><a href="#信息系统的生命周期" class="headerlink" title="信息系统的生命周期"></a>信息系统的生命周期</h4><h4 id="信息系统建设的原则"><a href="#信息系统建设的原则" class="headerlink" title="信息系统建设的原则"></a>信息系统建设的原则</h4><h4 id="信息系统开发方法"><a href="#信息系统开发方法" class="headerlink" title="信息系统开发方法"></a>信息系统开发方法</h4><h3 id="信息系统工程"><a href="#信息系统工程" class="headerlink" title="信息系统工程"></a>信息系统工程</h3><h4 id="信息系统工程的概念"><a href="#信息系统工程的概念" class="headerlink" title="信息系统工程的概念"></a>信息系统工程的概念</h4><h4 id="信息系统工程的内容"><a href="#信息系统工程的内容" class="headerlink" title="信息系统工程的内容"></a>信息系统工程的内容</h4><h4 id="信息系统工程的总体规划"><a href="#信息系统工程的总体规划" class="headerlink" title="信息系统工程的总体规划"></a>信息系统工程的总体规划</h4><h4 id="总体规划的方法论"><a href="#总体规划的方法论" class="headerlink" title="总体规划的方法论"></a>总体规划的方法论</h4><h3 id="政府信息化与电子政务"><a href="#政府信息化与电子政务" class="headerlink" title="政府信息化与电子政务"></a>政府信息化与电子政务</h3><h4 id="我国政府信息化的历程和策略"><a href="#我国政府信息化的历程和策略" class="headerlink" title="我国政府信息化的历程和策略"></a>我国政府信息化的历程和策略</h4><h4 id="电子政务的内容"><a href="#电子政务的内容" class="headerlink" title="电子政务的内容"></a>电子政务的内容</h4><h4 id="电子政务建设的过程模式和技术模式"><a href="#电子政务建设的过程模式和技术模式" class="headerlink" title="电子政务建设的过程模式和技术模式"></a>电子政务建设的过程模式和技术模式</h4><h3 id="企业信息化与电子商务"><a href="#企业信息化与电子商务" class="headerlink" title="企业信息化与电子商务"></a>企业信息化与电子商务</h3><h4 id="企业信息化概述"><a href="#企业信息化概述" class="headerlink" title="企业信息化概述"></a>企业信息化概述</h4><h4 id="企业资源规划"><a href="#企业资源规划" class="headerlink" title="企业资源规划"></a>企业资源规划</h4><h4 id="客户关系管理"><a href="#客户关系管理" class="headerlink" title="客户关系管理"></a>客户关系管理</h4><h4 id="产品数据管理"><a href="#产品数据管理" class="headerlink" title="产品数据管理"></a>产品数据管理</h4><h4 id="企业门户"><a href="#企业门户" class="headerlink" title="企业门户"></a>企业门户</h4><h4 id="企业应用集成"><a href="#企业应用集成" class="headerlink" title="企业应用集成"></a>企业应用集成</h4><h4 id="供应链管理"><a href="#供应链管理" class="headerlink" title="供应链管理"></a>供应链管理</h4><h4 id="电子商务概述"><a href="#电子商务概述" class="headerlink" title="电子商务概述"></a>电子商务概述</h4><h3 id="知识管理与商业智能"><a href="#知识管理与商业智能" class="headerlink" title="知识管理与商业智能"></a>知识管理与商业智能</h3><h4 id="知识管理"><a href="#知识管理" class="headerlink" title="知识管理"></a>知识管理</h4><h4 id="商业智能"><a href="#商业智能" class="headerlink" title="商业智能"></a>商业智能</h4><h3 id="业务流程重组"><a href="#业务流程重组" class="headerlink" title="业务流程重组"></a>业务流程重组</h3><h2 id="基于中间件的开发"><a href="#基于中间件的开发" class="headerlink" title="基于中间件的开发"></a>基于中间件的开发</h2><h3 id="中间件技术"><a href="#中间件技术" class="headerlink" title="中间件技术"></a>中间件技术</h3><h4 id="中间件的概述"><a href="#中间件的概述" class="headerlink" title="中间件的概述"></a>中间件的概述</h4><h4 id="中间件的分类"><a href="#中间件的分类" class="headerlink" title="中间件的分类"></a>中间件的分类</h4><h4 id="中间件产品介绍"><a href="#中间件产品介绍" class="headerlink" title="中间件产品介绍"></a>中间件产品介绍</h4><h3 id="应用服务器技术"><a href="#应用服务器技术" class="headerlink" title="应用服务器技术"></a>应用服务器技术</h3><h4 id="应用服务器的概念"><a href="#应用服务器的概念" class="headerlink" title="应用服务器的概念"></a>应用服务器的概念</h4><h4 id="主要的应用服务器"><a href="#主要的应用服务器" class="headerlink" title="主要的应用服务器"></a>主要的应用服务器</h4><h3 id="J2EE"><a href="#J2EE" class="headerlink" title="J2EE"></a>J2EE</h3><h4 id="表示层"><a href="#表示层" class="headerlink" title="表示层"></a>表示层</h4><h4 id="应用服务层"><a href="#应用服务层" class="headerlink" title="应用服务层"></a>应用服务层</h4><h3 id="NET"><a href="#NET" class="headerlink" title=".NET"></a>.NET</h3><h3 id="企业应用集成-1"><a href="#企业应用集成-1" class="headerlink" title="企业应用集成"></a>企业应用集成</h3><h3 id="轻量级架构和重量级架构"><a href="#轻量级架构和重量级架构" class="headerlink" title="轻量级架构和重量级架构"></a>轻量级架构和重量级架构</h3><h2 id="安全性和保密性设计"><a href="#安全性和保密性设计" class="headerlink" title="安全性和保密性设计"></a>安全性和保密性设计</h2><h3 id="加密和解密"><a href="#加密和解密" class="headerlink" title="加密和解密"></a>加密和解密</h3><h4 id="对称密钥加密算法"><a href="#对称密钥加密算法" class="headerlink" title="对称密钥加密算法"></a>对称密钥加密算法</h4><h4 id="非对称密钥加密算法"><a href="#非对称密钥加密算法" class="headerlink" title="非对称密钥加密算法"></a>非对称密钥加密算法</h4><h3 id="数字签名和数字水印"><a href="#数字签名和数字水印" class="headerlink" title="数字签名和数字水印"></a>数字签名和数字水印</h3><h3 id="数字证书和密钥管理"><a href="#数字证书和密钥管理" class="headerlink" title="数字证书和密钥管理"></a>数字证书和密钥管理</h3><h3 id="安全协议"><a href="#安全协议" class="headerlink" title="安全协议"></a>安全协议</h3><h3 id="计算机病毒与防治"><a href="#计算机病毒与防治" class="headerlink" title="计算机病毒与防治"></a>计算机病毒与防治</h3><h3 id="身份认证与访问控制"><a href="#身份认证与访问控制" class="headerlink" title="身份认证与访问控制"></a>身份认证与访问控制</h3><h3 id="网络安全体系"><a href="#网络安全体系" class="headerlink" title="网络安全体系"></a>网络安全体系</h3><h4 id="OSI安全架构"><a href="#OSI安全架构" class="headerlink" title="OSI安全架构"></a>OSI安全架构</h4><h4 id="VPN在网络安全中的应用"><a href="#VPN在网络安全中的应用" class="headerlink" title="VPN在网络安全中的应用"></a>VPN在网络安全中的应用</h4><h3 id="系统的安全性设计"><a href="#系统的安全性设计" class="headerlink" title="系统的安全性设计"></a>系统的安全性设计</h3><h4 id="物理安全问题与设计"><a href="#物理安全问题与设计" class="headerlink" title="物理安全问题与设计"></a>物理安全问题与设计</h4><h4 id="防火墙及其在系统安全中的应用"><a href="#防火墙及其在系统安全中的应用" class="headerlink" title="防火墙及其在系统安全中的应用"></a>防火墙及其在系统安全中的应用</h4><h4 id="入侵检测系统"><a href="#入侵检测系统" class="headerlink" title="入侵检测系统"></a>入侵检测系统</h4><h3 id="安全性规章"><a href="#安全性规章" class="headerlink" title="安全性规章"></a>安全性规章</h3><h2 id="系统的可靠性分析与设计"><a href="#系统的可靠性分析与设计" class="headerlink" title="系统的可靠性分析与设计"></a>系统的可靠性分析与设计</h2><h3 id="可靠性概述"><a href="#可靠性概述" class="headerlink" title="可靠性概述"></a>可靠性概述</h3><h3 id="系统故障模型"><a href="#系统故障模型" class="headerlink" title="系统故障模型"></a>系统故障模型</h3><h4 id="故障的来源以及表现"><a href="#故障的来源以及表现" class="headerlink" title="故障的来源以及表现"></a>故障的来源以及表现</h4><h4 id="几种常见的故障模型"><a href="#几种常见的故障模型" class="headerlink" title="几种常见的故障模型"></a>几种常见的故障模型</h4><h3 id="系统配置方法"><a href="#系统配置方法" class="headerlink" title="系统配置方法"></a>系统配置方法</h3><h4 id="单机容错技术"><a href="#单机容错技术" class="headerlink" title="单机容错技术"></a>单机容错技术</h4><h4 id="双机热备份技术"><a href="#双机热备份技术" class="headerlink" title="双机热备份技术"></a>双机热备份技术</h4><h4 id="服务器集群技术"><a href="#服务器集群技术" class="headerlink" title="服务器集群技术"></a>服务器集群技术</h4><h3 id="系统可靠性模型"><a href="#系统可靠性模型" class="headerlink" title="系统可靠性模型"></a>系统可靠性模型</h3><h4 id="时间模型"><a href="#时间模型" class="headerlink" title="时间模型"></a>时间模型</h4><h4 id="故障植入模型"><a href="#故障植入模型" class="headerlink" title="故障植入模型"></a>故障植入模型</h4><h4 id="数据模型-1"><a href="#数据模型-1" class="headerlink" title="数据模型"></a>数据模型</h4><h3 id="系统的可靠性分析和可靠度计算"><a href="#系统的可靠性分析和可靠度计算" class="headerlink" title="系统的可靠性分析和可靠度计算"></a>系统的可靠性分析和可靠度计算</h3><h4 id="组合模型"><a href="#组合模型" class="headerlink" title="组合模型"></a>组合模型</h4><h4 id="马尔柯夫模型"><a href="#马尔柯夫模型" class="headerlink" title="马尔柯夫模型"></a>马尔柯夫模型</h4><h3 id="提高系统可靠性的措施"><a href="#提高系统可靠性的措施" class="headerlink" title="提高系统可靠性的措施"></a>提高系统可靠性的措施</h3><h4 id="硬件冗余"><a href="#硬件冗余" class="headerlink" title="硬件冗余"></a>硬件冗余</h4><h4 id="信息冗余"><a href="#信息冗余" class="headerlink" title="信息冗余"></a>信息冗余</h4><h3 id="备份与恢复-1"><a href="#备份与恢复-1" class="headerlink" title="备份与恢复"></a>备份与恢复</h3><h2 id="软件的知识产权保护"><a href="#软件的知识产权保护" class="headerlink" title="软件的知识产权保护"></a>软件的知识产权保护</h2><h3 id="著作权法及实施条例"><a href="#著作权法及实施条例" class="headerlink" title="著作权法及实施条例"></a>著作权法及实施条例</h3><h4 id="著作权法客体"><a href="#著作权法客体" class="headerlink" title="著作权法客体"></a>著作权法客体</h4><h4 id="著作权法的主体"><a href="#著作权法的主体" class="headerlink" title="著作权法的主体"></a>著作权法的主体</h4><h4 id="著作权"><a href="#著作权" class="headerlink" title="著作权"></a>著作权</h4><h3 id="计算机软件保护条例"><a href="#计算机软件保护条例" class="headerlink" title="计算机软件保护条例"></a>计算机软件保护条例</h3><h3 id="商标法及实施条例"><a href="#商标法及实施条例" class="headerlink" title="商标法及实施条例"></a>商标法及实施条例</h3><h3 id="专利法及实施细则"><a href="#专利法及实施细则" class="headerlink" title="专利法及实施细则"></a>专利法及实施细则</h3><h3 id="反不正当竞争法"><a href="#反不正当竞争法" class="headerlink" title="反不正当竞争法"></a>反不正当竞争法</h3><h2 id="标准化知识"><a href="#标准化知识" class="headerlink" title="标准化知识"></a>标准化知识</h2><h3 id="标准化概论"><a href="#标准化概论" class="headerlink" title="标准化概论"></a>标准化概论</h3><h3 id="标准分级与标准类型"><a href="#标准分级与标准类型" class="headerlink" title="标准分级与标准类型"></a>标准分级与标准类型</h3><h4 id="标准分级"><a href="#标准分级" class="headerlink" title="标准分级"></a>标准分级</h4><h4 id="强制性标准与推荐性标准"><a href="#强制性标准与推荐性标准" class="headerlink" title="强制性标准与推荐性标准"></a>强制性标准与推荐性标准</h4><h2 id="应用数学"><a href="#应用数学" class="headerlink" title="应用数学"></a>应用数学</h2><h3 id="运筹方法"><a href="#运筹方法" class="headerlink" title="运筹方法"></a>运筹方法</h3><h4 id="网络计划技术"><a href="#网络计划技术" class="headerlink" title="网络计划技术"></a>网络计划技术</h4><h4 id="线性规划"><a href="#线性规划" class="headerlink" title="线性规划"></a>线性规划</h4><h4 id="决策论"><a href="#决策论" class="headerlink" title="决策论"></a>决策论</h4><h4 id="对策论"><a href="#对策论" class="headerlink" title="对策论"></a>对策论</h4><h3 id="数学建模"><a href="#数学建模" class="headerlink" title="数学建模"></a>数学建模</h3><h2 id="虚拟化、云计算和物联网"><a href="#虚拟化、云计算和物联网" class="headerlink" title="虚拟化、云计算和物联网"></a>虚拟化、云计算和物联网</h2><h3 id="虚拟化"><a href="#虚拟化" class="headerlink" title="虚拟化"></a>虚拟化</h3><h3 id="云计算"><a href="#云计算" class="headerlink" title="云计算"></a>云计算</h3><h3 id="物联网"><a href="#物联网" class="headerlink" title="物联网"></a>物联网</h3>
       
     </div>
@@ -1083,6 +1108,9 @@
         <div class="post-eof"></div>
       </footer>
   </article>
+  <div>
+  
+  </div>
   
   
   
@@ -1100,7 +1128,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="幸福的拾荒者">
+      <meta itemprop="name" content="拾荒者">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -1139,9 +1167,9 @@
           <h2 id="基本步骤"><a href="#基本步骤" class="headerlink" title="基本步骤"></a>基本步骤</h2><h3 id="申请账号"><a href="#申请账号" class="headerlink" title="申请账号"></a>申请账号</h3><p>前往<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/wxopen/waregister?action=step1">小程序注册</a> <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/wxopen/waregister?action=step1">https://mp.weixin.qq.com/wxopen/waregister?action=step1</a> 注册小程序，一个邮箱账号对应一个小程序。<br>登录 <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/">微信公众平台</a> <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/">https://mp.weixin.qq.com</a> ，在菜单 “设置”-“开发设置” 获取小程序的 AppID。</p>
 <h3 id="开发工具"><a href="#开发工具" class="headerlink" title="开发工具"></a>开发工具</h3><p><a target="_blank" rel="noopener" href="https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html?t=19020120">下载地址</a></p>
 <h3 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h3><p><a target="_blank" rel="noopener" href="https://developers.weixin.qq.com/miniprogram/dev/">官网开发文档</a></p>
-<h4 id="设置服务器域名"><a href="#设置服务器域名" class="headerlink" title="设置服务器域名"></a>设置服务器域名</h4><p>小程序要与后端交互，需要登录“微信工作平台|小程序”，在“开发”-“开发设置”-“服务器域名”添加域名，并且服务器要支持HTTPS协议。<br>如果在开发过程中使用了web-view组件，需要在“开发设置”中的“业务域名”中添加域名，并且只有企业号对应的小程序才有此项功能，个人账户不能进行此项设置。<br><img src="/.io//wx-applet/domain.png" alt="域名设置">   </p>
+<h4 id="设置服务器域名"><a href="#设置服务器域名" class="headerlink" title="设置服务器域名"></a>设置服务器域名</h4><p>小程序要与后端交互，需要登录“微信工作平台|小程序”，在“开发”-“开发设置”-“服务器域名”添加域名，并且服务器要支持HTTPS协议。<br>如果在开发过程中使用了web-view组件，需要在“开发设置”中的“业务域名”中添加域名，并且只有企业号对应的小程序才有此项功能，个人账户不能进行此项设置。<br><img src="/2018/03/05/wx-applet/wx-applet/domain.png" alt="域名设置">   </p>
 <h3 id="成员管理"><a href="#成员管理" class="headerlink" title="成员管理"></a>成员管理</h3><p>在“管理”-“成员管理”里可以添加项目成员和体验成员，上传代码后在“版本管理”-“开发版本”中设置体验版本，已经添加的体验成员就可以扫描二维码体验小程序。    </p>
-<h3 id="发布小程序"><a href="#发布小程序" class="headerlink" title="发布小程序"></a>发布小程序</h3><p>在小程序功能测试通过后，上传代码，在“开发版本”中提交审核，审核通过后在“审核版本”中发布到线上。<br><img src="/.io//wx-applet/publish.png" alt="发布小程序">   </p>
+<h3 id="发布小程序"><a href="#发布小程序" class="headerlink" title="发布小程序"></a>发布小程序</h3><p>在小程序功能测试通过后，上传代码，在“开发版本”中提交审核，审核通过后在“审核版本”中发布到线上。<br><img src="/2018/03/05/wx-applet/wx-applet/publish.png" alt="发布小程序">   </p>
 <p>发布成功后在微信里删除开发版本和预览版本，删除后台微信进程，重新打开微信，在小程序中搜索已发布的小程序，验证是否发布成功。</p>
 
       
@@ -1154,6 +1182,9 @@
         <div class="post-eof"></div>
       </footer>
   </article>
+  <div>
+  
+  </div>
   
   
   
@@ -1234,8 +1265,10 @@
         </a>
       </div>
       <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
         <span class="site-state-item-count">8</span>
-        <span class="site-state-item-name">标签</span>
+        <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
@@ -1272,7 +1305,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">fhclk</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
 
         
@@ -1328,5 +1361,5 @@
 
   <!-- 页面点击小红心 -->
   <script type="text/javascript" src="/js/src/clicklove.js"></script>
-</body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>

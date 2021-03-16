@@ -17,30 +17,30 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="HDFS简介HDFS（Hadoop Distributed File System）是Hadoop项目的核心子项目，用于分布式计算中的数据存储。HDFS可以运行在廉价的服务器上，为存储海量数据提供了高容错、高可靠性、高可扩展性、高获得性、高吞吐率等特征。          HDFS的优点 处理超大文件。指MB到TB级别的数据文件 运行于廉价机器上。 流式地访问数据。HDFS提供一次写入，多次读取得">
 <meta property="og:type" content="article">
 <meta property="og:title" content="分布式文件系统HDFS ">
 <meta property="og:url" content="http://fhclk.github.io/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/index.html">
-<meta property="og:site_name" content="幸福的拾荒者">
+<meta property="og:site_name" content="拾荒者">
 <meta property="og:description" content="HDFS简介HDFS（Hadoop Distributed File System）是Hadoop项目的核心子项目，用于分布式计算中的数据存储。HDFS可以运行在廉价的服务器上，为存储海量数据提供了高容错、高可靠性、高可扩展性、高获得性、高吞吐率等特征。          HDFS的优点 处理超大文件。指MB到TB级别的数据文件 运行于廉价机器上。 流式地访问数据。HDFS提供一次写入，多次读取得">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://fhclk.github.io/.io//nameNode.png">
-<meta property="og:image" content="http://fhclk.github.io/.io//dataNode.png">
-<meta property="og:image" content="http://fhclk.github.io/.io//secondaryNameNode.png">
-<meta property="og:image" content="http://fhclk.github.io/.io//HDFS%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84.png">
-<meta property="og:image" content="http://fhclk.github.io/.io//HDFS%E8%AF%BB%E6%B5%81%E7%A8%8B.png">
-<meta property="og:image" content="http://fhclk.github.io/.io//HDFS%E5%86%99%E6%B5%81%E7%A8%8B.png">
-<meta property="og:image" content="http://fhclk.github.io/.io//%E6%9C%BA%E6%9E%B6%E6%84%9F%E7%9F%A5.png">
-<meta property="og:image" content="http://fhclk.github.io/.io//SequenceFile%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png">
+<meta property="og:image" content="http://fhclk.github.io/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/nameNode.png">
+<meta property="og:image" content="http://fhclk.github.io/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/dataNode.png">
+<meta property="og:image" content="http://fhclk.github.io/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/secondaryNameNode.png">
+<meta property="og:image" content="http://fhclk.github.io/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/HDFS%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84.png">
+<meta property="og:image" content="http://fhclk.github.io/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/HDFS%E8%AF%BB%E6%B5%81%E7%A8%8B.png">
+<meta property="og:image" content="http://fhclk.github.io/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/HDFS%E5%86%99%E6%B5%81%E7%A8%8B.png">
+<meta property="og:image" content="http://fhclk.github.io/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/%E6%9C%BA%E6%9E%B6%E6%84%9F%E7%9F%A5.png">
+<meta property="og:image" content="http://fhclk.github.io/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/SequenceFile%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png">
 <meta property="article:published_time" content="2019-03-13T12:03:39.000Z">
 <meta property="article:modified_time" content="2019-06-14T08:30:50.000Z">
 <meta property="article:author" content="fhclk">
 <meta property="article:tag" content="大数据">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://fhclk.github.io/.io//nameNode.png">
+<meta name="twitter:image" content="http://fhclk.github.io/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/nameNode.png">
 
 <link rel="canonical" href="http://fhclk.github.io/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/">
 
@@ -55,7 +55,7 @@
   };
 </script>
 
-  <title>分布式文件系统HDFS  | 幸福的拾荒者</title>
+  <title>分布式文件系统HDFS  | 拾荒者</title>
   
 
 
@@ -106,9 +106,10 @@
 
     <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">幸福的拾荒者</h1>
+      <h1 class="site-title">拾荒者</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
   </div>
 
   <div class="site-nav-right">
@@ -174,7 +175,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="幸福的拾荒者">
+      <meta itemprop="name" content="拾荒者">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -220,7 +221,7 @@
 <li>无法高效存储大量小文件</li>
 </ol>
 <h3 id="HDFS基本概念"><a href="#HDFS基本概念" class="headerlink" title="HDFS基本概念"></a>HDFS基本概念</h3><h4 id="数据块-Block"><a href="#数据块-Block" class="headerlink" title="数据块(Block)"></a>数据块(Block)</h4><p>HDFS默认的最基本的存储单位是数据块(Block)，默认的块大小(Block Size)是64M(有些发布版本是128M)。HDFS中文件被分割成以Block Size为大小的数据块存储的。HDFS中，如果一个文件小于一个数据块的大小，并不占用整个数据块存储空间，文件大小是多大就占用多少存储空间。</p>
-<h4 id="元数据节点-NameNode"><a href="#元数据节点-NameNode" class="headerlink" title="元数据节点(NameNode)"></a>元数据节点(NameNode)</h4><p>NameNode的职责是管理文件系统的命名空间，它将所有的文件和文件夹的元数据保存在一个文件系统树中，至于一个文件包括哪些数据块，分布在哪些数据节点上，这些信息都存储下来。<br>NameNode目录结构如下所示：<br><img src="/.io//nameNode.png" alt="NameNode目录结构"></p>
+<h4 id="元数据节点-NameNode"><a href="#元数据节点-NameNode" class="headerlink" title="元数据节点(NameNode)"></a>元数据节点(NameNode)</h4><p>NameNode的职责是管理文件系统的命名空间，它将所有的文件和文件夹的元数据保存在一个文件系统树中，至于一个文件包括哪些数据块，分布在哪些数据节点上，这些信息都存储下来。<br>NameNode目录结构如下所示：<br><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/nameNode.png" alt="NameNode目录结构"></p>
 <p>目录结构描述：   </p>
 <ol>
 <li>VERSION文件是存放版本的文件，保存了HDFS的版本号。</li>
@@ -228,7 +229,7 @@
 <li>fsimage文件即命名空间文件。</li>
 </ol>
 <h4 id="数据节点-DataNode"><a href="#数据节点-DataNode" class="headerlink" title="数据节点(DataNode)"></a>数据节点(DataNode)</h4><p>DataNode是文件系统中真正存储数据的地方，一个文件被拆分成多个Block后，会将这些Block存储在对应的数据节点上。客户端向NameNode发起请求后到对应的数据节点上写入或读取对应的数据Block。</p>
-<p>DataNode目录结构：<br><img src="/.io//dataNode.png" alt="DataNode目录结构"></p>
+<p>DataNode目录结构：<br><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/dataNode.png" alt="DataNode目录结构"></p>
 <p>目录结构描述：</p>
 <ol>
 <li>blk_<id>保存的是HDFS的数据块，其中保存了具体的二进制数据。</id></li>
@@ -236,10 +237,10 @@
 <li>subdirxx 当一个目录中的数据块达到一定数量的时候，则创建子文件夹来保存数据块及数据块属性信息。</li>
 </ol>
 <h4 id="从元数据节点-Secondary-NameNode"><a href="#从元数据节点-Secondary-NameNode" class="headerlink" title="从元数据节点(Secondary NameNode)"></a>从元数据节点(Secondary NameNode)</h4><p>从元数据节点并不是NameNode节点出现问题时的备用节点，它和元数据节点负责不同的功能。其主要功能就是周期性将NameNode的namespace image和edit log合并，以防日志文件过大。合并过后的namespace image也在元数据节点保存了一份，以防在NameNode失败的时候进行恢复。        </p>
-<p>Secondary NameNode目录结构：<br><img src="/.io//secondaryNameNode.png" alt="Secondary DataNode目录结构"></p>
+<p>Secondary NameNode目录结构：<br><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/secondaryNameNode.png" alt="Secondary DataNode目录结构"></p>
 <p>Secondary NameNode用来帮助NameNode将内存中的元数据信息checkpoint到硬盘上。</p>
 <h4 id="HDFS体系结构"><a href="#HDFS体系结构" class="headerlink" title="HDFS体系结构"></a>HDFS体系结构</h4><h5 id="体系架构概述"><a href="#体系架构概述" class="headerlink" title="体系架构概述"></a>体系架构概述</h5><p>HDFS采用master/slave的架构。一个HDFS集群是由一个NameNode和一定数量的DataNode组成。NameNode是一个中心服务器，负责管理文件系统的名字空间（namespace）以及客户端文件的访问。集群中的DataNode一般是一个节点对应一个，负责管理它所在节点上的存储数据。从内容上看，一个文件系统其实被分成一个或多个数据块，这些数据块存储在一组DataNode上。NameNode执行文件系统的名字空间操作，比如打开、关闭、重命名文件或目录，它也负责确定数据块到具体DataNode节点的映射。DataNode负责处理文件系统客户端的读写请求。在NameNode的统一调度下进行数据块的创建、删除和复制。</p>
-<p><img src="/.io//HDFS%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84.png" alt="HDFS体系结构"></p>
+<p><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/HDFS%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84.png" alt="HDFS体系结构"></p>
 <h5 id="架构组件功能"><a href="#架构组件功能" class="headerlink" title="架构组件功能"></a>架构组件功能</h5><p>NameNode和DataNode被设计成可以在普通的商用机器上运行。任何支持Java的机器都可以部署NameNode或DataNode。一个典型的部署场景是一台机器上运行一个NameNode实例，而集群中的其他机器分别运行一个DataNode实例。这种架构并不排斥在一台机器上运行多个DataNode，只不过这样的情况比较少。</p>
 <p>文件系统的名字空间（namespace）：HDFS支持传统的层次型文件组织结构。用户或者应用程序可以创建目录，然后将文件保存在这些目录里。文件系统名字空间的层次结构和大多数现有文件系统类似，用户可以创建、删除、移动或重命名文件。当前，HDFS不支持用户磁盘配额和访问权限控制，也不支持硬链接和软链接。但是HDFS架构并不妨碍实现这些特性。</p>
 <p>NameNode负责维护文件系统的名字空间，任何对文件系统名字空间或属性的修改都将被NameNode记录下来。应用程序可以设置HDFS保存的文件的副本数目，文件副本数目称为文件的副本系数，这个信息也是由NameNode保存的。</p>
@@ -283,7 +284,7 @@
 <li>当读取完所有的数据之后，DFSInputStream会关闭与DataNode的连接，然后寻找下一块的最佳位置，客户端只需要读取连续的流。</li>
 <li>一旦客户端完成读取操作后，就对DFSInputStream调用close方法来完成资源的关闭操作。</li>
 </ol>
-<p><img src="/.io//HDFS%E8%AF%BB%E6%B5%81%E7%A8%8B.png" alt="HDFS读取数据过程"></p>
+<p><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/HDFS%E8%AF%BB%E6%B5%81%E7%A8%8B.png" alt="HDFS读取数据过程"></p>
 <h5 id="HDFS文件写流程"><a href="#HDFS文件写流程" class="headerlink" title="HDFS文件写流程"></a>HDFS文件写流程</h5><p>客户端写数据的流程：</p>
 <ol>
 <li>客户端通过调用DistributeFileSystem的create方法来创建一个文件。</li>
@@ -292,7 +293,7 @@
 <li>FSDataOutputStream内部维护着一个确认队列，当接收到所有DataNode确认写完的消息后，该数据才会从确认队列中删除。</li>
 <li>当客户端完成数据的写入后，会对数据流调用close方法来关闭相关资源</li>
 </ol>
-<p><img src="/.io//HDFS%E5%86%99%E6%B5%81%E7%A8%8B.png" alt="HDFS写数据过程"></p>
+<p><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/HDFS%E5%86%99%E6%B5%81%E7%A8%8B.png" alt="HDFS写数据过程"></p>
 <h4 id="HDFS副本机制"><a href="#HDFS副本机制" class="headerlink" title="HDFS副本机制"></a>HDFS副本机制</h4><p>HDFS上的文件对应的Block保存多个副本，且提供容错机制，副本丢失或宕机自动恢复。默认3份副本。</p>
 <h5 id="副本摆放策略"><a href="#副本摆放策略" class="headerlink" title="副本摆放策略"></a>副本摆放策略</h5><ol>
 <li>第一副本：放置在上传文件的DataNode上；如果是集群外提交，则随机挑选一台磁盘不太慢、CPU不太忙的节点</li>
@@ -312,7 +313,7 @@
 </ol>
 <h4 id="机架感知"><a href="#机架感知" class="headerlink" title="机架感知"></a>机架感知</h4><p>通常大型Hadoop集群是以机架的形式来组织的，同一个机架上的不同节点间的网络状况比不同机架之间的更为理想，NameNode设法将数据块副本保存在不同的机架上以提高容错性。</p>
 <p>HDFS不能够自动判断集群中各个DataNode的网络拓扑情况，Hadoop允许集群的管理员通过配置dfs.network.script参数来确定节点所处的机架，配置文件提供了ip到rackid的翻译。NameNode通过这个配置知道集群中各个DataNode机器的rack.id。如果topology.script.file.name没有设定，则每个ip都会被翻译成/default-rack。 </p>
-<p><img src="/.io//%E6%9C%BA%E6%9E%B6%E6%84%9F%E7%9F%A5.png" alt="机架感知"></p>
+<p><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/%E6%9C%BA%E6%9E%B6%E6%84%9F%E7%9F%A5.png" alt="机架感知"></p>
 <p>说明:</p>
 <ol>
 <li>当没有配置机架信息时，所有的机器Hadoop都在同一个默认的机架下， 名为“/default-rack”，这种情况的任何一台DataNode机器，不管物理上是否属于同一个机架，都会被认为是在同一个机架下。</li>
@@ -326,7 +327,7 @@
 <p>注意:<br>对于一定大小的数据，比如说IOOGB，如果采用SequenceFile进行存储的话占用的空间是大于lOOGB的，因为SequenceFile的存储中为了查找方便添加了一些额外的信息。</p>
 <h5 id="SequenceFile特点"><a href="#SequenceFile特点" class="headerlink" title="SequenceFile特点"></a>SequenceFile特点</h5><ol>
 <li><p>支持压缩:可定制为基于Record(记录)和Block(块)压缩。无压缩类型:如果没有启动压缩(默认设置，那么每个记录就由它的记录长度(字节数)、键的长度，键和值组成，长度字段为4字节。</p>
-<p> <img src="/.io//SequenceFile%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png" alt="SequenceFile 内部结构"><br> Record针对行压缩，只压缩Value部分不压缩Key; Block对Key和Value都压缩。 </p>
+<p> <img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/SequenceFile%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png" alt="SequenceFile 内部结构"><br> Record针对行压缩，只压缩Value部分不压缩Key; Block对Key和Value都压缩。 </p>
 </li>
 <li><p>本地化任务支持: 因为文件可以被切分，因此在运行MapReduce任务时数据的本地化情况应该是非常好的； 尽可能多地发起Map Task来进行并行处理进而提高作业的执行效率。</p>
 </li>
@@ -403,6 +404,15 @@
       </footer>
     
   </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
   
   
   
@@ -478,8 +488,10 @@
         </a>
       </div>
       <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
         <span class="site-state-item-count">8</span>
-        <span class="site-state-item-name">标签</span>
+        <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
@@ -516,7 +528,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">fhclk</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
 
         
@@ -572,5 +584,5 @@
 
   <!-- 页面点击小红心 -->
   <script type="text/javascript" src="/js/src/clicklove.js"></script>
-</body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>
