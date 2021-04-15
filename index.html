@@ -151,6 +151,146 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/04/14/Android-Jetpack%E4%B9%8BLifecycle/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/14/Android-Jetpack%E4%B9%8BLifecycle/" class="post-title-link" itemprop="url">Android Jetpack之Lifecycle</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-04-14 13:48:19" itemprop="dateCreated datePublished" datetime="2021-04-14T13:48:19+08:00">2021-04-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-15 09:02:25" itemprop="dateModified" datetime="2021-04-15T09:02:25+08:00">2021-04-15</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="Android-Jepack介绍"><a href="#Android-Jepack介绍" class="headerlink" title="Android Jepack介绍"></a>Android Jepack介绍</h4><blockquote>
+<p>Jetpack 是一个由多个库组成的套件，可帮助开发者遵循最佳做法，减少样板代码并编写可在各种Android版本和设备中一致运行的代码，让开发者精力集中编写重要的代码。</p>
+</blockquote>
+<p>使用Jetpack的好处：</p>
+<ul>
+<li><strong>遵循最佳做法</strong>，Android Jetpack 组件采用最新的设计方法构建，具有向后兼容性，可以减少崩溃和内存泄露。</li>
+<li><strong>消除样本代码</strong>，Android Jetpack 可以管理各种繁琐的 Activity（如后台任务、导航和生命周期管理），以便您可以专注于打造出色的应用。</li>
+<li><strong>减少不一致</strong>，这些库可在各种 Android 版本和设备中以一致的方式运作，助您降低复杂性。</li>
+</ul>
+<h4 id="Lifecycle"><a href="#Lifecycle" class="headerlink" title="Lifecycle"></a>Lifecycle</h4><p>Lifecycle是用来帮助开发者管理Activity和Fragment的生命周期。    </p>
+<p>Lifecycle是一个库，它包含Lifecycle类，Lifecycle类用于存储有关组件（如Acitivity或Fragment）的生命周期状态的信息，并允许其他对象观察此状态。   </p>
+<p>Lifycycle使用两种主要枚举跟踪其关联组件的生命周期状态：     </p>
+<ul>
+<li><p>事件     </p>
+<p>从框架和Lifecycle类分派的生命周期事件。这些事件映射到Activity和Fragment中的回调事件。        </p>
+</li>
+<li><p>状态      </p>
+<p>由Lifecyle对象跟踪的组件的当前状态</p>
+</li>
+</ul>
+<p><img src="/2021/04/14/Android-Jetpack%E4%B9%8BLifecycle/Android-Jetpack%E4%B9%8BLifecycle%5Clifecycle-states.svg" alt="构成 Android Activity 生命周期的状态和事件"></p>
+<h5 id="Lifecycle的使用"><a href="#Lifecycle的使用" class="headerlink" title="Lifecycle的使用"></a>Lifecycle的使用</h5><h6 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h6><p>非androidx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation &quot;android.arch.lifecycle:extensions:1.1.1&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>androidx</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    def lifecycle_version = <span class="string">&quot;2.3.0&quot;</span></span><br><span class="line">    def arch_version = <span class="string">&quot;2.1.0&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// ViewModel</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version&quot;</span></span><br><span class="line">    <span class="comment">// LiveData</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.lifecycle:lifecycle-livedata:$lifecycle_version&quot;</span></span><br><span class="line">    <span class="comment">// Lifecycles only (without ViewModel or LiveData)</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.lifecycle:lifecycle-runtime:$lifecycle_version&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Saved state module for ViewModel</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Annotation processor</span></span><br><span class="line">    annotationProcessor <span class="string">&quot;androidx.lifecycle:lifecycle-compiler:$lifecycle_version&quot;</span></span><br><span class="line">    <span class="comment">// alternately - if using Java8, use the following instead of lifecycle-compiler</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.lifecycle:lifecycle-common-java8:$lifecycle_version&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// optional - helpers for implementing LifecycleOwner in a Service</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.lifecycle:lifecycle-service:$lifecycle_version&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// optional - ProcessLifecycleOwner provides a lifecycle for the whole application process</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.lifecycle:lifecycle-process:$lifecycle_version&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// optional - ReactiveStreams support for LiveData</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.lifecycle:lifecycle-reactivestreams:$lifecycle_version&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// optional - Test helpers for LiveData</span></span><br><span class="line">    testImplementation <span class="string">&quot;androidx.arch.core:core-testing:$arch_version&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看着有很多，实际上如果只使用Lifecycle，只需要引入lifecycle-runtime即可。但通常都是和 ViewModel、 LiveData 配套使用的，所以lifecycle-viewmodel、lifecycle-livedata 一般也会引入。</p>
+<h6 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h6><ol>
+<li>生命周期拥有者使用getLifecycle()获取Lifecycle实例，然后用addObserve()添加观察者。    </li>
+<li>观察者实现LifecycleObserve，方法上用OnLifecycleEvent注解关注对应生命周期，生命周期触发时就会执行对应方法。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyObserver</span> <span class="keyword">implements</span> <span class="title">LifecycleObserver</span> </span>&#123;</span><br><span class="line">    <span class="meta">@OnLifecycleEvent(Lifecycle.Event.ON_RESUME)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">connectListener</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">disconnectListener</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LifecycleTestActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_lifecycle_test);</span><br><span class="line">        <span class="comment">//Lifecycle 生命周期</span></span><br><span class="line">        getLifecycle().addObserver(<span class="keyword">new</span> MyObserver());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>Activity（或Fragment）是生命周期的拥有者，通过getLifecycle()方法获取到生命周期Lifecycle对象，Lifecycle对象使用addObserver方法 给自己添加观察者，即MyObserver对象。当Lifecycle的生命周期发生变化时，MyObserver就可以感知到。</p>
+<h6 id="MVP架构中的使用"><a href="#MVP架构中的使用" class="headerlink" title="MVP架构中的使用"></a>MVP架构中的使用</h6><p>如果在MVP架构中，可以把presenter作为观察者。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LifecycleTestActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> <span class="keyword">implements</span> <span class="title">IView</span> </span>&#123;</span><br><span class="line">   <span class="keyword">private</span> String TAG = <span class="string">&quot;Lifecycle_Test&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_lifecycle_test);</span><br><span class="line">        <span class="comment">//Lifecycle 生命周期</span></span><br><span class="line"><span class="comment">//        getLifecycle().addObserver(new MyObserver());</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//MVP中使用Lifecycle</span></span><br><span class="line">        getLifecycle().addObserver(<span class="keyword">new</span> MyPresenter(<span class="keyword">this</span>));</span><br><span class="line">        Log.i(TAG, <span class="string">&quot;onCreate: &quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onResume</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onResume();</span><br><span class="line">        Log.i(TAG, <span class="string">&quot;onResume: &quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPause</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onPause();</span><br><span class="line">        Log.i(TAG, <span class="string">&quot;onPause: &quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">showView</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hideView</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//Presenter</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyPresenter</span> <span class="keyword">implements</span> <span class="title">LifecycleObserver</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">&quot;Lifecycle_Test&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> IView mView;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyPresenter</span><span class="params">(IView view)</span> </span>&#123;mView = view;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@OnLifecycleEvent(value = Lifecycle.Event.ON_START)</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">getDataOnStart</span><span class="params">(LifecycleOwner owner)</span></span>&#123;</span><br><span class="line">        Log.i(TAG, <span class="string">&quot;getDataOnStart: &quot;</span>);</span><br><span class="line">        </span><br><span class="line">        Util.checkUserStatus(result -&gt; &#123;</span><br><span class="line">                <span class="comment">//checkUserStatus是耗时操作，回调后检查当前生命周期状态</span></span><br><span class="line">                <span class="keyword">if</span> (owner.getLifecycle().getCurrentState().isAtLeast(STARTED)) &#123;</span><br><span class="line">                	start();</span><br><span class="line">                    mView.showView();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@OnLifecycleEvent(value = Lifecycle.Event.ON_STOP)</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">hideDataOnStop</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Log.i(TAG, <span class="string">&quot;hideDataOnStop: &quot;</span>);</span><br><span class="line">        stop();</span><br><span class="line">        mView.hideView();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//IView</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IView</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">showView</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">hideView</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这里是让Presenter实现LifecycleObserver接口，同样在方法上注解要触发的生命周期，最后在Activity中作为观察者添加到Lifecycle中。</p>
+<p>这样做好处是啥呢？ 当Activity生命周期发生变化时，MyPresenter就可以感知并执行方法，不需要在MainActivity的多个生命周期方法中调用MyPresenter的方法了。</p>
+<ul>
+<li><strong>所有方法调用操作都由组件本身管理</strong>：Presenter类自动感知生命周期，如果需要在其他的Activity/Fragment也使用这个Presenter，只需添加其为观察者即可。</li>
+<li><strong>让各个组件存储自己的逻辑，减轻Activity/Fragment中代码，更易于管理</strong>；    </li>
+</ul>
+<p>另外，注意到 getDataOnStart()中耗时校验回调后，对当前生命周期状态进行了检查：至少处于STARTED状态才会继续执行start()方法，也就是保证了Activity停止后不会走start()方法；</p>
+<h6 id="自定义LifecycleOwner"><a href="#自定义LifecycleOwner" class="headerlink" title="自定义LifecycleOwner"></a>自定义LifecycleOwner</h6><p>在Activity中调用getLifecycle()能获取到Lifecycle实例，getLifecycle()是在接口LifecycleOwner中定义。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 生命周期拥有者</span></span><br><span class="line"><span class="comment"> * 生命周期事件可被 自定义的组件 用来 处理生命周期事件的变化，同时不会在Activity/Fragmen中写任何代码</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">LifecycleOwner</span> </span>&#123;</span><br><span class="line">    <span class="meta">@NonNull</span></span><br><span class="line">    <span class="function">Lifecycle <span class="title">getLifecycle</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Support Library 26.1.0及以上、AndroidX的 Fragment 和 Activity 已实现 LifecycleOwner 接口，所以我们在Activity中可以直接使用getLifecycle()。</p>
+<p>如果有一个自定义类并希望使其成为LifecycleOwner，可以使用LifecycleRegistry类，它是Lifecycle的实现类，但需要将事件转发到该类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> <span class="keyword">implements</span> <span class="title">LifecycleOwner</span> </span>&#123;</span><br><span class="line">       <span class="keyword">private</span> LifecycleRegistry lifecycleRegistry;</span><br><span class="line">       <span class="meta">@Override</span></span><br><span class="line">       <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">           <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line"></span><br><span class="line">           lifecycleRegistry = <span class="keyword">new</span> LifecycleRegistry(<span class="keyword">this</span>);</span><br><span class="line">           lifecycleRegistry.markState(Lifecycle.State.CREATED);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="meta">@Override</span></span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStart</span><span class="params">()</span> </span>&#123;</span><br><span class="line">           <span class="keyword">super</span>.onStart();</span><br><span class="line">           lifecycleRegistry.markState(Lifecycle.State.STARTED);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="meta">@NonNull</span></span><br><span class="line">       <span class="meta">@Override</span></span><br><span class="line">       <span class="function"><span class="keyword">public</span> Lifecycle <span class="title">getLifecycle</span><span class="params">()</span> </span>&#123;</span><br><span class="line">           <span class="keyword">return</span> lifecycleRegistry;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>MyActivity实现LifecycleOwner，getLifecycle()返回lifecycleRegistry实例。lifecycleRegistry实例则是在onCreate创建，并且在各个生命周期内调用markState()方法完成生命周期事件的传递。这就完成了LifecycleOwner的自定义，也即MyActivity变成了LifecycleOwner，然后就可以和 实现了LifecycleObserver的组件配合使用了。</p>
+<p>补充一点，<strong>观察者的方法可以接受一个参数LifecycleOwner</strong>，就可以用来获取当前状态、或者继续添加观察者。 若注解的是ON_ANY还可以接收Event，用于区分是哪个事件。如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">TestObserver</span> <span class="keyword">implements</span> <span class="title">LifecycleObserver</span> </span>&#123;</span><br><span class="line">        <span class="meta">@OnLifecycleEvent(Lifecycle.Event.ON_CREATE)</span></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">onCreated</span><span class="params">(LifecycleOwner owner)</span> </span>&#123;</span><br><span class="line"><span class="comment">//            owner.getLifecycle().addObserver(anotherObserver);</span></span><br><span class="line"><span class="comment">//            owner.getLifecycle().getCurrentState();</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="meta">@OnLifecycleEvent(Lifecycle.Event.ON_ANY)</span></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">onAny</span><span class="params">(LifecycleOwner owner, Lifecycle.Event event)</span> </span>&#123;</span><br><span class="line"><span class="comment">//            event.name()</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="Application生命周期-ProcessLifecycleOwner"><a href="#Application生命周期-ProcessLifecycleOwner" class="headerlink" title="Application生命周期 ProcessLifecycleOwner"></a>Application生命周期 ProcessLifecycleOwner</h6><p>之前对App进入前后台的判断是通过registerActivityLifecycleCallbacks(callback)方法，然后在callback中利用一个全局变量做计数，在onActivityStarted()中计数加1，在onActivityStopped方法中计数减1，从而判断前后台切换。</p>
+<p>而使用ProcessLifecycleOwner可以直接获取应用前后台切换状态。（记得先引入lifecycle-process依赖）</p>
+<p>使用方式和Activity中类似，只不过要使用ProcessLifecycleOwner.get()获取ProcessLifecycleOwner，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyApplication</span> <span class="keyword">extends</span> <span class="title">Application</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate();</span><br><span class="line"></span><br><span class="line">	<span class="comment">//注册App生命周期观察者</span></span><br><span class="line">        ProcessLifecycleOwner.get().getLifecycle().addObserver(<span class="keyword">new</span> ApplicationLifecycleObserver());</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Application生命周期观察，提供整个应用进程的生命周期</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * Lifecycle.Event.ON_CREATE只会分发一次，Lifecycle.Event.ON_DESTROY不会被分发。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 第一个Activity进入时，ProcessLifecycleOwner将分派Lifecycle.Event.ON_START, Lifecycle.Event.ON_RESUME。</span></span><br><span class="line"><span class="comment">     * 而Lifecycle.Event.ON_PAUSE, Lifecycle.Event.ON_STOP，将在最后一个Activit退出后后延迟分发。如果由于配置更改而销毁并重新创建活动，则此延迟足以保证ProcessLifecycleOwner不会发送任何事件。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 作用：监听应用程序进入前台或后台</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ApplicationLifecycleObserver</span> <span class="keyword">implements</span> <span class="title">LifecycleObserver</span> </span>&#123;</span><br><span class="line">        <span class="meta">@OnLifecycleEvent(Lifecycle.Event.ON_START)</span></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">onAppForeground</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            Log.w(TAG, <span class="string">&quot;ApplicationObserver: app moved to foreground&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@OnLifecycleEvent(Lifecycle.Event.ON_STOP)</span></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">onAppBackground</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            Log.w(TAG, <span class="string">&quot;ApplicationObserver: app moved to background&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/12/03/Solidity%E7%B1%BB%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -541,7 +681,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-12-16 16:46:38" itemprop="dateModified" datetime="2019-12-16T16:46:38+08:00">2019-12-16</time>
+                <time title="修改时间：2021-03-16 14:38:25" itemprop="dateModified" datetime="2021-03-16T14:38:25+08:00">2021-03-16</time>
               </span>
 
           
@@ -557,7 +697,7 @@
       
           <p>MetaMask是一款在谷歌浏览器Chrome上使用的插件类型的以太坊钱包，该钱包不需要下载，只需要在谷歌浏览器添加对应的扩展程序即可，非常轻量级，使用起来也非常方便。</p>
 <p>“文中的图片后面有过更新”</p>
-<p>###安装MetaMask<br>进入到MetaMask官网<a target="_blank" rel="noopener" href="https://metamask.io/">https://metamask.io/</a></p>
+<h3 id="安装MetaMask"><a href="#安装MetaMask" class="headerlink" title="安装MetaMask"></a>安装MetaMask</h3><p>进入到MetaMask官网<a target="_blank" rel="noopener" href="https://metamask.io/">https://metamask.io/</a></p>
 <p><img src="/2019/10/16/MetaMask%E7%9A%84%E4%BD%BF%E7%94%A8/metaMaskExtension1.png" alt="MetaMask插件"></p>
 <p>点击 “GET CHROME EXTENSION”按钮下载Chrome版本的插件，网站也提供了火狐浏览器的插件。</p>
 <p>###MetaMask使用方法<br>点击MetaMask的狐狸头图标，安装后首次使用时会展示隐私提示</p>
@@ -1054,102 +1194,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/03/31/spark%E5%85%A5%E9%97%A8-python/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/03/31/spark%E5%85%A5%E9%97%A8-python/" class="post-title-link" itemprop="url">Spark入门(python)1 - Spark的设计与运行原理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-03-31 11:57:31" itemprop="dateCreated datePublished" datetime="2019-03-31T11:57:31+08:00">2019-03-31</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-06-04 16:27:36" itemprop="dateModified" datetime="2019-06-04T16:27:36+08:00">2019-06-04</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Spark运行架构"><a href="#Spark运行架构" class="headerlink" title="Spark运行架构"></a>Spark运行架构</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
-<li>RDD 弹性分布数据集（Resilient Distributed Dataset），是分布式内存的一个抽象概念，提供了一种高度受限的共享内存模型</li>
-<li>DAG 有向无环图（Directed Acyclic Graph），反映RDD之间的依赖关系</li>
-<li>Executor 运行在工作节点上的一个进程，负责运行任务，并为应用程序存储数据</li>
-<li>应用 用户编写的Spark应用程序</li>
-<li>任务 运行在Executor上的工作单元</li>
-<li>作业 一个作业包含多个RDD及作用于相应RDD上的各种操作</li>
-<li>阶段 是作业的基本调度单位，一个作业会分为多组任务，每组任务被称为“阶段”，或者也被称为“任务集”</li>
-</ul>
-<h3 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h3><p><img src="/2019/03/31/spark%E5%85%A5%E9%97%A8-python/Spark%E8%BF%90%E8%A1%8C%E6%9E%B6%E6%9E%84.jpg" alt="Spark运行架构"><br>&emsp;Spark运行架构包括集群资源管理器（Cluster Manager）、运行作业任务的工作节点（Worker Node）、每个应用的任务控制节点（Driver）和每个工作节点上负责具体任务的执行进程（Executor）。其中，集群资源管理器可以是Spark自带的资源管理器，也可以是YARN或Mesos等资源管理框架。<br>与Hadoop MapReduce计算框架相比，Spark所采用的Executor有两个优点：      </p>
-<ol>
-<li>利用多线程来执行具体的任务（Hadoop MapReduce采用的是进程模型），减少任务的启动开销；      </li>
-<li>Executor中有一个BlockManager存储模块，会将内存和磁盘共同作为存储设备，当需要多轮迭代计算时，可以将中间结果存储到这个存储模块里，下次需要时，就可以直接读该存储模块里的数据，而不需要读写到HDFS等文件系统里，因而有效减少了IO开销；或者在交互式查询场景下，预先将表缓存到该存储系统上，从而可以提高读写IO性能。</li>
-</ol>
-<p><img src="/2019/03/31/spark%E5%85%A5%E9%97%A8-python/Spark%E4%B8%AD%E5%90%84%E7%A7%8D%E6%A6%82%E5%BF%B5%E4%B9%8B%E9%97%B4%E7%9A%84%E7%9B%B8%E4%BA%92%E5%85%B3%E7%B3%BB.jpg" alt="Spark中各种概念之间的相互关系"><br>如上图，在Spark中，一个应用（Application）由一个任务控制节点（Driver）和若干个作业（Job）构成，一个作业由多个阶段（Stage）构成，一个阶段由多个任务（Task）组成。当执行一个应用时，任务控制节点会向集群管理器（Cluster Manager）申请资源，启动Executor，并向Executor发送应用程序代码和文件，然后在Executor上执行任务，运行结束后，执行结果会返回给任务控制节点，或者写到HDFS或者其他数据库中。       </p>
-<h3 id="Spark运行基本流程"><a href="#Spark运行基本流程" class="headerlink" title="Spark运行基本流程"></a>Spark运行基本流程</h3><p><img src="/2019/03/31/spark%E5%85%A5%E9%97%A8-python/Spark%E8%BF%90%E8%A1%8C%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B.jpg" alt="Spark运行基本流程"><br>Spark的基本运行流程如下：     </p>
-<ol>
-<li>当一个Spark应用被提交时，首先需要为这个应用构建起基本的运行环境，即由任务控制节点（Driver）创建一个SparkContext，由SparkContext负责和资源管理器（Cluster Manager）的通信以及进行资源的申请、任务的分配和监控等。SparkContext会向资源管理器注册并申请运行Executor的资源；    </li>
-<li>资源管理器为Executor分配资源，并启动Executor进程，Executor运行情况将随着“心跳”发送到资源管理器上；       </li>
-<li>SparkContext根据RDD的依赖关系构建DAG图，DAG图提交给DAG调度器（DAGScheduler）进行解析，将DAG图分解成多个“阶段”（每个阶段都是一个任务集），并且计算出各个阶段之间的依赖关系，然后把一个个“任务集”提交给底层的任务调度器（TaskScheduler）进行处理；Executor向SparkContext申请任务，任务调度器将任务分发给Executor运行，同时，SparkContext将应用程序代码发放给Executor；       </li>
-<li>任务在Executor上运行，把执行结果反馈给任务调度器，然后反馈给DAG调度器，运行完毕后写入数据并释放所有资源。</li>
-</ol>
-<p>Spark运行架构的特点：        </p>
-<ol>
-<li>每个应用都有自己专属的Executor进程，并且该进程在应用运行期间一直驻留。Executor进程以多线程的方式运行任务，减少了多进程任务频繁的启动开销，使得任务执行变得非常高效和可靠；          </li>
-<li>Spark运行过程与资源管理器无关，只要能够获取Executor进程并保持通信即可；       </li>
-<li>Executor上有一个BlockManager存储模块，类似于键值存储系统（把内存和磁盘共同作为存储设备），在处理迭代计算任务时，不需要把中间结果写入到HDFS等文件系统，而是直接放在这个存储系统上，后续有需要时就可以直接读取；在交互式查询场景下，也可以把表提前缓存到这个存储系统上，提高读写IO性能；             </li>
-<li>任务采用了数据本地性和推测执行等优化机制。数据本地性是尽量将计算移到数据所在的节点上进行，即“计算向数据靠拢”，因为移动计算比移动数据所占的网络资源要少得多。而且，Spark采用了延时调度机制，可以在更大的程度上实现执行过程优化。比如，拥有数据的节点当前正被其他的任务占用，那么，在这种情况下是否需要将数据移动到其他的空闲节点呢？答案是不一定。因为，如果经过预测发现当前节点结束当前任务的时间要比移动数据的时间还要少，那么，调度就会等待，直到当前节点可用。</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1221,14 +1265,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

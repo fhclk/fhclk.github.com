@@ -151,6 +151,102 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/03/31/spark%E5%85%A5%E9%97%A8-python/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/31/spark%E5%85%A5%E9%97%A8-python/" class="post-title-link" itemprop="url">Spark入门(python)1 - Spark的设计与运行原理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-03-31 11:57:31" itemprop="dateCreated datePublished" datetime="2019-03-31T11:57:31+08:00">2019-03-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-06-04 16:27:36" itemprop="dateModified" datetime="2019-06-04T16:27:36+08:00">2019-06-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Spark运行架构"><a href="#Spark运行架构" class="headerlink" title="Spark运行架构"></a>Spark运行架构</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
+<li>RDD 弹性分布数据集（Resilient Distributed Dataset），是分布式内存的一个抽象概念，提供了一种高度受限的共享内存模型</li>
+<li>DAG 有向无环图（Directed Acyclic Graph），反映RDD之间的依赖关系</li>
+<li>Executor 运行在工作节点上的一个进程，负责运行任务，并为应用程序存储数据</li>
+<li>应用 用户编写的Spark应用程序</li>
+<li>任务 运行在Executor上的工作单元</li>
+<li>作业 一个作业包含多个RDD及作用于相应RDD上的各种操作</li>
+<li>阶段 是作业的基本调度单位，一个作业会分为多组任务，每组任务被称为“阶段”，或者也被称为“任务集”</li>
+</ul>
+<h3 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h3><p><img src="/2019/03/31/spark%E5%85%A5%E9%97%A8-python/Spark%E8%BF%90%E8%A1%8C%E6%9E%B6%E6%9E%84.jpg" alt="Spark运行架构"><br>&emsp;Spark运行架构包括集群资源管理器（Cluster Manager）、运行作业任务的工作节点（Worker Node）、每个应用的任务控制节点（Driver）和每个工作节点上负责具体任务的执行进程（Executor）。其中，集群资源管理器可以是Spark自带的资源管理器，也可以是YARN或Mesos等资源管理框架。<br>与Hadoop MapReduce计算框架相比，Spark所采用的Executor有两个优点：      </p>
+<ol>
+<li>利用多线程来执行具体的任务（Hadoop MapReduce采用的是进程模型），减少任务的启动开销；      </li>
+<li>Executor中有一个BlockManager存储模块，会将内存和磁盘共同作为存储设备，当需要多轮迭代计算时，可以将中间结果存储到这个存储模块里，下次需要时，就可以直接读该存储模块里的数据，而不需要读写到HDFS等文件系统里，因而有效减少了IO开销；或者在交互式查询场景下，预先将表缓存到该存储系统上，从而可以提高读写IO性能。</li>
+</ol>
+<p><img src="/2019/03/31/spark%E5%85%A5%E9%97%A8-python/Spark%E4%B8%AD%E5%90%84%E7%A7%8D%E6%A6%82%E5%BF%B5%E4%B9%8B%E9%97%B4%E7%9A%84%E7%9B%B8%E4%BA%92%E5%85%B3%E7%B3%BB.jpg" alt="Spark中各种概念之间的相互关系"><br>如上图，在Spark中，一个应用（Application）由一个任务控制节点（Driver）和若干个作业（Job）构成，一个作业由多个阶段（Stage）构成，一个阶段由多个任务（Task）组成。当执行一个应用时，任务控制节点会向集群管理器（Cluster Manager）申请资源，启动Executor，并向Executor发送应用程序代码和文件，然后在Executor上执行任务，运行结束后，执行结果会返回给任务控制节点，或者写到HDFS或者其他数据库中。       </p>
+<h3 id="Spark运行基本流程"><a href="#Spark运行基本流程" class="headerlink" title="Spark运行基本流程"></a>Spark运行基本流程</h3><p><img src="/2019/03/31/spark%E5%85%A5%E9%97%A8-python/Spark%E8%BF%90%E8%A1%8C%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B.jpg" alt="Spark运行基本流程"><br>Spark的基本运行流程如下：     </p>
+<ol>
+<li>当一个Spark应用被提交时，首先需要为这个应用构建起基本的运行环境，即由任务控制节点（Driver）创建一个SparkContext，由SparkContext负责和资源管理器（Cluster Manager）的通信以及进行资源的申请、任务的分配和监控等。SparkContext会向资源管理器注册并申请运行Executor的资源；    </li>
+<li>资源管理器为Executor分配资源，并启动Executor进程，Executor运行情况将随着“心跳”发送到资源管理器上；       </li>
+<li>SparkContext根据RDD的依赖关系构建DAG图，DAG图提交给DAG调度器（DAGScheduler）进行解析，将DAG图分解成多个“阶段”（每个阶段都是一个任务集），并且计算出各个阶段之间的依赖关系，然后把一个个“任务集”提交给底层的任务调度器（TaskScheduler）进行处理；Executor向SparkContext申请任务，任务调度器将任务分发给Executor运行，同时，SparkContext将应用程序代码发放给Executor；       </li>
+<li>任务在Executor上运行，把执行结果反馈给任务调度器，然后反馈给DAG调度器，运行完毕后写入数据并释放所有资源。</li>
+</ol>
+<p>Spark运行架构的特点：        </p>
+<ol>
+<li>每个应用都有自己专属的Executor进程，并且该进程在应用运行期间一直驻留。Executor进程以多线程的方式运行任务，减少了多进程任务频繁的启动开销，使得任务执行变得非常高效和可靠；          </li>
+<li>Spark运行过程与资源管理器无关，只要能够获取Executor进程并保持通信即可；       </li>
+<li>Executor上有一个BlockManager存储模块，类似于键值存储系统（把内存和磁盘共同作为存储设备），在处理迭代计算任务时，不需要把中间结果写入到HDFS等文件系统，而是直接放在这个存储系统上，后续有需要时就可以直接读取；在交互式查询场景下，也可以把表提前缓存到这个存储系统上，提高读写IO性能；             </li>
+<li>任务采用了数据本地性和推测执行等优化机制。数据本地性是尽量将计算移到数据所在的节点上进行，即“计算向数据靠拢”，因为移动计算比移动数据所占的网络资源要少得多。而且，Spark采用了延时调度机制，可以在更大的程度上实现执行过程优化。比如，拥有数据的节点当前正被其他的任务占用，那么，在这种情况下是否需要将数据移动到其他的空闲节点呢？答案是不一定。因为，如果经过预测发现当前节点结束当前任务的时间要比移动数据的时间还要少，那么，调度就会等待，直到当前节点可用。</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/03/23/React%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -288,7 +384,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-06-14 17:58:28" itemprop="dateModified" datetime="2019-06-14T17:58:28+08:00">2019-06-14</time>
+                <time title="修改时间：2021-04-09 18:22:36" itemprop="dateModified" datetime="2021-04-09T18:22:36+08:00">2021-04-09</time>
               </span>
 
           
@@ -1115,80 +1211,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2018/03/05/wx-applet/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/03/05/wx-applet/" class="post-title-link" itemprop="url">微信.小程序</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-03-05 08:17:00" itemprop="dateCreated datePublished" datetime="2018-03-05T08:17:00+08:00">2018-03-05</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-02-02 10:49:54" itemprop="dateModified" datetime="2019-02-02T10:49:54+08:00">2019-02-02</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="基本步骤"><a href="#基本步骤" class="headerlink" title="基本步骤"></a>基本步骤</h2><h3 id="申请账号"><a href="#申请账号" class="headerlink" title="申请账号"></a>申请账号</h3><p>前往<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/wxopen/waregister?action=step1">小程序注册</a> <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/wxopen/waregister?action=step1">https://mp.weixin.qq.com/wxopen/waregister?action=step1</a> 注册小程序，一个邮箱账号对应一个小程序。<br>登录 <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/">微信公众平台</a> <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/">https://mp.weixin.qq.com</a> ，在菜单 “设置”-“开发设置” 获取小程序的 AppID。</p>
-<h3 id="开发工具"><a href="#开发工具" class="headerlink" title="开发工具"></a>开发工具</h3><p><a target="_blank" rel="noopener" href="https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html?t=19020120">下载地址</a></p>
-<h3 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h3><p><a target="_blank" rel="noopener" href="https://developers.weixin.qq.com/miniprogram/dev/">官网开发文档</a></p>
-<h4 id="设置服务器域名"><a href="#设置服务器域名" class="headerlink" title="设置服务器域名"></a>设置服务器域名</h4><p>小程序要与后端交互，需要登录“微信工作平台|小程序”，在“开发”-“开发设置”-“服务器域名”添加域名，并且服务器要支持HTTPS协议。<br>如果在开发过程中使用了web-view组件，需要在“开发设置”中的“业务域名”中添加域名，并且只有企业号对应的小程序才有此项功能，个人账户不能进行此项设置。<br><img src="/2018/03/05/wx-applet/wx-applet/domain.png" alt="域名设置">   </p>
-<h3 id="成员管理"><a href="#成员管理" class="headerlink" title="成员管理"></a>成员管理</h3><p>在“管理”-“成员管理”里可以添加项目成员和体验成员，上传代码后在“版本管理”-“开发版本”中设置体验版本，已经添加的体验成员就可以扫描二维码体验小程序。    </p>
-<h3 id="发布小程序"><a href="#发布小程序" class="headerlink" title="发布小程序"></a>发布小程序</h3><p>在小程序功能测试通过后，上传代码，在“开发版本”中提交审核，审核通过后在“审核版本”中发布到线上。<br><img src="/2018/03/05/wx-applet/wx-applet/publish.png" alt="发布小程序">   </p>
-<p>发布成功后在微信里删除开发版本和预览版本，删除后台微信进程，重新打开微信，在小程序中搜索已发布的小程序，验证是否发布成功。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1260,14 +1282,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
