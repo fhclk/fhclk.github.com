@@ -151,6 +151,596 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2017/10/15/react-native/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/10/15/react-native/" class="post-title-link" itemprop="url">React Native</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-10-15 16:31:32" itemprop="dateCreated datePublished" datetime="2017-10-15T16:31:32+08:00">2017-10-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-01-25 17:43:10" itemprop="dateModified" datetime="2019-01-25T17:43:10+08:00">2019-01-25</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2017/08/24/read-react/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/08/24/read-react/" class="post-title-link" itemprop="url">React</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-08-24 23:52:48" itemprop="dateCreated datePublished" datetime="2017-08-24T23:52:48+08:00">2017-08-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-03-08 16:01:02" itemprop="dateModified" datetime="2019-03-08T16:01:02+08:00">2019-03-08</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="基本"><a href="#基本" class="headerlink" title="基本"></a>基本</h2><h3 id="node和npm"><a href="#node和npm" class="headerlink" title="node和npm"></a>node和npm</h3><ol>
+<li><p>node    </p>
+<p> node包管理器</p>
+</li>
+<li><p>npm</p>
+<p> <code>npm install -g &lt;package&gt;</code> 安装全局包<br> <code>npm install &lt;package&gt;</code> 安装本地包</p>
+<p> node包安装完后会保存在node_modules/文件夹下，并且会添加到package.json中</p>
+<p> <code>npm init -y</code> 创建npm项目和package.json文件</p>
+<p> <code>npm install</code> 从依赖文件package.json中安装node包</p>
+<p> <code>npm install --save-dev</code> –save-dev 标记该node包只是用作开发环境的一部分，并不会作为产品代码发布</p>
+</li>
+</ol>
+<h2 id="react"><a href="#react" class="headerlink" title="react"></a>react</h2><h3 id="创建react项目"><a href="#创建react项目" class="headerlink" title="创建react项目"></a>创建react项目</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npx create-react-app my-app</span><br><span class="line">cd my-app</span><br><span class="line">yarn start</span><br></pre></td></tr></table></figure>
+<h3 id="JSX"><a href="#JSX" class="headerlink" title="JSX"></a>JSX</h3><h4 id="模块热替换"><a href="#模块热替换" class="headerlink" title="模块热替换"></a>模块热替换</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import React from &#39;react&#39;;</span><br><span class="line">import ReactDOM from &#39;react-dom&#39;;</span><br><span class="line">import App from &#39;.&#x2F;App&#39;;</span><br><span class="line">import &#39;.&#x2F;index.css&#39;;</span><br><span class="line"></span><br><span class="line">ReactDOM.reander(</span><br><span class="line">	&lt;App &#x2F;&gt;,</span><br><span class="line">	document.getElementById(&#39;root&#39;)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">if (module.hot) &#123;</span><br><span class="line">	module.hot.accept();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="创建组件"><a href="#创建组件" class="headerlink" title="创建组件"></a>创建组件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class ShoppingList extends React.Component &#123;</span><br><span class="line">	render() &#123;</span><br><span class="line">		&lt;div className&#x3D;&quot;shopping-list&quot;&gt;</span><br><span class="line">			&lt;h1&gt;Shopping List for &#123;this.props.name&#125;&lt;&#x2F;h1&gt;</span><br><span class="line">			&lt;ul&gt;</span><br><span class="line">				&lt;li&gt;Instagram&lt;&#x2F;li&gt;</span><br><span class="line">				&lt;li&gt;WhatsApp&lt;&#x2F;li&gt;</span><br><span class="line">				&lt;li&gt;Oculus&lt;&#x2F;li&gt;</span><br><span class="line">			&lt;&#x2F;ul&gt;</span><br><span class="line">		&lt;&#x2F;div&gt;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;用法： &lt;ShoppingList name&#x3D;&quot;mark&quot; &#x2F;&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="函数定义组件"><a href="#函数定义组件" class="headerlink" title="函数定义组件"></a>函数定义组件</h4><p>为只有render方法的组件提供的一种简便的定义组件的方法。     </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function Square(props) &#123;</span><br><span class="line">	return (</span><br><span class="line">		&lt;button className&#x3D;&quot;square&quot; onClick&#x3D;&#123;props.onClick&#125;&gt;</span><br><span class="line">			&#123;props.value&#125;</span><br><span class="line">		&lt;&#x2F;button&gt;</span><br><span class="line">	);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>简化事件处理函数。这里把 <code>onClick=&#123; () =&gt; props.onClick() &#125;</code> 直接修改为 <code>onClick=&#123;props.onClick&#125;</code> ，注意不能写成 <code>onClick=&#123;props.onClick()&#125;</code>否则<code>porps.onClick</code>方法会在Square组件渲染时被直接触发而不是等到Board组件渲染完成时通过点击触发，又因为此时Board组件正在渲染中（即Board组件的render方法正在调用），又触发父组件onClick中调用setState()会再次调用render方法导致死循环。     </p>
+<h4 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h4><p><img src="/2017/08/24/read-react/lifecycle.png" alt="生命周期">     </p>
+<h4 id="正确使用state"><a href="#正确使用state" class="headerlink" title="正确使用state"></a>正确使用state</h4><p>构造函数是唯一能够初始化state的地方。</p>
+<ul>
+<li><p>不要直接更新状态，应当使用setState()</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Wrong，此代码不会重新渲染组件</span><br><span class="line">this.state.comment &#x3D; &#39;Hello&#39;;</span><br><span class="line">&#x2F;&#x2F; Correct</span><br><span class="line">this.setState(&#123;comment: &#39;Hello&#39;&#125;);</span><br></pre></td></tr></table></figure></li>
+<li><p>状态更新可能是异步的<br>  React可以将多个setState()调用合并成一个调用来提高性能。<br>  因为this.props和this.state可能是异步更新的，你不应该依靠它们的值来计算下一个状态。      </p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Wrong</span><br><span class="line">this.setState(&#123;</span><br><span class="line">	counter: this.state.counter + this.props.increment,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Correct</span><br><span class="line">this.setState((prevState, props) &#x3D;&gt; &#123;</span><br><span class="line">	counter: prevState.counter + props.increment</span><br><span class="line">&#125;);</span><br><span class="line">&#x2F;&#x2F; Correct</span><br><span class="line">this.setState(function(prevState, props) &#123;</span><br><span class="line">	return &#123;</span><br><span class="line">		counter: prevState.counter + props.increment</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
+<li><p>状态更新合并</p>
+<p>  当调用setState()时，React将提供的对象合并到当前状态。 </p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">constructor(props) &#123;</span><br><span class="line">	super(props);</span><br><span class="line">	this.state &#x3D; &#123;</span><br><span class="line">		posts: [],</span><br><span class="line">		comments: []</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;</span><br><span class="line">componentDidMount() &#123;</span><br><span class="line">	fetchPost().then(response &#x3D;&gt; &#123;</span><br><span class="line">		this.setState(&#123;</span><br><span class="line">			posts: response.posts</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;;</span><br><span class="line">	</span><br><span class="line">	fetchPost().then(response &#x3D;&gt; &#123;</span><br><span class="line">		this.setState(&#123;</span><br><span class="line">			comments: response.comments</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  这里的合并是浅合并，也就是说this.setState({comments})完整保留了this.state.posts，但完全替换了this.state.comments。</p>
+</li>
+</ul>
+<h3 id="事件处理"><a href="#事件处理" class="headerlink" title="事件处理"></a>事件处理</h3><p>React元素的事件处理和DOM元素的很相似。但是有一些语法上的不同：</p>
+<ul>
+<li>React事件绑定属性的命名采用驼峰式写法，而不是小写。   </li>
+<li>如果采用JSX的语法需要传入一个函数作为事件处理函数，而不是一个字符串（DOM元素的写法）</li>
+<li>在React中，不能使用返回false的方式阻止默认行为，必须明确使用preventDefault</li>
+</ul>
+<p>在React中，JSX回调函数中的this，类方法默认不会绑定this的。如果忘记绑定this.handleClick并把它传入onClick，当你调用这个函数的时候，this的值是undefined。<br>两种不用绑定this的方法，属性初始化器语法和箭头函数。      </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">class Toggle extends React.component &#123;</span><br><span class="line">	constructor(props) &#123;</span><br><span class="line">		super(props);</span><br><span class="line">		this.state &#x3D; &#123;</span><br><span class="line">			isToggleOn: true</span><br><span class="line">		&#125;;</span><br><span class="line">		this.handleClick1 &#x3D; this.handleClick1.bind(this);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	handleClick1() &#123;</span><br><span class="line">		this.setState((prevState) &#x3D;&gt; &#123;</span><br><span class="line">			isToggleOn: !prevState.isToggleOn</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	handleClick2 &#x3D; (e) &#x3D;&gt; &#123;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	handleClick3(e) &#123;</span><br><span class="line">	</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	render() &#123;</span><br><span class="line">		return (</span><br><span class="line">			&lt;div&gt;</span><br><span class="line">				&lt;button onClick&#x3D;&#123;this.handleClick1&#125;&gt;</span><br><span class="line">					&#123;this.state.isToggleOn ? &#39;ON&#39; : &#39;OFF&#39;&#125;</span><br><span class="line">				&lt;&#x2F;button&gt;</span><br><span class="line">				&lt;button onClick&#x3D;&#123;this.handleClick2&#125;&gt;</span><br><span class="line">					click me</span><br><span class="line">				&lt;&#x2F;button&gt;</span><br><span class="line">				&lt;button onClick&#x3D;&#123;(e) &#x3D;&gt; this.handleClick3(e)&#125;&gt;</span><br><span class="line">					click me</span><br><span class="line">				&lt;&#x2F;button&gt;</span><br><span class="line">			&lt;&#x2F;div&gt;</span><br><span class="line">		)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用箭头函数，每次Toggle渲染的时候都会创建一个不同的回调函数。在大多数情况下，这没有问题。然而如果这个回调函数作为一个属性值传入低阶组件，这些组件可能会进行额外的重新渲染。通常建议在构造函数中绑定或使用属性初始化器语法来避免这类性能问题。      </p>
+<h4 id="向事件处理程序传递参数"><a href="#向事件处理程序传递参数" class="headerlink" title="向事件处理程序传递参数"></a>向事件处理程序传递参数</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">deleteRow(rowId, event) &#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">&lt;button onClick&#x3D;&#123;(e) &#x3D;&gt; this.deleteRow(id, e)&#125;&gt;Delete Row&lt;&#x2F;button&gt;</span><br><span class="line">&lt;button onClick&#x3D;&#123;this.deleteRow.bind(this, id)&#125;&gt;Delete Row&lt;&#x2F;button&gt;</span><br></pre></td></tr></table></figure>
+<p>箭头函数的方式，事件对象必须显式的进行传递，但是通过 bind 的方式，事件对象以及更多的参数将会被隐式的进行传递。</p>
+<h3 id="列表和keys"><a href="#列表和keys" class="headerlink" title="列表和keys"></a>列表和keys</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const todoItems &#x3D; todos.map((todo) &#x3D;&gt;</span><br><span class="line">  &lt;li key&#x3D;&#123;todo.id&#125;&gt;</span><br><span class="line">    &#123;todo.text&#125;</span><br><span class="line">  &lt;&#x2F;li&gt;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>当元素没有确定的id时，你可以使用他的序列号索引index作为key。     </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const todoItems &#x3D; todos.map((todo, index) &#x3D;&gt;</span><br><span class="line">  &lt;li key&#x3D;&#123;index&#125;&gt;</span><br><span class="line">    &#123;todo.text&#125;</span><br><span class="line">  &lt;&#x2F;li&gt;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>如果列表项目的顺序可能会变化，我们不建议使用索引来用作键值，因为这样做会导致性能的负面影响，还可能引起组件状态问题。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2017/06/21/%E8%AF%BB%E3%80%8A%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E3%80%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/06/21/%E8%AF%BB%E3%80%8A%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E3%80%8B/" class="post-title-link" itemprop="url">读《大型网站技术架构：核心原理与案例分析》</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-06-21 14:10:13" itemprop="dateCreated datePublished" datetime="2017-06-21T14:10:13+08:00">2017-06-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-01-31 22:10:46" itemprop="dateModified" datetime="2019-01-31T22:10:46+08:00">2019-01-31</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><h2 id="大型网站架构演化"><a href="#大型网站架构演化" class="headerlink" title="大型网站架构演化"></a>大型网站架构演化</h2><h3 id="大型网站软件系统的特点"><a href="#大型网站软件系统的特点" class="headerlink" title="大型网站软件系统的特点"></a>大型网站软件系统的特点</h3><h3 id="大型网站架构演化发展历程"><a href="#大型网站架构演化发展历程" class="headerlink" title="大型网站架构演化发展历程"></a>大型网站架构演化发展历程</h3><h4 id="初始阶段的网站架构"><a href="#初始阶段的网站架构" class="headerlink" title="初始阶段的网站架构"></a>初始阶段的网站架构</h4><h4 id="应用服务和数据服务分离"><a href="#应用服务和数据服务分离" class="headerlink" title="应用服务和数据服务分离"></a>应用服务和数据服务分离</h4><h4 id="使用缓存改善网站性能"><a href="#使用缓存改善网站性能" class="headerlink" title="使用缓存改善网站性能"></a>使用缓存改善网站性能</h4><h4 id="使用应用服务器集群改善网站的并发处理能力"><a href="#使用应用服务器集群改善网站的并发处理能力" class="headerlink" title="使用应用服务器集群改善网站的并发处理能力"></a>使用应用服务器集群改善网站的并发处理能力</h4><h4 id="数据库读写分离"><a href="#数据库读写分离" class="headerlink" title="数据库读写分离"></a>数据库读写分离</h4><h4 id="使用反向代理和CDN加速网站响应"><a href="#使用反向代理和CDN加速网站响应" class="headerlink" title="使用反向代理和CDN加速网站响应"></a>使用反向代理和CDN加速网站响应</h4><h4 id="使用分布式文件系统和分布式数据库系统"><a href="#使用分布式文件系统和分布式数据库系统" class="headerlink" title="使用分布式文件系统和分布式数据库系统"></a>使用分布式文件系统和分布式数据库系统</h4><h4 id="使用NoSQL和搜索引擎"><a href="#使用NoSQL和搜索引擎" class="headerlink" title="使用NoSQL和搜索引擎"></a>使用NoSQL和搜索引擎</h4><h4 id="业务拆分"><a href="#业务拆分" class="headerlink" title="业务拆分"></a>业务拆分</h4><h4 id="分布式服务"><a href="#分布式服务" class="headerlink" title="分布式服务"></a>分布式服务</h4><h3 id="大型网站架构演化的价值观"><a href="#大型网站架构演化的价值观" class="headerlink" title="大型网站架构演化的价值观"></a>大型网站架构演化的价值观</h3><h4 id="大型网站架构技术的核心价值是随网站所需灵活应对"><a href="#大型网站架构技术的核心价值是随网站所需灵活应对" class="headerlink" title="大型网站架构技术的核心价值是随网站所需灵活应对"></a>大型网站架构技术的核心价值是随网站所需灵活应对</h4><h4 id="驱动大型网站技术发展的主要力量是网站的业务发展"><a href="#驱动大型网站技术发展的主要力量是网站的业务发展" class="headerlink" title="驱动大型网站技术发展的主要力量是网站的业务发展"></a>驱动大型网站技术发展的主要力量是网站的业务发展</h4><h3 id="网站架构设计误区"><a href="#网站架构设计误区" class="headerlink" title="网站架构设计误区"></a>网站架构设计误区</h3><h4 id="一味追随大公司的解决方案"><a href="#一味追随大公司的解决方案" class="headerlink" title="一味追随大公司的解决方案"></a>一味追随大公司的解决方案</h4><h4 id="为了技术而技术"><a href="#为了技术而技术" class="headerlink" title="为了技术而技术"></a>为了技术而技术</h4><h4 id="企图用技术解决所有问题"><a href="#企图用技术解决所有问题" class="headerlink" title="企图用技术解决所有问题"></a>企图用技术解决所有问题</h4><h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><h2 id="大型网站架构模式"><a href="#大型网站架构模式" class="headerlink" title="大型网站架构模式"></a>大型网站架构模式</h2><h3 id="网站架构模式"><a href="#网站架构模式" class="headerlink" title="网站架构模式"></a>网站架构模式</h3><h4 id="分层"><a href="#分层" class="headerlink" title="分层"></a>分层</h4><h4 id="分割"><a href="#分割" class="headerlink" title="分割"></a>分割</h4><h4 id="分布式"><a href="#分布式" class="headerlink" title="分布式"></a>分布式</h4><h4 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h4><h4 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h4><h4 id="异步"><a href="#异步" class="headerlink" title="异步"></a>异步</h4><h4 id="冗余"><a href="#冗余" class="headerlink" title="冗余"></a>冗余</h4><h4 id="自动化"><a href="#自动化" class="headerlink" title="自动化"></a>自动化</h4><h4 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h4><h3 id="架构模式在新浪微博的应用"><a href="#架构模式在新浪微博的应用" class="headerlink" title="架构模式在新浪微博的应用"></a>架构模式在新浪微博的应用</h3><h3 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h3><h2 id="大型网站核心架构要素"><a href="#大型网站核心架构要素" class="headerlink" title="大型网站核心架构要素"></a>大型网站核心架构要素</h2><h3 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h3><h3 id="可用性"><a href="#可用性" class="headerlink" title="可用性"></a>可用性</h3><h3 id="伸缩性"><a href="#伸缩性" class="headerlink" title="伸缩性"></a>伸缩性</h3><h3 id="扩展性"><a href="#扩展性" class="headerlink" title="扩展性"></a>扩展性</h3><h3 id="安全性"><a href="#安全性" class="headerlink" title="安全性"></a>安全性</h3><h3 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a>小结</h3><h1 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h1><h2 id="瞬间响应：网站的高性能架构"><a href="#瞬间响应：网站的高性能架构" class="headerlink" title="瞬间响应：网站的高性能架构"></a>瞬间响应：网站的高性能架构</h2><h3 id="网站性能测试"><a href="#网站性能测试" class="headerlink" title="网站性能测试"></a>网站性能测试</h3><h4 id="不同视角下的网站性能"><a href="#不同视角下的网站性能" class="headerlink" title="不同视角下的网站性能"></a>不同视角下的网站性能</h4><h4 id="性能测试指标"><a href="#性能测试指标" class="headerlink" title="性能测试指标"></a>性能测试指标</h4><h4 id="性能测试方法"><a href="#性能测试方法" class="headerlink" title="性能测试方法"></a>性能测试方法</h4><h4 id="性能测试报告"><a href="#性能测试报告" class="headerlink" title="性能测试报告"></a>性能测试报告</h4><h4 id="性能测试策略"><a href="#性能测试策略" class="headerlink" title="性能测试策略"></a>性能测试策略</h4><h3 id="Web前端性能优化"><a href="#Web前端性能优化" class="headerlink" title="Web前端性能优化"></a>Web前端性能优化</h3><h4 id="浏览器访问优化"><a href="#浏览器访问优化" class="headerlink" title="浏览器访问优化"></a>浏览器访问优化</h4><h4 id="CDN加速"><a href="#CDN加速" class="headerlink" title="CDN加速"></a>CDN加速</h4><h4 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h4><h3 id="应用服务器性能优化"><a href="#应用服务器性能优化" class="headerlink" title="应用服务器性能优化"></a>应用服务器性能优化</h3><h4 id="分布式缓存"><a href="#分布式缓存" class="headerlink" title="分布式缓存"></a>分布式缓存</h4><h4 id="异步操作"><a href="#异步操作" class="headerlink" title="异步操作"></a>异步操作</h4><h4 id="使用集群"><a href="#使用集群" class="headerlink" title="使用集群"></a>使用集群</h4><h4 id="代码优化"><a href="#代码优化" class="headerlink" title="代码优化"></a>代码优化</h4><h3 id="存储性能优化"><a href="#存储性能优化" class="headerlink" title="存储性能优化"></a>存储性能优化</h3><h4 id="机械硬盘-vs-固态硬盘"><a href="#机械硬盘-vs-固态硬盘" class="headerlink" title="机械硬盘 vs 固态硬盘"></a>机械硬盘 vs 固态硬盘</h4><h4 id="B-树-vs-LSM树"><a href="#B-树-vs-LSM树" class="headerlink" title="B+树 vs LSM树"></a>B+树 vs LSM树</h4><h4 id="RAID-vs-HDFS"><a href="#RAID-vs-HDFS" class="headerlink" title="RAID vs HDFS"></a>RAID vs HDFS</h4><h3 id="小结-3"><a href="#小结-3" class="headerlink" title="小结"></a>小结</h3><h2 id="万无一失：网站的高可用框架"><a href="#万无一失：网站的高可用框架" class="headerlink" title="万无一失：网站的高可用框架"></a>万无一失：网站的高可用框架</h2><h3 id="网站可用性的度量与考核"><a href="#网站可用性的度量与考核" class="headerlink" title="网站可用性的度量与考核"></a>网站可用性的度量与考核</h3><h4 id="网站可用性度量"><a href="#网站可用性度量" class="headerlink" title="网站可用性度量"></a>网站可用性度量</h4><h4 id="网站可用性考核"><a href="#网站可用性考核" class="headerlink" title="网站可用性考核"></a>网站可用性考核</h4><h3 id="高可用的网站架构"><a href="#高可用的网站架构" class="headerlink" title="高可用的网站架构"></a>高可用的网站架构</h3><h3 id="高可用的应用"><a href="#高可用的应用" class="headerlink" title="高可用的应用"></a>高可用的应用</h3><h4 id="通过负载均衡进行无状态服务的失效转移"><a href="#通过负载均衡进行无状态服务的失效转移" class="headerlink" title="通过负载均衡进行无状态服务的失效转移"></a>通过负载均衡进行无状态服务的失效转移</h4><h4 id="应用服务器集群的Session管理"><a href="#应用服务器集群的Session管理" class="headerlink" title="应用服务器集群的Session管理"></a>应用服务器集群的Session管理</h4><h3 id="高可用的服务"><a href="#高可用的服务" class="headerlink" title="高可用的服务"></a>高可用的服务</h3><h3 id="高可用的数据"><a href="#高可用的数据" class="headerlink" title="高可用的数据"></a>高可用的数据</h3><h4 id="CAP原理"><a href="#CAP原理" class="headerlink" title="CAP原理"></a>CAP原理</h4><h4 id="数据备份"><a href="#数据备份" class="headerlink" title="数据备份"></a>数据备份</h4><h4 id="失效转移"><a href="#失效转移" class="headerlink" title="失效转移"></a>失效转移</h4><h3 id="高可用网站的软件质量保证"><a href="#高可用网站的软件质量保证" class="headerlink" title="高可用网站的软件质量保证"></a>高可用网站的软件质量保证</h3><h4 id="网站发布"><a href="#网站发布" class="headerlink" title="网站发布"></a>网站发布</h4><h4 id="自动化测试"><a href="#自动化测试" class="headerlink" title="自动化测试"></a>自动化测试</h4><h4 id="预发布验证"><a href="#预发布验证" class="headerlink" title="预发布验证"></a>预发布验证</h4><h4 id="代码控制"><a href="#代码控制" class="headerlink" title="代码控制"></a>代码控制</h4><h4 id="自动化发布"><a href="#自动化发布" class="headerlink" title="自动化发布"></a>自动化发布</h4><h4 id="灰度发布"><a href="#灰度发布" class="headerlink" title="灰度发布"></a>灰度发布</h4><h3 id="网站运行监控"><a href="#网站运行监控" class="headerlink" title="网站运行监控"></a>网站运行监控</h3><h4 id="监控数据采集"><a href="#监控数据采集" class="headerlink" title="监控数据采集"></a>监控数据采集</h4><h4 id="监控管理"><a href="#监控管理" class="headerlink" title="监控管理"></a>监控管理</h4><h3 id="小结-4"><a href="#小结-4" class="headerlink" title="小结"></a>小结</h3><h2 id="永无止境：网站的伸缩性架构"><a href="#永无止境：网站的伸缩性架构" class="headerlink" title="永无止境：网站的伸缩性架构"></a>永无止境：网站的伸缩性架构</h2><h3 id="网站架构的伸缩性设计"><a href="#网站架构的伸缩性设计" class="headerlink" title="网站架构的伸缩性设计"></a>网站架构的伸缩性设计</h3><h4 id="不同功能进行物理分离实现伸缩"><a href="#不同功能进行物理分离实现伸缩" class="headerlink" title="不同功能进行物理分离实现伸缩"></a>不同功能进行物理分离实现伸缩</h4><h4 id="单一功能通过集群规模实现伸缩"><a href="#单一功能通过集群规模实现伸缩" class="headerlink" title="单一功能通过集群规模实现伸缩"></a>单一功能通过集群规模实现伸缩</h4><h3 id="应用服务器集群的伸缩性设计"><a href="#应用服务器集群的伸缩性设计" class="headerlink" title="应用服务器集群的伸缩性设计"></a>应用服务器集群的伸缩性设计</h3><h4 id="HTTP重定向负载均衡"><a href="#HTTP重定向负载均衡" class="headerlink" title="HTTP重定向负载均衡"></a>HTTP重定向负载均衡</h4><h4 id="DNS域名解析负载均衡"><a href="#DNS域名解析负载均衡" class="headerlink" title="DNS域名解析负载均衡"></a>DNS域名解析负载均衡</h4><h4 id="反向代理负载均衡"><a href="#反向代理负载均衡" class="headerlink" title="反向代理负载均衡"></a>反向代理负载均衡</h4><h4 id="IP负载均衡"><a href="#IP负载均衡" class="headerlink" title="IP负载均衡"></a>IP负载均衡</h4><h4 id="数据链路层负载均衡"><a href="#数据链路层负载均衡" class="headerlink" title="数据链路层负载均衡"></a>数据链路层负载均衡</h4><h4 id="负载均衡算法"><a href="#负载均衡算法" class="headerlink" title="负载均衡算法"></a>负载均衡算法</h4><h3 id="分布式缓存集群的伸缩性设计"><a href="#分布式缓存集群的伸缩性设计" class="headerlink" title="分布式缓存集群的伸缩性设计"></a>分布式缓存集群的伸缩性设计</h3><h4 id="Memcached分布式缓存集群的访问模型"><a href="#Memcached分布式缓存集群的访问模型" class="headerlink" title="Memcached分布式缓存集群的访问模型"></a>Memcached分布式缓存集群的访问模型</h4><h4 id="Memcached分布式缓存集群的伸缩性挑战"><a href="#Memcached分布式缓存集群的伸缩性挑战" class="headerlink" title="Memcached分布式缓存集群的伸缩性挑战"></a>Memcached分布式缓存集群的伸缩性挑战</h4><h4 id="分布式缓存的一致性Hash算法"><a href="#分布式缓存的一致性Hash算法" class="headerlink" title="分布式缓存的一致性Hash算法"></a>分布式缓存的一致性Hash算法</h4><h3 id="数据存储服务器集群的伸缩性设计"><a href="#数据存储服务器集群的伸缩性设计" class="headerlink" title="数据存储服务器集群的伸缩性设计"></a>数据存储服务器集群的伸缩性设计</h3><h4 id="关系数据库集群的伸缩性设计"><a href="#关系数据库集群的伸缩性设计" class="headerlink" title="关系数据库集群的伸缩性设计"></a>关系数据库集群的伸缩性设计</h4><h4 id="NoSQL数据库的伸缩性设计"><a href="#NoSQL数据库的伸缩性设计" class="headerlink" title="NoSQL数据库的伸缩性设计"></a>NoSQL数据库的伸缩性设计</h4><h3 id="小结-5"><a href="#小结-5" class="headerlink" title="小结"></a>小结</h3><h2 id="随需应变：网站的可扩展架构"><a href="#随需应变：网站的可扩展架构" class="headerlink" title="随需应变：网站的可扩展架构"></a>随需应变：网站的可扩展架构</h2><h3 id="构建可扩展的网站架构"><a href="#构建可扩展的网站架构" class="headerlink" title="构建可扩展的网站架构"></a>构建可扩展的网站架构</h3><h3 id="利用分布式消息队列降低系统耦合性"><a href="#利用分布式消息队列降低系统耦合性" class="headerlink" title="利用分布式消息队列降低系统耦合性"></a>利用分布式消息队列降低系统耦合性</h3><h4 id="事件驱动架构"><a href="#事件驱动架构" class="headerlink" title="事件驱动架构"></a>事件驱动架构</h4><h4 id="分布式消息队列"><a href="#分布式消息队列" class="headerlink" title="分布式消息队列"></a>分布式消息队列</h4><h3 id="利用分布式服务打造可复用的业务平台"><a href="#利用分布式服务打造可复用的业务平台" class="headerlink" title="利用分布式服务打造可复用的业务平台"></a>利用分布式服务打造可复用的业务平台</h3><h4 id="Web-Service-与企业级分布式服务"><a href="#Web-Service-与企业级分布式服务" class="headerlink" title="Web Service 与企业级分布式服务"></a>Web Service 与企业级分布式服务</h4><h4 id="大型网站分布式服务的需求与特点"><a href="#大型网站分布式服务的需求与特点" class="headerlink" title="大型网站分布式服务的需求与特点"></a>大型网站分布式服务的需求与特点</h4><h4 id="分布式服务框架设计"><a href="#分布式服务框架设计" class="headerlink" title="分布式服务框架设计"></a>分布式服务框架设计</h4><h3 id="可扩展的数据结构"><a href="#可扩展的数据结构" class="headerlink" title="可扩展的数据结构"></a>可扩展的数据结构</h3><h3 id="利用开放平台建设网站生态圈"><a href="#利用开放平台建设网站生态圈" class="headerlink" title="利用开放平台建设网站生态圈"></a>利用开放平台建设网站生态圈</h3><h3 id="小结-6"><a href="#小结-6" class="headerlink" title="小结"></a>小结</h3><h2 id="固若金汤：网站的安全架构"><a href="#固若金汤：网站的安全架构" class="headerlink" title="固若金汤：网站的安全架构"></a>固若金汤：网站的安全架构</h2><h3 id="道高一尺魔高一丈的网站应用攻击与防御"><a href="#道高一尺魔高一丈的网站应用攻击与防御" class="headerlink" title="道高一尺魔高一丈的网站应用攻击与防御"></a>道高一尺魔高一丈的网站应用攻击与防御</h3><h4 id="XSS攻击"><a href="#XSS攻击" class="headerlink" title="XSS攻击"></a>XSS攻击</h4><h4 id="注入攻击"><a href="#注入攻击" class="headerlink" title="注入攻击"></a>注入攻击</h4><h4 id="CSRF攻击"><a href="#CSRF攻击" class="headerlink" title="CSRF攻击"></a>CSRF攻击</h4><h4 id="其他攻击和漏洞"><a href="#其他攻击和漏洞" class="headerlink" title="其他攻击和漏洞"></a>其他攻击和漏洞</h4><h4 id="Web应用防火墙"><a href="#Web应用防火墙" class="headerlink" title="Web应用防火墙"></a>Web应用防火墙</h4><h4 id="网站安全漏铜扫描"><a href="#网站安全漏铜扫描" class="headerlink" title="网站安全漏铜扫描"></a>网站安全漏铜扫描</h4><h3 id="信息加密技术及密钥安全管理"><a href="#信息加密技术及密钥安全管理" class="headerlink" title="信息加密技术及密钥安全管理"></a>信息加密技术及密钥安全管理</h3><h4 id="单向三列加密"><a href="#单向三列加密" class="headerlink" title="单向三列加密"></a>单向三列加密</h4><h4 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密"></a>对称加密</h4><h4 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h4><h4 id="密钥安全管理"><a href="#密钥安全管理" class="headerlink" title="密钥安全管理"></a>密钥安全管理</h4><h3 id="信息过滤与反垃圾"><a href="#信息过滤与反垃圾" class="headerlink" title="信息过滤与反垃圾"></a>信息过滤与反垃圾</h3><h4 id="文本匹配"><a href="#文本匹配" class="headerlink" title="文本匹配"></a>文本匹配</h4><h4 id="分类算法"><a href="#分类算法" class="headerlink" title="分类算法"></a>分类算法</h4><h4 id="黑名单"><a href="#黑名单" class="headerlink" title="黑名单"></a>黑名单</h4><h3 id="电子商务风险控制"><a href="#电子商务风险控制" class="headerlink" title="电子商务风险控制"></a>电子商务风险控制</h3><h4 id="风险"><a href="#风险" class="headerlink" title="风险"></a>风险</h4><h4 id="风控"><a href="#风控" class="headerlink" title="风控"></a>风控</h4><h3 id="小结-7"><a href="#小结-7" class="headerlink" title="小结"></a>小结</h3><h1 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h1><h2 id="淘宝网的架构演化案例分析"><a href="#淘宝网的架构演化案例分析" class="headerlink" title="淘宝网的架构演化案例分析"></a>淘宝网的架构演化案例分析</h2><h3 id="淘宝网的业务发展历程"><a href="#淘宝网的业务发展历程" class="headerlink" title="淘宝网的业务发展历程"></a>淘宝网的业务发展历程</h3><h3 id="淘宝网技术架构演化"><a href="#淘宝网技术架构演化" class="headerlink" title="淘宝网技术架构演化"></a>淘宝网技术架构演化</h3><h3 id="小结-8"><a href="#小结-8" class="headerlink" title="小结"></a>小结</h3><h2 id="维基百科的高性能架构设计分析"><a href="#维基百科的高性能架构设计分析" class="headerlink" title="维基百科的高性能架构设计分析"></a>维基百科的高性能架构设计分析</h2><h3 id="Wikipedia-网站整体架构"><a href="#Wikipedia-网站整体架构" class="headerlink" title="Wikipedia 网站整体架构"></a>Wikipedia 网站整体架构</h3><h3 id="Wikipedia-性能优化策略"><a href="#Wikipedia-性能优化策略" class="headerlink" title="Wikipedia 性能优化策略"></a>Wikipedia 性能优化策略</h3><h4 id="Wikipedia-前端性能优化"><a href="#Wikipedia-前端性能优化" class="headerlink" title="Wikipedia 前端性能优化"></a>Wikipedia 前端性能优化</h4><h4 id="Wikipedia-服务端性能优化"><a href="#Wikipedia-服务端性能优化" class="headerlink" title="Wikipedia 服务端性能优化"></a>Wikipedia 服务端性能优化</h4><h4 id="Wikipedia-后端性能优化"><a href="#Wikipedia-后端性能优化" class="headerlink" title="Wikipedia 后端性能优化"></a>Wikipedia 后端性能优化</h4><h2 id="海量分布式存储系统Doris的高可用架构设计分析"><a href="#海量分布式存储系统Doris的高可用架构设计分析" class="headerlink" title="海量分布式存储系统Doris的高可用架构设计分析"></a>海量分布式存储系统Doris的高可用架构设计分析</h2><h3 id="分布式存储系统的高可用架构"><a href="#分布式存储系统的高可用架构" class="headerlink" title="分布式存储系统的高可用架构"></a>分布式存储系统的高可用架构</h3><h3 id="不同故障情况下的高可用解决方案"><a href="#不同故障情况下的高可用解决方案" class="headerlink" title="不同故障情况下的高可用解决方案"></a>不同故障情况下的高可用解决方案</h3><h4 id="分布式存储系统的故障分类"><a href="#分布式存储系统的故障分类" class="headerlink" title="分布式存储系统的故障分类"></a>分布式存储系统的故障分类</h4><h4 id="正常情况下系统访问结构"><a href="#正常情况下系统访问结构" class="headerlink" title="正常情况下系统访问结构"></a>正常情况下系统访问结构</h4><h4 id="瞬时故障的高可用解决方案"><a href="#瞬时故障的高可用解决方案" class="headerlink" title="瞬时故障的高可用解决方案"></a>瞬时故障的高可用解决方案</h4><h4 id="临时故障的高可用解决方案"><a href="#临时故障的高可用解决方案" class="headerlink" title="临时故障的高可用解决方案"></a>临时故障的高可用解决方案</h4><h4 id="永久故障的高可用解决方案"><a href="#永久故障的高可用解决方案" class="headerlink" title="永久故障的高可用解决方案"></a>永久故障的高可用解决方案</h4><h2 id="网购秒杀系统架构设计案例分析"><a href="#网购秒杀系统架构设计案例分析" class="headerlink" title="网购秒杀系统架构设计案例分析"></a>网购秒杀系统架构设计案例分析</h2><h3 id="秒杀活动的技术挑战"><a href="#秒杀活动的技术挑战" class="headerlink" title="秒杀活动的技术挑战"></a>秒杀活动的技术挑战</h3><h3 id="秒杀系统的应对策略"><a href="#秒杀系统的应对策略" class="headerlink" title="秒杀系统的应对策略"></a>秒杀系统的应对策略</h3><h3 id="秒杀系统架构设计"><a href="#秒杀系统架构设计" class="headerlink" title="秒杀系统架构设计"></a>秒杀系统架构设计</h3><h3 id="小结-9"><a href="#小结-9" class="headerlink" title="小结"></a>小结</h3><h2 id="大型网站典型故障案例分析"><a href="#大型网站典型故障案例分析" class="headerlink" title="大型网站典型故障案例分析"></a>大型网站典型故障案例分析</h2><h3 id="写日志也会引发故障"><a href="#写日志也会引发故障" class="headerlink" title="写日志也会引发故障"></a>写日志也会引发故障</h3><h3 id="高并发访问数据库引发的故障"><a href="#高并发访问数据库引发的故障" class="headerlink" title="高并发访问数据库引发的故障"></a>高并发访问数据库引发的故障</h3><h3 id="高并发情况下锁引发的故障"><a href="#高并发情况下锁引发的故障" class="headerlink" title="高并发情况下锁引发的故障"></a>高并发情况下锁引发的故障</h3><h3 id="缓存引发的故障"><a href="#缓存引发的故障" class="headerlink" title="缓存引发的故障"></a>缓存引发的故障</h3><h3 id="应用启动不同步引发的故障"><a href="#应用启动不同步引发的故障" class="headerlink" title="应用启动不同步引发的故障"></a>应用启动不同步引发的故障</h3><h3 id="大文件读写独占磁盘引发的故障"><a href="#大文件读写独占磁盘引发的故障" class="headerlink" title="大文件读写独占磁盘引发的故障"></a>大文件读写独占磁盘引发的故障</h3><h3 id="滥用生产环境引发的故障"><a href="#滥用生产环境引发的故障" class="headerlink" title="滥用生产环境引发的故障"></a>滥用生产环境引发的故障</h3><h3 id="不规范的流程引发的故障"><a href="#不规范的流程引发的故障" class="headerlink" title="不规范的流程引发的故障"></a>不规范的流程引发的故障</h3><h3 id="不好的编程习惯引发的故障"><a href="#不好的编程习惯引发的故障" class="headerlink" title="不好的编程习惯引发的故障"></a>不好的编程习惯引发的故障</h3><h3 id="小结-10"><a href="#小结-10" class="headerlink" title="小结"></a>小结</h3><h1 id="架构师"><a href="#架构师" class="headerlink" title="架构师"></a>架构师</h1><h2 id="架构师领导艺术"><a href="#架构师领导艺术" class="headerlink" title="架构师领导艺术"></a>架构师领导艺术</h2><h3 id="关注人而不是产品"><a href="#关注人而不是产品" class="headerlink" title="关注人而不是产品"></a>关注人而不是产品</h3><h3 id="发掘人的优秀"><a href="#发掘人的优秀" class="headerlink" title="发掘人的优秀"></a>发掘人的优秀</h3><h3 id="共享美好蓝图"><a href="#共享美好蓝图" class="headerlink" title="共享美好蓝图"></a>共享美好蓝图</h3><h3 id="共同参与架构"><a href="#共同参与架构" class="headerlink" title="共同参与架构"></a>共同参与架构</h3><h3 id="学会妥协"><a href="#学会妥协" class="headerlink" title="学会妥协"></a>学会妥协</h3><h3 id="成就他人"><a href="#成就他人" class="headerlink" title="成就他人"></a>成就他人</h3><h2 id="网站架构师职场攻略"><a href="#网站架构师职场攻略" class="headerlink" title="网站架构师职场攻略"></a>网站架构师职场攻略</h2><h3 id="发现问题，寻找突破"><a href="#发现问题，寻找突破" class="headerlink" title="发现问题，寻找突破"></a>发现问题，寻找突破</h3><h3 id="提出问题，寻求支持"><a href="#提出问题，寻求支持" class="headerlink" title="提出问题，寻求支持"></a>提出问题，寻求支持</h3><h3 id="解决问题，达成绩效"><a href="#解决问题，达成绩效" class="headerlink" title="解决问题，达成绩效"></a>解决问题，达成绩效</h3><h2 id="漫话网站架构师"><a href="#漫话网站架构师" class="headerlink" title="漫话网站架构师"></a>漫话网站架构师</h2><h3 id="按作用划分架构师"><a href="#按作用划分架构师" class="headerlink" title="按作用划分架构师"></a>按作用划分架构师</h3><h3 id="按效果划分架构师"><a href="#按效果划分架构师" class="headerlink" title="按效果划分架构师"></a>按效果划分架构师</h3><h3 id="按职责角色划分架构师"><a href="#按职责角色划分架构师" class="headerlink" title="按职责角色划分架构师"></a>按职责角色划分架构师</h3><h3 id="安关注层次划分架构师"><a href="#安关注层次划分架构师" class="headerlink" title="安关注层次划分架构师"></a>安关注层次划分架构师</h3><h3 id="安关注层次划分架构师-1"><a href="#安关注层次划分架构师-1" class="headerlink" title="安关注层次划分架构师"></a>安关注层次划分架构师</h3><h3 id="安口碑划分架构师"><a href="#安口碑划分架构师" class="headerlink" title="安口碑划分架构师"></a>安口碑划分架构师</h3><h3 id="非主流方式划分架构师"><a href="#非主流方式划分架构师" class="headerlink" title="非主流方式划分架构师"></a>非主流方式划分架构师</h3>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2017/06/05/JavaScript%E9%97%AD%E5%8C%85%E5%92%8C%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/06/05/JavaScript%E9%97%AD%E5%8C%85%E5%92%8C%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">JavaScript闭包和高阶函数</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-06-05 20:28:22" itemprop="dateCreated datePublished" datetime="2017-06-05T20:28:22+08:00">2017-06-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-06-18 17:48:18" itemprop="dateModified" datetime="2019-06-18T17:48:18+08:00">2019-06-18</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h2><h3 id="变量的作用域"><a href="#变量的作用域" class="headerlink" title="变量的作用域"></a>变量的作用域</h3><p>变量的作用域，就是指变量的有效范围。<br>当在函数中声明一个变量的时候，如果该变量前面没有带上关键字var，这个变量就会成为全局变量。这种做法会造成命名冲突。<br>在函数内声明的变量是局部变量，只有在函数内才能访问到该变量。因为当在函数中搜索一个变量的时候，如果该函数内并没有声明这个变量，那么此次搜索的过程会随着代码执行环境 创建的作用域链往外层逐层搜索，一直搜索到全局对象为止。变量的搜索是从内到外而非从外到 内的。  </p>
+<h3 id="变量的生存周期"><a href="#变量的生存周期" class="headerlink" title="变量的生存周期"></a>变量的生存周期</h3><p>普通函数，函数结束，局部变量的生命周期也将结束。但闭包不同，在闭包中，函数结束，局部变量的生命周期不一定结束。   </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">var func &#x3D; function() &#123;</span><br><span class="line">	var a &#x3D; 1;</span><br><span class="line">	return function() &#123;</span><br><span class="line">		a++;</span><br><span class="line">		console.log(a);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">var f &#x3D; func();</span><br><span class="line">f();</span><br><span class="line">f();</span><br><span class="line">f();</span><br><span class="line">f();</span><br><span class="line">f();</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;输出</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td></tr></table></figure>
+
+<p>当执行 var f = func();时，f 返回了一个匿名函数的引用，它可以访问到 func() 被调用时产生的环境，而局部变量 a 一直处在这个环境里。既然局部变量所在的环境还能被外界访问，这个局部变量就有了不被销毁的理由。在这里产生了一个闭包结构，局部变量的生命看起 来被延续了。</p>
+<p>应用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">	&lt;title&gt;test&lt;&#x2F;title&gt;</span><br><span class="line">&lt;&#x2F;head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;div&gt;1&lt;&#x2F;div&gt;</span><br><span class="line">&lt;div&gt;2&lt;&#x2F;div&gt;</span><br><span class="line">&lt;div&gt;3&lt;&#x2F;div&gt;</span><br><span class="line">&lt;div&gt;4&lt;&#x2F;div&gt;</span><br><span class="line">&lt;div&gt;5&lt;&#x2F;div&gt;</span><br><span class="line"></span><br><span class="line">&lt;script type&#x3D;&quot;text&#x2F;javascript&quot;&gt;</span><br><span class="line">	var nodes &#x3D; document.getElementsByTagName(&#39;div&#39;);</span><br><span class="line">	for (var i &#x3D; 0, len &#x3D; nodes.length; i &lt; len; i++) &#123;</span><br><span class="line">		nodes[i].onclick &#x3D; function() &#123;</span><br><span class="line">			console.log(i);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line">&lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
+<p>在上面的代码中，无论触发哪个数的事件，输出都是5。因为 div 节点的 onclick 事件是被异步触发的，当事件被触发的时候，for 循环早已结束，此时变量 i 的值已经是 5，所以在 div 的 onclick 事件函数中顺着作用域链从内到外查找变量 i 时，查找到的值总是 5。<br>解决方法是使用闭包，把每次循环的 i 值都封闭起来。当在事件函数中顺着作用域链 中从内到外查找变量 i 时，会先找到被封闭在闭包环境中的 i，如果有 5 个 div，这里的 i 就分别 是 0,1,2,3,4。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">for (var i &#x3D; 0, len &#x3D; nodes.length; i &lt; len; i++) &#123;</span><br><span class="line">	(function(i) &#123;</span><br><span class="line">		nodes[i].onclick &#x3D; function() &#123;</span><br><span class="line">			console.log(i);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;)(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>示例二：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">var Type &#x3D; &#123;&#125;;</span><br><span class="line">for (var i &#x3D; 0, type; type &#x3D; [&#39;String&#39;, &#39;Array&#39;, &#39;Number&#39;][i++];) &#123;</span><br><span class="line">	(function(type)&#123;</span><br><span class="line">		Type[&#39;is&#39;+type] &#x3D; function(obj) &#123;</span><br><span class="line">			return Object.prototype.toString.call(obj) &#x3D;&#x3D;&#x3D; &#39;[object &#39; + type + &#39;]&#39;;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;)(type)</span><br><span class="line">&#125;</span><br><span class="line">console.log(Type.isArray([]));</span><br><span class="line">console.log(Type.isString(&#39;str&#39;));</span><br><span class="line">console.log(Type);</span><br><span class="line">	</span><br><span class="line">&#x2F;&#x2F;输出</span><br><span class="line">true</span><br><span class="line">true</span><br><span class="line">&#123;isString: ƒ, isArray: ƒ, isNumber: ƒ&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="闭包的更多作用"><a href="#闭包的更多作用" class="headerlink" title="闭包的更多作用"></a>闭包的更多作用</h3><ol>
+<li><p>封装变量<br>如果一个变量仅仅在函数中被使用，可以把它封闭在函数内部，这样可以减少页面中的全局变量，以避免这个变量在其他地方被不小心修改。</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">var mult &#x3D; (function() &#123;</span><br><span class="line">	var cache &#x3D; &#123;&#125;;</span><br><span class="line">	return function() &#123;</span><br><span class="line">		var args &#x3D; Array.prototype.join.call(arguments, &#39;,&#39;);</span><br><span class="line">		if (args in cache) &#123;</span><br><span class="line">			return cache[args];</span><br><span class="line">		&#125;</span><br><span class="line">		var a &#x3D; 1;</span><br><span class="line">		for (var i &#x3D; 0, l &#x3D; arguments.length; i &lt; l; i++) &#123;</span><br><span class="line">			a &#x3D; a * arguments[i];</span><br><span class="line">		&#125;</span><br><span class="line">		return cache[args] &#x3D; a;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)();</span><br><span class="line">console.log(mult(1,2,3));</span><br><span class="line">console.log(mult(4,5,6));</span><br><span class="line">&#x2F;&#x2F;输出</span><br><span class="line">6</span><br><span class="line">120</span><br></pre></td></tr></table></figure>
+<p> 如果在一个大函数中有一些代码块能够独立出来，我们常常把这些代码块封装在独立的小函数里面。独立出来的小函数有助于代码复用，如果这些 小函数有一个良好的命名，它们本身也起到了注释的作用。如果这些小函数不需要在程序的其他 9 地方使用，最好是把它们用闭包封闭起来。代码如下：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">var mult &#x3D; (function() &#123;</span><br><span class="line">	var cache &#x3D; &#123;&#125;;</span><br><span class="line">	var calculate &#x3D; function() &#123;</span><br><span class="line">		var a &#x3D; 1;</span><br><span class="line">		for (var i &#x3D; 0, l &#x3D; arguments.length; i &lt; l; i++) &#123;</span><br><span class="line">			a &#x3D; a * arguments[i];</span><br><span class="line">		&#125;</span><br><span class="line">		return a;</span><br><span class="line">	&#125;</span><br><span class="line">	return function() &#123;</span><br><span class="line">		var args &#x3D; Array.prototype.join.call(arguments, &#39;,&#39;);</span><br><span class="line">		if (args in cache) &#123;</span><br><span class="line">			return cache[args];</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		return cache[args] &#x3D; calculate.apply(null, arguments);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)();</span><br><span class="line">console.log(mult(1,2,3));</span><br><span class="line">console.log(mult(4,5,6));</span><br><span class="line">&#x2F;&#x2F;输出</span><br><span class="line">6</span><br><span class="line">120</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>延续局部变量的寿命<br>img 对象经常用于进行数据上报，如下所示:</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var report &#x3D; function( src )&#123; var img &#x3D; new Image(); 		img.src &#x3D; src;</span><br><span class="line">&#125;;</span><br><span class="line">report( &#39;http:&#x2F;&#x2F;xxx.com&#x2F;getUserInfo&#39; );</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>但是通过查询后台的记录得知，因为一些低版本浏览器的实现存在 bug，在这些浏览器下使用 report 函数进行数据上报会丢失30%左右的数据，也就是说，report 函数并不是每一次都成功发起了 HTTP 请求。丢失数据的原因是 img 是 report 函数中的局部变量，当 report 函数的调用结束后，img 局部变量随即被销毁，而此时或许还没来得及发出 HTTP 请求，所以此次请求就会丢失掉。<br>现在我们把 img 变量用闭包封闭起来，便能解决请求丢失的问题:</p>
+<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var report &#x3D; (function()&#123; </span><br><span class="line">	var imgs &#x3D; [];</span><br><span class="line">	return function( src )&#123;</span><br><span class="line">		var img &#x3D; new Image(); </span><br><span class="line">		imgs.push( img ); </span><br><span class="line">		img.src &#x3D; src;</span><br><span class="line">	&#125; </span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+</code></pre>
+<h3 id="闭包和面向对象设计"><a href="#闭包和面向对象设计" class="headerlink" title="闭包和面向对象设计"></a>闭包和面向对象设计</h3><p>对象以方法的形式包含了过程，而闭包则是在过程中以环境的形式包含了数据。通常用面向对象思想能实现的功能，用闭包也能实现。反之亦然，也可以使用闭包来实现一个完整的面向对象系统。<br>闭包实现：     </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">var extent &#x3D; function() &#123;</span><br><span class="line">	var value &#x3D; 0;</span><br><span class="line">	return &#123;</span><br><span class="line">		call: function() &#123;</span><br><span class="line">			value++,</span><br><span class="line">			console.log(value);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line">var extent &#x3D; extent();</span><br><span class="line">extent.call();</span><br><span class="line">extent.call();</span><br><span class="line">extent.call();</span><br><span class="line">&#x2F;&#x2F;输出</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+
+<p>面向对象的写法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">var extent &#x3D; &#123; </span><br><span class="line">	value: 0,</span><br><span class="line">	call: function()&#123; </span><br><span class="line">		this.value++;</span><br><span class="line">		console.log( this.value ); </span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line">extent.call(); </span><br><span class="line">extent.call(); </span><br><span class="line">extent.call();</span><br><span class="line">&#x2F;&#x2F;输出</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3 </span><br><span class="line">&#x2F;&#x2F;或者：</span><br><span class="line">var Extent &#x3D; function() &#123;</span><br><span class="line">	this.value &#x3D; 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Extent.prototype.call1 &#x3D; function() &#123;</span><br><span class="line">	this.value++;</span><br><span class="line">	console.log(this.value);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">var extent &#x3D; new Extent();</span><br><span class="line">extent.call1();</span><br><span class="line">extent.call1();</span><br><span class="line">extent.call1();</span><br><span class="line">&#x2F;&#x2F;输出</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3 </span><br></pre></td></tr></table></figure>
+
+<h3 id="用闭包实现命令模式"><a href="#用闭包实现命令模式" class="headerlink" title="用闭包实现命令模式"></a>用闭包实现命令模式</h3><h3 id="闭包与内存管理"><a href="#闭包与内存管理" class="headerlink" title="闭包与内存管理"></a>闭包与内存管理</h3><p>闭包是一个非常强大的特性，但人们对其也有诸多误解。一种耸人听闻的说法是闭包会造成内存泄露，所以要尽量减少闭包的使用。</p>
+<p>局部变量本来应该在函数退出的时候被解除引用，但如果局部变量被封闭在闭包形成的环境中，那么这个局部变量就能一直生存下去。从这个意义上看，闭包的确会使一些数据无法被及时销毁。使用闭包的一部分原因是我们选择主动把一些变量封闭在闭包中，因为可能在以后还需要使用这些变量，把这些变量放在闭包中和放在全局作用域，对内存方面的影响是一致的，这里并不能说成是内存泄露。如果在将来需要回收这些变量，我们可以手动把这些变量设为 null。</p>
+<p>跟闭包和内存泄露有关系的地方是，使用闭包的同时比较容易形成循环引用，如果闭包的作用域链中保存着一些 DOM 节点，这时候就有可能造成内存泄露。但这本身并非闭包的问题，也并非 JavaScript 的问题。在 IE 浏览器中，由于 BOM 和 DOM 中的对象是使用 C++以 COM 对象 的方式实现的，而 COM 对象的垃圾收集机制采用的是引用计数策略。在基于引用计数策略的垃圾回收机制中，如果两个对象之间形成了循环引用，那么这两个对象都无法被回收，但循环引用造成的内存泄露在本质上也不是闭包造成的。</p>
+<p>同样，如果要解决循环引用带来的内存泄露问题，我们只需要把循环引用中的变量设为 null 即可。将变量设置为 null 意味着切断变量与它此前引用的值之间的连接。当垃圾收集器下次运 行时，就会删除这些值并回收它们占用的内存。</p>
+<h2 id="高阶函数"><a href="#高阶函数" class="headerlink" title="高阶函数"></a>高阶函数</h2><p>高阶函数是指满足以下条件之一的函数。</p>
+<ul>
+<li>函数可以作为参数被传递</li>
+<li>函数可以作为返回值输出</li>
+</ul>
+<h3 id="函数作为参数传递"><a href="#函数作为参数传递" class="headerlink" title="函数作为参数传递"></a>函数作为参数传递</h3><h5 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h5><h5 id="Array-prototype-sort"><a href="#Array-prototype-sort" class="headerlink" title="Array.prototype.sort"></a>Array.prototype.sort</h5><p>Array.prototype.sort接受一个函数当作参数，这个函数里面封装了数组元素的排序规则。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt; [1,4,3].sort(function(a,b)&#123;</span><br><span class="line">... return a -b;</span><br><span class="line">... &#125;)</span><br><span class="line">[ 1, 3, 4 ]</span><br><span class="line">&gt; [1,4,3].sort(function(a,b)&#123;</span><br><span class="line">... return b - a;</span><br><span class="line">... &#125;)</span><br><span class="line">[ 4, 3, 1 ]</span><br></pre></td></tr></table></figure>
+
+<h3 id="函数作为返回值输出"><a href="#函数作为返回值输出" class="headerlink" title="函数作为返回值输出"></a>函数作为返回值输出</h3><p>相比把函数作为参数传递，函数当作返回值输出的应用场景也许更多，也更能体现函数式编程的巧妙。让函数继续返回一个可执行的函数，意味着运算过程是可延续的。</p>
+<h5 id="判断数据类型"><a href="#判断数据类型" class="headerlink" title="判断数据类型"></a>判断数据类型</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">var isType &#x3D; function(type) &#123;</span><br><span class="line">	return function(obj) &#123;</span><br><span class="line">		return Object.prototype.toString.call(obj) &#x3D;&#x3D;&#x3D; &#39;[object &#39; + type + &#39;]&#39;;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var isArray &#x3D; isType(&#39;Array&#39;);</span><br><span class="line">var isString &#x3D; isType(&#39;String&#39;);</span><br><span class="line">var isNumber &#x3D; isType(&#39;Number&#39;);</span><br><span class="line"></span><br><span class="line">console.log(isArray([1,2,3,4]));</span><br><span class="line">console.log(isString(&#39;abcd&#39;));</span><br><span class="line">console.log(isString(123));</span><br><span class="line">console.log(isNumber(123));</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;输出</span><br><span class="line">true</span><br><span class="line">true</span><br><span class="line">false</span><br><span class="line">true</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>可以用循环语句，批量注册这些isType函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">var Type &#x3D; &#123;&#125;;</span><br><span class="line">for (var i &#x3D; 0, type; type &#x3D; [&#39;String&#39;, &#39;Array&#39;, &#39;Number&#39;][i++];) &#123;</span><br><span class="line">	(function(type)&#123;</span><br><span class="line">		Type[&#39;is&#39; + type] &#x3D; function(obj) &#123;</span><br><span class="line">			return Object.prototype.toString.call(obj) &#x3D;&#x3D;&#x3D; &#39;[object &#39; + type + &#39;]&#39;;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;)(type)</span><br><span class="line">&#125;;</span><br><span class="line">console.log(Type.isArray([]));</span><br><span class="line">console.log(Type.isString(&#39;123&#39;));</span><br><span class="line">console.log(Type.isNumber(123));</span><br><span class="line">&#x2F;&#x2F;输出</span><br><span class="line">true</span><br><span class="line">true</span><br><span class="line">true</span><br></pre></td></tr></table></figure>
+
+<h5 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">	</span><br><span class="line">var getSingle &#x3D; function(fn) &#123;</span><br><span class="line">	var ret;</span><br><span class="line">	return function() &#123;</span><br><span class="line">		return ret || (ret &#x3D; fn.apply(this, arguments))</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">var getScript &#x3D; getSingle(function() &#123;</span><br><span class="line">	return document.createElement(&#39;script&#39;);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">var script1 &#x3D; getScript();</span><br><span class="line">var script2 &#x3D; getScript();</span><br><span class="line"></span><br><span class="line">console.log(script1 &#x3D;&#x3D;&#x3D; script2)   &#x2F;&#x2F;true</span><br></pre></td></tr></table></figure>
+
+<h3 id="高阶函数实现AOP"><a href="#高阶函数实现AOP" class="headerlink" title="高阶函数实现AOP"></a>高阶函数实现AOP</h3><p>AOP(面向切面编程)的主要作用是把一些跟核心业务逻辑模块无关的功能抽离出来，这些 跟业务逻辑无关的功能通常包括日志统计、安全控制、异常处理等。把这些功能抽离出来之后， 再通过“动态织入”的方式掺入业务逻辑模块中。这样做的好处首先是可以保持业务逻辑模块的纯净和高内聚性，其次是可以很方便地复用日志统计等功能模块。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype.before &#x3D; function(beforefn) &#123;</span><br><span class="line">	var __self &#x3D; this;  &#x2F;&#x2F;保存原函数的引用</span><br><span class="line">	return function() &#123;  &#x2F;&#x2F;返回包含了原函数和新函数的“代理”函数</span><br><span class="line">		beforefn.apply(this, arguments);  &#x2F;&#x2F;执行新函数，修正this</span><br><span class="line">		return __self.apply(this, arguments);  &#x2F;&#x2F;执行原函数</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Function.prototype.after &#x3D; function(afterfn) &#123;</span><br><span class="line">	var __self &#x3D; this;</span><br><span class="line">	return function() &#123;</span><br><span class="line">		var ret &#x3D; __self.apply(this, arguments);</span><br><span class="line">		afterfn.apply(this, arguments);</span><br><span class="line">		return ret;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var func &#x3D; function() &#123;</span><br><span class="line">	console.log(2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func &#x3D; func.before(function()&#123;</span><br><span class="line">	console.log(1);</span><br><span class="line">&#125;).after(function()&#123;</span><br><span class="line">	console.log(3);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">func();</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;输出</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+
+<h3 id="高阶函数的其他应用"><a href="#高阶函数的其他应用" class="headerlink" title="高阶函数的其他应用"></a>高阶函数的其他应用</h3><h5 id="currying"><a href="#currying" class="headerlink" title="currying"></a>currying</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">var currying &#x3D; function(fn) &#123;</span><br><span class="line">	var args &#x3D; [];</span><br><span class="line">	return function() &#123;</span><br><span class="line">		if (arguments.length &#x3D;&#x3D;&#x3D; 0) &#123;</span><br><span class="line">			return fn.apply(this, args);</span><br><span class="line">		&#125;</span><br><span class="line">		else &#123;</span><br><span class="line">			[].push.apply(args, arguments);</span><br><span class="line">			return arguments.callee</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">var cost &#x3D; (function()&#123;</span><br><span class="line">	var money &#x3D; 0;</span><br><span class="line">	return function() &#123;</span><br><span class="line">		for (var i &#x3D; 0, l &#x3D; arguments.length; i &lt; l; i++) &#123;</span><br><span class="line">			money +&#x3D; arguments[i];</span><br><span class="line">		&#125;</span><br><span class="line">		return money</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)();</span><br><span class="line">var cost &#x3D; currying(cost);</span><br><span class="line">cost(100);</span><br><span class="line">cost(200);</span><br><span class="line">cost(300);</span><br><span class="line">console.log(cost()); &#x2F;&#x2F;600</span><br></pre></td></tr></table></figure>
+
+<h5 id="uncurrying"><a href="#uncurrying" class="headerlink" title="uncurrying"></a>uncurrying</h5><p>在我们的预期中，Array.prototype 上的方法原本只能用来操作 array 对象。但用 call 和 apply 可以把任意对象当作 this 传入某个方法，这样一来，方法中用到 this 的地方就不再局限于原来规定的对象，而是加以泛化并得到更广的适用性。那么有没有办法把泛化 this 的过程提取出来呢? uncurrying 就是用来解决这个问题的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype.uncurrying &#x3D; function() &#123;</span><br><span class="line">	var self &#x3D; this;</span><br><span class="line">	return function() &#123;</span><br><span class="line">		var obj &#x3D; Array.prototype.shift.call(arguments);</span><br><span class="line">		return self.apply(obj, arguments);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;在类数组对象 arguments 借用 Array.prototype 的方法之前，先把 Array.prototype.push.call这句代码转换为一个通用的 push 函数</span><br><span class="line">var push &#x3D; Array.prototype.push.uncurrying();</span><br><span class="line"></span><br><span class="line">(function()&#123;</span><br><span class="line">	console.log(arguments);</span><br><span class="line">	push(arguments, 4);</span><br><span class="line">	console.log(arguments);</span><br><span class="line">&#125;)(1,2,3)</span><br></pre></td></tr></table></figure>
+
+<p>通过 uncurrying 的方式，Array.prototype.push.call 变成了一个通用的 push 函数。这样一来， push 函数的作用就跟 Array.prototype.push 一样了，同样不仅仅局限于只能操作 array 对象。而 对于使用者而言，调用 push 函数的方式也显得更加简洁和意图明了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">for (var i &#x3D; 0, fn, ary &#x3D; [&#39;push&#39;, &#39;shift&#39;, &#39;forEach&#39;]; fn &#x3D; ary[i++];) &#123;</span><br><span class="line">	Array[fn] &#x3D; Array.prototype[fn].uncurrying();</span><br><span class="line">&#125;;</span><br><span class="line">var obj &#x3D; &#123;</span><br><span class="line">	&#39;length&#39;: 3,</span><br><span class="line">	&#39;0&#39;: 1,</span><br><span class="line">	&#39;1&#39;: 2,</span><br><span class="line">	&#39;2&#39;: 3</span><br><span class="line">&#125;</span><br><span class="line">Array.push(obj, 4);</span><br><span class="line">console.log(obj.length);</span><br><span class="line">var first &#x3D; Array.shift(obj);</span><br><span class="line">console.log(first);</span><br><span class="line">console.log(obj);</span><br><span class="line"></span><br><span class="line">Array.forEach(obj, function(i, n)&#123;</span><br><span class="line">	console.log(n);</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;输出</span><br><span class="line">4</span><br><span class="line">1</span><br><span class="line">&#123;0: 2, 1: 3, 2: 4, length: 3&#125;</span><br><span class="line">0</span><br><span class="line">1</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+
+<h5 id="函数节流"><a href="#函数节流" class="headerlink" title="函数节流"></a>函数节流</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">var throttle &#x3D; function(fn, interval) &#123;</span><br><span class="line">	var __self &#x3D; fn;</span><br><span class="line">	var timer;</span><br><span class="line">	var firstTime &#x3D; true;</span><br><span class="line">	return function() &#123;</span><br><span class="line">		var args &#x3D; arguments;</span><br><span class="line">		var __me &#x3D; this;</span><br><span class="line">		if (firstTime) &#123;</span><br><span class="line">			__self.apply(__me, args);</span><br><span class="line">			return firstTime &#x3D; false</span><br><span class="line">		&#125;</span><br><span class="line">		if (timer) &#123;</span><br><span class="line">			return false</span><br><span class="line">		&#125;</span><br><span class="line">		timer &#x3D; setTimeout(function() &#123;</span><br><span class="line">			clearTimeout(timer);</span><br><span class="line">			timer &#x3D; null;</span><br><span class="line">			__self.apply(__me, args);</span><br><span class="line">		&#125;, interval || 500)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line">		</span><br><span class="line">window.onresize &#x3D; throttle(function() &#123;</span><br><span class="line">	console.log(1);</span><br><span class="line">&#125;, 500)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2017/06/03/JavaScript%E4%B8%AD%E7%9A%84this%E3%80%81call%E5%92%8Capply/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/06/03/JavaScript%E4%B8%AD%E7%9A%84this%E3%80%81call%E5%92%8Capply/" class="post-title-link" itemprop="url">JavaScript中的this、call和apply</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-06-03 16:13:48" itemprop="dateCreated datePublished" datetime="2017-06-03T16:13:48+08:00">2017-06-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-06-04 16:00:22" itemprop="dateModified" datetime="2019-06-04T16:00:22+08:00">2019-06-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="this"><a href="#this" class="headerlink" title="this"></a>this</h3><p>JavaScript的this总是指向一个对象，而具体指向哪个对象是在运行时基于函数的执行环境动态绑定的，而非函数被声明时的环境。      </p>
+<h4 id="this的指向"><a href="#this的指向" class="headerlink" title="this的指向"></a>this的指向</h4><p>除去不常用的with和eval的情况，具体到实际应用中，this的指向大致可以分为以下4中：</p>
+<ul>
+<li>作为对象的方法调用</li>
+<li>作为普通函数调用</li>
+<li>构造器调用</li>
+<li>Function.prototype.call或Function.prototype.apply调用</li>
+</ul>
+<h5 id="作为对象的方法调用"><a href="#作为对象的方法调用" class="headerlink" title="作为对象的方法调用"></a>作为对象的方法调用</h5><p>当作为对象的方法被调用时，this指向该对象。      </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt; var obj &#x3D; &#123;</span><br><span class="line">... a: 1,</span><br><span class="line">... getA: function() &#123;</span><br><span class="line">..... console.log(this &#x3D;&#x3D;&#x3D; obj);</span><br><span class="line">..... console.log(this.a);</span><br><span class="line">..... &#125;</span><br><span class="line">... &#125;;</span><br><span class="line">undefined</span><br><span class="line">&gt; obj.getA()</span><br><span class="line">true</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<h5 id="作为普通函数调用"><a href="#作为普通函数调用" class="headerlink" title="作为普通函数调用"></a>作为普通函数调用</h5><p>当函数不作为对象的属性被调用时，也就是我们常说的普通函数方式，此时的this总是指向全局对象。在浏览器的JavaScript中，这个全局对象是window对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">window.name &#x3D; &quot;globalName&quot;;</span><br><span class="line">var getName &#x3D; function() &#123;</span><br><span class="line">	return this.name;</span><br><span class="line">&#125;</span><br><span class="line">console.log(getName());</span><br><span class="line"></span><br><span class="line">var myObj &#x3D; &#123;</span><br><span class="line">	name: &#39;sven&#39;,</span><br><span class="line">	getName: function() &#123;</span><br><span class="line">		return this.name;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var getName1 &#x3D; myObj.getName;</span><br><span class="line">console.log(getName1());</span><br><span class="line">console.log(myObj.getName());</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;	输出</span><br><span class="line">&#x2F;&#x2F;	globalName</span><br><span class="line">&#x2F;&#x2F;	globalName</span><br><span class="line">&#x2F;&#x2F; 	sven</span><br></pre></td></tr></table></figure>
+
+<p>有种情况，比如在div节点的事件函数内部，有个局部的callback方法，callback被视为普通函数调用，callback内部的this指向了window，但我们往往是想让它指向该div节点。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">	&lt;title&gt;test&lt;&#x2F;title&gt;</span><br><span class="line">&lt;&#x2F;head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;div id&#x3D;&quot;div1&quot;&gt;this is a div&lt;&#x2F;div&gt;</span><br><span class="line"></span><br><span class="line">&lt;script type&#x3D;&quot;text&#x2F;javascript&quot;&gt;</span><br><span class="line">	window.id &#x3D; &#39;window&#39;;</span><br><span class="line">	document.getElementById(&#39;div1&#39;).onclick &#x3D; function() &#123;</span><br><span class="line">		alert(this.id);   &#x2F;&#x2F;div1</span><br><span class="line">		var callback &#x3D; function() &#123;</span><br><span class="line">			alert(this.id);   &#x2F;&#x2F;window</span><br><span class="line">		&#125;</span><br><span class="line">		callback();</span><br><span class="line">	&#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line">&lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>一种简单的解决方案，可以用一个变量保存div节点的引用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">document.getElementById(&#39;div1&#39;).onclick &#x3D; function() &#123;</span><br><span class="line">	alert(this.id);   &#x2F;&#x2F;div1</span><br><span class="line">	var that &#x3D; this;</span><br><span class="line">	var callback &#x3D; function() &#123;</span><br><span class="line">		alert(that.id);   &#x2F;&#x2F;window</span><br><span class="line">	&#125;</span><br><span class="line">	callback();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在ECMAScript5的strict模式下，这种情况下的this已经被规定为不会指向全局对象，而是undefined。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function func() &#123;</span><br><span class="line">	&quot;use strict&quot;</span><br><span class="line">	alert(this);    &#x2F;&#x2F;undefined</span><br><span class="line">&#125;</span><br><span class="line">func();</span><br></pre></td></tr></table></figure>
+
+<h5 id="构造器调用"><a href="#构造器调用" class="headerlink" title="构造器调用"></a>构造器调用</h5><p>JavaScript中没有类，但是可以从构造器中创建对象，同时也提供了new运算符，使得构造器看起来更像一个类。<br>除了宿主提供的一些内置函数，大部分JavaScript函数都可以当作构造器使用。构造器的外表跟普通函数一模一样，它们的区别在于被调用的方式。当用new运算符调用函数时，该函数总会返回一个对象，通常情况下，构造器里的this就指向返回的这个对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt; var MyClass &#x3D; function() &#123;</span><br><span class="line">... this.name &#x3D; &#39;sven&#39;;</span><br><span class="line">... &#125;</span><br><span class="line">undefined</span><br><span class="line">&gt; var obj &#x3D; new MyClass();</span><br><span class="line">undefined</span><br><span class="line">&gt; obj.name</span><br><span class="line">&#39;sven&#39;</span><br><span class="line">&gt; </span><br></pre></td></tr></table></figure>
+
+<p>但用 new 调用构造器时，还要注意一个问题，如果构造器显式地返回了一个 object 类型的对象，那么此次运算结果最终会返回这个对象，而不是我们之前期待的this。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt; var MyClass &#x3D; function() &#123;</span><br><span class="line">... this.name &#x3D; &#39;sven&#39;;</span><br><span class="line">... return &#123;</span><br><span class="line">..... name: &#39;anne&#39;,</span><br><span class="line">..... &#125;</span><br><span class="line">... &#125;</span><br><span class="line">undefined</span><br><span class="line">&gt; var obj &#x3D; new MyClass();</span><br><span class="line">undefined</span><br><span class="line">&gt; obj.name</span><br><span class="line">&#39;anne&#39;</span><br></pre></td></tr></table></figure>
+
+<p>如果构造器不显式地返回任何数据，或者是返回一个非对象类型的数据，就不会造成上述问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt; var MyClass &#x3D; function() &#123;</span><br><span class="line">... this.name &#x3D; &#39;sven&#39;;</span><br><span class="line">... return &#39;anne&#39;</span><br><span class="line">... &#125;</span><br><span class="line">undefined</span><br><span class="line">&gt; var obj &#x3D; new MyClass()</span><br><span class="line">undefined</span><br><span class="line">&gt; obj.name</span><br><span class="line">&#39;sven&#39;</span><br></pre></td></tr></table></figure>
+
+<h5 id="Function-prototype-call或Function-prototype-apply调用"><a href="#Function-prototype-call或Function-prototype-apply调用" class="headerlink" title="Function.prototype.call或Function.prototype.apply调用"></a>Function.prototype.call或Function.prototype.apply调用</h5><p>跟普通的函数调用相比，用Function.prototype.call或Function.prototype.apply可以动态地改变传入函数的this。     </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&gt; var obj1 &#x3D; &#123;</span><br><span class="line">... name: &#39;sven&#39;,</span><br><span class="line">... getName: function() &#123;</span><br><span class="line">..... return this.name;</span><br><span class="line">..... &#125;</span><br><span class="line">... &#125;;</span><br><span class="line">undefined</span><br><span class="line">&gt; var obj2 &#x3D; &#123;</span><br><span class="line">... name: &#39;anne&#39;,</span><br><span class="line">... &#125;</span><br><span class="line">undefined</span><br><span class="line">&gt; obj1.getName()</span><br><span class="line">&#39;sven&#39;</span><br><span class="line">&gt; obj1.getName.call(obj2)</span><br><span class="line">&#39;anne&#39;</span><br></pre></td></tr></table></figure>
+
+<h3 id="call和apply"><a href="#call和apply" class="headerlink" title="call和apply"></a>call和apply</h3><h5 id="call和apply的区别"><a href="#call和apply的区别" class="headerlink" title="call和apply的区别"></a>call和apply的区别</h5><p>它们的作用一模一样，区别仅在于传入参数形式的不同。<br>apply接受两个参数，第一个参数指定了函数体内this对象的指向，第二个参数为一个带下标的集合，这个集合可以为数组，也可以是类数组，apply方法把这个集合中的元素作为参数传递给被调用的函数。     </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt; var func &#x3D; function(a,b,c) &#123;</span><br><span class="line">... console.log([a,b,c])</span><br><span class="line">... &#125;</span><br><span class="line">undefined</span><br><span class="line">&gt; func.apply(null, [1,2,3])</span><br><span class="line">[ 1, 2, 3 ]</span><br><span class="line">undefined</span><br><span class="line">&#x2F;&#x2F;参数 1、2、3 被放在数组中一起传入 func 函数，它们分别对应 func 参数列 表中的 a、b、c</span><br><span class="line">&gt; func.apply(null, 1,2,3)</span><br><span class="line">TypeError: CreateListFromArrayLike called on non-object</span><br></pre></td></tr></table></figure>
+
+<p>call是包装在apply上面的一颗语法糖，如果我们明确地知道函数接受多少个参数，而且想一目了然地表达形参和实参的对应关系，那么也可以用 call来传送参数。<br>当使用call或者apply的时候，如果我们传入的第一个参数为null，函数体内的this会指向默认的宿主对象，在浏览器中则是window。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var func &#x3D; function(a,b,c) &#123;</span><br><span class="line">	console.log(a,b,c);</span><br><span class="line">	alert(this &#x3D;&#x3D;&#x3D; window);   &#x2F;&#x2F;true</span><br><span class="line">&#125;</span><br><span class="line">func.apply(null, [1,2,3]);</span><br></pre></td></tr></table></figure>
+
+<p>但如果是在严格模式下，函数体内的 this 还是为 null。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">var func &#x3D; function(a,b,c) &#123;</span><br><span class="line">	&quot;use strict&quot;</span><br><span class="line">	console.log(a,b,c)</span><br><span class="line">	console.log(this &#x3D;&#x3D;&#x3D; window);</span><br><span class="line">	console.log(this &#x3D;&#x3D;&#x3D; null);</span><br><span class="line">&#125;</span><br><span class="line">func.apply(null, [1,2,3])</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;输出</span><br><span class="line">1 2 3</span><br><span class="line">false</span><br><span class="line">true</span><br></pre></td></tr></table></figure>
+
+<p>有时候我们使用 call 或者 apply 的目的不在于指定 this 指向，而是另有用途，比如借用其他对象的方法。那么我们可以传入 null 来代替某个具体的对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; Math.max.apply(null,[1,23,5,2,3,6])</span><br><span class="line">23</span><br></pre></td></tr></table></figure>
+
+<h4 id="call和apply的用途"><a href="#call和apply的用途" class="headerlink" title="call和apply的用途"></a>call和apply的用途</h4><h5 id="改变this指向"><a href="#改变this指向" class="headerlink" title="改变this指向"></a>改变this指向</h5><p>场景一：      </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">var obj1 &#x3D; &#123;</span><br><span class="line">	name: &#39;sven&#39;</span><br><span class="line">&#125;;</span><br><span class="line">var obj2 &#x3D; &#123;</span><br><span class="line">	name: &#39;anne&#39;,</span><br><span class="line">&#125;</span><br><span class="line">window.name &#x3D; &#39;window&#39;;</span><br><span class="line">var getName &#x3D; function() &#123;</span><br><span class="line">	console.log(this.name);</span><br><span class="line">&#125;</span><br><span class="line">getName();</span><br><span class="line">getName.call(obj1);</span><br><span class="line">getName.call(obj2);</span><br><span class="line">&#x2F;&#x2F;输出</span><br><span class="line">window</span><br><span class="line">sven</span><br><span class="line">anne</span><br></pre></td></tr></table></figure>
+
+<p>场景二：在div事件中的内部函数中，修正this        </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">document.getElementById(&#39;div1&#39;).onclick &#x3D; function() &#123;</span><br><span class="line">	console.log(this.id);</span><br><span class="line">	var func &#x3D; function() &#123;</span><br><span class="line">		console.log(&#39;id:&#39; + this.id);</span><br><span class="line">	&#125;</span><br><span class="line">	func();</span><br><span class="line">	func.call(this);</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;输出</span><br><span class="line">div1</span><br><span class="line">id:undefined</span><br><span class="line">id:div1</span><br></pre></td></tr></table></figure>
+
+<h5 id="Function-prototype-bind"><a href="#Function-prototype-bind" class="headerlink" title="Function.prototype.bind"></a>Function.prototype.bind</h5><p>大部分高级浏览器都实现了内置的 Function.prototype.bind，用来指定函数内部的 this 指向，即使没有原生的Function.prototype.bind 实现，我们来模拟一个也不是难事，代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype.bind &#x3D; function(context) &#123;</span><br><span class="line">	var self &#x3D; this;</span><br><span class="line">	return function() &#123;</span><br><span class="line">		return self.apply(context, arguments);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var obj &#x3D; &#123;</span><br><span class="line">	name: &#39;sven&#39;,</span><br><span class="line">&#125;</span><br><span class="line">var func &#x3D; function() &#123;</span><br><span class="line">	alert(this.name);    &#x2F;&#x2F;输出sven</span><br><span class="line">&#125;.bind(obj);</span><br><span class="line">func()</span><br></pre></td></tr></table></figure>
+
+<p>带有参数的Function.prototype.bind</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype.bind &#x3D; function() &#123;</span><br><span class="line">	var self &#x3D; this;   &#x2F;&#x2F;保存原函数</span><br><span class="line">	var context &#x3D; [].shift.call(arguments);  &#x2F;&#x2F;需要绑定的this上下文</span><br><span class="line">	var args &#x3D; [].slice.call(arguments);  &#x2F;&#x2F;剩余的参数转成数组</span><br><span class="line">	return function() &#123;  &#x2F;&#x2F;返回一个新函数</span><br><span class="line">		return self.apply(context, [].concat.call(args, [].slice.call(arguments)));</span><br><span class="line">		&#x2F;&#x2F;执行新的函数的时候，会把之前传入的context当做新函数体内的this</span><br><span class="line">		&#x2F;&#x2F;并且组合两次分别传入的参数，作为新函数的参数</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var obj &#x3D; &#123;</span><br><span class="line">	name: &#39;sven&#39;,</span><br><span class="line">&#125;</span><br><span class="line">var func &#x3D; function(a,b,c,d) &#123;</span><br><span class="line">	alert(this.name);</span><br><span class="line">	console.log([a,b,c,d]);</span><br><span class="line">&#125;.bind(obj, 1,2);</span><br><span class="line">func(3, 4);</span><br><span class="line">&#x2F;&#x2F;输出</span><br><span class="line">[1,2,3,4]</span><br></pre></td></tr></table></figure>
+
+<h5 id="借用其他对象的方法"><a href="#借用其他对象的方法" class="headerlink" title="借用其他对象的方法"></a>借用其他对象的方法</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">var A &#x3D; function(name) &#123;</span><br><span class="line">	this.name &#x3D; name</span><br><span class="line">&#125;</span><br><span class="line">var B &#x3D; function() &#123;</span><br><span class="line">	A.apply(this, arguments);</span><br><span class="line">&#125;</span><br><span class="line">B.prototype.getName &#x3D; function() &#123;</span><br><span class="line">	return this.name;</span><br><span class="line">&#125;</span><br><span class="line">var b &#x3D; new B(&#39;sven&#39;);</span><br><span class="line">console.log(b.getName());</span><br><span class="line">&#x2F;&#x2F;输出</span><br><span class="line">sven</span><br></pre></td></tr></table></figure>
+
+<p>另一种常用的场景。<br>函数的参数列表 arguments 是一个类数组对象，虽然它也有“下标”，但它并非真正的数组， 所以也不能像数组一样，进行排序操作或者往集合里添加一个新的元素。这种情况下，我们常常 会借用 Array.prototype 对象上的方法。比如想往 arguments 中添加一个新的元素，通常会借用 Array.prototype.push:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(function()&#123;</span><br><span class="line">	Array.prototype.push.call(arguments, 3);</span><br><span class="line">	console.log(arguments);</span><br><span class="line">&#125;)(1,2)</span><br><span class="line">&#x2F;&#x2F;输出</span><br><span class="line">Arguments(3) [1, 2, 3, callee: ƒ, Symbol(Symbol.iterator): ƒ]</span><br></pre></td></tr></table></figure>
+
+<p>我们可以把“任意”对象传入 Array.prototype.push。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">var a &#x3D; &#123;&#125;</span><br><span class="line">undefined</span><br><span class="line">&gt; Array.prototype.push.call(a, &#39;first&#39;)</span><br><span class="line">1</span><br><span class="line">&gt; a.length</span><br><span class="line">1</span><br><span class="line">&gt; a[0]</span><br><span class="line">&#39;first&#39;</span><br><span class="line">&gt; typeof a</span><br><span class="line">&#39;object&#39;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码在绝大部分浏览器里都能顺利执行，但由于引擎的内部实现存在差异，如果在低版 本的 IE 浏览器中执行，必须显式地给对象 a 设置length 属性:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var a &#x3D; &#123; </span><br><span class="line">	length: 0</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>前面我们之所以把“任意”两字加了双引号，是因为可以借用 Array.prototype.push 方法的对象还要满足以下两个条件</p>
+<ol>
+<li>对象本身要可以存取属性;</li>
+<li>对象的 length 属性可读写。</li>
+</ol>
+<p>注：函数对象的length属性是只读属性，并不满足要求</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; var func &#x3D; function()&#123;&#125;</span><br><span class="line">undefined</span><br><span class="line">&gt; Array.prototype.push.call(func, &#39;first&#39;)</span><br><span class="line">TypeError: Cannot assign to read only property &#39;length&#39; of function &#39;function()&#123;&#125;&#39;</span><br><span class="line">    at Function.push (&lt;anonymous&gt;)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2017/01/13/IONIC3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/01/13/IONIC3/" class="post-title-link" itemprop="url">Ionic3</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-01-13 14:57:58" itemprop="dateCreated datePublished" datetime="2017-01-13T14:57:58+08:00">2017-01-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-01-26 14:53:44" itemprop="dateModified" datetime="2019-01-26T14:53:44+08:00">2019-01-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="官网文档"><a href="#官网文档" class="headerlink" title="官网文档"></a>官网文档</h3><p><a target="_blank" rel="noopener" href="https://ionicframework.com/docs/">Ionic Framework</a><br><a target="_blank" rel="noopener" href="https://ionicframework.com/docs/v3/">Ionic3</a></p>
+<h3 id="其他资源"><a href="#其他资源" class="headerlink" title="其他资源"></a>其他资源</h3><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/u/7222ddf1ce84">IonicBlog</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/1baf40713c1c">ionic3 教程</a>    </p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2016/12/21/angular4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -631,315 +1221,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2016/09/16/javascript1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2016/09/16/javascript1/" class="post-title-link" itemprop="url">JavasSript（ES6）1  --基础</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2016-09-16 09:45:10" itemprop="dateCreated datePublished" datetime="2016-09-16T09:45:10+08:00">2016-09-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-02-12 22:34:14" itemprop="dateModified" datetime="2019-02-12T22:34:14+08:00">2019-02-12</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="包管理工具-npm"><a href="#包管理工具-npm" class="headerlink" title="包管理工具 npm"></a>包管理工具 npm</h2><p>npm 支持两种级别的安装包：全局和本地。全局安装的包通常是一些用于开发过程中的命令工具，本地安装包则是用于具体项目上的包。<br><code>npm install</code> 命令用于安装包<br>npm安装安装模块将安装到项目根目录下的node_modules文件夹下。<br>npm通过package.json文件来管理安装的模块，通过<code>npm init</code>生成package.json文件。<br>依赖分为常规依赖和开发依赖。开发依赖是指那些只在项目构建时需要的依赖，运行时不需要。<br><code>npm install moduleName</code> #安装模块到项目目录下<br><code>npm install -g moduleName</code> #将模块安装到全局，npm config prefix可查看安装位置<br><code>npm install --save moduleName</code> #将模块安装到项目目录下，并在package文件的dependencies节点写入依赖<br><code>npm install --save-dev moduleName</code> #将模块安装到项目目录下，并在package文件中的devDependencies节点写入依赖，该模块只作为开发环境的一部分，不会作为产品代码发布</p>
-<h2 id="构建工具-Gulp-和-Grunt"><a href="#构建工具-Gulp-和-Grunt" class="headerlink" title="构建工具 Gulp 和 Grunt"></a>构建工具 Gulp 和 Grunt</h2><h3 id="Gulp"><a href="#Gulp" class="headerlink" title="Gulp"></a>Gulp</h3><p><code>sudo npm install -g gulp</code> 全局安装Gulp<br>每个项目都需要本地Gulp，切换到项目目录下，运行<code>npm install --save-dev gulp</code>，程序开发依赖它，运行不依赖它。<br>创建Gulpfile（gulpfile.js）     </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const gulp &#x3D; require(&#39;gulp&#39;);   </span><br><span class="line">&#x2F;&#x2F; Gulp dependencies go here                    </span><br><span class="line">gulp.task(&#39;default&#39;, function() &#123;</span><br><span class="line">	&#x2F;&#x2F;	Gulp tasks go here</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p><code>$ gulp</code> 验证gulp能否正常运行     </p>
-<h2 id="转换器-Babel"><a href="#转换器-Babel" class="headerlink" title="转换器 Babel"></a>转换器 Babel</h2><p>es5 到 es6 的转换<br><code>$ npm install --save-dev babel-preset-es2015</code><br>并在项目的根目录下创建.babelrc(默认会被隐藏)的文件，通过它识别所有使用ES6的地方，文件内容：<br><code>&#123; &quot;presets&quot; : [&quot;es2015&quot;]&#125;</code></p>
-<h2 id="格式审查工具-ESLint"><a href="#格式审查工具-ESLint" class="headerlink" title="格式审查工具 ESLint"></a>格式审查工具 ESLint</h2><p>安装 <code>npm install g eslint</code>，在项目目录下运行<code>eslint --init</code>创建.eslintrc文件，运行eslint <code>eslint es6/test.js</code>。<br>可以将ESLint集成到编辑器中，也可以jia到Gulpfile中。</p>
-<hr>
-<hr>
-<h1 id="javascript基础"><a href="#javascript基础" class="headerlink" title="javascript基础"></a>javascript基础</h1><h2 id="字面量、变量、常量和数据类型"><a href="#字面量、变量、常量和数据类型" class="headerlink" title="字面量、变量、常量和数据类型"></a>字面量、变量、常量和数据类型</h2><h3 id="变量和常量"><a href="#变量和常量" class="headerlink" title="变量和常量"></a>变量和常量</h3><p>变量 <code>let currentVariable = 21; </code><br>常量 <code>const currentVariable = 21; </code><br>优先使用常量const    </p>
-<h3 id="基本类型和对象"><a href="#基本类型和对象" class="headerlink" title="基本类型和对象"></a>基本类型和对象</h3><h4 id="基本类型"><a href="#基本类型" class="headerlink" title="基本类型"></a>基本类型</h4><ul>
-<li>数字</li>
-<li>字符串</li>
-<li>布尔</li>
-<li>null</li>
-<li>undefined</li>
-<li>符号<h4 id="内置对象"><a href="#内置对象" class="headerlink" title="内置对象"></a>内置对象</h4></li>
-<li>Array</li>
-<li>Date</li>
-<li>RegExp</li>
-<li>Map 和 WeakMap</li>
-<li>Set 和 WeakSet<h4 id="数字"><a href="#数字" class="headerlink" title="数字"></a>数字</h4>NaN不是数字，可用作占位符。<br>数字对应Number对象   <h4 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h4>字符串在JavaScript中标识Unicode文本。<br>可在单引号字符串’ ‘中使用双引号””，也可在双引号字符串””中使用单引号’’。      <h5 id="模板字符串"><a href="#模板字符串" class="headerlink" title="模板字符串"></a>模板字符串</h5>通过加号 + 可连接字符串。<br>字符串模板一种快速插值的方式。它用`代替引号。    </li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let currentVariable &#x3D; 19.5;</span><br><span class="line">const message &#x3D; &#96;The current temperature is $&#123;currentVariable&#125; \u00b0c&#96;;</span><br></pre></td></tr></table></figure>
-<h5 id="数字用作字符串"><a href="#数字用作字符串" class="headerlink" title="数字用作字符串"></a>数字用作字符串</h5><p>数字加字符串是字符串</p>
-<h4 id="布尔型"><a href="#布尔型" class="headerlink" title="布尔型"></a>布尔型</h4><h4 id="符号"><a href="#符号" class="headerlink" title="符号"></a>符号</h4><p>ES6新特性，代表唯一标识<br>Symbol()构造方法来创建符号。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const RED &#x3D; Symbol();</span><br><span class="line">const ORANGE &#x3D; Symbol(&#39;the color of a sunset!&#39;);</span><br><span class="line">RED &#x3D;&#x3D;&#x3D; ORANGE &#x2F;&#x2F; false:每个符号都是唯一的</span><br></pre></td></tr></table></figure>
-<h4 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h4><p><code>const obj = &#123;&#125;</code>  对象属性名称必须是字符串或符号，值可以是任何类型。<br>对象可以包含函数 <code>obj.func = function() &#123;return &#39;&#39;&#125;</code><br>可以通过delete操作来删除对象中的属性 <code>delete obj.attribute1;</code></p>
-<h4 id="Number-String和Boolean对象"><a href="#Number-String和Boolean对象" class="headerlink" title="Number, String和Boolean对象"></a>Number, String和Boolean对象</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const s &#x3D; &quot;hello&quot;;</span><br><span class="line">s.toUpperCase();</span><br></pre></td></tr></table></figure>
-<p>s是基本的字符串类型，JavaScript创建了一个临时的String对象，该对象有一个toUpperCase函数，一旦函数被调用了，该临时对象就会被删除。</p>
-<h4 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h4><p>数组长度不固定，可以随时添加和删除元素。<br>数组中元素的类型是多样的，每个元素都可以是任意类型。<br>数组下标从0开始。    </p>
-<h4 id="日期"><a href="#日期" class="headerlink" title="日期"></a>日期</h4><h4 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h4><h4 id="映射和集合"><a href="#映射和集合" class="headerlink" title="映射和集合"></a>映射和集合</h4><h4 id="数据类型转换"><a href="#数据类型转换" class="headerlink" title="数据类型转换"></a>数据类型转换</h4><h5 id="转换成数字"><a href="#转换成数字" class="headerlink" title="转换成数字"></a>转换成数字</h5><ol>
-<li>Number对象构造<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const numStr &#x3D; &quot;33.3&quot;;</span><br><span class="line">const num &#x3D; Number(numStr);  &#x2F;&#x2F;创建一个数值，不是一个Number对象的实例， 如果字符串内容不符合数字格式，就返回NaN</span><br></pre></td></tr></table></figure></li>
-<li>parseInt和parseFloat<br>使用parseInt时，可以指定一个基数，它代表要将数字转换成什么样的格式（）<br>parseInt和parseFloat会忽略任何跟数字不相关的信息  </li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const a &#x3D; parseInt(&quot;16 volts&quot;, 10);</span><br><span class="line">const b &#x3D; parseInt(&quot;3a&quot;, 16);</span><br></pre></td></tr></table></figure>
-<p>日期对象转换成数字，转换结果是从1970年1月1日0:00:00到当前的毫秒数，使用valueOf()方法     </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const d &#x3D; new Date();</span><br><span class="line">const ts &#x3D; d.valueOf();</span><br></pre></td></tr></table></figure>
-<h5 id="转换成字符串"><a href="#转换成字符串" class="headerlink" title="转换成字符串"></a>转换成字符串</h5><p>JavaScript中任何对象都有toString()方法，toString()返回该对象的字符串形式。<br>数组的toString()方法将每个元素转换成字符串，然后用逗号将这些字符串连接起来组成一个大的字符串。   </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const att &#x3D; [1, true, &#39;hello&#39;];   </span><br><span class="line">att.toString();     &#x2F;&#x2F; att &#x3D; &quot;1,true,hello&#39;</span><br></pre></td></tr></table></figure>
-
-<h2 id="控制流"><a href="#控制流" class="headerlink" title="控制流"></a>控制流</h2><h4 id="while-循环"><a href="#while-循环" class="headerlink" title="while 循环"></a>while 循环</h4><h4 id="if-else-语句"><a href="#if-else-语句" class="headerlink" title="if else 语句"></a>if else 语句</h4><h4 id="do-…-while-循环"><a href="#do-…-while-循环" class="headerlink" title="do … while 循环"></a>do … while 循环</h4><p>do … while 语句循环体至少会被执行一次。     </p>
-<h4 id="for-循环"><a href="#for-循环" class="headerlink" title="for 循环"></a>for 循环</h4><h4 id="if-语句"><a href="#if-语句" class="headerlink" title="if 语句"></a>if 语句</h4><h3 id="JavaScript-中的控制语句"><a href="#JavaScript-中的控制语句" class="headerlink" title="JavaScript 中的控制语句"></a>JavaScript 中的控制语句</h3><h4 id="控制流异常"><a href="#控制流异常" class="headerlink" title="控制流异常"></a>控制流异常</h4><p>break   提前结束循环<br>continue 跳到循环的下一步<br>throw   指出必须被异常处理器所捕获的异常</p>
-<h5 id="switch-语句"><a href="#switch-语句" class="headerlink" title="switch 语句"></a>switch 语句</h5><p>switch 语句的条件是一个可以计算值的表达式。    </p>
-<h5 id="for…in-循环"><a href="#for…in-循环" class="headerlink" title="for…in 循环"></a>for…in 循环</h5><p>for…in循环是为那些循环对象中有一个属性key而设计的。语法是：   </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">for (变量 in 对象) </span><br><span class="line">	语句</span><br></pre></td></tr></table></figure>
-<h5 id="for…of循环"><a href="#for…of循环" class="headerlink" title="for…of循环"></a>for…of循环</h5><p>for…of运算符是ES6中的新语法，在集合中遍历元素的方法.  </p>
-<h2 id="表达式和运算符"><a href="#表达式和运算符" class="headerlink" title="表达式和运算符"></a>表达式和运算符</h2><p>严格相等（===），值类型和值都相同。<br>严格不相等（!==），值类型和值不相同。<br>非严格相等（==），它们隶属同一个对象，或者可以强制转换成相同的值。<br>非严格不相等（!=）<br>NaN与任何值都不相等，包括它自己（即， NaN === NaN 和 NaN == NaN 都是false）， 判断某个数字是不是NaN，可以使用内置函数isNaN()</p>
-<h5 id="字符串连接"><a href="#字符串连接" class="headerlink" title="字符串连接"></a>字符串连接</h5><p>JavaScript中，+运算符既可以用作数字的加法，也可以用作字符串连接。会根据运算符对象的类型来决定执行加法还是字符串连接，这两种的执行顺序都是从左至右。    </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">3 + 5 + &quot;8&quot;    &#x2F;&#x2F;结果为 &quot;88&quot;</span><br><span class="line">&quot;3&quot; + 5 + 8    &#x2F;&#x2F;结果为 &quot;358&quot;</span><br></pre></td></tr></table></figure>
-<h5 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h5><p>以下值代表false：        </p>
-<ul>
-<li>undefined</li>
-<li>null</li>
-<li>false   </li>
-<li>0</li>
-<li>NaN</li>
-<li>‘’(空字符串)</li>
-</ul>
-<p>以下值代表true：</p>
-<ul>
-<li>所有对象（包括valueof()方法返回false的对象）</li>
-<li>所有数组（包括空数组）</li>
-<li>仅含有空格的字符串</li>
-<li>字符串”false”</li>
-</ul>
-<h4 id="与、或、非"><a href="#与、或、非" class="headerlink" title="与、或、非"></a>与、或、非</h4><p>x和y的异或（XOR）运算 <code>(x || y) &amp;&amp; x !== y</code></p>
-<h5 id="短路求值"><a href="#短路求值" class="headerlink" title="短路求值"></a>短路求值</h5><p>&amp;&amp; 运算，第一个计算值为false时就不会计算第二个的值。<br>|| 运算，第一个计算值为true时就不会计算第二个的值。</p>
-<h4 id="类型判断运算符"><a href="#类型判断运算符" class="headerlink" title="类型判断运算符"></a>类型判断运算符</h4><p>typeof</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">typeof undefined     &gt;&gt;  &quot;undefined&quot;</span><br><span class="line">typeof null 			 &gt;&gt;  &quot;object&quot;   &#x2F;&#x2F;历史遗留问题</span><br><span class="line">typeof &#123;&#125;				 &gt;&gt;  &quot;object&quot;</span><br><span class="line">typeof true          &gt;&gt;  &quot;boolean&quot;</span><br><span class="line">typeof 1             &gt;&gt;  &quot;number&quot;</span><br><span class="line">typeof &quot;&quot;				 &gt;&gt;  &quot;string&quot;</span><br><span class="line">typeof Symbol()		 &gt;&gt;  &quot;symbol&quot;</span><br><span class="line">typeof function()    &gt;&gt;  &quot;function&quot;</span><br></pre></td></tr></table></figure>
-<p>因为typeof是一个运算符，不需要搭配括号。</p>
-<h4 id="解析结构"><a href="#解析结构" class="headerlink" title="解析结构"></a>解析结构</h4><p>将一个对象或者数组“分解”成多个单独的值。     </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">const obj &#x3D; &#123;b: 2, c: 3, d: 4&#125;;</span><br><span class="line">&#x2F;&#x2F;对象解构赋值</span><br><span class="line">const &#123;a, b, c&#125; &#x3D; obj;</span><br><span class="line">a;  &#x2F;&#x2F;undefined, obj中不存在属性&quot;a&quot;</span><br><span class="line">b;  &#x2F;&#x2F; 2</span><br><span class="line">c;  &#x2F;&#x2F; 3</span><br><span class="line">d;  &#x2F;&#x2F; 引用error: &quot;d&quot;未定义</span><br></pre></td></tr></table></figure>
-<p>对象解构也可以在一个赋值语句中完成，但是这个语句必须被括号括起来。否则，JavaScript解释器会认为左边的部分是一个代码块。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const obj &#x3D; &#123;b: 2, c: 3, d: 4&#125;;</span><br><span class="line">let a, b, c;</span><br><span class="line">&#x2F;&#x2F;会报错</span><br><span class="line">&#123;a, b, c&#125; &#x3D; obj;</span><br><span class="line">&#x2F;&#x2F;正常运行</span><br><span class="line">(&#123;a, b, c&#125; &#x3D; obj);</span><br></pre></td></tr></table></figure>
-<p>数组解析时，可以给数组的元素任意指定变量名（按顺序）。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const att &#x3D; [1, 2, 3];</span><br><span class="line">let [x,y] &#x3D; arr;</span><br><span class="line">x;    &#x2F;&#x2F; 1</span><br><span class="line">y;    &#x2F;&#x2F; 2</span><br><span class="line">z;    &#x2F;&#x2F; 错误： z未定义</span><br></pre></td></tr></table></figure>
-<p>展开运算符（…）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const arr &#x3D; [1, 2, 3, 4, 5];</span><br><span class="line">let [x, y, ...rest] &#x3D; arr;</span><br><span class="line">x;       &#x2F;&#x2F;   1</span><br><span class="line">y;       &#x2F;&#x2F;   2</span><br><span class="line">rest;    &#x2F;&#x2F;   [3, 4, 5]</span><br></pre></td></tr></table></figure>
-<p>数组解构可以很方便地交换变量的值（以前可能需要一个中间变量来完成）。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let a &#x3D; 5, b &#x3D; 10;</span><br><span class="line">[a, b] &#x3D; [b, a];</span><br><span class="line">a;   &#x2F;&#x2F;  10</span><br><span class="line">b;   &#x2F;&#x2F;  5</span><br></pre></td></tr></table></figure>
-<p>数组解构不仅适用于数组，还适用于任何可迭代的对象。</p>
-<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><h3 id="返回值"><a href="#返回值" class="headerlink" title="返回值"></a>返回值</h3><p>如果没有明确指定return语句，返回值将会是undefined。函数可以返回任何类型的值。</p>
-<h3 id="引用调用"><a href="#引用调用" class="headerlink" title="引用调用"></a>引用调用</h3><p>在JavaScript中，函数是一个对象，可以被传递和赋值。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function func1() &#123;</span><br><span class="line">	console.log(&#39;hello&#39;);</span><br><span class="line">&#125;</span><br><span class="line">func1();    &#x2F;&#x2F; &#39;hello&#39;</span><br><span class="line">func1;      &#x2F;&#x2F; 函数func1()</span><br></pre></td></tr></table></figure>
-<p>可以将一个函数赋值给一个变量，就可以通过这个变量来调用函数。也可把函数赋值给一个对象的属性。   </p>
-<h3 id="函数参数"><a href="#函数参数" class="headerlink" title="函数参数"></a>函数参数</h3><p>字符串、数值等参数是值类型。对象、数组等是引用类型，对象属性在函数内部发生变化，函数外也随着发生了变化。<br>在JavaScript中，函数名相同，参数不同（类型不同，个数不同），认为是同一个函数，如果在调用时没有传入参数，函数就会接收到一个undefined的参数。   </p>
-<h3 id="解构参数"><a href="#解构参数" class="headerlink" title="解构参数"></a>解构参数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">function getSentence(&#123;subject, verb, object&#125;) &#123;</span><br><span class="line">	return &#96;$&#123;subject&#125; $&#123;verb&#125; $&#123;object&#125;&#96;</span><br><span class="line">&#125;</span><br><span class="line">const o &#x3D; &#123;</span><br><span class="line">	subject: &#39;I&#39;,</span><br><span class="line">	verb: &#39;love&#39;,</span><br><span class="line">	object: &#39;JavaScript&#39;</span><br><span class="line">&#125;</span><br><span class="line">getSentence(o);     &#x2F;&#x2F; &#39;I love JavaScript&#39;</span><br></pre></td></tr></table></figure>
-<p>在解构赋值中，参数属性名必须是字符串标识符，而且如果传入的对象不存在与参数属性名匹配的属性，该属性将会接受一个undefined值。<br>解构参数可以是一个数组。    </p>
-<h3 id="this"><a href="#this" class="headerlink" title="this"></a>this</h3><p>关于this变量的一个细节，当在嵌套函数中访问它时经常会出错。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">const o &#x3D; &#123;</span><br><span class="line">	name: &#39;Julie&#39;,</span><br><span class="line">	greetBackwords: function() &#123;</span><br><span class="line">		let self &#x3D; this;</span><br><span class="line">		function getReverseName() &#123;</span><br><span class="line">			let nameBackwards &#x3D; &#39;&#39;;</span><br><span class="line">			for (let i &#x3D; self.name.length - 1; i--) &#123;</span><br><span class="line">				nameBackwards +&#x3D; this.name[i];</span><br><span class="line">			&#125;</span><br><span class="line">			return nameBackwards;</span><br><span class="line">		&#125;</span><br><span class="line">		return &#96;$&#123;getReverseName()&#125; si eman ym, olleH&#39;;</span><br><span class="line">	&#125;,</span><br><span class="line">&#125;;</span><br><span class="line">o.greetBackwards();</span><br></pre></td></tr></table></figure>
-<h3 id="箭头函数"><a href="#箭头函数" class="headerlink" title="箭头函数"></a>箭头函数</h3><p>箭头函数允许使用以下3种方式来简化语法：    </p>
-<ul>
-<li>可以省略function这个单词</li>
-<li>如果函数只有一个参数，可以省略括号</li>
-<li>如果函数体是一个单独的表达式，则可以省略花括号和返回语句</li>
-</ul>
-<p>箭头函数大多是匿名的。可以将它们赋值给变量。<br>箭头函数跟普通函数的区别：this是跟语句绑定起来的，就像其他变量一样。不能把箭头函数当做对象构造器，同时，指定的参数变量在箭头函数中也不生效。   </p>
-<h3 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h3><p>故意将某个函数定义在一个指定的作用域中，并明确地指定出它对该作用域所具备的访问权限，通常称这种形式为闭包（可以认为封闭了函数的作用域）</p>
-<h3 id="即时调用函数表达式-IIFE"><a href="#即时调用函数表达式-IIFE" class="headerlink" title="即时调用函数表达式(IIFE)"></a>即时调用函数表达式(IIFE)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(function() &#123;</span><br><span class="line">	&#x2F;&#x2F;code</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
-<p>可以从IIFE中返回任何想要的结果，比较常见的返回值有数组、对象、以及函数。<br>IIFE的好处是，任何内部信息都有自己的作用域，并且因为它本身就是函数，它还可以向作用域外传递信息。    </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const message &#x3D; (function() &#123;</span><br><span class="line">	const secret &#x3D; &quot;I&#39;m a secret!&quot;;</span><br><span class="line">	return &#96;The secret is $&#123;secret.length&#125; characters long.&#96;</span><br><span class="line">&#125;)();</span><br><span class="line">console.log(message);</span><br></pre></td></tr></table></figure>
-<p>如下例子中打印自己被调用的次数，而且次数不会被篡改。   </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">const f &#x3D; (function() &#123;</span><br><span class="line">	let count &#x3D; 0;</span><br><span class="line">	return function() &#123;</span><br><span class="line">		return &#96;count $&#123;++count&#125;&#96;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)();</span><br><span class="line">f();    &#x2F;&#x2F; count 0</span><br><span class="line">f();    &#x2F;&#x2F; count 1</span><br><span class="line">&#x2F;&#x2F; count 被安全地隐藏在IIFE中，外界没法篡改它</span><br></pre></td></tr></table></figure>
-<h3 id="严格模式"><a href="#严格模式" class="headerlink" title="严格模式"></a>严格模式</h3><p>ES5的语法允许存在隐式全局变量。如果忘记使用var声明某个变量，JavaScript会不暇思索地认为开发人员引用一个全局变量，如果该全局变量不存在，它会替开发人员创建一个。<br>严格模式可以阻止隐式全局变量。在开始编写代码前，单独引入一行字符串“use strict”</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2016/07/03/flask/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2016/07/03/flask/" class="post-title-link" itemprop="url">Flask</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2016-07-03 15:16:06" itemprop="dateCreated datePublished" datetime="2016-07-03T15:16:06+08:00">2016-07-03</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-01-26 00:48:22" itemprop="dateModified" datetime="2019-01-26T00:48:22+08:00">2019-01-26</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2016/01/06/python1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2016/01/06/python1/" class="post-title-link" itemprop="url">python</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2016-01-06 00:46:10" itemprop="dateCreated datePublished" datetime="2016-01-06T00:46:10+08:00">2016-01-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-01-26 00:47:22" itemprop="dateModified" datetime="2019-01-26T00:47:22+08:00">2019-01-26</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1007,14 +1292,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-count">43</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
