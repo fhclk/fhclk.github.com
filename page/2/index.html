@@ -151,6 +151,365 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/12/03/Solidity%E7%B1%BB%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/03/Solidity%E7%B1%BB%E5%9E%8B/" class="post-title-link" itemprop="url">Solidity类型</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-03 08:35:12" itemprop="dateCreated datePublished" datetime="2019-12-03T08:35:12+08:00">2019-12-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-12-13 17:31:22" itemprop="dateModified" datetime="2019-12-13T17:31:22+08:00">2019-12-13</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h3><p>Solidity是一种静态类型语言，这意味着每个变量（状态量和局部变量）都需要在编译时指定变量的类型（或至少可以推导出变量类型）。类型之间可以在包含运算符号的表达式中进行交互。</p>
+<h4 id="值类型"><a href="#值类型" class="headerlink" title="值类型"></a>值类型</h4><h5 id="布尔类型"><a href="#布尔类型" class="headerlink" title="布尔类型"></a>布尔类型</h5><p><code>bool</code>: 可能的取值为字面常数值 <code>true</code> 和 <code>false</code>   </p>
+<p>运算符</p>
+<ul>
+<li><code>!</code>  逻辑非</li>
+<li><code>&amp;&amp;</code> 逻辑与</li>
+<li><code>||</code> 逻辑或</li>
+<li><code>==</code> 等于</li>
+<li><code>!=</code> 不等于</li>
+</ul>
+<p>运算符<code>||</code>和<code>&amp;&amp;</code>遵循短路运算</p>
+<h5 id="整型"><a href="#整型" class="headerlink" title="整型"></a>整型</h5><p><code>int</code>/<code>uint</code>：分别表示有符号和无符号的不同位数的整型变量。支持关键字<code>uint8</code>到<code>uint256</code>(无符号，从8位到256位)以及<code>int8</code>到<code>int256</code>，以8位为步长递增。<code>uint</code>和<code>int</code>分别是<code>uint256</code>和<code>int256</code>的别名    </p>
+<p>运算符：</p>
+<ul>
+<li>比较运算符： &lt;= ， &lt; ， == ， != ， &gt;= ， &gt; （返回布尔值）</li>
+<li>位运算符： &amp; ， | ， ^ （异或）， ~ （位取反）</li>
+<li>算数运算符： + ， - ， 一元运算 - ， 一元运算 + ， * ， / ， % （取余） ， ** （幂）， &lt;&lt; （左移位） ， &gt;&gt; （右移位）</li>
+</ul>
+<p>除法总是会截断的（仅被编译为 EVM 中的 DIV 操作码）， 但如果操作数都是 字面常数（或者字面常数表达式），则不会截断。</p>
+<p>除以零或者模零运算都会引发运行时异常。</p>
+<p>移位运算的结果取决于运算符左边的类型。 表达式 x &lt;&lt; y 与 x * 2**y 是等价的， x &gt;&gt; y 与 x / 2**y 是等价的。这意味对一个负数进行移位会导致其符号消失。 按负数位移动会引发运行时异常。</p>
+<p>警告：<br>由有符号整数类型负值右移所产生的结果跟其它语言中所产生的结果是不同的。 在 Solidity 中，右移和除是等价的，因此对一个负数进行右移操作会导致向 0 的取整（截断）。 而在其它语言中， 对负数进行右移类似于（向负无穷）取整。</p>
+<h5 id="定长浮点数"><a href="#定长浮点数" class="headerlink" title="定长浮点数"></a>定长浮点数</h5><p>Solidity还没有完全支持定长浮点数。可以声明定长浮点型的变量，但不能给它们赋值或把它们赋值给其他变量。     </p>
+<p><code>fixed</code> / <code>ufixed</code>：表示各种大小的有符号和无符号的定长浮点型。 在关键字 <code>ufixedMxN</code> 和 <code>fixedMxN</code> 中，M 表示该类型占用的位数，N 表示可用的小数位数。 M 必须能整除 8，即 8 到 256 位。 N 则可以是从 0 到 80 之间的任意数。 ufixed 和 fixed 分别是 <code>ufixed128x19</code> 和 <code>fixed128x19</code> 的别名。</p>
+<p>运算符： </p>
+<ul>
+<li>比较运算符：&lt;=， &lt;， ==， !=， &gt;=， &gt; （返回值是布尔型）</li>
+<li>算术运算符：+， -， 一元运算 -， 一元运算 +， *， /， % （取余数）</li>
+</ul>
+<h5 id="地址类型"><a href="#地址类型" class="headerlink" title="地址类型"></a>地址类型</h5><p><code>address</code>：地址类型存储一个20字节的值（以太坊地址的大小）。地址类型也有成员变量，并作为所有合约的基础。    </p>
+<p>运算符：</p>
+<ul>
+<li><code>&lt;=</code>, <code>&lt;</code>, <code>==</code>, <code>!=</code>, ‘&gt;=<code>, </code>&gt;`</li>
+</ul>
+<p>从 0.5.0 版本开始，合约不会从地址类型派生，但仍然可以显式地转换成地址类型。</p>
+<h6 id="地址类型成员变量"><a href="#地址类型成员变量" class="headerlink" title="地址类型成员变量"></a>地址类型成员变量</h6><ul>
+<li><code>balance</code> 和 <code>transfer</code>   </li>
+</ul>
+<p>可以使用 <code>balance</code> 属性来查询一个地址的余额，也可以使用 <code>transfer</code> 函数向一个地址发送以太币Ether （以 wei 为单位）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">address x &#x3D; 0x123;</span><br><span class="line">address myAddress &#x3D; this;</span><br><span class="line">if (x.balance &lt; 10 &amp;&amp; myAddress.balance &gt;&#x3D; 10)</span><br><span class="line">	x.transfer(10);</span><br></pre></td></tr></table></figure>
+
+<p>如果 x 是一个合约地址，它的代码（更具体来说是它的 fallback 函数，如果有的话）会跟 transfer 函数调用一起执行（这是 EVM 的一个特性，无法阻止）。 如果在执行过程中用光了 gas 或者因为任何原因执行失败，以太币Ether 交易会被打回，当前的合约也会在终止的同时抛出异常。</p>
+<ul>
+<li><code>send</code></li>
+</ul>
+<p><code>send</code> 是 <code>transfer</code> 的低级版本。如果执行失败，当前的合约不会因为异常而终止，但<code>send</code> 会返回false。</p>
+<p>在使用 send 的时候会有些风险：如果调用栈深度是 1024 会导致发送失败（这总是可以被调用者强制），如果接收者用光了 gas 也会导致发送失败。 所以为了保证 以太币Ether 发送的安全，一定要检查 send 的返回值，使用 transfer 或者更好的办法： 使用一种接收者可以取回资金的模式。</p>
+<ul>
+<li><code>call</code>, <code>callcode</code>和<code>delegatecall</code></li>
+</ul>
+<p>为了与不符合 应用二进制接口的合约交互，于是就有了可以接受任意类型任意数量参数的 call 函数。 这些参数会被打包到以 32 字节为单位的连续区域中存放。 其中一个例外是当第一个参数被编码成正好 4 个字节的情况。 在这种情况下，这个参数后边不会填充后续参数编码，以允许使用函数签名。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">address nameReg &#x3D; 0x72ba7d8e73fe8eb666ea66babc8116a41bfb10e2;</span><br><span class="line">nameReg.call(&quot;register&quot;, &quot;MyName&quot;);</span><br><span class="line">nameReg.call(bytes4(keccak256(&quot;fun(uint256)&quot;)), a);</span><br></pre></td></tr></table></figure>
+
+<p>call 返回的布尔值表明了被调用的函数已经执行完毕（true）或者引发了一个 EVM 异常（false）。 无法访问返回的真实数据（为此我们需要事先知道编码和大小）。</p>
+<p>可以使用 .gas() 修饰器调整提供的 gas 数量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">namReg.call.gas(1000000)(&quot;register&quot;, &quot;MyName&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>类似地，也能控制提供的 以太币Ether 的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nameReg.call.value(1 ether)(&quot;register&quot;, &quot;MyName&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>最后一点，这些 修饰器modifier 可以联合使用。每个修改器出现的顺序不重要</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nameReg.call.gas(1000000).value(1 ether)(&quot;register&quot;, &quot;MyName&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>目前还不能在重载函数中使用 gas 或者 value 修饰器。<br>一种解决方案是给 gas 和值引入一个特例，并重新检查它们是否在重载的地方出现。</p>
+<p>类似地，也可以使用 delegatecall： 区别在于只使用给定地址的代码，其它属性（存储，余额，……）都取自当前合约。 delegatecall 的目的是使用存储在另外一个合约中的库代码。 用户必须确保两个合约中的存储结构都适用于 delegatecall。 在 homestead 版本之前，只有一个功能类似但作用有限的 callcode 的函数可用，但它不能获取委托方的 msg.sender 和 msg.value。</p>
+<p>这三个函数 call， delegatecall 和 callcode 都是非常低级的函数，应该只把它们当作 最后一招 来使用，因为它们破坏了 Solidity 的类型安全性。</p>
+<p>所有合约都继承了地址（address）的成员变量，因此可以使用 this.balance 查询当前合约的余额。</p>
+<p>不鼓励使用 callcode，在未来也会将其移除。</p>
+<p>这三个函数都属于低级函数，需要谨慎使用。 具体来说，任何未知的合约都可能是恶意的。 你在调用一个合约的同时就将控制权交给了它，它可以反过来调用你的合约， 因此，当调用返回时要为你的状态变量的改变做好准备。</p>
+<h5 id="定长字节数组"><a href="#定长字节数组" class="headerlink" title="定长字节数组"></a>定长字节数组</h5><p>关键字有：bytes1， bytes2， bytes3， …， bytes32。byte 是 bytes1 的别名。</p>
+<p>运算符：</p>
+<ul>
+<li>比较运算符：&lt;=， &lt;， ==， !=， &gt;=， &gt; （返回布尔型）</li>
+<li>位运算符： &amp;， |， ^ （按位异或）， ~ （按位取反）， &lt;&lt; （左移位）， &gt;&gt; （右移位）</li>
+<li>索引访问：如果 x 是 bytesI 类型，那么 x[k] （其中 0 &lt;= k &lt; I）返回第 k 个字节（只读）。</li>
+<li>该类型可以和作为右操作数的任何整数类型进行移位运算（但返回结果的类型和左操作数类型相同），右操作数表示需要移动的位数。 进行负数位移运算会引发运行时异常。</li>
+</ul>
+<p>可以将 byte[] 当作字节数组使用，但这种方式非常浪费存储空间，准确来说，是在传入调用时，每个元素会浪费 31 字节。 更好地做法是使用 bytes。</p>
+<h5 id="变长字节数组"><a href="#变长字节数组" class="headerlink" title="变长字节数组"></a>变长字节数组</h5><p><code>bytes</code>：变长字节数组，它不是值类型</p>
+<p><code>string</code>：变长UTF-8编码字符串类型，不是值类型</p>
+<h5 id="地址字面常数"><a href="#地址字面常数" class="headerlink" title="地址字面常数"></a>地址字面常数</h5><p>比如像 <code>0xdCad3a6d3569DF655070DEd06cb7A1b2Ccd1D3AF</code> 这样的通过了地址校验和测试的十六进制字面常数属于 address 类型。 长度在 39 到 41 个数字的，没有通过校验和测试而产生了一个警告的十六进制字面常数视为正常的有理数字面常数。</p>
+<h5 id="有理数和整数字面常数"><a href="#有理数和整数字面常数" class="headerlink" title="有理数和整数字面常数"></a>有理数和整数字面常数</h5><p>Solidity中没有八进制</p>
+<h5 id="字符串字面常数"><a href="#字符串字面常数" class="headerlink" title="字符串字面常数"></a>字符串字面常数</h5><p>字符串字面常数是指由双引号或单引号引起来的字符串（”foo” 或者 ‘bar’）。 不像在 C 语言中那样带有结束符；”foo” 相当于 3 个字节而不是 4 个。 和整数字面常数一样，字符串字面常数的类型也可以发生改变，但它们可以隐式地转换成 bytes1，……，bytes32，如果合适的话，还可以转换成 bytes 以及 string。</p>
+<p>字符串字面常数支持转义字符，例如 \n，\xNN 和 \uNNNN。\xNN 表示一个 16 进制值，最终转换成合适的字节， 而 \uNNNN 表示 Unicode 编码值，最终会转换为 UTF-8 的序列。</p>
+<h5 id="十六进制字面常数"><a href="#十六进制字面常数" class="headerlink" title="十六进制字面常数"></a>十六进制字面常数</h5><p>十六进制字面常数以关键字 hex 打头，后面紧跟着用单引号或双引号引起来的字符串（例如，hex”001122FF”）。 字符串的内容必须是一个十六进制的字符串，它们的值将使用二进制表示。</p>
+<p>十六进制字面常数跟字符串字面常数很类似，具有相同的转换规则。</p>
+<h5 id="枚举类型"><a href="#枚举类型" class="headerlink" title="枚举类型"></a>枚举类型</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.16;</span><br><span class="line"></span><br><span class="line">contract test &#123;</span><br><span class="line">    enum ActionChoices &#123; GoLeft, GoRight, GoStraight, SitStill &#125;</span><br><span class="line">    ActionChoices choice;</span><br><span class="line">    ActionChoices constant defaultChoice &#x3D; ActionChoices.GoStraight;</span><br><span class="line"></span><br><span class="line">    function setGoStraight() public &#123;</span><br><span class="line">        choice &#x3D; ActionChoices.GoStraight;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 由于枚举类型不属于 |ABI| 的一部分，因此对于所有来自 Solidity 外部的调用，</span><br><span class="line">    &#x2F;&#x2F; &quot;getChoice&quot; 的签名会自动被改成 &quot;getChoice() returns (uint8)&quot;。</span><br><span class="line">    &#x2F;&#x2F; 整数类型的大小已经足够存储所有枚举类型的值，随着值的个数增加，</span><br><span class="line">    &#x2F;&#x2F; 可以逐渐使用 &#96;uint16&#96; 或更大的整数类型。</span><br><span class="line">    function getChoice() public view returns (ActionChoices) &#123;</span><br><span class="line">        return choice;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function getDefaultChoice() public pure returns (uint) &#123;</span><br><span class="line">        return uint(defaultChoice);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="函数类型"><a href="#函数类型" class="headerlink" title="函数类型"></a>函数类型</h5><p>函数类型是一种表示函数的类型。可以将一个函数赋值给另一个函数类型的变量，也可以将一个函数作为参数进行传递，还能在函数调用中返回函数类型变量。 函数类型有两类：- 内部（internal） 函数和 外部（external） 函数：</p>
+<p>内部函数只能在当前合约内被调用（更具体来说，在当前代码块内，包括内部库函数和继承的函数中），因为它们不能在当前合约上下文的外部被执行。 调用一个内部函数是通过跳转到它的入口标签来实现的，就像在当前合约的内部调用一个函数。</p>
+<p>外部函数由一个地址和一个函数签名组成，可以通过外部函数调用传递或者返回。</p>
+<p>函数类型表示成如下的形式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function (&lt;parameter types&gt;) &#123;internal|external&#125; [pure|constant|view|payable] [returns (&lt;return types&gt;)]</span><br></pre></td></tr></table></figure>
+
+<p>与参数类型相反，返回类型不能为空 —— 如果函数类型不需要返回，则需要删除整个 returns (<return types>) 部分。</return></p>
+<p>函数类型默认是内部函数，因此不需要声明 internal 关键字。 与此相反的是，合约中的函数本身默认是 public 的，只有当它被当做类型名称时，默认才是内部函数。</p>
+<p>有两种方法可以访问当前合约中的函数：一种是直接使用它的名字，f ，另一种是使用 this.f 。 前者适用于内部函数，后者适用于外部函数。</p>
+<p>如果当函数类型的变量还没有初始化时就调用它的话会引发一个异常。 如果在一个函数被 delete 之后调用它也会发生相同的情况。</p>
+<p>如果外部函数类型在 Solidity 的上下文环境以外的地方使用，它们会被视为 function 类型。 该类型将函数地址紧跟其函数标识一起编码为一个 bytes24 类型。。</p>
+<p>请注意，当前合约的 public 函数既可以被当作内部函数也可以被当作外部函数使用。 如果想将一个函数当作内部函数使用，就用 f 调用，如果想将其当作外部函数，使用 this.f 。</p>
+<p>除此之外，public（或 external）函数也有一个特殊的成员变量称作 selector，可以返回 ABI 函数选择器:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.16;</span><br><span class="line"></span><br><span class="line">contract Selector &#123;</span><br><span class="line">  function f() public view returns (bytes4) &#123;</span><br><span class="line">    return this.f.selector;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用内部函数类型的例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.16;</span><br><span class="line"></span><br><span class="line">library ArrayUtils &#123;</span><br><span class="line">  &#x2F;&#x2F; 内部函数可以在内部库函数中使用，</span><br><span class="line">  &#x2F;&#x2F; 因为它们会成为同一代码上下文的一部分</span><br><span class="line">  function map(uint[] memory self, function (uint) pure returns (uint) f)</span><br><span class="line">    internal</span><br><span class="line">    pure</span><br><span class="line">    returns (uint[] memory r)</span><br><span class="line">  &#123;</span><br><span class="line">    r &#x3D; new uint[](self.length);</span><br><span class="line">    for (uint i &#x3D; 0; i &lt; self.length; i++) &#123;</span><br><span class="line">      r[i] &#x3D; f(self[i]);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  function reduce(</span><br><span class="line">    uint[] memory self,</span><br><span class="line">    function (uint, uint) pure returns (uint) f</span><br><span class="line">  )</span><br><span class="line">    internal</span><br><span class="line">    pure</span><br><span class="line">    returns (uint r)</span><br><span class="line">  &#123;</span><br><span class="line">    r &#x3D; self[0];</span><br><span class="line">    for (uint i &#x3D; 1; i &lt; self.length; i++) &#123;</span><br><span class="line">      r &#x3D; f(r, self[i]);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  function range(uint length) internal pure returns (uint[] memory r) &#123;</span><br><span class="line">    r &#x3D; new uint[](length);</span><br><span class="line">    for (uint i &#x3D; 0; i &lt; r.length; i++) &#123;</span><br><span class="line">      r[i] &#x3D; i;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract Pyramid &#123;</span><br><span class="line">  using ArrayUtils for *;</span><br><span class="line">  function pyramid(uint l) public pure returns (uint) &#123;</span><br><span class="line">    return ArrayUtils.range(l).map(square).reduce(sum);</span><br><span class="line">  &#125;</span><br><span class="line">  function square(uint x) internal pure returns (uint) &#123;</span><br><span class="line">    return x * x;</span><br><span class="line">  &#125;</span><br><span class="line">  function sum(uint x, uint y) internal pure returns (uint) &#123;</span><br><span class="line">    return x + y;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>使用外部函数类型的例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.11;</span><br><span class="line"></span><br><span class="line">contract Oracle &#123;</span><br><span class="line">  struct Request &#123;</span><br><span class="line">    bytes data;</span><br><span class="line">    function(bytes memory) external callback;</span><br><span class="line">  &#125;</span><br><span class="line">  Request[] requests;</span><br><span class="line">  event NewRequest(uint);</span><br><span class="line">  function query(bytes data, function(bytes memory) external callback) public &#123;</span><br><span class="line">    requests.push(Request(data, callback));</span><br><span class="line">    NewRequest(requests.length - 1);</span><br><span class="line">  &#125;</span><br><span class="line">  function reply(uint requestID, bytes response) public &#123;</span><br><span class="line">    &#x2F;&#x2F; 这里要验证 reply 来自可信的源</span><br><span class="line">    requests[requestID].callback(response);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract OracleUser &#123;</span><br><span class="line">  Oracle constant oracle &#x3D; Oracle(0x1234567); &#x2F;&#x2F; 已知的合约</span><br><span class="line">  function buySomething() &#123;</span><br><span class="line">    oracle.query(&quot;USD&quot;, this.oracleResponse);</span><br><span class="line">  &#125;</span><br><span class="line">  function oracleResponse(bytes response) public &#123;</span><br><span class="line">    require(msg.sender &#x3D;&#x3D; address(oracle));</span><br><span class="line">    &#x2F;&#x2F; 使用数据</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h3><h4 id="数据位置"><a href="#数据位置" class="headerlink" title="数据位置"></a>数据位置</h4><p>所有的复杂类型，即 数组 和 结构 类型，都有一个额外属性，“数据位置”，说明数据是保存在 内存memory 中还是 存储storage 中。 根据上下文不同，大多数时候数据有默认的位置，但也可以通过在类型名后增加关键字 storage 或 memory 进行修改。 函数参数（包括返回的参数）的数据位置默认是 memory， 局部变量的数据位置默认是 storage，状态变量的数据位置强制是 storage （这是显而易见的）。</p>
+<p>也存在第三种数据位置， calldata ，这是一块只读的，且不会永久存储的位置，用来存储函数参数。 外部函数的参数（非返回参数）的数据位置被强制指定为 calldata ，效果跟 memory 差不多。</p>
+<p>数据位置的指定非常重要，因为它们影响着赋值行为： 在 存储storage 和 内存memory 之间两两赋值，或者 存储storage 向状态变量（甚至是从其它状态变量）赋值都会创建一份独立的拷贝。 然而状态变量向局部变量赋值时仅仅传递一个引用，而且这个引用总是指向状态变量，因此后者改变的同时前者也会发生改变。 另一方面，从一个 内存memory 存储的引用类型向另一个 内存memory 存储的引用类型赋值并不会创建拷贝。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0;</span><br><span class="line">contract C &#123;</span><br><span class="line">    uint[] x; &#x2F;&#x2F; x的数据存储位置是storage</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; memoryArray的数据存储位置是memory</span><br><span class="line">    function f(uint[] memoryArray) public &#123;</span><br><span class="line">        x &#x3D; memoryArray;  &#x2F;&#x2F; 将整个数组拷贝到storage中，可行</span><br><span class="line">        var y &#x3D; x; &#x2F;&#x2F; 分配一个指针（其中y的数据存储位置是storage），可行</span><br><span class="line"></span><br><span class="line">        y[7]; &#x2F;&#x2F; 返回第8个元素，可行</span><br><span class="line">        y.length &#x3D; 2;  &#x2F;&#x2F; 通过y修改x，可行</span><br><span class="line">        delete x; &#x2F;&#x2F; 清除数组，同时修改y，可行</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; 下面的就不可行了；需要在storage中创建新的未命名的临时数组，但storage是“临时”分配的</span><br><span class="line">        &#x2F;&#x2F; y &#x3D; memoryArray;</span><br><span class="line">        &#x2F;&#x2F; 下面这一行也不可行，因为这会“重置”指针</span><br><span class="line">        &#x2F;&#x2F; 但并没有可以让它指向的合适的存储位置。</span><br><span class="line">        &#x2F;&#x2F; delete y;</span><br><span class="line"></span><br><span class="line">        g(x); &#x2F;&#x2F; 调用g函数，同时移交对x的引用</span><br><span class="line">        h(x); &#x2F;&#x2F; 调用h函数，同时在memory中创建一个独立的临时拷贝</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function g(uint[] storage storageArray) internal &#123;&#125;</span><br><span class="line"></span><br><span class="line">    function h(uint[] memoryArray) public &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>强制指定的数据位置：</p>
+<ul>
+<li>外部函数的参数（不包括返回参数）： calldata</li>
+<li>状态变量： storage</li>
+</ul>
+<p>默认数据位置：</p>
+<ul>
+<li>函数参数（包括返回参数）： memory</li>
+<li>所有其它局部变量： storage</li>
+</ul>
+<h4 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h4><p>数组可以在声明时指定长度，也可以动态调整大小。对于storage的数组来说，元素类型可以是任意的（即元素可以是数组类型，映射类型或者结构体）。对于memory的数组来说，元素类型不能是映射类型，如果作为public函数的参数，它只能是ABI类型。</p>
+<p>一个元素类型为 T，固定长度为 k 的数组可以声明为 T[k]，而动态数组声明为 T[]。 举个例子，一个长度为 5，元素类型为 uint 的动态数组的数组，应声明为 uint[][5] （注意这里跟其它语言比，数组长度的声明位置是反的）。 要访问第三个动态数组的第二个元素，你应该使用 x[2][1]（数组下标是从 0 开始的，且访问数组时的下标顺序与声明时相反，也就是说，x[2] 是从右边减少了一级）。</p>
+<h6 id="创建内存数组"><a href="#创建内存数组" class="headerlink" title="创建内存数组"></a>创建内存数组</h6><p>可使用new关键字在内存中创建变长数组。与storage数组相反的是，不能通过修改成员变量.length改变memory数组的大小。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.16;</span><br><span class="line"></span><br><span class="line">contract D &#123;</span><br><span class="line">    function f(uint len) public pure &#123;</span><br><span class="line">        uint[] memory a &#x3D; new uint[](7);</span><br><span class="line">        bytes memory b &#x3D; new bytes(len);</span><br><span class="line">        &#x2F;&#x2F; a.length &#x3D;&#x3D; 7 b.length &#x3D;&#x3D; len</span><br><span class="line">        a[6] &#x3D; 8;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="数组字面常数-内联数组"><a href="#数组字面常数-内联数组" class="headerlink" title="数组字面常数/内联数组"></a>数组字面常数/内联数组</h6><p>数组字面常数是写作表达式形式的数组，并且不会立即赋值给变量。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.16;</span><br><span class="line"></span><br><span class="line">contract C &#123;</span><br><span class="line">    function f() public pure &#123;</span><br><span class="line">        g([uint(1), 2, 3]);</span><br><span class="line">    &#125;</span><br><span class="line">    function g(uint[3] _data) public pure &#123;</span><br><span class="line">        &#x2F;&#x2F; ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>数组字面常数是一种定长的 内存memory 数组类型，它的基础类型由其中元素的普通类型决定。 例如，[1, 2, 3] 的类型是 uint8[3] memory，因为其中的每个字面常数的类型都是 uint8。 正因为如此，有必要将上面这个例子中的第一个元素转换成 uint 类型。 目前需要注意的是，定长的 内存memory 数组并不能赋值给变长的 内存memory 数组，下面是个反例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 这段代码并不能编译。</span><br><span class="line">pragma solidity ^0.4.0;</span><br><span class="line"></span><br><span class="line">contract C &#123;</span><br><span class="line">    function f() public &#123;</span><br><span class="line">        &#x2F;&#x2F; 这一行引发了一个类型错误，因为 unint[3] memory</span><br><span class="line">        &#x2F;&#x2F; 不能转换成 uint[] memory。</span><br><span class="line">        uint[] x &#x3D; [uint(1), 3, 4];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>####### 成员</p>
+<ul>
+<li>length:</li>
+</ul>
+<p>数组有 length 成员变量表示当前数组的长度。 动态数组可以在 存储storage （而不是 内存memory ）中通过改变成员变量 .length 改变数组大小。 并不能通过访问超出当前数组长度的方式实现自动扩展数组的长度。 一经创建，内存memory 数组的大小就是固定的（但却是动态的，也就是说，它依赖于运行时的参数）。</p>
+<ul>
+<li>push:</li>
+</ul>
+<p>变长的 存储storage 数组以及 bytes 类型（而不是 string 类型）都有一个叫做 push 的成员函数，它用来附加新的元素到数组末尾。 这个函数将返回新的数组长度。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/12/02/Solidity%E5%90%88%E7%BA%A6%E7%BB%93%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/02/Solidity%E5%90%88%E7%BA%A6%E7%BB%93%E6%9E%84/" class="post-title-link" itemprop="url">Solidity合约结构</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-02 15:03:45" itemprop="dateCreated datePublished" datetime="2019-12-02T15:03:45+08:00">2019-12-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-12-12 15:30:36" itemprop="dateModified" datetime="2019-12-12T15:30:36+08:00">2019-12-12</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="合约结构"><a href="#合约结构" class="headerlink" title="合约结构"></a>合约结构</h3><p>合约中可以包含状态变量、函数、函数修饰器、事件、结构类型、枚举类型的声明，并且可以从其他合约继承。</p>
+<h4 id="状态变量"><a href="#状态变量" class="headerlink" title="状态变量"></a>状态变量</h4><p>状态变量是永久地存储在合约存储中的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0;</span><br><span class="line"></span><br><span class="line">contract SimpleStorage &#123;</span><br><span class="line">	uint storedData; &#x2F;&#x2F;状态变量</span><br><span class="line">	&#x2F;&#x2F; ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h4><p>函数是合约中代码的可执行单元。<br>函数调用可发生在合约内部或外部，且函数对其他合约有不同程度的可见性。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0;</span><br><span class="line"></span><br><span class="line">contract SimpleAuction &#123;</span><br><span class="line">	function bid() public payable &#123;  &#x2F;&#x2F; 函数</span><br><span class="line">		&#x2F;&#x2F; ...</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="函数修饰器"><a href="#函数修饰器" class="headerlink" title="函数修饰器"></a>函数修饰器</h4><p>函数修饰器可以用来以声明的方式改良函数语义</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0;</span><br><span class="line"></span><br><span class="line">contract Purchase &#123;</span><br><span class="line">	address public seller;</span><br><span class="line">	</span><br><span class="line">	modifier onlySeller() &#123; &#x2F;&#x2F; 修饰器</span><br><span class="line">		require(</span><br><span class="line">			msg.sender &#x3D;&#x3D; seller,</span><br><span class="line">			&quot;Only seller can call this.&quot;</span><br><span class="line">		);</span><br><span class="line">		_;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	function abort() public onlySeller &#123; &#x2F;&#x2F; Modifier usage</span><br><span class="line">		&#x2F;&#x2F; ...</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h4><p>事件是能方便地调用以太坊虚拟机日志功能的接口。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.21;</span><br><span class="line"></span><br><span class="line">contract SimpleAuction &#123;</span><br><span class="line">	event HighestBidIncreased(address bidder, uint amount);  &#x2F;&#x2F; 事件</span><br><span class="line">	</span><br><span class="line">	function bid() public payable &#123;</span><br><span class="line">		&#x2F;&#x2F; ...</span><br><span class="line">		emit HighestBidIncreased(msg.sender, msg.value);  &#x2F;&#x2F; 触发事件</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="结构类型"><a href="#结构类型" class="headerlink" title="结构类型"></a>结构类型</h3><p>结构是可以将几个变量分组的自定义类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0;</span><br><span class="line"></span><br><span class="line">contract Ballot &#123;</span><br><span class="line">	struct Voter &#123; &#x2F;&#x2F; 结构</span><br><span class="line">		uint weight;</span><br><span class="line">		bool boted;</span><br><span class="line">		address delegate;</span><br><span class="line">		uint vote;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="枚举类型"><a href="#枚举类型" class="headerlink" title="枚举类型"></a>枚举类型</h4><p>枚举可以用来创建由一定数量的”常量值“构成的自定义类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.0;</span><br><span class="line"></span><br><span class="line">contract Purchase &#123;</span><br><span class="line">	enum State &#123; Created, Locked, Inactive &#125; &#x2F;&#x2F; 枚举</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/11/18/%E5%8C%BA%E5%9D%97%E9%93%BE%E6%8A%80%E6%9C%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/18/%E5%8C%BA%E5%9D%97%E9%93%BE%E6%8A%80%E6%9C%AF/" class="post-title-link" itemprop="url">区块链技术</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-11-18 09:47:12 / 修改时间：09:49:02" itemprop="dateCreated datePublished" datetime="2019-11-18T09:47:12+08:00">2019-11-18</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="BTC-密码学原理"><a href="#BTC-密码学原理" class="headerlink" title="BTC-密码学原理"></a>BTC-密码学原理</h1><h3 id><a href="#" class="headerlink" title></a></h3>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/10/16/MetaMask%E7%9A%84%E4%BD%BF%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -791,480 +1150,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/03/23/React%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/03/23/React%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" class="post-title-link" itemprop="url">React高阶组件</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-03-23 10:48:27" itemprop="dateCreated datePublished" datetime="2019-03-23T10:48:27+08:00">2019-03-23</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-05-29 13:51:48" itemprop="dateModified" datetime="2019-05-29T13:51:48+08:00">2019-05-29</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="高阶组件的基本概念"><a href="#高阶组件的基本概念" class="headerlink" title="高阶组件的基本概念"></a>高阶组件的基本概念</h4><ul>
-<li>高阶组件就是接受一个组件作为参数并返回一个新组件的函数</li>
-<li>高阶组件是一个函数，并不是组件</li>
-<li>多个组件都需要某个相同的功能，使用高阶组件减少重复实现</li>
-</ul>
-<p>react-redux中的connect就是高阶组件</p>
-<h4 id="编写高阶组件的步骤"><a href="#编写高阶组件的步骤" class="headerlink" title="编写高阶组件的步骤"></a>编写高阶组件的步骤</h4><p>1.实现一个普通组件   </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">import React, &#123;Component&#125; from &#39;react&#39;</span><br><span class="line"></span><br><span class="line">function d(WrappedComponent) &#123;</span><br><span class="line">    return (</span><br><span class="line">        class D extends Component &#123;</span><br><span class="line">            render() &#123;</span><br><span class="line">               return (</span><br><span class="line">                    &lt;div&gt;</span><br><span class="line">                        this is higher component d</span><br><span class="line">                        &lt;WrappedComponent &#x2F;&gt;</span><br><span class="line">                    &lt;&#x2F;div&gt;</span><br><span class="line">                )</span><br><span class="line">            	&#125;</span><br><span class="line">         &#125;</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line">export default d;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>2.将普通组件使用函数包裹起来   </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import React, &#123;Component&#125; from &#39;react&#39;;</span><br><span class="line">import d from &#39;.&#x2F;D&#39;</span><br><span class="line"></span><br><span class="line">class B extends Component &#123;</span><br><span class="line">    render() &#123;</span><br><span class="line">        	return (</span><br><span class="line">            	&lt;div&gt;</span><br><span class="line">                this is b</span><br><span class="line">            	&lt;&#x2F;div&gt;</span><br><span class="line">        	)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">export default d(B)</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="使用高阶组件"><a href="#使用高阶组件" class="headerlink" title="使用高阶组件"></a>使用高阶组件</h4><ol>
-<li>higherOrderComponet(WrappedComponent);</li>
-<li>@ higherOrderComponent (使用装饰器)</li>
-</ol>
-<h5 id="在create-react-app中使用装饰器"><a href="#在create-react-app中使用装饰器" class="headerlink" title="在create-react-app中使用装饰器"></a>在create-react-app中使用装饰器</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;运行</span><br><span class="line">npm run eject</span><br><span class="line">&#x2F;&#x2F;安装相关插件</span><br><span class="line">npm install babel-preset-stage-2 --save-dev</span><br><span class="line">npm install babel-preset-react-native-stage-0 --save-dev</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;根目录下创建.babelrc</span><br><span class="line">&#123;</span><br><span class="line">	&quot;presets&quot;: [&quot;react-native-stage-0&#x2F;decorator-support&quot;]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ps:如果上面出现报错</span><br><span class="line">Cannot find module &#39;react-native-stage-0&#x2F;decorator-suppor</span><br><span class="line"></span><br><span class="line">npm install metro-react-native-babel-preset -D</span><br><span class="line">将.babelrc改为</span><br><span class="line">&#123;</span><br><span class="line">  &quot;presets&quot;: [&quot;module:metro-react-native-babel-preset&quot;],</span><br><span class="line">   &quot;plugins&quot;: [</span><br><span class="line">    [&quot;@babel&#x2F;plugin-proposal-decorators&quot;, &#123; &quot;legacy&quot;: true &#125;]   </span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>函数方法使用高阶组件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import React, &#123;Component&#125; from &#39;react&#39;;</span><br><span class="line">import d from &#39;.&#x2F;D&#39;</span><br><span class="line"></span><br><span class="line">class B extends Component &#123;</span><br><span class="line">    render() &#123;</span><br><span class="line">        return (</span><br><span class="line">            &lt;div&gt;</span><br><span class="line">                this is b</span><br><span class="line">            &lt;&#x2F;div&gt;</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">export default d(B);</span><br></pre></td></tr></table></figure>      
-
-
-<p>使用装饰器使用高阶组件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">import React, &#123;Component&#125; from &#39;react&#39;;</span><br><span class="line">import d from &#39;.&#x2F;D&#39;;</span><br><span class="line"></span><br><span class="line">@d</span><br><span class="line">class C extends Component &#123;</span><br><span class="line">    render() &#123;</span><br><span class="line">        return (</span><br><span class="line">            &lt;div&gt;</span><br><span class="line">                this is C component</span><br><span class="line">            &lt;&#x2F;div&gt;</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">export default C;</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="高阶组件的应用"><a href="#高阶组件的应用" class="headerlink" title="高阶组件的应用"></a>高阶组件的应用</h4><h5 id="代理方式的高阶组件"><a href="#代理方式的高阶组件" class="headerlink" title="代理方式的高阶组件"></a>代理方式的高阶组件</h5><p>返回的新组件类直接继承React.Component类，新组件扮演的角色传入参数组件的一个代理，在新组件的render函数中，将被包裹组件渲染出来，除了高阶组件自己要做的工作，其余功能全都转手给了被包裹的组件。     </p>
-<h5 id="继承方式的高阶组件"><a href="#继承方式的高阶组件" class="headerlink" title="继承方式的高阶组件"></a>继承方式的高阶组件</h5><p>采用继承关联作为参数的组件和返回的组件，假如传入的组件参数是WrappedComponent，那么返回的组件就直接继承自WrappedComponent</p>
-<h4 id="代理方式的高阶组件-1"><a href="#代理方式的高阶组件-1" class="headerlink" title="代理方式的高阶组件"></a>代理方式的高阶组件</h4><ul>
-<li>操纵prop</li>
-<li>访问ref</li>
-<li>抽取状态</li>
-<li>包装组件</li>
-</ul>
-<h5 id="代理方式的高阶组件-2"><a href="#代理方式的高阶组件-2" class="headerlink" title="代理方式的高阶组件"></a>代理方式的高阶组件</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">export default () &#x3D;&gt; WrappedComponent &#x3D;&gt; class A extends Component &#123;</span><br><span class="line">	render() &#123;</span><br><span class="line">		const &#123; ...otherProps &#125; &#x3D; this.props;</span><br><span class="line">		return &lt;WrappedComponent &#123;...otherProps&#125; &#x2F;&gt;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="继承方式的高阶组件-1"><a href="#继承方式的高阶组件-1" class="headerlink" title="继承方式的高阶组件"></a>继承方式的高阶组件</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">export default () &#x3D;&gt; WrappedComponent &#x3D;&gt; class A extends WrappedComponent &#123;</span><br><span class="line">	render() &#123;</span><br><span class="line">		const &#123;user, ...otherProps &#125; &#x3D; this.props;</span><br><span class="line">		this.props &#x3D; otherProps;</span><br><span class="line">		return super.render()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="高阶组件显示名"><a href="#高阶组件显示名" class="headerlink" title="高阶组件显示名"></a>高阶组件显示名</h5><p>getDisplayName       </p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/" class="post-title-link" itemprop="url">资源管理器YARN</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-03-16 21:16:52" itemprop="dateCreated datePublished" datetime="2019-03-16T21:16:52+08:00">2019-03-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-09 18:22:36" itemprop="dateModified" datetime="2021-04-09T18:22:36+08:00">2021-04-09</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="YARN概述"><a href="#YARN概述" class="headerlink" title="YARN概述"></a>YARN概述</h4><p>Apache Hadoop YARN (Yet Another Resource Negotiator，另 一种资源协调者)是一种新的Hadoop资源管理器，是一个通用资源管理系统，可为上层应用提供统一的资源管理和调度，它的引入为集群在利用率、资源统一管理和数据共享等方面带来了巨大好处。</p>
-<p>YARN 是随着Hadoop发展而催生的新框架，取代了以前Hadoop1.x中 JobTracker的角色，因为以前JobTracker的任务过重，负责任务的调度、跟踪和失败重启等过程，而且只能运行MapReduce作业，不支持其他编程模式，这也限制了JobTracker的使用范围，于是YARN应运而生。</p>
-<h4 id="YARN架构"><a href="#YARN架构" class="headerlink" title="YARN架构"></a>YARN架构</h4><p>YARN由Client、ResourceManager、NodeManager、ApplicationMaster组成；YARN也是采用Master/Slave结构，一个ResourceManager对应多个NodeManager。</p>
-<p><img src="/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E6%9E%B6%E6%9E%84.png" alt="YARN架构"></p>
-<p>Client向ResourceManager提交任务、终止任务等。</p>
-<p>ApplicationMaster由对应的应用程序完成；每个应用程序对应一个 Application­ Master, ApplicationMaster向ResourceManager 申请资源用于在NodeManager上启动相应的任务。</p>
-<p>NodeManager向ResourceManager通过心跳信息，汇报NodeManager健康状况、任务执行状况、领取任务等。</p>
-<p>MapTask对应的是MapReduce作业启动时产生的Map任务，MPI Task是 MPI框架(MPI是消息传递接口，可以理解为更原生的一种分布式模型)对应的执行任务。</p>
-<h4 id="YARN核心组件功能"><a href="#YARN核心组件功能" class="headerlink" title="YARN核心组件功能"></a>YARN核心组件功能</h4><ol>
-<li>ResourceManager<br> 整个集群只有一个，负责集群资源的统一管理和调度。<ul>
-<li>处理来自客户端的请求(启动/终止应用程序〉。</li>
-<li>启动/监控 ApplicationMaster; 一旦某个 AM 挂了之后，RM 将会在另外一个节点上启动该 AM。</li>
-<li>监控 NodeManager，接收 NodeManager 的心跳汇报信息并分配任务到NodeManager去执行; 一旦某个 NM 挂了，标志下该 NM 上的任务，来告诉对应的 AM 如何处理。</li>
-<li>负责整个集群的资源分配和调度。</li>
-</ul>
-</li>
-<li>NodeManager<br> 整个集群中有多个，负责单节点资源管理和使用。      <ul>
-<li>周期性向 ResourceManager汇报本节点上的资源使用情况和各个 Container的运行状态。</li>
-<li>接收井处理来自 ResourceManager 的 Container 启动/停止的各种命令。</li>
-<li>处理来自 ApplicationMaster 的命令。</li>
-<li>负责单个节点上的资源管理和任务调度 。</li>
-</ul>
-</li>
-<li>ApplicationMaster<br> 每个应用一个，负责应用程序的管理。<ul>
-<li>数据切分。</li>
-<li>为应用程序/作业向 ResourceManager 申请资源(Container)，并分配给内部任务 </li>
-<li>与 NodeManager通信以启动/停止任务。</li>
-<li>任务监控和容错(在任务执行失败时重新为该任务申请资源以重启任务)。</li>
-<li>处理ResourceManager发过来的命令:终止 Container、让 NodeManager重启等。</li>
-</ul>
-</li>
-<li>Container<br> 对任务运行环境的抽象。<ul>
-<li>任务运行资源(节点、内存、 CPU)。</li>
-<li>任务启动命令。</li>
-<li>任务运行环境。</li>
-<li>任务是运行在 Container 中， 一个 Container 中既可以运行 ApplicationMaster,也可以运行具体的Map/Reduce/MPl/SparkTask。</li>
-</ul>
-</li>
-</ol>
-<h3 id="YARN运行机制"><a href="#YARN运行机制" class="headerlink" title="YARN运行机制"></a>YARN运行机制</h3><h4 id="YARN工作原理"><a href="#YARN工作原理" class="headerlink" title="YARN工作原理"></a>YARN工作原理</h4><p><img src="/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png" alt="YARN工作原理"></p>
-<p>执行步骤：</p>
-<ol>
-<li>用户向 Y础N 中提交应用程序/作业，其中包括 ApplicationMaster程序、启动 ApplicationMaster的命令、用户程序等 。</li>
-<li>ResourceManager为作业分配第一个Container，并与对应的 NodeMaoager通信，要求它在这个Container中启动该作业的 ApplicationMaster。</li>
-<li>ApplicationMaster首先向 ResourceManager注册，这样用户可以直接通过 ResourceManager 查询作业的运行状态；然后它将为各个任务申请资源并监控任务的运行状态，直到运行结束。即重复步骤(7)。</li>
-<li>ApplicationMaster采用轮询的方式通过 RPC 请求向 ResourceManager申请和获取资源。</li>
-<li>一旦 ApplicationMaster 申请到资源后，便与对应的 NodeManager通信，要求它启动任务。</li>
-<li>NodeManager启动任务。</li>
-<li>各个任务通过 RPC 协议向 ApplicationMaster 汇报自己的状态和进度，以便 ApplicaitonMaster 随时掌握各个任务的运行状态，从而可以在任务失败时重新启动任务;在作业运行过程中，用户可随时通过 RPC 向 AppIicationMaster查询作业当前运行状态；</li>
-<li>作业完成后，ApplicationMaster 向 ResourceManager注销并关闭自己。</li>
-</ol>
-<h4 id="YARN容错性"><a href="#YARN容错性" class="headerlink" title="YARN容错性"></a>YARN容错性</h4><ol>
-<li>ResourceMananger: 基于ZooKeeper实现HA(High Available:高可用)避免单点故障。</li>
-<li>NodeManager: 执行失败后，ResourceManager将失败任务告诉对应的ApplicationMaster，由Applicatio出faster决定如何处理失败的任务。</li>
-<li>ApplicationMaster: 执行失败后，由 ResourceManager 负责重启；ApplicationMaster需处理内部任务的容错问题，会保存己经运行完成的Task，重启后无需重新运行。</li>
-</ol>
-<h4 id="YARN设计目标"><a href="#YARN设计目标" class="headerlink" title="YARN设计目标"></a>YARN设计目标</h4><p>通用的统一的资源管理系统:</p>
-<ol>
-<li>同时运行长应用程序(永不停止的程序: Service、 HTTP Server)</li>
-<li>短应用程序(秒、分、小时级内运行结束的程序: MR job、Spark job等)  </li>
-<li>打造以YARN为核心的生态系统</li>
-</ol>
-<p>YARN核心的生态系统<br><img src="/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E6%A0%B8%E5%BF%83%E7%9A%84%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F.png" alt="YARN核心的生态系统"><br>图中的 HDFS2 值的是在基于HDFS之上的HA和Federation等新特性。</p>
-<p>在引入YARN之后，可以在YARN上运行各种不同框架的作业:</p>
-<ul>
-<li>离线计算框架: MapReduce</li>
-<li>DAG计算框架: Tez</li>
-<li>流式计算框架: Storm</li>
-<li>内存计算框架: Spark</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/" class="post-title-link" itemprop="url">分布式文件系统HDFS </a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-03-13 20:03:39" itemprop="dateCreated datePublished" datetime="2019-03-13T20:03:39+08:00">2019-03-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-06-14 16:30:50" itemprop="dateModified" datetime="2019-06-14T16:30:50+08:00">2019-06-14</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="HDFS简介"><a href="#HDFS简介" class="headerlink" title="HDFS简介"></a>HDFS简介</h3><p>HDFS（Hadoop Distributed File System）是Hadoop项目的核心子项目，用于分布式计算中的数据存储。HDFS可以运行在廉价的服务器上，为存储海量数据提供了高容错、高可靠性、高可扩展性、高获得性、高吞吐率等特征。         </p>
-<h4 id="HDFS的优点"><a href="#HDFS的优点" class="headerlink" title="HDFS的优点"></a>HDFS的优点</h4><ol>
-<li>处理超大文件。指MB到TB级别的数据文件</li>
-<li>运行于廉价机器上。</li>
-<li>流式地访问数据。HDFS提供一次写入，多次读取得服务。比如在HDFS上存储了一个要处理的问题，后续可能会有多个作业都会使用到这份数据，那么只需要通过集群来读取前面已经存储好的数据即可。</li>
-</ol>
-<h4 id="HDFS的缺点"><a href="#HDFS的缺点" class="headerlink" title="HDFS的缺点"></a>HDFS的缺点</h4><ol>
-<li>不适合低延迟数据访问</li>
-<li>无法高效存储大量小文件</li>
-</ol>
-<h3 id="HDFS基本概念"><a href="#HDFS基本概念" class="headerlink" title="HDFS基本概念"></a>HDFS基本概念</h3><h4 id="数据块-Block"><a href="#数据块-Block" class="headerlink" title="数据块(Block)"></a>数据块(Block)</h4><p>HDFS默认的最基本的存储单位是数据块(Block)，默认的块大小(Block Size)是64M(有些发布版本是128M)。HDFS中文件被分割成以Block Size为大小的数据块存储的。HDFS中，如果一个文件小于一个数据块的大小，并不占用整个数据块存储空间，文件大小是多大就占用多少存储空间。</p>
-<h4 id="元数据节点-NameNode"><a href="#元数据节点-NameNode" class="headerlink" title="元数据节点(NameNode)"></a>元数据节点(NameNode)</h4><p>NameNode的职责是管理文件系统的命名空间，它将所有的文件和文件夹的元数据保存在一个文件系统树中，至于一个文件包括哪些数据块，分布在哪些数据节点上，这些信息都存储下来。<br>NameNode目录结构如下所示：<br><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/nameNode.png" alt="NameNode目录结构"></p>
-<p>目录结构描述：   </p>
-<ol>
-<li>VERSION文件是存放版本的文件，保存了HDFS的版本号。</li>
-<li>edits: 当文件系统客户端进行写操作时，首先把它记录在修改日志中，元数据节点在内存中保存了文件系统的元数据信息。在记录了修改日志后，元数据节点则修改内存中的数据结构。每次的写操作成功之前，修改日志都会同步到文件系统。</li>
-<li>fsimage文件即命名空间文件。</li>
-</ol>
-<h4 id="数据节点-DataNode"><a href="#数据节点-DataNode" class="headerlink" title="数据节点(DataNode)"></a>数据节点(DataNode)</h4><p>DataNode是文件系统中真正存储数据的地方，一个文件被拆分成多个Block后，会将这些Block存储在对应的数据节点上。客户端向NameNode发起请求后到对应的数据节点上写入或读取对应的数据Block。</p>
-<p>DataNode目录结构：<br><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/dataNode.png" alt="DataNode目录结构"></p>
-<p>目录结构描述：</p>
-<ol>
-<li>blk_<id>保存的是HDFS的数据块，其中保存了具体的二进制数据。</id></li>
-<li>blk_<id>.meta保存的是数据块的属性信息：版本信息、类型信息和校验和。</id></li>
-<li>subdirxx 当一个目录中的数据块达到一定数量的时候，则创建子文件夹来保存数据块及数据块属性信息。</li>
-</ol>
-<h4 id="从元数据节点-Secondary-NameNode"><a href="#从元数据节点-Secondary-NameNode" class="headerlink" title="从元数据节点(Secondary NameNode)"></a>从元数据节点(Secondary NameNode)</h4><p>从元数据节点并不是NameNode节点出现问题时的备用节点，它和元数据节点负责不同的功能。其主要功能就是周期性将NameNode的namespace image和edit log合并，以防日志文件过大。合并过后的namespace image也在元数据节点保存了一份，以防在NameNode失败的时候进行恢复。        </p>
-<p>Secondary NameNode目录结构：<br><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/secondaryNameNode.png" alt="Secondary DataNode目录结构"></p>
-<p>Secondary NameNode用来帮助NameNode将内存中的元数据信息checkpoint到硬盘上。</p>
-<h4 id="HDFS体系结构"><a href="#HDFS体系结构" class="headerlink" title="HDFS体系结构"></a>HDFS体系结构</h4><h5 id="体系架构概述"><a href="#体系架构概述" class="headerlink" title="体系架构概述"></a>体系架构概述</h5><p>HDFS采用master/slave的架构。一个HDFS集群是由一个NameNode和一定数量的DataNode组成。NameNode是一个中心服务器，负责管理文件系统的名字空间（namespace）以及客户端文件的访问。集群中的DataNode一般是一个节点对应一个，负责管理它所在节点上的存储数据。从内容上看，一个文件系统其实被分成一个或多个数据块，这些数据块存储在一组DataNode上。NameNode执行文件系统的名字空间操作，比如打开、关闭、重命名文件或目录，它也负责确定数据块到具体DataNode节点的映射。DataNode负责处理文件系统客户端的读写请求。在NameNode的统一调度下进行数据块的创建、删除和复制。</p>
-<p><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/HDFS%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84.png" alt="HDFS体系结构"></p>
-<h5 id="架构组件功能"><a href="#架构组件功能" class="headerlink" title="架构组件功能"></a>架构组件功能</h5><p>NameNode和DataNode被设计成可以在普通的商用机器上运行。任何支持Java的机器都可以部署NameNode或DataNode。一个典型的部署场景是一台机器上运行一个NameNode实例，而集群中的其他机器分别运行一个DataNode实例。这种架构并不排斥在一台机器上运行多个DataNode，只不过这样的情况比较少。</p>
-<p>文件系统的名字空间（namespace）：HDFS支持传统的层次型文件组织结构。用户或者应用程序可以创建目录，然后将文件保存在这些目录里。文件系统名字空间的层次结构和大多数现有文件系统类似，用户可以创建、删除、移动或重命名文件。当前，HDFS不支持用户磁盘配额和访问权限控制，也不支持硬链接和软链接。但是HDFS架构并不妨碍实现这些特性。</p>
-<p>NameNode负责维护文件系统的名字空间，任何对文件系统名字空间或属性的修改都将被NameNode记录下来。应用程序可以设置HDFS保存的文件的副本数目，文件副本数目称为文件的副本系数，这个信息也是由NameNode保存的。</p>
-<h3 id="HDFS操作"><a href="#HDFS操作" class="headerlink" title="HDFS操作"></a>HDFS操作</h3><h4 id="HDFS-shell"><a href="#HDFS-shell" class="headerlink" title="HDFS shell"></a>HDFS shell</h4><p>HDFS基本命令格式</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bin&#x2F;hdfs dfs -cmd &lt;args&gt;</span><br><span class="line">cmd就是具体的命令</span><br></pre></td></tr></table></figure>
-<h5 id="列出文件目录"><a href="#列出文件目录" class="headerlink" title="列出文件目录"></a>列出文件目录</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -ls &#x2F;</span><br></pre></td></tr></table></figure>
-
-<p>递归查看文件，使用-ls -R命令，即该命令不仅会打印出目录下的文件，还会打印出其子目录和子目录的文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -ls -R &#x2F;data</span><br></pre></td></tr></table></figure>
-
-<h5 id="在HDFS中创建文件夹"><a href="#在HDFS中创建文件夹" class="headerlink" title="在HDFS中创建文件夹"></a>在HDFS中创建文件夹</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -mkdir 文件夹名称</span><br></pre></td></tr></table></figure>
-
-<p>创建级联文件夹</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -p &#x2F;data&#x2F;mr&#x2F;input</span><br></pre></td></tr></table></figure>
-
-<p>查看文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -ls &#x2F;data</span><br></pre></td></tr></table></figure>
-
-<h5 id="上传文件至HDFS"><a href="#上传文件至HDFS" class="headerlink" title="上传文件至HDFS"></a>上传文件至HDFS</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -put 源路径 目标存放路径</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -put &#x2F;home&#x2F;hadoop&#x2F;input.txt &#x2F;data</span><br></pre></td></tr></table></figure>
-
-<h5 id="从HDFS上下载文件"><a href="#从HDFS上下载文件" class="headerlink" title="从HDFS上下载文件"></a>从HDFS上下载文件</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -get HDFS上的文件 本地存放路径</span><br></pre></td></tr></table></figure>
-
-<h5 id="查看HDFS上某个文件的内容"><a href="#查看HDFS上某个文件的内容" class="headerlink" title="查看HDFS上某个文件的内容"></a>查看HDFS上某个文件的内容</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -text(cat) HDFS上存放的文件</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -text &#x2F;data&#x2F;input.txt</span><br><span class="line">hdfs dfs -cat &#x2F;data&#x2F;input.txt</span><br></pre></td></tr></table></figure>
-
-<h5 id="统计目录下各文件的大小"><a href="#统计目录下各文件的大小" class="headerlink" title="统计目录下各文件的大小"></a>统计目录下各文件的大小</h5><p>统计目录下文件大小的单位是字节</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -du 目录路径</span><br></pre></td></tr></table></figure>
-
-<h5 id="删除HDFS上的某个文件或文件夹"><a href="#删除HDFS上的某个文件或文件夹" class="headerlink" title="删除HDFS上的某个文件或文件夹"></a>删除HDFS上的某个文件或文件夹</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -rm(r) 文件存放路径</span><br></pre></td></tr></table></figure>
-
-<h5 id="使用help命令寻求帮助"><a href="#使用help命令寻求帮助" class="headerlink" title="使用help命令寻求帮助"></a>使用help命令寻求帮助</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -help 命令</span><br></pre></td></tr></table></figure>
-
-<h3 id="HDFS运行机制"><a href="#HDFS运行机制" class="headerlink" title="HDFS运行机制"></a>HDFS运行机制</h3><h4 id="HDFS文件读写流程"><a href="#HDFS文件读写流程" class="headerlink" title="HDFS文件读写流程"></a>HDFS文件读写流程</h4><h5 id="HDFS文件读流程"><a href="#HDFS文件读流程" class="headerlink" title="HDFS文件读流程"></a>HDFS文件读流程</h5><p>客户端读取数据过程：</p>
-<ol>
-<li>客户端通过调用FileSystem的open方法获取所需要读取的数据文件，对于HDFS来说该FileSystem就是DistributeFileSystem</li>
-<li>DistributeFileSystem通过RPC来调用NameNode，获取到要读取的数据文件对应的Block存储在哪些DataNode上</li>
-<li>客户端调用DFSInputStream的read方法，先到最佳位置（距离最近）的DataNode，通过对数据反复调用read方法，可以将数据从DataNode传递到客户端</li>
-<li>当读取完所有的数据之后，DFSInputStream会关闭与DataNode的连接，然后寻找下一块的最佳位置，客户端只需要读取连续的流。</li>
-<li>一旦客户端完成读取操作后，就对DFSInputStream调用close方法来完成资源的关闭操作。</li>
-</ol>
-<p><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/HDFS%E8%AF%BB%E6%B5%81%E7%A8%8B.png" alt="HDFS读取数据过程"></p>
-<h5 id="HDFS文件写流程"><a href="#HDFS文件写流程" class="headerlink" title="HDFS文件写流程"></a>HDFS文件写流程</h5><p>客户端写数据的流程：</p>
-<ol>
-<li>客户端通过调用DistributeFileSystem的create方法来创建一个文件。</li>
-<li>DistributeFileSystem会对NameNode发起RPC请求，在文件系统的命令空间中创建一个新的文件，此时会进行各种检查，比如我们要创建的文件是否已经存在。如果该文件不存在，NameNode就会为该文件创建一条元数据记录。</li>
-<li>客户端调用FSDataOutputStream的write方法将数据写到一个内部队列中。假设副本系数为3，那么将队列中的数据写到各个副本对应存储的DataNode上。</li>
-<li>FSDataOutputStream内部维护着一个确认队列，当接收到所有DataNode确认写完的消息后，该数据才会从确认队列中删除。</li>
-<li>当客户端完成数据的写入后，会对数据流调用close方法来关闭相关资源</li>
-</ol>
-<p><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/HDFS%E5%86%99%E6%B5%81%E7%A8%8B.png" alt="HDFS写数据过程"></p>
-<h4 id="HDFS副本机制"><a href="#HDFS副本机制" class="headerlink" title="HDFS副本机制"></a>HDFS副本机制</h4><p>HDFS上的文件对应的Block保存多个副本，且提供容错机制，副本丢失或宕机自动恢复。默认3份副本。</p>
-<h5 id="副本摆放策略"><a href="#副本摆放策略" class="headerlink" title="副本摆放策略"></a>副本摆放策略</h5><ol>
-<li>第一副本：放置在上传文件的DataNode上；如果是集群外提交，则随机挑选一台磁盘不太慢、CPU不太忙的节点</li>
-<li>第二副本：放置在与第一个副本不同的机架的节点上</li>
-<li>第三副本：与第二个副本相同机架的不同节点上</li>
-<li>如果还有更多的副本，随机放在节点中。</li>
-</ol>
-<h5 id="副本系数"><a href="#副本系数" class="headerlink" title="副本系数"></a>副本系数</h5><p>对于上传文件到HDFS时，当时Hadoop的副本系数是几，那么这个文件的块副本数就有几份，无论以后怎么更改系统副本系数，这个文件的副本系数都不会改变。</p>
-<h4 id="数据负载均衡"><a href="#数据负载均衡" class="headerlink" title="数据负载均衡"></a>数据负载均衡</h4><p>HDFS的架构支持数据均衡策略。如果某个DataNode节点上的空闲空间低于特定的临界点，按照均衡策略系统就会自动地将数据从这个DataNode移动到其他空闲的DataNode。当对某个文件的请求突然增加，那么也可能启动一个计划创建该文件新的副本，井且同时重新平衡集群中的其他数据。当 HDFS负载不均衡时，需要对HDFS进行数据的负载均衡调整，即对各节点机器上数据的存储分布进行调整，从而让数据均匀的分布在各个DataNode上，以均衡IO性能、平衡IO、平均数据、平衡集群，防止热点的发生。</p>
-<p>在Hadoop中，包含一个start-balancer.sh脚本，通过运行这个工具，启动HDFS数据均衡服务。$HADOOP_HOME/bin目录下的start-balancer.sh 脚本就是该任务的启动脚本。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;bin&#x2F;start-balancer.sh -threshold</span><br></pre></td></tr></table></figure>
-
-<p>影响 Balancer 的几个参数:</p>
-<ol>
-<li>-threshold<br>默认设置: 10，参数取值范围: 0-100<br>参数含义:判断集群是否平衡的阑值。理论上，该参数值越小整个集群就越平衡</li>
-<li>dfs.balance.bandwidthPerSec<br>默认设置: 1048576 ClM/S)<br>参数含义: Balancer 运行时允许占用的带宽</li>
-</ol>
-<h4 id="机架感知"><a href="#机架感知" class="headerlink" title="机架感知"></a>机架感知</h4><p>通常大型Hadoop集群是以机架的形式来组织的，同一个机架上的不同节点间的网络状况比不同机架之间的更为理想，NameNode设法将数据块副本保存在不同的机架上以提高容错性。</p>
-<p>HDFS不能够自动判断集群中各个DataNode的网络拓扑情况，Hadoop允许集群的管理员通过配置dfs.network.script参数来确定节点所处的机架，配置文件提供了ip到rackid的翻译。NameNode通过这个配置知道集群中各个DataNode机器的rack.id。如果topology.script.file.name没有设定，则每个ip都会被翻译成/default-rack。 </p>
-<p><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/%E6%9C%BA%E6%9E%B6%E6%84%9F%E7%9F%A5.png" alt="机架感知"></p>
-<p>说明:</p>
-<ol>
-<li>当没有配置机架信息时，所有的机器Hadoop都在同一个默认的机架下， 名为“/default-rack”，这种情况的任何一台DataNode机器，不管物理上是否属于同一个机架，都会被认为是在同一个机架下。</li>
-<li>一旦配置topology.script.file.name，就按照网络拓扑结构来寻找DataNode; topology.script.file.name这个配置选项的value指定为一个可执行程序，通常为一个脚本。</li>
-</ol>
-<h4 id="Hadoop序列化"><a href="#Hadoop序列化" class="headerlink" title="Hadoop序列化"></a>Hadoop序列化</h4><h5 id="什么是序列化和反序列化"><a href="#什么是序列化和反序列化" class="headerlink" title="什么是序列化和反序列化"></a>什么是序列化和反序列化</h5><p>序列化: 将对象转化为字节流，以便在网络上传输或者写在磁盘上进行永久存储。<br>反序列化:将字节流转回成对象。<br>序列化在分布式数据处理的两个领域经常出现:进程间通信和永久存储。<br>Hadoop中多个节点进程间通信通过远程过程调用( Remote Procedure Call,<br>RPC)实现</p>
-<h5 id="Hadoop的序列化"><a href="#Hadoop的序列化" class="headerlink" title="Hadoop的序列化"></a>Hadoop的序列化</h5><p>Hadoop的序列化不采用Java的序列化，而是实现了自己的序列化机制。在 Hadoop的序列化机制中，用户可以复用对象，这就减少了Java对象的分配和回收，提高了应用效率。<br>Hadoop通过Writable接口实现序列化机制，但没有提供比较功能，所以和 Java中的Comparable接口合并，提供一个接口WritableComparable。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public interface Writable &#123;</span><br><span class="line">	void write(DataOutputout)throwsIOException; &#x2F;&#x2F;状态写入到DataOutput二进制流 </span><br><span class="line">	void readFields(Datainput in) throws IOException; &#x2F;&#x2F;从 Datainput二进制流中读取状态</span><br><span class="line">&#125;</span><br><span class="line">public interface WritableComparable&lt;T&gt; extends Writable, Comparable&lt;T&gt; &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="基于文件的数据结构SequenceFile"><a href="#基于文件的数据结构SequenceFile" class="headerlink" title="基于文件的数据结构SequenceFile"></a>基于文件的数据结构SequenceFile</h4><h5 id="SequenceFile概述"><a href="#SequenceFile概述" class="headerlink" title="SequenceFile概述"></a>SequenceFile概述</h5><p>SequenceFile是Hadoop提供的一种对二进制文件的支持。二进制文件直接将&lt;Key, Value&gt;对序列化到文件中。 HDFS文件系统是适合存储大文件的，很小的文件如果很多的话对于NameNode的压力会非常大，因为每个文件都会有一条元数据信息存储在NameNode上，当小文件非常多也就意味着在NameNode上存储的元数据信息就非常多。Hadoop是适合存储大数据的，所以我们可以通过SequenceFile将小文件合并起来，可以获得更高效率的存储和计算。SequenceFile中的key和value可以是任意类型的 Writable 或者自定义Writable类型。</p>
-<p>注意:<br>对于一定大小的数据，比如说IOOGB，如果采用SequenceFile进行存储的话占用的空间是大于lOOGB的，因为SequenceFile的存储中为了查找方便添加了一些额外的信息。</p>
-<h5 id="SequenceFile特点"><a href="#SequenceFile特点" class="headerlink" title="SequenceFile特点"></a>SequenceFile特点</h5><ol>
-<li><p>支持压缩:可定制为基于Record(记录)和Block(块)压缩。无压缩类型:如果没有启动压缩(默认设置，那么每个记录就由它的记录长度(字节数)、键的长度，键和值组成，长度字段为4字节。</p>
-<p> <img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/SequenceFile%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png" alt="SequenceFile 内部结构"><br> Record针对行压缩，只压缩Value部分不压缩Key; Block对Key和Value都压缩。 </p>
-</li>
-<li><p>本地化任务支持: 因为文件可以被切分，因此在运行MapReduce任务时数据的本地化情况应该是非常好的； 尽可能多地发起Map Task来进行并行处理进而提高作业的执行效率。</p>
-</li>
-<li><p>难度低:因为是Hadoop框架提供的API，业务逻辑侧的修改比较简单。</p>
-</li>
-</ol>
-<h5 id="SequenceFile-写操作"><a href="#SequenceFile-写操作" class="headerlink" title="SequenceFile 写操作"></a>SequenceFile 写操作</h5><p>实现步骤:</p>
-<ol>
-<li>设置 Configuration</li>
-<li>获取 FileSystem</li>
-<li>设置文件输出路径</li>
-<li>SequenceFile.createWriter()创建 SequenceFile.Write写入 </li>
-<li>调用 SequenceFile.Write.append追加写入</li>
-<li>关闭流   </li>
-</ol>
-<h5 id="SequenceFile-读操作"><a href="#SequenceFile-读操作" class="headerlink" title="SequenceFile 读操作"></a>SequenceFile 读操作</h5><p>实现步骤:</p>
-<ol>
-<li>设置 Configuration</li>
-<li>获取 FileSystem</li>
-<li>设置文件输出路径</li>
-<li>调用 SequenceFile.Reader()创建读取类 SequenceFile.Reader </li>
-<li>拿到 key 和 value 的 class</li>
-<li>读取</li>
-<li>关闭流 </li>
-</ol>
-<h5 id="SequenceFile-写操作使用压缩"><a href="#SequenceFile-写操作使用压缩" class="headerlink" title="SequenceFile 写操作使用压缩"></a>SequenceFile 写操作使用压缩</h5><p>SequenceFile写操作的压缩支持Record和Block两种，在读取时能够自动解压。</p>
-<h4 id="基于文件的数据结构-MapFile"><a href="#基于文件的数据结构-MapFile" class="headerlink" title="基于文件的数据结构 MapFile"></a>基于文件的数据结构 MapFile</h4><h5 id="MapFile概述"><a href="#MapFile概述" class="headerlink" title="MapFile概述"></a>MapFile概述</h5><p>M叩File是排序过后的SequenceFile，由两部分构成，分别是data和 index。index作为文件的数据索引，主要记录了每个Record的key值，以 及该Record在文件中的偏移位置。在M叩File被访问的时候，索引文件会先被加载到内存，通过index映射关系可迅速定位到指定Record所在文件位置，因此，相对SequenceFile而言，MapFile的检索效率更高，缺点是会消耗一部分内存来存储index数据。</p>
-<h5 id="MapFile写操作"><a href="#MapFile写操作" class="headerlink" title="MapFile写操作"></a>MapFile写操作</h5><p>实现步骤 :</p>
-<ol>
-<li>设置 Configuration</li>
-<li>获取 FileSystem</li>
-<li>设置文件输出路径</li>
-<li>MapFile.Writer()创建 MapFile.Write写入 </li>
-<li>调用MapFile.Write.append追加写入 </li>
-<li>关闭流</li>
-</ol>
-<h5 id="MapFile读操作"><a href="#MapFile读操作" class="headerlink" title="MapFile读操作"></a>MapFile读操作</h5><p>实现步骤 :</p>
-<ol>
-<li>设置 Configuration</li>
-<li>获取 FileSystem</li>
-<li>设置文件输出路径</li>
-<li>MapFile. Reader()创建MapFile.Reader写入 </li>
-<li>拿到 Key 与 Value 的 class</li>
-<li>读取</li>
-<li>关闭流</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1336,14 +1221,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1375,7 +1260,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
