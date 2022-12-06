@@ -151,6 +151,99 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/04/15/Android-Jetpack%E4%B9%8BLiveData/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/15/Android-Jetpack%E4%B9%8BLiveData/" class="post-title-link" itemprop="url">Android Jetpack之LiveData</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-04-15 09:31:20 / 修改时间：18:53:34" itemprop="dateCreated datePublished" datetime="2021-04-15T09:31:20+08:00">2021-04-15</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="LiveData介绍"><a href="#LiveData介绍" class="headerlink" title="LiveData介绍"></a>LiveData介绍</h4><h5 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h5><p>LiveData是一个重要组件，也是一个同名抽象类。</p>
+<blockquote>
+<p>LiveData是一种可观察的数据存储器类。与常规的可观察类不同，LiveData具有生命周期感知能力，意指它遵循其他应用组件（如Activity/Fragment）的生命周期。这种感知能力可确保LiveData仅更新处于活跃生命周期状态的应用组件观察者。</p>
+</blockquote>
+<p>解读：     </p>
+<ol>
+<li>LiveData是一个数据持有者，给源数据包装一层。</li>
+<li>源数据使用LiveData包装后，可以被observer观察，数据有更新时observer可感知。</li>
+<li>但observer的感知，只发生在（Activity/Fragment）活跃生命周期状态（STARTED、RESUMED）。</li>
+</ol>
+<p>也就是说，<strong>LiveData使得数据的更新能以观察者模式被observer感知，且此感知只发生在LifecycleOwner的活跃生命周期状态</strong>。</p>
+<h5 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h5><p>使用LiveData具有以下优势：</p>
+<ul>
+<li><strong>确保界面符合数据状态</strong>，当生命周期状态变化时，LiveData通知Observer，可以在observer中更新界面。观察者可以在生命周期状态更改时刷新界面，而不是在每次数据变化时刷新界面。</li>
+<li><strong>不会发生内存泄漏</strong>，observer会在LifecycleOwner状态变为DESTROYED后自动remove。</li>
+<li><strong>不会因Activity停止而导致崩溃</strong>，如果LifecycleOwner生命周期处于非活跃状态，则它不会接收任何LiveData事件。</li>
+<li><strong>不需要手动解除观察</strong>，开发者不需要在onPause或onDestroy方法中解除对LiveData的观察，因为LiveData能感知生命周期状态变化，所以会自动管理所有这些操作。</li>
+<li><strong>数据始终保持最新状态</strong>，数据更新时，若LifecycleOwner为非活跃状态，那么会在变为活跃时接收最新数据。例如，曾经在后台的Activity会在返回前台后，observer立即接收最新的数据。</li>
+</ul>
+<h4 id="LiveData的使用"><a href="#LiveData的使用" class="headerlink" title="LiveData的使用"></a>LiveData的使用</h4><h5 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h5><p>基本用法：</p>
+<ol>
+<li>创建LiveData实例，指定源数据类型。</li>
+<li>创建Observer实例，实现onChanged()方法，用于接收源数据变化并刷新UI。</li>
+<li>LiveData实例使用observe()方法添加观察者，并传入LifecycleOwner。</li>
+<li>LiveData实例使用setVale()/postVale()更新源数据（子线程要postValue()）。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LiveDataTestActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span></span>&#123;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">private</span> MutableLiveData&lt;String&gt; mLiveData;</span><br><span class="line">   </span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">       setContentView(R.layout.activity_lifecycle_test);</span><br><span class="line">       </span><br><span class="line">       <span class="comment">//liveData基本使用</span></span><br><span class="line">       mLiveData = <span class="keyword">new</span> MutableLiveData&lt;&gt;();</span><br><span class="line">       mLiveData.observe(<span class="keyword">this</span>, <span class="keyword">new</span> Observer&lt;String&gt;() &#123;</span><br><span class="line">           <span class="meta">@Override</span></span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onChanged</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">               Log.i(TAG, <span class="string">&quot;onChanged: &quot;</span>+s);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;);</span><br><span class="line">       Log.i(TAG, <span class="string">&quot;onCreate: &quot;</span>);</span><br><span class="line">       mLiveData.setValue(<span class="string">&quot;onCreate&quot;</span>);<span class="comment">//activity是非活跃状态，不会回调onChanged。变为活跃时，value被onStart中的value覆盖</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onStart</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onStart();</span><br><span class="line">       Log.i(TAG, <span class="string">&quot;onStart: &quot;</span>);</span><br><span class="line">       mLiveData.setValue(<span class="string">&quot;onStart&quot;</span>);<span class="comment">//活跃状态，会回调onChanged。并且value会覆盖onCreate、onStop中设置的value</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onResume</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onResume();</span><br><span class="line">       Log.i(TAG, <span class="string">&quot;onResume: &quot;</span>);</span><br><span class="line">       mLiveData.setValue(<span class="string">&quot;onResume&quot;</span>);<span class="comment">//活跃状态，回调onChanged</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPause</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onPause();</span><br><span class="line">       Log.i(TAG, <span class="string">&quot;onPause: &quot;</span>);</span><br><span class="line">       mLiveData.setValue(<span class="string">&quot;onPause&quot;</span>);<span class="comment">//活跃状态，回调onChanged</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onStop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onStop();</span><br><span class="line">       Log.i(TAG, <span class="string">&quot;onStop: &quot;</span>);</span><br><span class="line">       mLiveData.setValue(<span class="string">&quot;onStop&quot;</span>);<span class="comment">//非活跃状态，不会回调onChanged。后面变为活跃时，value被onStart中的value覆盖</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onDestroy();</span><br><span class="line">       Log.i(TAG, <span class="string">&quot;onDestroy: &quot;</span>);</span><br><span class="line">       mLiveData.setValue(<span class="string">&quot;onDestroy&quot;</span>);<span class="comment">//非活跃状态，且此时Observer已被移除，不会回调onChanged</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>注意到 LiveData实例mLiveData的创建是使用MutableLiveData，它是LiveData的实现类，且指定了源数据的类型为String。然后创建了接口Observer的实例，实现其onChanged()方法，用于接收源数据的变化。observer和Activity一起作为参数调用mLiveData的observe()方法，表示observer开始观察mLiveData。然后Activity的所有生命周期方法中都调用了mLiveData的setValue()方法。</p>
+<p>另外，除了使用observe()方法添加观察者，也可以使用<strong>observeForever</strong>(Observer) 方法来注册未关联 LifecycleOwner的观察者。在这种情况下，观察者会被视为始终处于活跃状态。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/04/14/Android-Jetpack%E4%B9%8BLifecycle/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1077,123 +1170,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/" class="post-title-link" itemprop="url">Spark入门(python)2 - Spark的安装与使用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-04-02 16:06:15" itemprop="dateCreated datePublished" datetime="2019-04-02T16:06:15+08:00">2019-04-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-06-04 16:27:16" itemprop="dateModified" datetime="2019-06-04T16:27:16+08:00">2019-06-04</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Spark的安装与使用"><a href="#Spark的安装与使用" class="headerlink" title="Spark的安装与使用"></a>Spark的安装与使用</h2><h3 id="Mac下安装Spark"><a href="#Mac下安装Spark" class="headerlink" title="Mac下安装Spark"></a>Mac下安装Spark</h3><h4 id="配置ssh"><a href="#配置ssh" class="headerlink" title="配置ssh"></a>配置ssh</h4><p>系统偏好设置-&gt;选择共享-&gt;勾选远程登录。<br>配置ssh，使<code>ssh localhost</code>不需要输入密码。       </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa    </span><br><span class="line">$ cat ~&#x2F;.ssh&#x2F;id_rsa.pub &gt;&gt; ~&#x2F;.ssh&#x2F;authorized_keys     </span><br><span class="line">$ ssh localhost</span><br></pre></td></tr></table></figure>
-
-<h4 id="安装scala"><a href="#安装scala" class="headerlink" title="安装scala"></a>安装scala</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install scala</span><br></pre></td></tr></table></figure>
-
-<h4 id="安装Spark"><a href="#安装Spark" class="headerlink" title="安装Spark"></a>安装Spark</h4><ol>
-<li><p>到<a target="_blank" rel="noopener" href="http://spark.apache.org/downloads.html">http://spark.apache.org/downloads.html</a>下载Spark<br><img src="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/%E4%B8%8B%E8%BD%BDSpark.png" alt="下载Spark"></p>
-</li>
-<li><p>解压到目录下</p>
-</li>
-<li><p>配置.zshrc或者.bashrc</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export SPARK_HOME&#x3D;&#x2F;Users&#x2F;xy&#x2F;Documents&#x2F;bigData&#x2F;spark-2.4.3-bin-hadoop2.7</span><br><span class="line">export PATH&#x3D;$&#123;PATH&#125;:$&#123;SPARK_HOME&#125;&#x2F;bin</span><br></pre></td></tr></table></figure></li>
-<li><p>到Spark解压路径下，执行<code>./sbin/start-all.sh</code>，在浏览器中访问<code>http://localhost:8080/</code>，看是否可以访问。<br><img src="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/Spark%E5%AE%89%E8%A3%85%E7%BB%93%E6%9E%9C.png" alt="Spark安装结果"></p>
-</li>
-<li><p>运行pyspark<br><img src="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/%E8%BF%90%E8%A1%8Cpyspark.png" alt="运行pyspark"></p>
-</li>
-</ol>
-<h3 id="在pyspark中运行代码-本地"><a href="#在pyspark中运行代码-本地" class="headerlink" title="在pyspark中运行代码(本地)"></a>在pyspark中运行代码(本地)</h3><p>pyspark命令及其常用的参数如下：       </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pyspark --master &lt;master-url&gt;</span><br></pre></td></tr></table></figure>
-<p>Spark的运行模式取决于传递给SparkContext的Master URL的值。Master URL可以是以下任一种形式：  </p>
-<ul>
-<li>local 使用一个Worker线程本地化运行SPARK(完全不并行)</li>
-<li>local[*] 使用逻辑CPU个数数量的线程来本地化运行Spark</li>
-<li>local[K] 使用K个Worker线程本地化运行Spark（理想情况下，K应该根据运行机器的CPU核数设定）</li>
-<li>spark://HOST:PORT 连接到指定的Spark standalone master。默认端口是7077.</li>
-<li>yarn-client 以客户端模式连接YARN集群。集群的位置可以在HADOOP_CONF_DIR 环境变量中找到。</li>
-<li>yarn-cluster 以集群模式连接YARN集群。集群的位置可以在HADOOP_CONF_DIR 环境变量中找到。</li>
-<li>mesos://HOST:PORT 连接到指定的Mesos集群。默认接口是5050。</li>
-</ul>
-<p>在Spark中采用本地模式启动pyspark的命令主要包含以下参数：</p>
-<ul>
-<li>–master：这个参数表示当前的pyspark要连接到哪个master，如果是local[*]，就是使用本地模式启动pyspark，其中，中括号内的星号表示需要使用几个CPU核心(core)；</li>
-<li>–jars： 这个参数用于把相关的JAR包添加到CLASSPATH中；如果有多个jar包，可以使用逗号分隔符连接它们；</li>
-</ul>
-<h4 id="Spark运行独立的python代码"><a href="#Spark运行独立的python代码" class="headerlink" title="Spark运行独立的python代码"></a>Spark运行独立的python代码</h4><ol>
-<li><p>使用virtualenv创立独立python环境</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">virtualent spark-py3 --python&#x3D;python3</span><br><span class="line">cd spark-py3</span><br><span class="line">source .&#x2F;bin&#x2F;activate</span><br><span class="line">pip install pyspark</span><br></pre></td></tr></table></figure></li>
-<li><p>在test.py中编写代码</p>
-</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">from pyspark import SparkContext</span><br><span class="line">sc &#x3D; SparkContext( &#39;local&#39;, &#39;test&#39;)</span><br><span class="line">logFile &#x3D; &quot;file:&#x2F;&#x2F;&#x2F;Users&#x2F;xy&#x2F;Documents&#x2F;bigData&#x2F;spark-2.4.3-bin-hadoop2.7&#x2F;README.md&quot;</span><br><span class="line">logData &#x3D; sc.textFile(logFile, 2).cache()</span><br><span class="line">numAs &#x3D; logData.filter(lambda line: &#39;a&#39; in line).count()</span><br><span class="line">numBs &#x3D; logData.filter(lambda line: &#39;b&#39; in line).count()</span><br><span class="line">print(&#39;Lines with a: %s, Lines with b: %s&#39; % (numAs, numBs))</span><br></pre></td></tr></table></figure>
-<ol start="3">
-<li>运行代码<code>python3 test.py</code></li>
-</ol>
-<p><img src="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/Spark%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81.png" alt="Spark测试代码"></p>
-<h2 id="Spark应用程序"><a href="#Spark应用程序" class="headerlink" title="Spark应用程序"></a>Spark应用程序</h2><h3 id="加载本地文件"><a href="#加载本地文件" class="headerlink" title="加载本地文件"></a>加载本地文件</h3><p>运行pyspark <code>pyspark --master local[4]</code>        </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from pyspark import SparkContext</span><br><span class="line">&gt;&gt;&gt; #排除异常</span><br><span class="line">&gt;&gt;&gt; try:</span><br><span class="line">...     sc.stop()</span><br><span class="line">... except:</span><br><span class="line">...     pass</span><br><span class="line">... </span><br><span class="line">&gt;&gt;&gt; sc &#x3D; SparkContext(&#39;local[2]&#39;,&#39;First Spark App&#39;)</span><br><span class="line">&gt;&gt;&gt; textFile &#x3D; sc.textFile(&#39;file:&#x2F;&#x2F;&#x2F;Users&#x2F;xy&#x2F;Documents&#x2F;develop&#x2F;study&#x2F;bigData&#x2F;spark-2.4.3-bin-hadoop2.7&#x2F;README.md&#39;)</span><br><span class="line">&gt;&gt;&gt; textFile.first()</span><br><span class="line">u&#39;# Apache Spark&#39;</span><br><span class="line">&gt;&gt;&gt; textFile.saveAsTextFile(&#39;file:&#x2F;&#x2F;&#x2F;Users&#x2F;xy&#x2F;Documents&#x2F;writeback&#39;)</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/%E8%AF%BB%E5%86%99%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6.png" alt="读写本地文件"></p>
-<p>运行结果<br><img src="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/%E8%AF%BB%E5%86%99%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%9C.png" alt="读写本地文件结果"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1265,14 +1241,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-count">48</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

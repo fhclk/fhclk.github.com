@@ -230,6 +230,142 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/02/06/Spark%E6%A0%B8%E5%BF%83%E7%BC%96%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/06/Spark%E6%A0%B8%E5%BF%83%E7%BC%96%E7%A8%8B/" class="post-title-link" itemprop="url">Spark核心编程</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-06 11:11:10" itemprop="dateCreated datePublished" datetime="2022-02-06T11:11:10+08:00">2022-02-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-12-06 14:16:16" itemprop="dateModified" datetime="2022-12-06T14:16:16+08:00">2022-12-06</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="RDD"><a href="#RDD" class="headerlink" title="RDD"></a>RDD</h1><h2 id="RDD-定义"><a href="#RDD-定义" class="headerlink" title="RDD 定义"></a>RDD 定义</h2><blockquote>
+<p>RDD(Resilient Distributed Dataset) 弹性分布式数据集，是Spark中最基本的数据抽象，代表一个不可变、可分区、里面的元素可以并行计算的集合</p>
+</blockquote>
+<ul>
+<li>Dataset：一个数据集合，用于存放数据的</li>
+<li>Distributed：分布式存储，可用于并行计算</li>
+<li>Resilient：可以存储在内存中或磁盘中</li>
+</ul>
+<h2 id="RDD五大特性"><a href="#RDD五大特性" class="headerlink" title="RDD五大特性"></a>RDD五大特性</h2><h3 id="RDD是有分区的"><a href="#RDD是有分区的" class="headerlink" title="RDD是有分区的"></a>RDD是有分区的</h3><p>RDD的分区是RDD数据存储的最小单位</p>
+<p>一份RDD的数据，本质上是分割成了多个分区</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>sc.parallelize([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>]).glom().collect()</span><br><span class="line">[[<span class="number">1</span>, <span class="number">2</span>], [<span class="number">3</span>, <span class="number">4</span>], [<span class="number">5</span>, <span class="number">6</span>], [<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>]]                                         </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sc.parallelize([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>], <span class="number">3</span>).glom().collect()</span><br><span class="line">[[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>], [<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>]]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span></span><br></pre></td></tr></table></figure>
+
+<h3 id="RDD的方法会作用在其所有分区上"><a href="#RDD的方法会作用在其所有分区上" class="headerlink" title="RDD的方法会作用在其所有分区上"></a>RDD的方法会作用在其所有分区上</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>sc.parallelize([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>], <span class="number">3</span>).glom().collect()</span><br><span class="line">[[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>], [<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>]]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sc.parallelize([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>], <span class="number">3</span>).<span class="built_in">map</span>(<span class="keyword">lambda</span> x: x * <span class="number">10</span>).glom().collect()</span><br><span class="line">[[<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>], [<span class="number">40</span>, <span class="number">50</span>, <span class="number">60</span>], [<span class="number">70</span>, <span class="number">80</span>, <span class="number">90</span>, <span class="number">100</span>]]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment">#RDD 3个分区，在执行了map操作，将数据都乘以10后，3个分区的数据都乘以10了</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="RDD之间是有依赖关系（RDD有血缘关系）"><a href="#RDD之间是有依赖关系（RDD有血缘关系）" class="headerlink" title="RDD之间是有依赖关系（RDD有血缘关系）"></a>RDD之间是有依赖关系（RDD有血缘关系）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">conf = SparkConf().setAppName(<span class="string">&quot;study_00&quot;</span>).setMaster(<span class="string">&quot;local[*]&quot;</span>)</span><br><span class="line">    sc = SparkContext(conf=conf)</span><br><span class="line"></span><br><span class="line">    rdd1 = sc.textFile(<span class="string">&quot;hdfs://node1:8020/input/words.txt&quot;</span>)</span><br><span class="line">    rdd2 = rdd1.flatMap(<span class="keyword">lambda</span> x: x.split(<span class="string">&quot; &quot;</span>))</span><br><span class="line">    rdd3 = rdd2.<span class="built_in">map</span>(<span class="keyword">lambda</span> x: (x, <span class="number">1</span>))</span><br><span class="line">    rdd4 = rdd3.reduceByKey(<span class="keyword">lambda</span> a, b: a + b)</span><br><span class="line"></span><br><span class="line">    print(rdd4.collect())</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#rdd2依赖rdd1，rdd3依赖rdd2，rdd4依赖rdd3</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Key-Value型的RDD可以有分区器（可能的）"><a href="#Key-Value型的RDD可以有分区器（可能的）" class="headerlink" title="Key-Value型的RDD可以有分区器（可能的）"></a>Key-Value型的RDD可以有分区器（可能的）</h3><p>默认分区器：Hash分区规则，可以手动设置一个分区器（rdd.partitionBy的方法来设置）</p>
+<p>这个特性是可能的，因为并不是所有的RDD都是Key-Value型</p>
+<p>Key-Value RDD：RDD中存储的是二元元组，这就是Key-Value型RDD</p>
+<p>二元元组：只有2个元素的元组，比如（’hadoop’, 1)</p>
+<h3 id="RDD的分区规划，会尽量靠近数据所在的服务器"><a href="#RDD的分区规划，会尽量靠近数据所在的服务器" class="headerlink" title="RDD的分区规划，会尽量靠近数据所在的服务器"></a>RDD的分区规划，会尽量靠近数据所在的服务器</h3><p>在初始RDD（读取数据的时候）规划的时候，分区会尽量规划到存储数据所在的服务器上。这样可以走本地读取，避免网络读取。</p>
+<p>本地读取：Executor所在的服务器，同样是一个DataNode，同时这个DataNode上有它要读取的数据，所以可以直接取机器硬盘上的数据，无需走网络传输。</p>
+<p>Spark会在确保并行计算能力的前提下，尽量确保本地读取，从而提升性能</p>
+<h1 id="RDD编程"><a href="#RDD编程" class="headerlink" title="RDD编程"></a>RDD编程</h1><h2 id="程序入口SparkContext对象"><a href="#程序入口SparkContext对象" class="headerlink" title="程序入口SparkContext对象"></a>程序入口SparkContext对象</h2><p>Spark RDD编程的程序入口对象是SparkContext对象（不论何种语言）</p>
+<p>只有构建出SparkContext，基于它才能执行后续的API调用和计算</p>
+<p>本质上，SparkContext对编程来说，主要功能就是创建第一个RDD出来</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark <span class="keyword">import</span> SparkConf, SparkContext</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    conf = SparkConf().setAppName(<span class="string">&quot;study_00&quot;</span>).setMaster(<span class="string">&quot;local[*]&quot;</span>)</span><br><span class="line">    sc = SparkContext(conf=conf)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="RDD的创建"><a href="#RDD的创建" class="headerlink" title="RDD的创建"></a>RDD的创建</h2><p>RDD的创建主要有2种方式：</p>
+<ul>
+<li>通过并行化集合创建（本地对象转分布式RDD）</li>
+<li>读取外部数据源（读取文件）</li>
+</ul>
+<p><strong>并行化创建</strong></p>
+<p>并行化创建是指将本地集合 -&gt; 转向分布式RDD</p>
+<p><strong>获取RDD分区数</strong></p>
+<figure class="highlight plain"><figcaption><span>API</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">获取RDD分区数量，返回值是Int数字</span><br><span class="line"></span><br><span class="line">**读取文件创建**</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;textFile&#96;&#96;&#96; API</span><br><span class="line"></span><br><span class="line">可以读取本地文件，也可以读取HDFS数据</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;wholeTextFile&#96;&#96;&#96; API</span><br><span class="line"></span><br><span class="line">小文件读取专用，适合读取一堆小文件</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 算子</span><br><span class="line"></span><br><span class="line">分布式集合对象上的API称之为算子</span><br><span class="line"></span><br><span class="line">**算子分类**</span><br><span class="line"></span><br><span class="line">* Transformation：转换算子</span><br><span class="line">* Action：动作（行动）算子</span><br><span class="line"></span><br><span class="line">**Transformation算子**</span><br><span class="line"></span><br><span class="line">定义：RDD的算子，返回值仍旧是一个RDD的，称为转换算子</span><br><span class="line"></span><br><span class="line">特性：这类算子是&#96;&#96;&#96;lazy  懒加载&#96;&#96;&#96;的。如果没有action算子，Tranformation算子是不工作的。</span><br><span class="line"></span><br><span class="line">**Action算子**</span><br><span class="line"></span><br><span class="line">定义：返回值不是RDD的就是Action算子</span><br><span class="line"></span><br><span class="line">![image-20221206134922918](.\Spark核心编程\image-20221206134922918.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 常用的Transformation算子</span><br><span class="line"></span><br><span class="line">### map</span><br><span class="line"></span><br><span class="line">功能：map算子，是将RDD的数据一条条处理（处理的逻辑基于map算子中接收的处理函数），返回新的RDD</span><br><span class="line"></span><br><span class="line">语法：</span><br><span class="line"></span><br><span class="line">![image-20221206135501887](.\Spark核心编程\image-20221206135501887.png)</span><br><span class="line"></span><br><span class="line">示例：</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;python</span><br><span class="line">from pyspark import SparkConf, SparkContext</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line">os.environ[&#39;SPARK_HOME&#39;] &#x3D; &#39;&#x2F;export&#x2F;server&#x2F;spark-3.2.0-bin-hadoop3.2&#39;</span><br><span class="line"></span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    conf &#x3D; SparkConf().setAppName(&quot;study_00&quot;).setMaster(&quot;local[*]&quot;)</span><br><span class="line">    sc &#x3D; SparkContext(conf&#x3D;conf)</span><br><span class="line"></span><br><span class="line">    rdd &#x3D; sc.parallelize([1,2,3,4,5,6,7,8])</span><br><span class="line"></span><br><span class="line">    def map_func(data):</span><br><span class="line">        return data * 10</span><br><span class="line"></span><br><span class="line">    # f:(T) -&gt; U</span><br><span class="line">    print(rdd.map(map_func).collect())</span><br><span class="line"></span><br><span class="line">    #匿名lambda的方式</span><br><span class="line">    print(rdd.map(lambda x: x * 10).collect())</span><br><span class="line">    </span><br><span class="line">#&gt;&gt;&gt;输出</span><br><span class="line">#&gt;&gt;&gt;[10, 20, 30, 40, 50, 60, 70, 80]</span><br><span class="line">#&gt;&gt;&gt;[10, 20, 30, 40, 50, 60, 70, 80]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="flatMap"><a href="#flatMap" class="headerlink" title="flatMap"></a>flatMap</h3><p>功能：对RDD执行map操作，然后进行<strong>解除嵌套</strong>操作</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#嵌套的list</span></span><br><span class="line"><span class="built_in">list</span> = [[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>],[<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>],[<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>]]</span><br><span class="line"><span class="comment">#解除嵌套的list</span></span><br><span class="line"><span class="built_in">list</span> = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>]</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark <span class="keyword">import</span> SparkConf, SparkContext</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">os.environ[<span class="string">&#x27;SPARK_HOME&#x27;</span>] = <span class="string">&#x27;/export/server/spark-3.2.0-bin-hadoop3.2&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    conf = SparkConf().setAppName(<span class="string">&quot;study_00&quot;</span>).setMaster(<span class="string">&quot;local[*]&quot;</span>)</span><br><span class="line">    sc = SparkContext(conf=conf)</span><br><span class="line"></span><br><span class="line">    rdd = sc.parallelize([<span class="string">&#x27;a b c&#x27;</span>, <span class="string">&#x27;a c e&#x27;</span>, <span class="string">&#x27;e c a&#x27;</span>])</span><br><span class="line">    print(rdd.flatMap(<span class="keyword">lambda</span> x: x.split(<span class="string">&#x27; &#x27;</span>)).collect())</span><br><span class="line">    </span><br><span class="line"><span class="comment">#&gt;&gt;&gt;输出</span></span><br><span class="line"><span class="comment">#&gt;&gt;&gt;[&#x27;a&#x27;, &#x27;b&#x27;, &#x27;c&#x27;, &#x27;a&#x27;, &#x27;c&#x27;, &#x27;e&#x27;, &#x27;e&#x27;, &#x27;c&#x27;, &#x27;a&#x27;]      </span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="reduceByKey"><a href="#reduceByKey" class="headerlink" title="reduceByKey"></a>reduceByKey</h3><p>功能：针对KV型的RDD，自动按照key分组，然后根据你提供的聚合逻辑，完成组内数据（value）的聚合操作</p>
+<p>用法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rdd.reduceByKey(func)</span><br><span class="line"><span class="comment"># func: (V, V) -&gt; V</span></span><br><span class="line"><span class="comment"># 接受2个传入参数（类型要一致），返回一个返回值，类型和传入要求一致</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark <span class="keyword">import</span> SparkConf, SparkContext</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">os.environ[<span class="string">&#x27;SPARK_HOME&#x27;</span>] = <span class="string">&#x27;/export/server/spark-3.2.0-bin-hadoop3.2&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    conf = SparkConf().setAppName(<span class="string">&quot;study_00&quot;</span>).setMaster(<span class="string">&quot;local[*]&quot;</span>)</span><br><span class="line">    sc = SparkContext(conf=conf)</span><br><span class="line"></span><br><span class="line">    rdd = sc.parallelize([(<span class="string">&#x27;a&#x27;</span>, <span class="number">1</span>), (<span class="string">&#x27;a&#x27;</span>, <span class="number">1</span>), (<span class="string">&#x27;b&#x27;</span>, <span class="number">1</span>), (<span class="string">&#x27;c&#x27;</span>,<span class="number">1</span>), (<span class="string">&#x27;b&#x27;</span>,<span class="number">1</span>), (<span class="string">&#x27;a&#x27;</span>, <span class="number">1</span>)])</span><br><span class="line">    print(rdd.reduceByKey(<span class="keyword">lambda</span> a, b: a + b).collect())</span><br><span class="line">    </span><br><span class="line"><span class="comment">#&gt;&gt;&gt;输出</span></span><br><span class="line"><span class="comment">#&gt;&gt;&gt;[(&#x27;b&#x27;, 2), (&#x27;c&#x27;, 1), (&#x27;a&#x27;, 3)]      </span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="groupBy"><a href="#groupBy" class="headerlink" title="groupBy"></a>groupBy</h3><p>功能：将rdd的数据进行分组</p>
+<p>语法：</p>
+<p><img src="/2022/02/06/Spark%E6%A0%B8%E5%BF%83%E7%BC%96%E7%A8%8B/.%5CSpark%E6%A0%B8%E5%BF%83%E7%BC%96%E7%A8%8B%5Cimage-20221206141147532.png" alt="image-20221206141147532"></p>
+<p>示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark <span class="keyword">import</span> SparkConf, SparkContext</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    conf = SparkConf().setAppName(<span class="string">&quot;study_00&quot;</span>).setMaster(<span class="string">&quot;local[*]&quot;</span>)</span><br><span class="line">    sc = SparkContext(conf=conf)</span><br><span class="line"></span><br><span class="line">    rdd = sc.parallelize([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>])</span><br><span class="line"></span><br><span class="line">    rdd2 = rdd.groupBy(<span class="keyword">lambda</span> num: <span class="string">&#x27;even&#x27;</span> <span class="keyword">if</span> num % <span class="number">2</span> == <span class="number">0</span> <span class="keyword">else</span> <span class="string">&#x27;odd&#x27;</span>)</span><br><span class="line">    print(rdd2.<span class="built_in">map</span>(<span class="keyword">lambda</span> x: (x[<span class="number">0</span>], <span class="built_in">list</span>(x[<span class="number">1</span>]))).collect())</span><br><span class="line">    </span><br><span class="line"><span class="comment">#&gt;&gt;&gt;输出</span></span><br><span class="line"><span class="comment">#&gt;&gt;&gt;[(&#x27;even&#x27;, [2, 4, 6, 8]), (&#x27;odd&#x27;, [1, 3, 5, 7])]  </span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="常用Action算子"><a href="#常用Action算子" class="headerlink" title="常用Action算子"></a>常用Action算子</h2><h2 id="分区操作算子（Transformation-amp-Action）"><a href="#分区操作算子（Transformation-amp-Action）" class="headerlink" title="分区操作算子（Transformation &amp; Action）"></a>分区操作算子（Transformation &amp; Action）</h2>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/12/24/kotlin%E7%B1%BB%E5%92%8C%E5%AF%B9%E8%B1%A1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1510,99 +1646,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/04/15/Android-Jetpack%E4%B9%8BLiveData/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/15/Android-Jetpack%E4%B9%8BLiveData/" class="post-title-link" itemprop="url">Android Jetpack之LiveData</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-04-15 09:31:20 / 修改时间：18:53:34" itemprop="dateCreated datePublished" datetime="2021-04-15T09:31:20+08:00">2021-04-15</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="LiveData介绍"><a href="#LiveData介绍" class="headerlink" title="LiveData介绍"></a>LiveData介绍</h4><h5 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h5><p>LiveData是一个重要组件，也是一个同名抽象类。</p>
-<blockquote>
-<p>LiveData是一种可观察的数据存储器类。与常规的可观察类不同，LiveData具有生命周期感知能力，意指它遵循其他应用组件（如Activity/Fragment）的生命周期。这种感知能力可确保LiveData仅更新处于活跃生命周期状态的应用组件观察者。</p>
-</blockquote>
-<p>解读：     </p>
-<ol>
-<li>LiveData是一个数据持有者，给源数据包装一层。</li>
-<li>源数据使用LiveData包装后，可以被observer观察，数据有更新时observer可感知。</li>
-<li>但observer的感知，只发生在（Activity/Fragment）活跃生命周期状态（STARTED、RESUMED）。</li>
-</ol>
-<p>也就是说，<strong>LiveData使得数据的更新能以观察者模式被observer感知，且此感知只发生在LifecycleOwner的活跃生命周期状态</strong>。</p>
-<h5 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h5><p>使用LiveData具有以下优势：</p>
-<ul>
-<li><strong>确保界面符合数据状态</strong>，当生命周期状态变化时，LiveData通知Observer，可以在observer中更新界面。观察者可以在生命周期状态更改时刷新界面，而不是在每次数据变化时刷新界面。</li>
-<li><strong>不会发生内存泄漏</strong>，observer会在LifecycleOwner状态变为DESTROYED后自动remove。</li>
-<li><strong>不会因Activity停止而导致崩溃</strong>，如果LifecycleOwner生命周期处于非活跃状态，则它不会接收任何LiveData事件。</li>
-<li><strong>不需要手动解除观察</strong>，开发者不需要在onPause或onDestroy方法中解除对LiveData的观察，因为LiveData能感知生命周期状态变化，所以会自动管理所有这些操作。</li>
-<li><strong>数据始终保持最新状态</strong>，数据更新时，若LifecycleOwner为非活跃状态，那么会在变为活跃时接收最新数据。例如，曾经在后台的Activity会在返回前台后，observer立即接收最新的数据。</li>
-</ul>
-<h4 id="LiveData的使用"><a href="#LiveData的使用" class="headerlink" title="LiveData的使用"></a>LiveData的使用</h4><h5 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h5><p>基本用法：</p>
-<ol>
-<li>创建LiveData实例，指定源数据类型。</li>
-<li>创建Observer实例，实现onChanged()方法，用于接收源数据变化并刷新UI。</li>
-<li>LiveData实例使用observe()方法添加观察者，并传入LifecycleOwner。</li>
-<li>LiveData实例使用setVale()/postVale()更新源数据（子线程要postValue()）。</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LiveDataTestActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span></span>&#123;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">private</span> MutableLiveData&lt;String&gt; mLiveData;</span><br><span class="line">   </span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">       setContentView(R.layout.activity_lifecycle_test);</span><br><span class="line">       </span><br><span class="line">       <span class="comment">//liveData基本使用</span></span><br><span class="line">       mLiveData = <span class="keyword">new</span> MutableLiveData&lt;&gt;();</span><br><span class="line">       mLiveData.observe(<span class="keyword">this</span>, <span class="keyword">new</span> Observer&lt;String&gt;() &#123;</span><br><span class="line">           <span class="meta">@Override</span></span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onChanged</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">               Log.i(TAG, <span class="string">&quot;onChanged: &quot;</span>+s);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;);</span><br><span class="line">       Log.i(TAG, <span class="string">&quot;onCreate: &quot;</span>);</span><br><span class="line">       mLiveData.setValue(<span class="string">&quot;onCreate&quot;</span>);<span class="comment">//activity是非活跃状态，不会回调onChanged。变为活跃时，value被onStart中的value覆盖</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onStart</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onStart();</span><br><span class="line">       Log.i(TAG, <span class="string">&quot;onStart: &quot;</span>);</span><br><span class="line">       mLiveData.setValue(<span class="string">&quot;onStart&quot;</span>);<span class="comment">//活跃状态，会回调onChanged。并且value会覆盖onCreate、onStop中设置的value</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onResume</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onResume();</span><br><span class="line">       Log.i(TAG, <span class="string">&quot;onResume: &quot;</span>);</span><br><span class="line">       mLiveData.setValue(<span class="string">&quot;onResume&quot;</span>);<span class="comment">//活跃状态，回调onChanged</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPause</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onPause();</span><br><span class="line">       Log.i(TAG, <span class="string">&quot;onPause: &quot;</span>);</span><br><span class="line">       mLiveData.setValue(<span class="string">&quot;onPause&quot;</span>);<span class="comment">//活跃状态，回调onChanged</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onStop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onStop();</span><br><span class="line">       Log.i(TAG, <span class="string">&quot;onStop: &quot;</span>);</span><br><span class="line">       mLiveData.setValue(<span class="string">&quot;onStop&quot;</span>);<span class="comment">//非活跃状态，不会回调onChanged。后面变为活跃时，value被onStart中的value覆盖</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onDestroy();</span><br><span class="line">       Log.i(TAG, <span class="string">&quot;onDestroy: &quot;</span>);</span><br><span class="line">       mLiveData.setValue(<span class="string">&quot;onDestroy&quot;</span>);<span class="comment">//非活跃状态，且此时Observer已被移除，不会回调onChanged</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<p>注意到 LiveData实例mLiveData的创建是使用MutableLiveData，它是LiveData的实现类，且指定了源数据的类型为String。然后创建了接口Observer的实例，实现其onChanged()方法，用于接收源数据的变化。observer和Activity一起作为参数调用mLiveData的observe()方法，表示observer开始观察mLiveData。然后Activity的所有生命周期方法中都调用了mLiveData的setValue()方法。</p>
-<p>另外，除了使用observe()方法添加观察者，也可以使用<strong>observeForever</strong>(Observer) 方法来注册未关联 LifecycleOwner的观察者。在这种情况下，观察者会被视为始终处于活跃状态。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1674,14 +1717,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-count">48</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
