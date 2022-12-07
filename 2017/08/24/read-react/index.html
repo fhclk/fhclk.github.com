@@ -27,12 +27,12 @@
 <meta property="og:site_name" content="拾荒者">
 <meta property="og:description" content="基本node和npm node	  node包管理器  npm  npm install -g &lt;package&gt; 安装全局包 npm install &lt;package&gt; 安装本地包  node包安装完后会保存在node_modules&#x2F;文件夹下，并且会添加到package.json中  npm init -y 创建npm项目和package.json文件  np">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://fhclk.github.io/read-react/lifecycle.png">
+<meta property="og:image" content="http://fhclk.github.io/2017/08/24/read-react/lifecycle.png">
 <meta property="article:published_time" content="2017-08-24T15:52:48.000Z">
 <meta property="article:modified_time" content="2019-03-08T08:01:02.000Z">
 <meta property="article:author" content="fhclk">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://fhclk.github.io/read-react/lifecycle.png">
+<meta name="twitter:image" content="http://fhclk.github.io/2017/08/24/read-react/lifecycle.png">
 
 <link rel="canonical" href="http://fhclk.github.io/2017/08/24/read-react/">
 
@@ -221,7 +221,7 @@
 <h4 id="函数定义组件"><a href="#函数定义组件" class="headerlink" title="函数定义组件"></a>函数定义组件</h4><p>为只有render方法的组件提供的一种简便的定义组件的方法。     </p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function Square(props) &#123;</span><br><span class="line">	return (</span><br><span class="line">		&lt;button className=&quot;square&quot; onClick=&#123;props.onClick&#125;&gt;</span><br><span class="line">			&#123;props.value&#125;</span><br><span class="line">		&lt;/button&gt;</span><br><span class="line">	);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>简化事件处理函数。这里把 <code>onClick=&#123; () =&gt; props.onClick() &#125;</code> 直接修改为 <code>onClick=&#123;props.onClick&#125;</code> ，注意不能写成 <code>onClick=&#123;props.onClick()&#125;</code>否则<code>porps.onClick</code>方法会在Square组件渲染时被直接触发而不是等到Board组件渲染完成时通过点击触发，又因为此时Board组件正在渲染中（即Board组件的render方法正在调用），又触发父组件onClick中调用setState()会再次调用render方法导致死循环。     </p>
-<h4 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h4><p><img src="/read-react/lifecycle.png" alt="生命周期">     </p>
+<h4 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h4><p><img src="/2017/08/24/read-react/lifecycle.png" alt="生命周期">     </p>
 <h4 id="正确使用state"><a href="#正确使用state" class="headerlink" title="正确使用state"></a>正确使用state</h4><p>构造函数是唯一能够初始化state的地方。</p>
 <ul>
 <li><p>不要直接更新状态，应当使用setState()</p>
@@ -354,7 +354,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">48</span>
+          <span class="site-state-item-count">49</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

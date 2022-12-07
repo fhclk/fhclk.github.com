@@ -151,6 +151,82 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/04/04/spark%E5%85%A5%E9%97%A8-python-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/04/04/spark%E5%85%A5%E9%97%A8-python-3/" class="post-title-link" itemprop="url">spark入门(python)3 - RDD</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-04-04 19:17:33" itemprop="dateCreated datePublished" datetime="2019-04-04T19:17:33+08:00">2019-04-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-06-28 17:43:50" itemprop="dateModified" datetime="2019-06-28T17:43:50+08:00">2019-06-28</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="RDD的设计与运行原理"><a href="#RDD的设计与运行原理" class="headerlink" title="RDD的设计与运行原理"></a>RDD的设计与运行原理</h2><h3 id="RDD设计背景"><a href="#RDD设计背景" class="headerlink" title="RDD设计背景"></a>RDD设计背景</h3><p>在实际应用中，存在许多迭代式算法，在不同计算阶段之间会重用中间结果，即一个阶段的输出结果会作为下一个阶段的输入。但是，目前的MapReduce框架都是把中间结果写入到HDFS中，带来了大量的数据复制、磁盘IO和序列化开销。虽然，类似Pregel等图计算框架也是将结果保存在内存当中，但是，这些框架只能支持一些特定的计算模式，并没有提供一种通用的数据抽象。RDD就是为了满足这种需求而出现的，它提供了一个抽象的数据架构，我们不必担心底层数据的分布式特性，只需将具体的应用逻辑表达为一系列转换处理，不同RDD之间的转换操作形成依赖关系，可以实现管道化，从而避免了中间结果的存储，大大降低了数据复制、磁盘IO和序列化开销。</p>
+<h3 id="RDD概念"><a href="#RDD概念" class="headerlink" title="RDD概念"></a>RDD概念</h3><p>一个RDD就是一个分布式对象集合，本质上是一个只读的分区记录集合，每个RDD可以分成多个分区，每个分区就是一个数据集片段，并且一个RDD的不同分区可以被保存到集群中不同的节点上，从而可以在集群中的不同节点上进行并行计算。RDD提供了一种高度受限的共享内存模型，即RDD是只读的记录分区的集合，不能直接修改，只能基于稳定的物理存储中的数据集来创建RDD，或者通过在其他RDD上执行确定的转换操作（如map、join和groupBy）而创建得到新的RDD。RDD提供了一组丰富的操作以支持常见的数据运算，分为“行动”（Action）和“转换”（Transformation）两种类型，前者用于执行计算并指定输出的形式，后者指定RDD之间的相互依赖关系。两类操作的主要区别是，转换操作（比如map、filter、groupBy、join等）接受RDD并返回RDD，而行动操作（比如count、collect等）接受RDD但返回非RDD（即输出一个值或结果）。RDD提供的转换接口都非常简单，都是类似map、filter、groupBy、join等粗粒度的数据转换操作，而不是针对某个数据项的细粒度修改。因此，RDD比较适合对于数据集中元素执行相同操作的批处理式应用，而不适合用于需要异步、细粒度状态的应用，比如Web应用系统、增量式的网页爬虫等。正因为这样，这种粗粒度转换接口设计，会使人直觉上认为RDD的功能很受限、不够强大。但是，实际上RDD已经被实践证明可以很好地应用于许多并行计算应用中，可以具备很多现有计算框架（比如MapReduce、SQL、Pregel等）的表达能力，并且可以应用于这些框架处理不了的交互式数据挖掘应用。</p>
+<p>RDD典型的执行过程如下：       </p>
+<ol>
+<li>RDD读入外部数据源（或者内存中的集合）进行创建</li>
+<li>RDD经过一些列的“转换”操作，每一次都会产生不同的RDD，提供下一个“转换”使用</li>
+<li>最后一个RDD经“行动”操作进行处理，并输出到外部数据源（或者变成Scala集合或标量）</li>
+</ol>
+<p>需要说明的是，RDD采用了惰性调用，即在RDD的执行过程中，真正的计算发生在RDD的“行动”操作，对于“行动”之前的所有“转换”操作，Spark只是记录下“转换”操作应用的一些基础数据集以及RDD生成的轨迹，即相互之间的依赖关系，而不会触发真正的计算。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -202,16 +278,16 @@
 <h4 id="安装scala"><a href="#安装scala" class="headerlink" title="安装scala"></a>安装scala</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install scala</span><br></pre></td></tr></table></figure>
 
 <h4 id="安装Spark"><a href="#安装Spark" class="headerlink" title="安装Spark"></a>安装Spark</h4><ol>
-<li><p>到<a target="_blank" rel="noopener" href="http://spark.apache.org/downloads.html">http://spark.apache.org/downloads.html</a>下载Spark<br><img src="/spark%E5%85%A5%E9%97%A8-python-2/%E4%B8%8B%E8%BD%BDSpark.png" alt="下载Spark"></p>
+<li><p>到<a target="_blank" rel="noopener" href="http://spark.apache.org/downloads.html">http://spark.apache.org/downloads.html</a>下载Spark<br><img src="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/%E4%B8%8B%E8%BD%BDSpark.png" alt="下载Spark"></p>
 </li>
 <li><p>解压到目录下</p>
 </li>
 <li><p>配置.zshrc或者.bashrc</p>
  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export SPARK_HOME=/Users/xy/Documents/bigData/spark-2.4.3-bin-hadoop2.7</span><br><span class="line">export PATH=$&#123;PATH&#125;:$&#123;SPARK_HOME&#125;/bin</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>到Spark解压路径下，执行<code>./sbin/start-all.sh</code>，在浏览器中访问<code>http://localhost:8080/</code>，看是否可以访问。<br><img src="/spark%E5%85%A5%E9%97%A8-python-2/Spark%E5%AE%89%E8%A3%85%E7%BB%93%E6%9E%9C.png" alt="Spark安装结果"></p>
+<li><p>到Spark解压路径下，执行<code>./sbin/start-all.sh</code>，在浏览器中访问<code>http://localhost:8080/</code>，看是否可以访问。<br><img src="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/Spark%E5%AE%89%E8%A3%85%E7%BB%93%E6%9E%9C.png" alt="Spark安装结果"></p>
 </li>
-<li><p>运行pyspark<br><img src="/spark%E5%85%A5%E9%97%A8-python-2/%E8%BF%90%E8%A1%8Cpyspark.png" alt="运行pyspark"></p>
+<li><p>运行pyspark<br><img src="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/%E8%BF%90%E8%A1%8Cpyspark.png" alt="运行pyspark"></p>
 </li>
 </ol>
 <h3 id="在pyspark中运行代码-本地"><a href="#在pyspark中运行代码-本地" class="headerlink" title="在pyspark中运行代码(本地)"></a>在pyspark中运行代码(本地)</h3><p>pyspark命令及其常用的参数如下：       </p>
@@ -241,12 +317,12 @@
 <ol start="3">
 <li>运行代码<code>python3 test.py</code></li>
 </ol>
-<p><img src="/spark%E5%85%A5%E9%97%A8-python-2/Spark%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81.png" alt="Spark测试代码"></p>
+<p><img src="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/Spark%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81.png" alt="Spark测试代码"></p>
 <h2 id="Spark应用程序"><a href="#Spark应用程序" class="headerlink" title="Spark应用程序"></a>Spark应用程序</h2><h3 id="加载本地文件"><a href="#加载本地文件" class="headerlink" title="加载本地文件"></a>加载本地文件</h3><p>运行pyspark <code>pyspark --master local[4]</code>        </p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from pyspark import SparkContext</span><br><span class="line">&gt;&gt;&gt; #排除异常</span><br><span class="line">&gt;&gt;&gt; try:</span><br><span class="line">...     sc.stop()</span><br><span class="line">... except:</span><br><span class="line">...     pass</span><br><span class="line">... </span><br><span class="line">&gt;&gt;&gt; sc = SparkContext(&#x27;local[2]&#x27;,&#x27;First Spark App&#x27;)</span><br><span class="line">&gt;&gt;&gt; textFile = sc.textFile(&#x27;file:///Users/xy/Documents/develop/study/bigData/spark-2.4.3-bin-hadoop2.7/README.md&#x27;)</span><br><span class="line">&gt;&gt;&gt; textFile.first()</span><br><span class="line">u&#x27;# Apache Spark&#x27;</span><br><span class="line">&gt;&gt;&gt; textFile.saveAsTextFile(&#x27;file:///Users/xy/Documents/writeback&#x27;)</span><br></pre></td></tr></table></figure>
 
-<p><img src="/spark%E5%85%A5%E9%97%A8-python-2/%E8%AF%BB%E5%86%99%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6.png" alt="读写本地文件"></p>
-<p>运行结果<br><img src="/spark%E5%85%A5%E9%97%A8-python-2/%E8%AF%BB%E5%86%99%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%9C.png" alt="读写本地文件结果"></p>
+<p><img src="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/%E8%AF%BB%E5%86%99%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6.png" alt="读写本地文件"></p>
+<p>运行结果<br><img src="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/%E8%AF%BB%E5%86%99%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%9C.png" alt="读写本地文件结果"></p>
 
       
     </div>
@@ -323,13 +399,13 @@
 <li>作业 一个作业包含多个RDD及作用于相应RDD上的各种操作</li>
 <li>阶段 是作业的基本调度单位，一个作业会分为多组任务，每组任务被称为“阶段”，或者也被称为“任务集”</li>
 </ul>
-<h3 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h3><p><img src="/spark%E5%85%A5%E9%97%A8-python/Spark%E8%BF%90%E8%A1%8C%E6%9E%B6%E6%9E%84.jpg" alt="Spark运行架构"><br>&amp;emsp;Spark运行架构包括集群资源管理器（Cluster Manager）、运行作业任务的工作节点（Worker Node）、每个应用的任务控制节点（Driver）和每个工作节点上负责具体任务的执行进程（Executor）。其中，集群资源管理器可以是Spark自带的资源管理器，也可以是YARN或Mesos等资源管理框架。<br>与Hadoop MapReduce计算框架相比，Spark所采用的Executor有两个优点：      </p>
+<h3 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h3><p><img src="/2019/03/31/spark%E5%85%A5%E9%97%A8-python/Spark%E8%BF%90%E8%A1%8C%E6%9E%B6%E6%9E%84.jpg" alt="Spark运行架构"><br>&amp;emsp;Spark运行架构包括集群资源管理器（Cluster Manager）、运行作业任务的工作节点（Worker Node）、每个应用的任务控制节点（Driver）和每个工作节点上负责具体任务的执行进程（Executor）。其中，集群资源管理器可以是Spark自带的资源管理器，也可以是YARN或Mesos等资源管理框架。<br>与Hadoop MapReduce计算框架相比，Spark所采用的Executor有两个优点：      </p>
 <ol>
 <li>利用多线程来执行具体的任务（Hadoop MapReduce采用的是进程模型），减少任务的启动开销；      </li>
 <li>Executor中有一个BlockManager存储模块，会将内存和磁盘共同作为存储设备，当需要多轮迭代计算时，可以将中间结果存储到这个存储模块里，下次需要时，就可以直接读该存储模块里的数据，而不需要读写到HDFS等文件系统里，因而有效减少了IO开销；或者在交互式查询场景下，预先将表缓存到该存储系统上，从而可以提高读写IO性能。</li>
 </ol>
-<p><img src="/spark%E5%85%A5%E9%97%A8-python/Spark%E4%B8%AD%E5%90%84%E7%A7%8D%E6%A6%82%E5%BF%B5%E4%B9%8B%E9%97%B4%E7%9A%84%E7%9B%B8%E4%BA%92%E5%85%B3%E7%B3%BB.jpg" alt="Spark中各种概念之间的相互关系"><br>如上图，在Spark中，一个应用（Application）由一个任务控制节点（Driver）和若干个作业（Job）构成，一个作业由多个阶段（Stage）构成，一个阶段由多个任务（Task）组成。当执行一个应用时，任务控制节点会向集群管理器（Cluster Manager）申请资源，启动Executor，并向Executor发送应用程序代码和文件，然后在Executor上执行任务，运行结束后，执行结果会返回给任务控制节点，或者写到HDFS或者其他数据库中。       </p>
-<h3 id="Spark运行基本流程"><a href="#Spark运行基本流程" class="headerlink" title="Spark运行基本流程"></a>Spark运行基本流程</h3><p><img src="/spark%E5%85%A5%E9%97%A8-python/Spark%E8%BF%90%E8%A1%8C%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B.jpg" alt="Spark运行基本流程"><br>Spark的基本运行流程如下：     </p>
+<p><img src="/2019/03/31/spark%E5%85%A5%E9%97%A8-python/Spark%E4%B8%AD%E5%90%84%E7%A7%8D%E6%A6%82%E5%BF%B5%E4%B9%8B%E9%97%B4%E7%9A%84%E7%9B%B8%E4%BA%92%E5%85%B3%E7%B3%BB.jpg" alt="Spark中各种概念之间的相互关系"><br>如上图，在Spark中，一个应用（Application）由一个任务控制节点（Driver）和若干个作业（Job）构成，一个作业由多个阶段（Stage）构成，一个阶段由多个任务（Task）组成。当执行一个应用时，任务控制节点会向集群管理器（Cluster Manager）申请资源，启动Executor，并向Executor发送应用程序代码和文件，然后在Executor上执行任务，运行结束后，执行结果会返回给任务控制节点，或者写到HDFS或者其他数据库中。       </p>
+<h3 id="Spark运行基本流程"><a href="#Spark运行基本流程" class="headerlink" title="Spark运行基本流程"></a>Spark运行基本流程</h3><p><img src="/2019/03/31/spark%E5%85%A5%E9%97%A8-python/Spark%E8%BF%90%E8%A1%8C%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B.jpg" alt="Spark运行基本流程"><br>Spark的基本运行流程如下：     </p>
 <ol>
 <li>当一个Spark应用被提交时，首先需要为这个应用构建起基本的运行环境，即由任务控制节点（Driver）创建一个SparkContext，由SparkContext负责和资源管理器（Cluster Manager）的通信以及进行资源的申请、任务的分配和监控等。SparkContext会向资源管理器注册并申请运行Executor的资源；    </li>
 <li>资源管理器为Executor分配资源，并启动Executor进程，Executor运行情况将随着“心跳”发送到资源管理器上；       </li>
@@ -519,7 +595,7 @@
           <h4 id="YARN概述"><a href="#YARN概述" class="headerlink" title="YARN概述"></a>YARN概述</h4><p>Apache Hadoop YARN (Yet Another Resource Negotiator，另 一种资源协调者)是一种新的Hadoop资源管理器，是一个通用资源管理系统，可为上层应用提供统一的资源管理和调度，它的引入为集群在利用率、资源统一管理和数据共享等方面带来了巨大好处。</p>
 <p>YARN 是随着Hadoop发展而催生的新框架，取代了以前Hadoop1.x中 JobTracker的角色，因为以前JobTracker的任务过重，负责任务的调度、跟踪和失败重启等过程，而且只能运行MapReduce作业，不支持其他编程模式，这也限制了JobTracker的使用范围，于是YARN应运而生。</p>
 <h4 id="YARN架构"><a href="#YARN架构" class="headerlink" title="YARN架构"></a>YARN架构</h4><p>YARN由Client、ResourceManager、NodeManager、ApplicationMaster组成；YARN也是采用Master&#x2F;Slave结构，一个ResourceManager对应多个NodeManager。</p>
-<p><img src="/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E6%9E%B6%E6%9E%84.png" alt="YARN架构"></p>
+<p><img src="/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E6%9E%B6%E6%9E%84.png" alt="YARN架构"></p>
 <p>Client向ResourceManager提交任务、终止任务等。</p>
 <p>ApplicationMaster由对应的应用程序完成；每个应用程序对应一个 Application­ Master, ApplicationMaster向ResourceManager 申请资源用于在NodeManager上启动相应的任务。</p>
 <p>NodeManager向ResourceManager通过心跳信息，汇报NodeManager健康状况、任务执行状况、领取任务等。</p>
@@ -555,7 +631,7 @@
 </ul>
 </li>
 </ol>
-<h3 id="YARN运行机制"><a href="#YARN运行机制" class="headerlink" title="YARN运行机制"></a>YARN运行机制</h3><h4 id="YARN工作原理"><a href="#YARN工作原理" class="headerlink" title="YARN工作原理"></a>YARN工作原理</h4><p><img src="/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png" alt="YARN工作原理"></p>
+<h3 id="YARN运行机制"><a href="#YARN运行机制" class="headerlink" title="YARN运行机制"></a>YARN运行机制</h3><h4 id="YARN工作原理"><a href="#YARN工作原理" class="headerlink" title="YARN工作原理"></a>YARN工作原理</h4><p><img src="/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png" alt="YARN工作原理"></p>
 <p>执行步骤：</p>
 <ol>
 <li>用户向 Y础N 中提交应用程序&#x2F;作业，其中包括 ApplicationMaster程序、启动 ApplicationMaster的命令、用户程序等 。</li>
@@ -578,7 +654,7 @@
 <li>短应用程序(秒、分、小时级内运行结束的程序: MR job、Spark job等)  </li>
 <li>打造以YARN为核心的生态系统</li>
 </ol>
-<p>YARN核心的生态系统<br><img src="/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E6%A0%B8%E5%BF%83%E7%9A%84%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F.png" alt="YARN核心的生态系统"><br>图中的 HDFS2 值的是在基于HDFS之上的HA和Federation等新特性。</p>
+<p>YARN核心的生态系统<br><img src="/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E6%A0%B8%E5%BF%83%E7%9A%84%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F.png" alt="YARN核心的生态系统"><br>图中的 HDFS2 值的是在基于HDFS之上的HA和Federation等新特性。</p>
 <p>在引入YARN之后，可以在YARN上运行各种不同框架的作业:</p>
 <ul>
 <li>离线计算框架: MapReduce</li>
@@ -664,7 +740,7 @@
 <li>无法高效存储大量小文件</li>
 </ol>
 <h3 id="HDFS基本概念"><a href="#HDFS基本概念" class="headerlink" title="HDFS基本概念"></a>HDFS基本概念</h3><h4 id="数据块-Block"><a href="#数据块-Block" class="headerlink" title="数据块(Block)"></a>数据块(Block)</h4><p>HDFS默认的最基本的存储单位是数据块(Block)，默认的块大小(Block Size)是64M(有些发布版本是128M)。HDFS中文件被分割成以Block Size为大小的数据块存储的。HDFS中，如果一个文件小于一个数据块的大小，并不占用整个数据块存储空间，文件大小是多大就占用多少存储空间。</p>
-<h4 id="元数据节点-NameNode"><a href="#元数据节点-NameNode" class="headerlink" title="元数据节点(NameNode)"></a>元数据节点(NameNode)</h4><p>NameNode的职责是管理文件系统的命名空间，它将所有的文件和文件夹的元数据保存在一个文件系统树中，至于一个文件包括哪些数据块，分布在哪些数据节点上，这些信息都存储下来。<br>NameNode目录结构如下所示：<br><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/nameNode.png" alt="NameNode目录结构"></p>
+<h4 id="元数据节点-NameNode"><a href="#元数据节点-NameNode" class="headerlink" title="元数据节点(NameNode)"></a>元数据节点(NameNode)</h4><p>NameNode的职责是管理文件系统的命名空间，它将所有的文件和文件夹的元数据保存在一个文件系统树中，至于一个文件包括哪些数据块，分布在哪些数据节点上，这些信息都存储下来。<br>NameNode目录结构如下所示：<br><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/nameNode.png" alt="NameNode目录结构"></p>
 <p>目录结构描述：   </p>
 <ol>
 <li>VERSION文件是存放版本的文件，保存了HDFS的版本号。</li>
@@ -672,7 +748,7 @@
 <li>fsimage文件即命名空间文件。</li>
 </ol>
 <h4 id="数据节点-DataNode"><a href="#数据节点-DataNode" class="headerlink" title="数据节点(DataNode)"></a>数据节点(DataNode)</h4><p>DataNode是文件系统中真正存储数据的地方，一个文件被拆分成多个Block后，会将这些Block存储在对应的数据节点上。客户端向NameNode发起请求后到对应的数据节点上写入或读取对应的数据Block。</p>
-<p>DataNode目录结构：<br><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/dataNode.png" alt="DataNode目录结构"></p>
+<p>DataNode目录结构：<br><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/dataNode.png" alt="DataNode目录结构"></p>
 <p>目录结构描述：</p>
 <ol>
 <li>blk_<id>保存的是HDFS的数据块，其中保存了具体的二进制数据。</id></li>
@@ -680,10 +756,10 @@
 <li>subdirxx 当一个目录中的数据块达到一定数量的时候，则创建子文件夹来保存数据块及数据块属性信息。</li>
 </ol>
 <h4 id="从元数据节点-Secondary-NameNode"><a href="#从元数据节点-Secondary-NameNode" class="headerlink" title="从元数据节点(Secondary NameNode)"></a>从元数据节点(Secondary NameNode)</h4><p>从元数据节点并不是NameNode节点出现问题时的备用节点，它和元数据节点负责不同的功能。其主要功能就是周期性将NameNode的namespace image和edit log合并，以防日志文件过大。合并过后的namespace image也在元数据节点保存了一份，以防在NameNode失败的时候进行恢复。        </p>
-<p>Secondary NameNode目录结构：<br><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/secondaryNameNode.png" alt="Secondary DataNode目录结构"></p>
+<p>Secondary NameNode目录结构：<br><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/secondaryNameNode.png" alt="Secondary DataNode目录结构"></p>
 <p>Secondary NameNode用来帮助NameNode将内存中的元数据信息checkpoint到硬盘上。</p>
 <h4 id="HDFS体系结构"><a href="#HDFS体系结构" class="headerlink" title="HDFS体系结构"></a>HDFS体系结构</h4><h5 id="体系架构概述"><a href="#体系架构概述" class="headerlink" title="体系架构概述"></a>体系架构概述</h5><p>HDFS采用master&#x2F;slave的架构。一个HDFS集群是由一个NameNode和一定数量的DataNode组成。NameNode是一个中心服务器，负责管理文件系统的名字空间（namespace）以及客户端文件的访问。集群中的DataNode一般是一个节点对应一个，负责管理它所在节点上的存储数据。从内容上看，一个文件系统其实被分成一个或多个数据块，这些数据块存储在一组DataNode上。NameNode执行文件系统的名字空间操作，比如打开、关闭、重命名文件或目录，它也负责确定数据块到具体DataNode节点的映射。DataNode负责处理文件系统客户端的读写请求。在NameNode的统一调度下进行数据块的创建、删除和复制。</p>
-<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/HDFS%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84.png" alt="HDFS体系结构"></p>
+<p><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/HDFS%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84.png" alt="HDFS体系结构"></p>
 <h5 id="架构组件功能"><a href="#架构组件功能" class="headerlink" title="架构组件功能"></a>架构组件功能</h5><p>NameNode和DataNode被设计成可以在普通的商用机器上运行。任何支持Java的机器都可以部署NameNode或DataNode。一个典型的部署场景是一台机器上运行一个NameNode实例，而集群中的其他机器分别运行一个DataNode实例。这种架构并不排斥在一台机器上运行多个DataNode，只不过这样的情况比较少。</p>
 <p>文件系统的名字空间（namespace）：HDFS支持传统的层次型文件组织结构。用户或者应用程序可以创建目录，然后将文件保存在这些目录里。文件系统名字空间的层次结构和大多数现有文件系统类似，用户可以创建、删除、移动或重命名文件。当前，HDFS不支持用户磁盘配额和访问权限控制，也不支持硬链接和软链接。但是HDFS架构并不妨碍实现这些特性。</p>
 <p>NameNode负责维护文件系统的名字空间，任何对文件系统名字空间或属性的修改都将被NameNode记录下来。应用程序可以设置HDFS保存的文件的副本数目，文件副本数目称为文件的副本系数，这个信息也是由NameNode保存的。</p>
@@ -727,7 +803,7 @@
 <li>当读取完所有的数据之后，DFSInputStream会关闭与DataNode的连接，然后寻找下一块的最佳位置，客户端只需要读取连续的流。</li>
 <li>一旦客户端完成读取操作后，就对DFSInputStream调用close方法来完成资源的关闭操作。</li>
 </ol>
-<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/HDFS%E8%AF%BB%E6%B5%81%E7%A8%8B.png" alt="HDFS读取数据过程"></p>
+<p><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/HDFS%E8%AF%BB%E6%B5%81%E7%A8%8B.png" alt="HDFS读取数据过程"></p>
 <h5 id="HDFS文件写流程"><a href="#HDFS文件写流程" class="headerlink" title="HDFS文件写流程"></a>HDFS文件写流程</h5><p>客户端写数据的流程：</p>
 <ol>
 <li>客户端通过调用DistributeFileSystem的create方法来创建一个文件。</li>
@@ -736,7 +812,7 @@
 <li>FSDataOutputStream内部维护着一个确认队列，当接收到所有DataNode确认写完的消息后，该数据才会从确认队列中删除。</li>
 <li>当客户端完成数据的写入后，会对数据流调用close方法来关闭相关资源</li>
 </ol>
-<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/HDFS%E5%86%99%E6%B5%81%E7%A8%8B.png" alt="HDFS写数据过程"></p>
+<p><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/HDFS%E5%86%99%E6%B5%81%E7%A8%8B.png" alt="HDFS写数据过程"></p>
 <h4 id="HDFS副本机制"><a href="#HDFS副本机制" class="headerlink" title="HDFS副本机制"></a>HDFS副本机制</h4><p>HDFS上的文件对应的Block保存多个副本，且提供容错机制，副本丢失或宕机自动恢复。默认3份副本。</p>
 <h5 id="副本摆放策略"><a href="#副本摆放策略" class="headerlink" title="副本摆放策略"></a>副本摆放策略</h5><ol>
 <li>第一副本：放置在上传文件的DataNode上；如果是集群外提交，则随机挑选一台磁盘不太慢、CPU不太忙的节点</li>
@@ -756,7 +832,7 @@
 </ol>
 <h4 id="机架感知"><a href="#机架感知" class="headerlink" title="机架感知"></a>机架感知</h4><p>通常大型Hadoop集群是以机架的形式来组织的，同一个机架上的不同节点间的网络状况比不同机架之间的更为理想，NameNode设法将数据块副本保存在不同的机架上以提高容错性。</p>
 <p>HDFS不能够自动判断集群中各个DataNode的网络拓扑情况，Hadoop允许集群的管理员通过配置dfs.network.script参数来确定节点所处的机架，配置文件提供了ip到rackid的翻译。NameNode通过这个配置知道集群中各个DataNode机器的rack.id。如果topology.script.file.name没有设定，则每个ip都会被翻译成&#x2F;default-rack。 </p>
-<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/%E6%9C%BA%E6%9E%B6%E6%84%9F%E7%9F%A5.png" alt="机架感知"></p>
+<p><img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/%E6%9C%BA%E6%9E%B6%E6%84%9F%E7%9F%A5.png" alt="机架感知"></p>
 <p>说明:</p>
 <ol>
 <li>当没有配置机架信息时，所有的机器Hadoop都在同一个默认的机架下， 名为“&#x2F;default-rack”，这种情况的任何一台DataNode机器，不管物理上是否属于同一个机架，都会被认为是在同一个机架下。</li>
@@ -770,7 +846,7 @@
 <p>注意:<br>对于一定大小的数据，比如说IOOGB，如果采用SequenceFile进行存储的话占用的空间是大于lOOGB的，因为SequenceFile的存储中为了查找方便添加了一些额外的信息。</p>
 <h5 id="SequenceFile特点"><a href="#SequenceFile特点" class="headerlink" title="SequenceFile特点"></a>SequenceFile特点</h5><ol>
 <li><p>支持压缩:可定制为基于Record(记录)和Block(块)压缩。无压缩类型:如果没有启动压缩(默认设置，那么每个记录就由它的记录长度(字节数)、键的长度，键和值组成，长度字段为4字节。</p>
-<p> <img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/SequenceFile%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png" alt="SequenceFile 内部结构"><br> Record针对行压缩，只压缩Value部分不压缩Key; Block对Key和Value都压缩。 </p>
+<p> <img src="/2019/03/13/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/SequenceFile%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png" alt="SequenceFile 内部结构"><br> Record针对行压缩，只压缩Value部分不压缩Key; Block对Key和Value都压缩。 </p>
 </li>
 <li><p>本地化任务支持: 因为文件可以被切分，因此在运行MapReduce任务时数据的本地化情况应该是非常好的； 尽可能多地发起Map Task来进行并行处理进而提高作业的执行效率。</p>
 </li>
@@ -1168,74 +1244,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2018/05/25/read-fupan1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/05/25/read-fupan1/" class="post-title-link" itemprop="url">读《复盘+把经验转化为能力》</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-05-25 20:32:54" itemprop="dateCreated datePublished" datetime="2018-05-25T20:32:54+08:00">2018-05-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-02-18 18:00:04" itemprop="dateModified" datetime="2019-02-18T18:00:04+08:00">2019-02-18</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;前几天把《复盘+把经验转化为能力》读了一遍。书中详细的介绍了复盘的概念，为什么要用复盘，复盘的实施步骤，及详细描述美军AAR和联想的复盘过程等。通篇本书，略觉书中内容略有繁琐，并且略有夸大复盘在企业发展和企业管理中的作用，每个公司和每个个人均有其特性，不能都按照书中详尽的复盘流程来复盘，达到自己对失败项目的深入总结和学习过程。<br>&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;柳传志首创复盘理论，并将其运用于联想内部管理中，取得不错的效果。美军也将AAR永远美军军事训练中，并对大量训练进行AAR，从而达到教学目标。等等实例，说明复盘是一种有效的学习方法。<br>&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;在复盘过程中，应该以严肃、认真的态度还原这个事件或项目的发展过程，应该尽量摒弃个人情感，其中包括想妥协责任、贬低他人、抬高自己、随意等情感，尽量客观的还原整个事件过程，找出其中引发问题的节点，进行反思总结，避免再次因同样的问题而造成项目或事情的失败，从而达到学习的目的。<br>&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;个人将复盘理念运用到个人的成长学习过程中，可以养成一种严禁的做事风格，并一种比较好的学习方法，从以往经历中、其他人的经历或其他事件的失败过程，汲取经验，从而到达自我的提高，避免自己犯同样的错误而导致事情的失败，避免掉入相同的坑中。<br>&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;团队和部门将复盘理念运用到项目管理中，可以避免项目因相同的原因出现相同的问题，浪费时间或者造成项目的失败。通过对复盘的实施，提升团队成员做事的严禁性，并从过去失败的实例中汲取经验教训，从而提升团队质量，提高团队做事的效率，项目的执行过程中的效率和质量有所提升。<br>&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;复盘是一个从过去经历中总结经验，学习提高的过程。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1307,7 +1315,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">48</span>
+          <span class="site-state-item-count">49</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
