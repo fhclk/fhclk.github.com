@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.4.0">
+<meta name="generator" content="Hexo 6.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -27,15 +27,15 @@
 <meta property="og:site_name" content="拾荒者">
 <meta property="og:description" content="YARN概述Apache Hadoop YARN (Yet Another Resource Negotiator，另 一种资源协调者)是一种新的Hadoop资源管理器，是一个通用资源管理系统，可为上层应用提供统一的资源管理和调度，它的引入为集群在利用率、资源统一管理和数据共享等方面带来了巨大好处。 YARN 是随着Hadoop发展而催生的新框架，取代了以前Hadoop1.x中 JobTracke">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://fhclk.github.io/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E6%9E%B6%E6%9E%84.png">
-<meta property="og:image" content="http://fhclk.github.io/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png">
-<meta property="og:image" content="http://fhclk.github.io/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E6%A0%B8%E5%BF%83%E7%9A%84%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F.png">
+<meta property="og:image" content="http://fhclk.github.io/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E6%9E%B6%E6%9E%84.png">
+<meta property="og:image" content="http://fhclk.github.io/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png">
+<meta property="og:image" content="http://fhclk.github.io/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E6%A0%B8%E5%BF%83%E7%9A%84%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F.png">
 <meta property="article:published_time" content="2019-03-16T13:16:52.000Z">
 <meta property="article:modified_time" content="2021-04-09T10:22:36.050Z">
 <meta property="article:author" content="fhclk">
 <meta property="article:tag" content="大数据">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://fhclk.github.io/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E6%9E%B6%E6%9E%84.png">
+<meta name="twitter:image" content="http://fhclk.github.io/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E6%9E%B6%E6%9E%84.png">
 
 <link rel="canonical" href="http://fhclk.github.io/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/">
 
@@ -207,31 +207,31 @@
       
         <h4 id="YARN概述"><a href="#YARN概述" class="headerlink" title="YARN概述"></a>YARN概述</h4><p>Apache Hadoop YARN (Yet Another Resource Negotiator，另 一种资源协调者)是一种新的Hadoop资源管理器，是一个通用资源管理系统，可为上层应用提供统一的资源管理和调度，它的引入为集群在利用率、资源统一管理和数据共享等方面带来了巨大好处。</p>
 <p>YARN 是随着Hadoop发展而催生的新框架，取代了以前Hadoop1.x中 JobTracker的角色，因为以前JobTracker的任务过重，负责任务的调度、跟踪和失败重启等过程，而且只能运行MapReduce作业，不支持其他编程模式，这也限制了JobTracker的使用范围，于是YARN应运而生。</p>
-<h4 id="YARN架构"><a href="#YARN架构" class="headerlink" title="YARN架构"></a>YARN架构</h4><p>YARN由Client、ResourceManager、NodeManager、ApplicationMaster组成；YARN也是采用Master/Slave结构，一个ResourceManager对应多个NodeManager。</p>
-<p><img src="/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E6%9E%B6%E6%9E%84.png" alt="YARN架构"></p>
+<h4 id="YARN架构"><a href="#YARN架构" class="headerlink" title="YARN架构"></a>YARN架构</h4><p>YARN由Client、ResourceManager、NodeManager、ApplicationMaster组成；YARN也是采用Master&#x2F;Slave结构，一个ResourceManager对应多个NodeManager。</p>
+<p><img src="/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E6%9E%B6%E6%9E%84.png" alt="YARN架构"></p>
 <p>Client向ResourceManager提交任务、终止任务等。</p>
 <p>ApplicationMaster由对应的应用程序完成；每个应用程序对应一个 Application­ Master, ApplicationMaster向ResourceManager 申请资源用于在NodeManager上启动相应的任务。</p>
 <p>NodeManager向ResourceManager通过心跳信息，汇报NodeManager健康状况、任务执行状况、领取任务等。</p>
 <p>MapTask对应的是MapReduce作业启动时产生的Map任务，MPI Task是 MPI框架(MPI是消息传递接口，可以理解为更原生的一种分布式模型)对应的执行任务。</p>
 <h4 id="YARN核心组件功能"><a href="#YARN核心组件功能" class="headerlink" title="YARN核心组件功能"></a>YARN核心组件功能</h4><ol>
 <li>ResourceManager<br> 整个集群只有一个，负责集群资源的统一管理和调度。<ul>
-<li>处理来自客户端的请求(启动/终止应用程序〉。</li>
-<li>启动/监控 ApplicationMaster; 一旦某个 AM 挂了之后，RM 将会在另外一个节点上启动该 AM。</li>
+<li>处理来自客户端的请求(启动&#x2F;终止应用程序〉。</li>
+<li>启动&#x2F;监控 ApplicationMaster; 一旦某个 AM 挂了之后，RM 将会在另外一个节点上启动该 AM。</li>
 <li>监控 NodeManager，接收 NodeManager 的心跳汇报信息并分配任务到NodeManager去执行; 一旦某个 NM 挂了，标志下该 NM 上的任务，来告诉对应的 AM 如何处理。</li>
 <li>负责整个集群的资源分配和调度。</li>
 </ul>
 </li>
 <li>NodeManager<br> 整个集群中有多个，负责单节点资源管理和使用。      <ul>
 <li>周期性向 ResourceManager汇报本节点上的资源使用情况和各个 Container的运行状态。</li>
-<li>接收井处理来自 ResourceManager 的 Container 启动/停止的各种命令。</li>
+<li>接收井处理来自 ResourceManager 的 Container 启动&#x2F;停止的各种命令。</li>
 <li>处理来自 ApplicationMaster 的命令。</li>
 <li>负责单个节点上的资源管理和任务调度 。</li>
 </ul>
 </li>
 <li>ApplicationMaster<br> 每个应用一个，负责应用程序的管理。<ul>
 <li>数据切分。</li>
-<li>为应用程序/作业向 ResourceManager 申请资源(Container)，并分配给内部任务 </li>
-<li>与 NodeManager通信以启动/停止任务。</li>
+<li>为应用程序&#x2F;作业向 ResourceManager 申请资源(Container)，并分配给内部任务 </li>
+<li>与 NodeManager通信以启动&#x2F;停止任务。</li>
 <li>任务监控和容错(在任务执行失败时重新为该任务申请资源以重启任务)。</li>
 <li>处理ResourceManager发过来的命令:终止 Container、让 NodeManager重启等。</li>
 </ul>
@@ -240,14 +240,14 @@
 <li>任务运行资源(节点、内存、 CPU)。</li>
 <li>任务启动命令。</li>
 <li>任务运行环境。</li>
-<li>任务是运行在 Container 中， 一个 Container 中既可以运行 ApplicationMaster,也可以运行具体的Map/Reduce/MPl/SparkTask。</li>
+<li>任务是运行在 Container 中， 一个 Container 中既可以运行 ApplicationMaster,也可以运行具体的Map&#x2F;Reduce&#x2F;MPl&#x2F;SparkTask。</li>
 </ul>
 </li>
 </ol>
-<h3 id="YARN运行机制"><a href="#YARN运行机制" class="headerlink" title="YARN运行机制"></a>YARN运行机制</h3><h4 id="YARN工作原理"><a href="#YARN工作原理" class="headerlink" title="YARN工作原理"></a>YARN工作原理</h4><p><img src="/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png" alt="YARN工作原理"></p>
+<h3 id="YARN运行机制"><a href="#YARN运行机制" class="headerlink" title="YARN运行机制"></a>YARN运行机制</h3><h4 id="YARN工作原理"><a href="#YARN工作原理" class="headerlink" title="YARN工作原理"></a>YARN工作原理</h4><p><img src="/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png" alt="YARN工作原理"></p>
 <p>执行步骤：</p>
 <ol>
-<li>用户向 Y础N 中提交应用程序/作业，其中包括 ApplicationMaster程序、启动 ApplicationMaster的命令、用户程序等 。</li>
+<li>用户向 Y础N 中提交应用程序&#x2F;作业，其中包括 ApplicationMaster程序、启动 ApplicationMaster的命令、用户程序等 。</li>
 <li>ResourceManager为作业分配第一个Container，并与对应的 NodeMaoager通信，要求它在这个Container中启动该作业的 ApplicationMaster。</li>
 <li>ApplicationMaster首先向 ResourceManager注册，这样用户可以直接通过 ResourceManager 查询作业的运行状态；然后它将为各个任务申请资源并监控任务的运行状态，直到运行结束。即重复步骤(7)。</li>
 <li>ApplicationMaster采用轮询的方式通过 RPC 请求向 ResourceManager申请和获取资源。</li>
@@ -267,7 +267,7 @@
 <li>短应用程序(秒、分、小时级内运行结束的程序: MR job、Spark job等)  </li>
 <li>打造以YARN为核心的生态系统</li>
 </ol>
-<p>YARN核心的生态系统<br><img src="/2019/03/16/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E6%A0%B8%E5%BF%83%E7%9A%84%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F.png" alt="YARN核心的生态系统"><br>图中的 HDFS2 值的是在基于HDFS之上的HA和Federation等新特性。</p>
+<p>YARN核心的生态系统<br><img src="/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8YARN/YARN%E6%A0%B8%E5%BF%83%E7%9A%84%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F.png" alt="YARN核心的生态系统"><br>图中的 HDFS2 值的是在基于HDFS之上的HA和Federation等新特性。</p>
 <p>在引入YARN之后，可以在YARN上运行各种不同框架的作业:</p>
 <ul>
 <li>离线计算框架: MapReduce</li>

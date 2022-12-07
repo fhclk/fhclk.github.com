@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.4.0">
+<meta name="generator" content="Hexo 6.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -27,13 +27,13 @@
 <meta property="og:site_name" content="拾荒者">
 <meta property="og:description" content="基本步骤申请账号前往小程序注册 https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;wxopen&#x2F;waregister?action&#x3D;step1 注册小程序，一个邮箱账号对应一个小程序。登录 微信公众平台 https:&#x2F;&#x2F;mp.weixin.qq.com ，在菜单 “设置”-“开发设置” 获取小程序的 AppID。 开发工具下载地址 开发官网开发文档 设置服务器域名小程序要与后端交互，需要登录“微信">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://fhclk.github.io/2018/03/05/wx-applet/wx-applet/domain.png">
-<meta property="og:image" content="http://fhclk.github.io/2018/03/05/wx-applet/wx-applet/publish.png">
+<meta property="og:image" content="http://fhclk.github.io/wx-applet/wx-applet/domain.png">
+<meta property="og:image" content="http://fhclk.github.io/wx-applet/wx-applet/publish.png">
 <meta property="article:published_time" content="2018-03-05T00:17:00.000Z">
 <meta property="article:modified_time" content="2019-02-02T02:49:54.000Z">
 <meta property="article:author" content="fhclk">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://fhclk.github.io/2018/03/05/wx-applet/wx-applet/domain.png">
+<meta name="twitter:image" content="http://fhclk.github.io/wx-applet/wx-applet/domain.png">
 
 <link rel="canonical" href="http://fhclk.github.io/2018/03/05/wx-applet/">
 
@@ -206,9 +206,9 @@
         <h2 id="基本步骤"><a href="#基本步骤" class="headerlink" title="基本步骤"></a>基本步骤</h2><h3 id="申请账号"><a href="#申请账号" class="headerlink" title="申请账号"></a>申请账号</h3><p>前往<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/wxopen/waregister?action=step1">小程序注册</a> <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/wxopen/waregister?action=step1">https://mp.weixin.qq.com/wxopen/waregister?action=step1</a> 注册小程序，一个邮箱账号对应一个小程序。<br>登录 <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/">微信公众平台</a> <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/">https://mp.weixin.qq.com</a> ，在菜单 “设置”-“开发设置” 获取小程序的 AppID。</p>
 <h3 id="开发工具"><a href="#开发工具" class="headerlink" title="开发工具"></a>开发工具</h3><p><a target="_blank" rel="noopener" href="https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html?t=19020120">下载地址</a></p>
 <h3 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h3><p><a target="_blank" rel="noopener" href="https://developers.weixin.qq.com/miniprogram/dev/">官网开发文档</a></p>
-<h4 id="设置服务器域名"><a href="#设置服务器域名" class="headerlink" title="设置服务器域名"></a>设置服务器域名</h4><p>小程序要与后端交互，需要登录“微信工作平台|小程序”，在“开发”-“开发设置”-“服务器域名”添加域名，并且服务器要支持HTTPS协议。<br>如果在开发过程中使用了web-view组件，需要在“开发设置”中的“业务域名”中添加域名，并且只有企业号对应的小程序才有此项功能，个人账户不能进行此项设置。<br><img src="/2018/03/05/wx-applet/wx-applet/domain.png" alt="域名设置">   </p>
+<h4 id="设置服务器域名"><a href="#设置服务器域名" class="headerlink" title="设置服务器域名"></a>设置服务器域名</h4><p>小程序要与后端交互，需要登录“微信工作平台|小程序”，在“开发”-“开发设置”-“服务器域名”添加域名，并且服务器要支持HTTPS协议。<br>如果在开发过程中使用了web-view组件，需要在“开发设置”中的“业务域名”中添加域名，并且只有企业号对应的小程序才有此项功能，个人账户不能进行此项设置。<br><img src="/wx-applet/wx-applet/domain.png" alt="域名设置">   </p>
 <h3 id="成员管理"><a href="#成员管理" class="headerlink" title="成员管理"></a>成员管理</h3><p>在“管理”-“成员管理”里可以添加项目成员和体验成员，上传代码后在“版本管理”-“开发版本”中设置体验版本，已经添加的体验成员就可以扫描二维码体验小程序。    </p>
-<h3 id="发布小程序"><a href="#发布小程序" class="headerlink" title="发布小程序"></a>发布小程序</h3><p>在小程序功能测试通过后，上传代码，在“开发版本”中提交审核，审核通过后在“审核版本”中发布到线上。<br><img src="/2018/03/05/wx-applet/wx-applet/publish.png" alt="发布小程序">   </p>
+<h3 id="发布小程序"><a href="#发布小程序" class="headerlink" title="发布小程序"></a>发布小程序</h3><p>在小程序功能测试通过后，上传代码，在“开发版本”中提交审核，审核通过后在“审核版本”中发布到线上。<br><img src="/wx-applet/wx-applet/publish.png" alt="发布小程序">   </p>
 <p>发布成功后在微信里删除开发版本和预览版本，删除后台微信进程，重新打开微信，在小程序中搜索已发布的小程序，验证是否发布成功。</p>
 
     </div>
