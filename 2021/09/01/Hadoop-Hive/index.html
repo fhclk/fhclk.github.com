@@ -23,21 +23,21 @@
   <meta name="description" content="数据仓库数仓概念Data Warehouse（DW），用于存储、分析、报告的数据系统。数据仓库的目的是构建面向分析的集成化数据环境，分析结果为企业提供决策支持 数据仓库本身并不“生产”任何数据，其数据来源于不同外部系统 数仓主要特征 面向主题（Subject-Oriented）主题是一个抽象的概念，是较高层次上数据综合、归类并进行分析利用的抽象 集成性（Integrated）主题相关的数据通常会分">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hadoop-Hive">
-<meta property="og:url" content="http://fhclk.github.io/2022/12/13/Hadoop-Hive/index.html">
+<meta property="og:url" content="http://fhclk.github.io/2021/09/01/Hadoop-Hive/index.html">
 <meta property="og:site_name" content="拾荒者">
 <meta property="og:description" content="数据仓库数仓概念Data Warehouse（DW），用于存储、分析、报告的数据系统。数据仓库的目的是构建面向分析的集成化数据环境，分析结果为企业提供决策支持 数据仓库本身并不“生产”任何数据，其数据来源于不同外部系统 数仓主要特征 面向主题（Subject-Oriented）主题是一个抽象的概念，是较高层次上数据综合、归类并进行分析利用的抽象 集成性（Integrated）主题相关的数据通常会分">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://fhclk.github.io/2022/12/13/Hadoop-Hive/image-20221213164955767.png">
-<meta property="og:image" content="http://fhclk.github.io/2022/12/13/Hadoop-Hive/image-20221213165041001.png">
-<meta property="article:published_time" content="2022-12-13T08:32:57.000Z">
-<meta property="article:modified_time" content="2022-12-13T08:52:16.869Z">
+<meta property="og:image" content="http://fhclk.github.io/2021/09/01/Hadoop-Hive/image-20221213164955767.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/09/01/Hadoop-Hive/image-20221213165041001.png">
+<meta property="article:published_time" content="2021-09-01T08:32:57.000Z">
+<meta property="article:modified_time" content="2022-12-13T09:13:14.623Z">
 <meta property="article:author" content="fhclk">
 <meta property="article:tag" content="大数据">
 <meta property="article:tag" content="Hadoop">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://fhclk.github.io/2022/12/13/Hadoop-Hive/image-20221213164955767.png">
+<meta name="twitter:image" content="http://fhclk.github.io/2021/09/01/Hadoop-Hive/image-20221213164955767.png">
 
-<link rel="canonical" href="http://fhclk.github.io/2022/12/13/Hadoop-Hive/">
+<link rel="canonical" href="http://fhclk.github.io/2021/09/01/Hadoop-Hive/">
 
 
 <script id="page-configurations">
@@ -161,7 +161,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/12/13/Hadoop-Hive/">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/09/01/Hadoop-Hive/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar1.png">
@@ -183,10 +183,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-12-13 16:32:57 / 修改时间：16:52:16" itemprop="dateCreated datePublished" datetime="2022-12-13T16:32:57+08:00">2022-12-13</time>
+              <time title="创建时间：2021-09-01 16:32:57" itemprop="dateCreated datePublished" datetime="2021-09-01T16:32:57+08:00">2021-09-01</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-12-13 17:13:14" itemprop="dateModified" datetime="2022-12-13T17:13:14+08:00">2022-12-13</time>
+              </span>
 
           
 
@@ -208,8 +214,8 @@
 </ul>
 <h1 id="Apache-Hive"><a href="#Apache-Hive" class="headerlink" title="Apache Hive"></a>Apache Hive</h1><h2 id="Apache-Hive概述"><a href="#Apache-Hive概述" class="headerlink" title="Apache Hive概述"></a>Apache Hive概述</h2><p>Apache Hive是一款建立在Hadoop之上的数据仓库系统。可以将存储在Hadoop文件中的结构化、半结构化数据文件映射为一张数据块表，基于表提供了一种类似SQL查询模型，称为Hive查询语言（HQL），用于访问和分析存储在Hadoop文件中的大型数据集。</p>
 <p>Hive的核心是将HQL转换为MapReduce程序，然后将程序提交到Hadoop集群执行。</p>
-<h2 id="SQL-on-Hadoop"><a href="#SQL-on-Hadoop" class="headerlink" title="SQL on Hadoop"></a>SQL on Hadoop</h2><p><img src="/2022/12/13/Hadoop-Hive/image-20221213164955767.png" alt="image-20221213164955767"></p>
-<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p><img src="/2022/12/13/Hadoop-Hive/image-20221213165041001.png" alt="image-20221213165041001"></p>
+<h2 id="SQL-on-Hadoop"><a href="#SQL-on-Hadoop" class="headerlink" title="SQL on Hadoop"></a>SQL on Hadoop</h2><p><img src="/2021/09/01/Hadoop-Hive/image-20221213164955767.png" alt="image-20221213164955767"></p>
+<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p><img src="/2021/09/01/Hadoop-Hive/image-20221213165041001.png" alt="image-20221213165041001"></p>
 <h2 id="Hive组件"><a href="#Hive组件" class="headerlink" title="Hive组件"></a>Hive组件</h2><h3 id="用户接口"><a href="#用户接口" class="headerlink" title="用户接口"></a>用户接口</h3><p>包括CLI、JDBC&#x2F;ODBC、WebGui</p>
 <h3 id="元数据存储"><a href="#元数据存储" class="headerlink" title="元数据存储"></a>元数据存储</h3><p>通常是存储在关系数据库如mysql&#x2F;derby中。Hive中的元数据包括表的名字，表的列和分区及其属性，表的属性（是否为外部表等），表的数据所在目录等</p>
 <h3 id="Driver驱动程序"><a href="#Driver驱动程序" class="headerlink" title="Driver驱动程序"></a>Driver驱动程序</h3><p>包括语法解析器、计划编译器、优化器、执行器<br>完成HQL查询语句从词法分析、语法分析、编译、优化以及查询计划的生成。生成的查询计划存储在HDFS中，并随后有执行引擎调用执行</p>
@@ -235,10 +241,13 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/02/18/SparkSQL/" rel="prev" title="SparkSQL">
-      <i class="fa fa-chevron-left"></i> SparkSQL
+    <a href="/2021/08/28/Mysql-8-%E7%89%88%E6%9C%AC%E4%BF%AE%E6%94%B9root%E5%AF%86%E7%A0%81/" rel="prev" title="Mysql 8.*版本修改root密码">
+      <i class="fa fa-chevron-left"></i> Mysql 8.*版本修改root密码
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/10/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83%E5%A4%A7%E5%85%A8/" rel="next" title="Android代码规范大全">
+      Android代码规范大全 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
