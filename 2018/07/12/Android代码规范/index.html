@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="常规规范 不用0dp，而用0px，这样就可以在获取时避免系统进行换算，提升代码的执行效率。  字符串比较，用  &quot;xxx&quot;.equals(object)，而不是object.equals(&quot;xxx&quot;)，因为object可能为空。  尽量采用switch case来判断，如果不能再考虑if else，在多条件下switch case会更加简洁。  不推荐使用l">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android代码规范">
+<meta property="og:url" content="http://fhclk.github.io/2018/07/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="常规规范 不用0dp，而用0px，这样就可以在获取时避免系统进行换算，提升代码的执行效率。  字符串比较，用  &quot;xxx&quot;.equals(object)，而不是object.equals(&quot;xxx&quot;)，因为object可能为空。  尽量采用switch case来判断，如果不能再考虑if else，在多条件下switch case会更加简洁。  不推荐使用l">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-07-12T02:08:41.000Z">
+<meta property="article:modified_time" content="2022-12-12T02:38:21.107Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://fhclk.github.io/2018/07/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Android代码规范 | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2018/07/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android代码规范
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-07-12 10:08:41" itemprop="dateCreated datePublished" datetime="2018-07-12T10:08:41+08:00">2018-07-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-12-12 10:38:21" itemprop="dateModified" datetime="2022-12-12T10:38:21+08:00">2022-12-12</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="常规规范"><a href="#常规规范" class="headerlink" title="常规规范"></a>常规规范</h4><ol>
+<li><p>不用0dp，而用0px，这样就可以在获取时避免系统进行换算，提升代码的执行效率。</p>
+</li>
+<li><p>字符串比较，用 <code> &quot;xxx&quot;.equals(object)</code>，而不是<code>object.equals(&quot;xxx&quot;)</code>，因为object可能为空。</p>
+</li>
+<li><p>尽量采用switch case来判断，如果不能再考虑if else，在多条件下switch case会更加简洁。</p>
+</li>
+<li><p>不推荐使用layout_marginLeft和layout_marginRight，推荐使用layout_marginStart和layout_marginEnd，padding同理。</p>
+</li>
+<li><p>如果在 layout_marginStart 和 layout_marginEnd 的值相同的情况下，使用 layout_marginHorizontal，而 layout_marginTop 和 layout_marginBottom 也同理，使用 layout_marginVertical，能用一句代码能做的事不要写两句，padding 属性也是同理。</p>
+</li>
+<li><p>在能满足需求的情况下，尽量用 invisible 来代替 gone，因为 gone 会触发当前整个 View 树进行重新测量和绘制。</p>
+</li>
+<li><p>api 和 implementation，在能满足使用的情况下，优先选用 implementation，因为这样可以减少一些编译时间。</p>
+</li>
+<li><p>ListView 和 RecyclerView 都能实现需求的前提下，优先选用 RecyclerView。</p>
+</li>
+<li><p>ScrollView 和 NestedScrollView 都能实现需求的前提下，优先选用 NestedScrollView，是因为 NestedScrollView 和 RecyclerView 支持相互嵌套，而 ScrollView 是不支持嵌套滚动的。</p>
+</li>
+<li><p>如果一个类不需要被继承，请直接用 final 进行修饰，如果一个字段在类初始化过程中已经赋值并且没有地方进行二次赋值，也应当用 final 修饰。</p>
+</li>
+<li><p>阿里巴巴代码约束插件，并及时地对插件所提示的代码警告进行处理或者抑制警告。</p>
+<p><em><a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/plugin/10046-alibaba-java-coding-guidelines">https://plugins.jetbrains.com/plugin/10046-alibaba-java-coding-guidelines</a></em></p>
+</li>
+<li><p>应用图标应该放在 mipmap 目录下，其他图片资源应当放到 drawable 目录下</p>
+</li>
+</ol>
+<h4 id="后台接口规范"><a href="#后台接口规范" class="headerlink" title="后台接口规范"></a>后台接口规范</h4><ol>
+<li>后台返回的 id 值，不要使用 int 或者 long 类型来接收，而应该用 string 类型来接收，因为不需要对这个 id 值进行运算，所以不需要关心它是什么类型的。</li>
+<li>后台返回的金额数值应该使用 String 来接收，而不能用浮点数来接收，因为 float 或者 double 在数值比较大的时候会容易丢失精度，并且还需要自己手动转换出想要保留的小数位，最好的方式是后台返回什么前端就展示什么，而到了运算的时候，则应该用 BigDecimal 类来进行转换和计算，当然金额在前端一般展示居多，运算的情况还算是比较少的。</li>
+<li>在定义后台返回的 Bean 类时，不应当将一些没有使用到的字段添加到代码中，因为这样会消耗性能，因为 Gson 是通过反射将后台字段赋值到 Java 字段中，所以应当避免一些不必要的字段解析，另外臃余的字段也会给排查问题造成一定的阻碍。</li>
+<li>如果后台给定的字段名不符合代码命名的时候，例如当遇到 student_name 这种命名时，应当使用 Gson 框架中的 @SerializedName 注解进行重命名。</li>
+<li>请求的接口参数和返回字段必须要写上注释，除此之外还应该备注对应的后台接口文档地址，以便后续能够更好地进行维护和迭代。</li>
+<li>后台返回的 Bean 类字段不能直接访问，而应该通过生成 Get 方法，然后使用这个 Get 方法来访问字段。</li>
+<li>接口请求成功的提示可以不显示，但请求失败的提示需要显示给到用户，否则会加大排查问题的难度，也极有可能会把问题掩盖掉，从而导致问题遗留到线上去。</li>
+</ol>
+<h4 id="变量命名规范"><a href="#变量命名规范" class="headerlink" title="变量命名规范"></a>变量命名规范</h4><ol>
+<li>严禁使用中文或者中文拼音进行命名</li>
+<li>使用驼峰命名风格（最好控制三个单词内）</li>
+<li>局部变量应用作用来命名</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">String name;</span><br><span class="line">TextView nameView;</span><br><span class="line">FrameLayout nameLayout;</span><br><span class="line"><span class="comment">//只有一个类型的控件时，也可以</span></span><br><span class="line">TextView textView;</span><br><span class="line">RecyclerView recyclerView;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>成员变量必须以m开头</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String mName;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>布尔值命名，不应该以is开头</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">boolean</span> <span class="variable">mDebug</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line"><span class="type">boolean</span> <span class="variable">debug</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>静态变量用s开头</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> Handler sHandler;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>常量则需要用大写，并且用下划线代替驼峰</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">TAG</span> <span class="operator">=</span> <span class="string">&quot;abc&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="包名命名规范"><a href="#包名命名规范" class="headerlink" title="包名命名规范"></a>包名命名规范</h4><ol>
+<li>不允许包名中携带英文大写</li>
+<li>包名应该以简洁的方式命名</li>
+<li>包名要按照模块或者作用来划分</li>
+<li>不要在某一包名下放置一些无关的类</li>
+</ol>
+<h4 id="方法命名规范"><a href="#方法命名规范" class="headerlink" title="方法命名规范"></a>方法命名规范</h4><ol>
+<li>initXX：初始化相关方法，使用 init 为前缀标识，如初始化布局 initView。</li>
+<li>isXX：方法返回值为 boolean 型的请使用 is 或 check 为前缀标识。</li>
+<li>getXX：返回某个值的方法，使用 get 为前缀标识，例如 getName。</li>
+<li>setXX：设置某个属性值，使用 set 为前缀标识，例如 setName。</li>
+<li>handlerXX&#x2F;processXX：对数据进行处理的方法，例如 handleMessage。</li>
+<li>displayXX&#x2F;showXX：弹出提示框和提示信息，例如 showDialog。</li>
+<li>updateXX：更新某个东西，例如 updateData。</li>
+<li>saveXX：保存某个东西，例如 saveData。</li>
+<li>resetXX：重置某个东西，例如 resetData。</li>
+<li>clearXX：清除某个东西，例如 clearData</li>
+<li>removeXX：移除数据或者视图等，例如 removeView。</li>
+<li>drawXX：绘制数据或效果相关的，使用 draw 前缀标识，例如 drawText。</li>
+</ol>
+<h4 id="类文件命名规范"><a href="#类文件命名规范" class="headerlink" title="类文件命名规范"></a>类文件命名规范</h4><p>业务模块以 模块 + 类型 来命名</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HomeActivity.java;</span><br><span class="line">SettingFragment.java;</span><br><span class="line">HomeAdapter.java;</span><br><span class="line">AddressDialog.java;</span><br></pre></td></tr></table></figure>
+
+<p>技术模块以类的 作用 来命名</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CrashHandler.java;</span><br><span class="line">PickerLayoutManager.java;</span><br></pre></td></tr></table></figure>
+
+<h4 id="接口命名规范"><a href="#接口命名规范" class="headerlink" title="接口命名规范"></a>接口命名规范</h4><p>如果是监听事件可以参考 View 的写法及命名</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">View</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> View.OnClickListener mListener;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setOnClickListener</span><span class="params">(OnClickListener listener)</span> &#123;</span><br><span class="line">        mListener = listener;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">OnClickListener</span> &#123;</span><br><span class="line">        <span class="keyword">void</span> <span class="title function_">onClick</span><span class="params">(View v)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果是回调事件可以参考 Handler 的写法及命名</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Handler</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Callback</span> &#123;</span><br><span class="line">        <span class="type">boolean</span> <span class="title function_">handleMessage</span><span class="params">(Message msg)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至于接口写在内部还是外部，具体可以视实际情况而定，如果功能比较庞大，就可以考虑抽取成外部的，只作用在某个类上的，则就可以直接写成内部的。</p>
+<h4 id="布局文件命名规范"><a href="#布局文件命名规范" class="headerlink" title="布局文件命名规范"></a>布局文件命名规范</h4><p>以 模块 + 类型 来命名</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">home_activity.xml</span><br><span class="line">setting_fragment.xml</span><br><span class="line">menu_item.xml</span><br><span class="line">address_dialog.xml</span><br></pre></td></tr></table></figure>
+
+<p>这样写的好处在于，由于 res 文件夹下是没有层级概念，通过前缀的命名可以帮助我们更好定位到同一模块下的资源<br>例如分享对话框中，有对话框 Root 布局和 Item 布局</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">share_dialog.xml（Root 布局）</span><br><span class="line">share_item.xml（Item 布局）</span><br></pre></td></tr></table></figure>
+
+<h4 id="资源文件命名规范"><a href="#资源文件命名规范" class="headerlink" title="资源文件命名规范"></a>资源文件命名规范</h4><p>如果是业务模块下的资源，以 模块 + 类型 来命名</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">share_link_ic.png（复制链接）</span><br><span class="line">share_moment_ic.png（分享到朋友圈）</span><br><span class="line">share_qq_ic.png（分享到 QQ 好友）</span><br><span class="line">share_qzone_ic.png（分享到 QQ 空间）</span><br><span class="line">share_wechat_ic.png（分享到微信好友）</span><br></pre></td></tr></table></figure>
+
+<p>如果和业务模块不相干的资源，以 作用 + 类型 来命名，例如通用的控件样式资源</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">button_rect_selector.xml（通用直角按钮样式）</span><br><span class="line">button_round_selector.xml（通用圆角按钮样式）</span><br></pre></td></tr></table></figure>
+
+<p>这种资源有一个共同特点，它不属于哪个模块，但是在不同模块都有用到，所以不能用业务的模块名作为文件名前缀。</p>
+<h4 id="接口实现规范"><a href="#接口实现规范" class="headerlink" title="接口实现规范"></a>接口实现规范</h4><p>一般情况下，我们会在类中这样实现接口，这样写的好处是，可以减少对象的创建，并且代码也比较美观。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">PasswordEditText</span> <span class="keyword">extends</span> <span class="title class_">EditText</span></span><br><span class="line">        <span class="keyword">implements</span> <span class="title class_">View</span>.OnTouchListener,</span><br><span class="line">        View.OnFocusChangeListener, TextWatcher &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">PasswordEditText</span><span class="params">(Context context, AttributeSet attrs, <span class="type">int</span> defStyleAttr)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">        setOnTouchListener(<span class="built_in">this</span>);</span><br><span class="line">        setOnFocusChangeListener(<span class="built_in">this</span>);</span><br><span class="line">        addTextChangedListener(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onFocusChange</span><span class="params">(View view, <span class="type">boolean</span> hasFocus)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onTouch</span><span class="params">(View view, MotionEvent event)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onTextChanged</span><span class="params">(CharSequence s, <span class="type">int</span> start, <span class="type">int</span> before, <span class="type">int</span> count)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">beforeTextChanged</span><span class="params">(CharSequence s, <span class="type">int</span> start, <span class="type">int</span> count, <span class="type">int</span> after)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterTextChanged</span><span class="params">(Editable s)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是有一个美中不足的地方，就是在实现的接口过多时，我们很难分辨是哪个方法是哪个接口的，这个时候可以使用注释的方式来解决这个问题，加上 @link 还可以帮助我们快速定位接口类在项目中所在的位置。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">PasswordEditText</span> <span class="keyword">extends</span> <span class="title class_">EditText</span></span><br><span class="line">        <span class="keyword">implements</span> <span class="title class_">View</span>.OnTouchListener,</span><br><span class="line">        View.OnFocusChangeListener, TextWatcher &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">PasswordEditText</span><span class="params">(Context context, AttributeSet attrs, <span class="type">int</span> defStyleAttr)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">        setOnTouchListener(<span class="built_in">this</span>);</span><br><span class="line">        setOnFocusChangeListener(<span class="built_in">this</span>);</span><br><span class="line">        addTextChangedListener(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * &#123;<span class="doctag">@link</span> OnFocusChangeListener&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onFocusChange</span><span class="params">(View view, <span class="type">boolean</span> hasFocus)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * &#123;<span class="doctag">@link</span> OnTouchListener&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onTouch</span><span class="params">(View view, MotionEvent event)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * &#123;<span class="doctag">@link</span> TextWatcher&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onTextChanged</span><span class="params">(CharSequence s, <span class="type">int</span> start, <span class="type">int</span> before, <span class="type">int</span> count)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">beforeTextChanged</span><span class="params">(CharSequence s, <span class="type">int</span> start, <span class="type">int</span> count, <span class="type">int</span> after)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterTextChanged</span><span class="params">(Editable s)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="异常捕获规范"><a href="#异常捕获规范" class="headerlink" title="异常捕获规范"></a>异常捕获规范</h4><p>请不要使用此方式捕获异常，因为这种方式会把问题给隐藏掉，从而会加大后续排查问题的难度。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">	Xxx.xxx();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span>(Exception e) &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如需捕获异常，请用以下方式进行捕获，列出具体的异常类型，并在代码中输出对应的日志。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 捕获这个异常，避免程序崩溃</span></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 目前发现在 Android 7.1 主线程被阻塞之后弹吐司会导致崩溃，可使用 Thread.sleep(5000) 进行复现</span></span><br><span class="line">    <span class="comment">// 查看源码得知 Google 已经在 Android 8.0 已经修复了此问题</span></span><br><span class="line">    <span class="comment">// 主线程阻塞之后 Toast 也会被阻塞，Toast 因为显示超时导致 Window Token 失效</span></span><br><span class="line">    mHandler.handleMessage(msg);</span><br><span class="line">&#125; <span class="keyword">catch</span> (WindowManager.BadTokenException | IllegalStateException e) &#123;</span><br><span class="line">    <span class="comment">// android.view.WindowManager$BadTokenException：Unable to add window -- token android.os.BinderProxy is not valid; is your activity running?</span></span><br><span class="line">    <span class="comment">// java.lang.IllegalStateException：View android.widget.TextView has already been added to the window manager.</span></span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果这个异常不是通过方法 throws 关键字抛出，则需要在 try 块中说明崩溃的缘由，并注明抛出的异常信息。<br>有异常就一定要 try catch ？，这种想法其实是错的，例如我们项目用 Glide 加载图片会抛出以下异常：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Caused by: java.lang.IllegalArgumentException: You cannot start a load <span class="keyword">for</span> a destroyed activity</span><br><span class="line">   at com.bumptech.glide.manager.RequestManagerRetriever.assertNotDestroyed(RequestManagerRetriever.java:<span class="number">348</span>)</span><br><span class="line">   at com.bumptech.glide.manager.RequestManagerRetriever.get(RequestManagerRetriever.java:<span class="number">148</span>)</span><br><span class="line">   at com.bumptech.glide.Glide.with(Glide.java:<span class="number">826</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这是因为 Activity 的销毁了而去加载图片导致的（场景：异步执行图片加载），大多人的解决方式可能是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// Activity 销毁后执行加载图片会触发 crash</span></span><br><span class="line">    Glide.with(<span class="built_in">this</span>)</span><br><span class="line">            .load(url)</span><br><span class="line">            .into(mImageView);</span><br><span class="line">&#125; <span class="keyword">catch</span> (IllegalArgumentException e) &#123;</span><br><span class="line">    <span class="comment">// java.lang.IllegalArgumentException: You cannot start a load for a destroyed activity</span></span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>虽然这种方式可以解决 crash 的问题，但是显得不够严谨，Glide 抛异常给外层，其实无非就想告诉调用者，调用的时机错了，正确的处理方式不是直接捕获这个异常，而是应该在外层做好逻辑判断，避免会进入出现 crash的代码，正确的处理示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (isFinishing() || isDestroyed()) &#123;</span><br><span class="line">   <span class="comment">// Glide：You cannot start a load for a destroyed activity</span></span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line">Glide.with(<span class="built_in">this</span>)</span><br><span class="line">        .load(url)</span><br><span class="line">        .into(mImageView);</span><br></pre></td></tr></table></figure>
+
+<p>所以尽量不要通过 try catch 的方式来处理异常，除非外层真的判断不了，否则应该通过一些逻辑判断来避免进入一些会 crash 的代码。</p>
+<h4 id="Activity跳转约定"><a href="#Activity跳转约定" class="headerlink" title="Activity跳转约定"></a>Activity跳转约定</h4><p>应当将 Intent 中的 key 常量保存到一个管理类中，又或者定义在目标的 Activity 中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IntentKey</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** id */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ID</span> <span class="operator">=</span> <span class="string">&quot;id&quot;</span>;</span><br><span class="line">    <span class="comment">/** token */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">TOKEN</span> <span class="operator">=</span> <span class="string">&quot;token&quot;</span>;</span><br><span class="line">    <span class="comment">/** 订单 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ORDER</span> <span class="operator">=</span> <span class="string">&quot;order&quot;</span>;</span><br><span class="line">    <span class="comment">/** 余额 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">BALANCE</span> <span class="operator">=</span> <span class="string">&quot;balance&quot;</span>;</span><br><span class="line">    <span class="comment">/** 时间 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">TIME</span> <span class="operator">=</span> <span class="string">&quot;time&quot;</span>;</span><br><span class="line">    <span class="comment">/** URL */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">URL</span> <span class="operator">=</span> <span class="string">&quot;url&quot;</span>;</span><br><span class="line">    <span class="comment">/** 路径 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PATH</span> <span class="operator">=</span> <span class="string">&quot;path&quot;</span>;</span><br><span class="line">    <span class="comment">/** 其他 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">OTHER</span> <span class="operator">=</span> <span class="string">&quot;other&quot;</span>;</span><br><span class="line"></span><br><span class="line">    .....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果跳转的 Activity 需要传递参数，应该在目标的 Activity 中定义静态的 start 又或者 newIntent 方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">WebActivity</span> <span class="keyword">extends</span> <span class="title class_">Activity</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">start</span><span class="params">(Context context, String url)</span> &#123;</span><br><span class="line">        <span class="type">Intent</span> <span class="variable">intent</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Intent</span>(context, WebActivity.class);</span><br><span class="line">        intent.putExtra(IntentKey.URL, url);</span><br><span class="line">        context.startActivity(intent);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">WebActivity</span> <span class="keyword">extends</span> <span class="title class_">Activity</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Intent <span class="title function_">newIntent</span><span class="params">(Context context, String url)</span> &#123;</span><br><span class="line">        <span class="type">Intent</span> <span class="variable">intent</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Intent</span>(context, WebActivity.class);</span><br><span class="line">        intent.putExtra(IntentKey.URL, url);</span><br><span class="line">        <span class="keyword">return</span> intent;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果创建的 Fragment 需要传递参数，应该在目标的 Fragment 中定义静态的 newInstance 方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">WebFragment</span> <span class="keyword">extends</span> <span class="title class_">Fragment</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> WebFragment <span class="title function_">newInstance</span><span class="params">(String url)</span> &#123;</span><br><span class="line">        <span class="type">WebFragment</span> <span class="variable">fragment</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">WebFragment</span>();</span><br><span class="line">        <span class="type">Bundle</span> <span class="variable">bundle</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Bundle</span>();</span><br><span class="line">        bundle.putString(IntentKey.URL, url);</span><br><span class="line">        fragment.setArguments(bundle);</span><br><span class="line">        <span class="keyword">return</span> fragment;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果跳转的 Activity 或者创建的 Fragment 不需要传任何参数，可以不需要定义这些静态方法</p>
+<h4 id="第三方框架使用规范"><a href="#第三方框架使用规范" class="headerlink" title="第三方框架使用规范"></a>第三方框架使用规范</h4><p>集成一些第三方框架或者 SDK，必须注明作用和出处，以便出现问题时能够快速核查和反馈</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 权限请求框架：https://github.com/getActivity/XXPermissions</span></span><br><span class="line">implementation <span class="string">&#x27;com.hjq:xxpermissions:9.8&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>尽量不要选择功能相同的两套框架，应当引用最合适的一套框架进行开发。<br>使用第三方库必须要依赖指定的版本号，而不能使用 + 号来指定依赖库最新的版本号。<br>使用第三方开源库出现问题或者 Bug 时应及时通知到开源库的作者，如果没有及时回复就根据实际情况对问题进行修复。<br>尽量避免 Copy 第三方库的技术代码到项目中，特别是在放置到项目业务模块中，因为这样会增加项目的复杂度，从而降低可维护性。<br>如果出现问题不能找到开源库的作者，如果需要修改，应当将这些代码抽取到单独的 Module 中。<br>能用框架就用成熟框架，尽量不要自己编写或者修改框架，如果有需要，要对这块进行严格测试。</p>
+<h4 id="代码注释规范"><a href="#代码注释规范" class="headerlink" title="代码注释规范"></a>代码注释规范</h4><p>类注释规范：author 是创建者（必填项）、time 是创建时间（必填项）、desc 是类的描述（必填项），doc是文档地址（非必填），github 是开源地址（如果项目是开源的则必填，否则不填）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> *    author : xxx</span><br><span class="line"> *    time   : xxxx/xx/xx</span><br><span class="line"> *    desc   : xxx</span><br><span class="line"> *    doc    : xxx</span><br><span class="line"> */</span><br><span class="line">public final class Permission &#123;</span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>方法注释规范：方法注释可根据实际情况而定。</p>
+<p>字段注释规范：根据字段的作用而定</p>
+<h4 id="String-ID命名规范"><a href="#String-ID命名规范" class="headerlink" title="String ID命名规范"></a>String ID命名规范</h4><p>以 模块 + 功能 来命名</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 主界面 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;home_nav_index&quot;</span>&gt;</span>首页<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;home_nav_found&quot;</span>&gt;</span>发现<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;home_nav_message&quot;</span>&gt;</span>消息<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;home_nav_me&quot;</span>&gt;</span>我的<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;home_exit_hint&quot;</span>&gt;</span>再按一次退出<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 登录界面 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;login_register&quot;</span>&gt;</span>注册<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;login_phone_hint&quot;</span>&gt;</span>请输入手机号<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;login_password_hint&quot;</span>&gt;</span>请输入密码<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;login_forget&quot;</span>&gt;</span>忘记密码？<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;login_text&quot;</span>&gt;</span>登录<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;login_other&quot;</span>&gt;</span>其他登录方式<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 注册界面 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;register_title&quot;</span>&gt;</span>注册<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;register_hint&quot;</span>&gt;</span>手机号仅用于登录和保护账号安全<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;register_login&quot;</span>&gt;</span>登录<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;register_password_hint1&quot;</span>&gt;</span>设置密码<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;register_password_hint2&quot;</span>&gt;</span>再次输入密码<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;register_password_input_error&quot;</span>&gt;</span>两次密码输入不一致，请重新输入<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 设置界面 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;setting_title&quot;</span>&gt;</span>设置<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;setting_language_switchover&quot;</span>&gt;</span>语言切换<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;setting_language_simple&quot;</span>&gt;</span>简体中文<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;setting_language_complex&quot;</span>&gt;</span>繁体中文<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Anim-ID命名规范"><a href="#Anim-ID命名规范" class="headerlink" title="Anim ID命名规范"></a>Anim ID命名规范</h4><p>应用到某个模块 View</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">login_left_balloon_view.xml</span><br><span class="line">login_right_balloon_view.xml</span><br></pre></td></tr></table></figure>
+
+<p>应用到全局 Activity</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">left_in_activity.xml</span><br><span class="line">left_out_activity.xml</span><br></pre></td></tr></table></figure>
+
+<p>应用到全局 Dialog</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bottom_in_dialog.xml</span><br><span class="line">bottom_out_dialog.xml</span><br></pre></td></tr></table></figure>
+
+<h4 id="View-ID命名规范"><a href="#View-ID命名规范" class="headerlink" title="View ID命名规范"></a>View ID命名规范</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@+id/R.id.rg_login_type</span><br><span class="line">@+id/R.id.et_login_phone</span><br><span class="line">@+id/R.id.et_login_sms</span><br><span class="line">@+id/R.id.et_login_password</span><br><span class="line">@+id/R.id.btn_login_commit</span><br></pre></td></tr></table></figure>
+
+<p>View 和 Layout 控件缩写表，这里列举最常见的几个</p>
+<table>
+<thead>
+<tr>
+<th>TextView</th>
+<th>tv</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>EditText</td>
+<td>et</td>
+</tr>
+<tr>
+<td>Button</td>
+<td>btn</td>
+</tr>
+<tr>
+<td>ImageView</td>
+<td>iv</td>
+</tr>
+<tr>
+<td>ImageButton</td>
+<td>ib</td>
+</tr>
+<tr>
+<td>ListView</td>
+<td>lv</td>
+</tr>
+<tr>
+<td>RecyclerView</td>
+<td>rv</td>
+</tr>
+<tr>
+<td>RadioButton</td>
+<td>rb</td>
+</tr>
+<tr>
+<td>RadioGroup</td>
+<td>rg</td>
+</tr>
+<tr>
+<td>ProgressBar</td>
+<td>pb</td>
+</tr>
+<tr>
+<td>CheckBox</td>
+<td>cb</td>
+</tr>
+<tr>
+<td>TableLayout</td>
+<td>tl</td>
+</tr>
+<tr>
+<td>ScrollView</td>
+<td>sv</td>
+</tr>
+<tr>
+<td>LinearLayout</td>
+<td>ll</td>
+</tr>
+<tr>
+<td>RelativeLayout</td>
+<td>rl</td>
+</tr>
+<tr>
+<td>FrameLayout</td>
+<td>fl</td>
+</tr>
+</tbody></table>
+<h4 id="Style样式命名规范"><a href="#Style样式命名规范" class="headerlink" title="Style样式命名规范"></a>Style样式命名规范</h4><p>如果只是主题相关的样式，以 Theme 命名结尾，控件样式则以 Style 命名结尾，命名要求尽量简洁，并且需要有代码注释</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 应用主题样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;AppTheme&quot;</span> <span class="attr">parent</span>=<span class="string">&quot;Theme.AppCompat.DayNight.NoActionBar&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 全屏主题样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;FullScreenTheme&quot;</span> <span class="attr">parent</span>=<span class="string">&quot;AppTheme&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 闪屏页主题样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;SplashTheme&quot;</span> <span class="attr">parent</span>=<span class="string">&quot;FullScreenTheme&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 默认圆角按钮样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;ButtonStyle&quot;</span> <span class="attr">parent</span>=<span class="string">&quot;Widget.AppCompat.Button.Borderless&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 不带圆角按钮样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;RectButtonStyle&quot;</span> <span class="attr">parent</span>=<span class="string">&quot;ButtonStyle&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 默认文本框样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;EditTextStyle&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 验证码按钮样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;CountdownViewStyle&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="预览属性约定"><a href="#预览属性约定" class="headerlink" title="预览属性约定"></a>预览属性约定</h4><p>应该在布局文件根布局中定义 tools:context 属性，以便在布局文件中快速定位到对应的类</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">FrameLayout</span> <span class="attr">xmlns:android</span>=<span class="string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:app</span>=<span class="string">&quot;http://schemas.android.com/apk/res-auto&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tools</span>=<span class="string">&quot;http://schemas.android.com/tools&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:context</span>=<span class="string">&quot;.ui.activity.HomeActivity&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">FrameLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tools:context=&quot;.ui.activity.HomeActivity&quot;</span><br><span class="line"></span><br><span class="line">tools:context=&quot;.ui.fragment.SettingFragment&quot;</span><br><span class="line"></span><br><span class="line">tools:context=&quot;.ui.adapter.HomeAdapter&quot;</span><br><span class="line"></span><br><span class="line">tools:context=&quot;.ui.dialog.PersonDataDialog&quot;</span><br></pre></td></tr></table></figure>
+
+<p>此外，tools 属性还有各种各样的用途，例如 RecyclerView 的 tools 属性</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">androidx.recyclerview.widget.RecyclerView</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">&quot;@+id/rv_pay_list&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:overScrollMode</span>=<span class="string">&quot;never&quot;</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:listitem</span>=<span class="string">&quot;@layout/item_dialog_pay_password&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:itemCount</span>=<span class="string">&quot;9&quot;</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:layoutManager</span>=<span class="string">&quot;androidx.recyclerview.widget.GridLayoutManager&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:spanCount</span>=<span class="string">&quot;3&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>tools 这种命名不止可以应用于 RecyclerView，还可以应用于其他 View 的属性，比如常用的 TextView 和 ImageView</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:text</span>=<span class="string">&quot;学生姓名&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">ImageView</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">&quot;@+id/iv_home_course_image&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:src</span>=<span class="string">&quot;@drawable/bg_home_placeholder&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果某个 TextView 显示的字符串是一成不变的，那么可以直接定义在布局文件中，如果是动态变化的，那么应该使用 tools:text 预览属性，而不应该使用 android:text，其他布局属性也同理。</p>
+<h4 id="资源使用约定"><a href="#资源使用约定" class="headerlink" title="资源使用约定"></a>资源使用约定</h4><p><strong>String 硬编码规范</strong>：如果项目已经适配了多语种，则严禁写死在 Java 代码或者布局文件中，如果没有这块需求的话，也建议将 String 资源定义在 string.xml 文件，此项不强制要求，大家根据实际情况而定。<br><strong>Color 硬编码规范</strong>：在没有使用夜间模式的情况下，允许大部分 Color 值直接定义在布局文件中，但是如果某个色值引用得比较多（例如主题强调色、默认背景色等），需要抽取到 color.xml 文件中。<br><strong>Dimens 硬编码规范</strong>：允许写死在 Java 代码或者布局文件中，但是如果使用了通配符方案对屏幕进行适配，那么则不能直接写死。<br><strong>Style 样式规范</strong>：对于一些常用并且样式比较统一的控件，例如 Button、EditText 等，我们对这些控件的样式进行抽取到 style.xml 文件中来，避免属性重复定义。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/Android/" rel="tag"># Android</a> -->
+              <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i>  Android</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/05/25/read-fupan1/" rel="prev" title="读《复盘+把经验转化为能力》">
+      <i class="fa fa-chevron-left"></i> 读《复盘+把经验转化为能力》
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/10/02/%E8%AF%BB%E3%80%8A%E8%81%8A%E5%87%BA%E6%9D%A5%E7%9A%84%E4%BC%81%E4%B8%9A%E5%B8%9D%E5%9B%BD%E3%80%8B/" rel="next" title="读《聊出来的企业帝国:马化腾与腾讯管理模式》">
+      读《聊出来的企业帝国:马化腾与腾讯管理模式》 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E8%A7%84%E8%A7%84%E8%8C%83"><span class="nav-number">1.</span> <span class="nav-text">常规规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8E%E5%8F%B0%E6%8E%A5%E5%8F%A3%E8%A7%84%E8%8C%83"><span class="nav-number">2.</span> <span class="nav-text">后台接口规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="nav-number">3.</span> <span class="nav-text">变量命名规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8C%85%E5%90%8D%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="nav-number">4.</span> <span class="nav-text">包名命名规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="nav-number">5.</span> <span class="nav-text">方法命名规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E6%96%87%E4%BB%B6%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="nav-number">6.</span> <span class="nav-text">类文件命名规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="nav-number">7.</span> <span class="nav-text">接口命名规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%83%E5%B1%80%E6%96%87%E4%BB%B6%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="nav-number">8.</span> <span class="nav-text">布局文件命名规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="nav-number">9.</span> <span class="nav-text">资源文件命名规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0%E8%A7%84%E8%8C%83"><span class="nav-number">10.</span> <span class="nav-text">接口实现规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7%E8%A7%84%E8%8C%83"><span class="nav-number">11.</span> <span class="nav-text">异常捕获规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Activity%E8%B7%B3%E8%BD%AC%E7%BA%A6%E5%AE%9A"><span class="nav-number">12.</span> <span class="nav-text">Activity跳转约定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B6%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83"><span class="nav-number">13.</span> <span class="nav-text">第三方框架使用规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%B3%A8%E9%87%8A%E8%A7%84%E8%8C%83"><span class="nav-number">14.</span> <span class="nav-text">代码注释规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#String-ID%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="nav-number">15.</span> <span class="nav-text">String ID命名规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Anim-ID%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="nav-number">16.</span> <span class="nav-text">Anim ID命名规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#View-ID%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="nav-number">17.</span> <span class="nav-text">View ID命名规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Style%E6%A0%B7%E5%BC%8F%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="nav-number">18.</span> <span class="nav-text">Style样式命名规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%84%E8%A7%88%E5%B1%9E%E6%80%A7%E7%BA%A6%E5%AE%9A"><span class="nav-number">19.</span> <span class="nav-text">预览属性约定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B5%84%E6%BA%90%E4%BD%BF%E7%94%A8%E7%BA%A6%E5%AE%9A"><span class="nav-number">20.</span> <span class="nav-text">资源使用约定</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>

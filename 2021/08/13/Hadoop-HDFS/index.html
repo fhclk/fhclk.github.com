@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="HDFS分布式文件系统基本概念数据：指存储的内容本身，比如文件、视频、图片等，这些数据底层最终是存储在磁盘等存储介质上的，一般用户无需关心，只需要基于目录树进行增删改查即可，实际针对数据的操作有文件系统完成。 元数据： 元数据（metadata）又称之为解释性数据，记录数据的数据。 文件系统元数据一般指文件大小、最后修改时间、底层存储位置、属性、所属用户、权限等信息。 分布式存储系统核心属性 分布">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hadoop-HDFS">
+<meta property="og:url" content="http://fhclk.github.io/2021/08/13/Hadoop-HDFS/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="HDFS分布式文件系统基本概念数据：指存储的内容本身，比如文件、视频、图片等，这些数据底层最终是存储在磁盘等存储介质上的，一般用户无需关心，只需要基于目录树进行增删改查即可，实际针对数据的操作有文件系统完成。 元数据： 元数据（metadata）又称之为解释性数据，记录数据的数据。 文件系统元数据一般指文件大小、最后修改时间、底层存储位置、属性、所属用户、权限等信息。 分布式存储系统核心属性 分布">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/13/Hadoop-HDFS/image-20221212155509725.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/13/Hadoop-HDFS/image-20221212160026689.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/13/Hadoop-HDFS/image-20221212162816232.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/13/Hadoop-HDFS/image-20221212230023760.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/13/Hadoop-HDFS/image-20221212230559137.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/13/Hadoop-HDFS/image-20221212232028347.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/13/Hadoop-HDFS/image-20221212225725826.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/13/Hadoop-HDFS/image-20221213094517559.png">
+<meta property="article:published_time" content="2021-08-13T02:07:09.000Z">
+<meta property="article:modified_time" content="2022-12-13T02:15:09.753Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="大数据">
+<meta property="article:tag" content="Hadoop">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/2021/08/13/Hadoop-HDFS/image-20221212155509725.png">
+
+<link rel="canonical" href="http://fhclk.github.io/2021/08/13/Hadoop-HDFS/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Hadoop-HDFS | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/08/13/Hadoop-HDFS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hadoop-HDFS
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-08-13 10:07:09" itemprop="dateCreated datePublished" datetime="2021-08-13T10:07:09+08:00">2021-08-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-12-13 10:15:09" itemprop="dateModified" datetime="2022-12-13T10:15:09+08:00">2022-12-13</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="HDFS分布式文件系统"><a href="#HDFS分布式文件系统" class="headerlink" title="HDFS分布式文件系统"></a>HDFS分布式文件系统</h2><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p><strong>数据</strong>：指存储的内容本身，比如文件、视频、图片等，这些数据底层最终是存储在磁盘等存储介质上的，一般用户无需关心，只需要基于目录树进行增删改查即可，实际针对数据的操作有文件系统完成。</p>
+<p><strong>元数据</strong>：</p>
+<p>元数据（metadata）又称之为解释性数据，记录数据的数据。</p>
+<p>文件系统元数据一般指文件大小、最后修改时间、底层存储位置、属性、所属用户、权限等信息。</p>
+<h2 id="分布式存储系统核心属性"><a href="#分布式存储系统核心属性" class="headerlink" title="分布式存储系统核心属性"></a>分布式存储系统核心属性</h2><ul>
+<li><p>分布式存储</p>
+<p>问题：数据量大，单机存储遇到瓶颈。</p>
+<p>解决：</p>
+<p>单机纵向扩展：增加磁盘</p>
+<p>多机横向扩展：增加机器</p>
+</li>
+<li><p>元数据记录</p>
+<p>问题：文件分布在不同机器上不利于查找</p>
+<p>解决：</p>
+<p>元数据记录下文件及其存储位置信息（文件名、大小、存储机器IP），快速定位文件位置</p>
+</li>
+<li><p>分块机制</p>
+<p>问题：文件过大导致单机存不下、上传下载效率低</p>
+<p>解决：文件分块存储在不同的机器，针对块并行操作提高效率</p>
+</li>
+<li><p>副本机制</p>
+<p>问题：硬件出现故障，输入容易丢失</p>
+<p>解决：不同机器设置备份，冗余存储，保障数据安全</p>
+</li>
+</ul>
+<h2 id="HDFS简介"><a href="#HDFS简介" class="headerlink" title="HDFS简介"></a>HDFS简介</h2><p>HDFS（Hadoop Distributed File System），Hadoop分布式文件系统，其主要是解决大数据如何存储问题，适于存储大型数据（TB和PB），它使用多台计算机存储文件，并且提供统一的访问接口，像访问一个普通文件系统一样使用分布式文件系统。</p>
+<h2 id="HDFS应用场景"><a href="#HDFS应用场景" class="headerlink" title="HDFS应用场景"></a>HDFS应用场景</h2><p>适合场景：</p>
+<p>大文件、数据流式访问、一次写入多次读取、低成本部署（廉价PC）、高容错</p>
+<p>不适合场景：</p>
+<p>小文件、数据交互式访问、频繁任意修改、低延迟处理</p>
+<h2 id="HDFS重要特性"><a href="#HDFS重要特性" class="headerlink" title="HDFS重要特性"></a>HDFS重要特性</h2><ul>
+<li>主从架构</li>
+<li>分块存储</li>
+<li>副本机制</li>
+<li>元数据记录</li>
+<li>抽象统一的目录树结构（namespace）</li>
+</ul>
+<p><img src="/2021/08/13/Hadoop-HDFS/image-20221212155509725.png" alt="image-20221212155509725"></p>
+<h3 id="主从架构"><a href="#主从架构" class="headerlink" title="主从架构"></a>主从架构</h3><ul>
+<li>HDFS集群是标准的master&#x2F;slave主从架构集群</li>
+<li>一般一个HDFS集群是有一个Namenode和一定数目的Datanode组成</li>
+<li>Namenode是HDFS主节点，Datanode是HDFS从节点，两种角色各司其职，共同协调完成分布式的文件存储服务</li>
+</ul>
+<h3 id="分块存储"><a href="#分块存储" class="headerlink" title="分块存储"></a>分块存储</h3><ul>
+<li>HDFS中的文件在物理上是分块存储（block）的，默认大小是128M，不足128M则本身就是一块。</li>
+<li>块的大小可以通过配置参数来规定，参数位于hdfs-default.xml中： dfs.blocksize</li>
+</ul>
+<p><img src="/2021/08/13/Hadoop-HDFS/image-20221212160026689.png" alt="image-20221212160026689"></p>
+<h3 id="副本机制"><a href="#副本机制" class="headerlink" title="副本机制"></a>副本机制</h3><ul>
+<li>文件的所有block都会有副本。副本系数可以在文件创建的时候指定，也可以在之后通过命令改变</li>
+<li>副本数由参数dfs.replication控制，默认是3，也就是会额外再复制2份，连同本身供3份</li>
+</ul>
+<h3 id="元数据管理"><a href="#元数据管理" class="headerlink" title="元数据管理"></a>元数据管理</h3><p>HDFS中，Namenode管理的元数据有两种类型：</p>
+<p><strong>文件自身属性信息</strong></p>
+<p>文件名称、权限、修改时间、文件大小、复制因子、数据块大小</p>
+<p><strong>文件块位置映射信息</strong></p>
+<p>记录文件块和DataNode之间的映射信息，即那块位于哪个节点上。</p>
+<h3 id="namespace"><a href="#namespace" class="headerlink" title="namespace"></a>namespace</h3><p>HDFS支持传统的层次型文件组织结构。用户可以创建目录，然后将文件保存在这些目录里，文件系统名字空间的层次结构和大多数现有的文件系统类似，用户可以创建、修改、移动或重命名文件。</p>
+<p>Namenode负责维护文件系统的namespace名称空间，任何文件系统名称空间或属性的修改都将被Namenode记录下来。</p>
+<p>HDFS会给客户端提供一个统一的抽象目录树，客户端通过路径来访问文件，形如：hdfs:&#x2F;&#x2F;namenode:port&#x2F;dir&#x2F;file.data</p>
+<h3 id="数据块存储"><a href="#数据块存储" class="headerlink" title="数据块存储"></a>数据块存储</h3><p>文件的各个block的具体存储管理由Datanode节点承担</p>
+<p>每一个block都可以在多个Datanode上存储</p>
+<h1 id="HDFS-shell"><a href="#HDFS-shell" class="headerlink" title="HDFS shell"></a>HDFS shell</h1><h2 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令"></a>基本命令</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs [generic options]</span><br></pre></td></tr></table></figure>
+
+<h2 id="文件系统协议"><a href="#文件系统协议" class="headerlink" title="文件系统协议"></a>文件系统协议</h2><p>本地文件系统： file:&#x2F;&#x2F;&#x2F;</p>
+<p>分布式文件系统： hdfs:&#x2F;&#x2F;&#x2F;</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -ls file:/// #操作本地文件系统</span><br><span class="line">hadoop fs -ls hdfs:///node1:8020/  #操作HDFS分布式文件系统</span><br><span class="line">hadoop hs -ls / #直接根目录，没有指定协议，将加载fs.defaultFS值</span><br></pre></td></tr></table></figure>
+
+
+
+<p>hdfs dfs 只能操作HDFS文件系统相关（包括Local FS间的操作），常用。</p>
+<p>hadoop fs可操作任意文件系统，不仅仅是hdfs文件系统，适用范围更广。</p>
+<h1 id="HDFS工作流程与机制"><a href="#HDFS工作流程与机制" class="headerlink" title="HDFS工作流程与机制"></a>HDFS工作流程与机制</h1><h2 id="HDFS集群角色与职责"><a href="#HDFS集群角色与职责" class="headerlink" title="HDFS集群角色与职责"></a>HDFS集群角色与职责</h2><h3 id="主角色：namenode"><a href="#主角色：namenode" class="headerlink" title="主角色：namenode"></a>主角色：namenode</h3><p>NameNode是Hadoop分布式文件系统的核心，架构中的主角色。</p>
+<p>NameNode维护和管理文件系统元数据，包括名称空间目录树结构、文件和块的位置信息、访问权限等信息。</p>
+<p>NameNode成为了访问HDFS的唯一入口。</p>
+<p>NameNode内部通过内存和磁盘文件两种方式管理元数据。</p>
+<p>其中磁盘上的元数据文件包括Fsimage内存元数据镜像文件和edits log（Journal）编辑日志。</p>
+<p><img src="/2021/08/13/Hadoop-HDFS/image-20221212162816232.png" alt="image-20221212162816232"></p>
+<h3 id="从角色：datanode"><a href="#从角色：datanode" class="headerlink" title="从角色：datanode"></a>从角色：datanode</h3><p>DataNode具体负责数据块存储。</p>
+<p>DataNode的数量决定了HDFS集群的整体数据存储能力。通过和NameNode配合维护着数据块。</p>
+<h3 id="主角色辅助角色：secondarynamenode"><a href="#主角色辅助角色：secondarynamenode" class="headerlink" title="主角色辅助角色：secondarynamenode"></a>主角色辅助角色：secondarynamenode</h3><p>SecondaryNameNode充当NameNode的辅助节点，但不能替代NameNode。</p>
+<p>主要是帮助主角色进行元数据文件的合并动作。</p>
+<h3 id="namenode职责"><a href="#namenode职责" class="headerlink" title="namenode职责"></a>namenode职责</h3><p>NameNode仅存储HDFS的元数据：文件系统中所有文件的目录树，并跟踪整个集群中的文件，不存储实际数据。</p>
+<p>NameNode知道HDFS中任何给定文件的快列表及其位置。使用此信息NameNode知道如何从块中构建文件。</p>
+<p>NameNode不持久化存储每个文件中各个块所在的datanode的位置信息，这些信息会在系统启动时从DataNode重建。</p>
+<p>NameNode是Hadoop集群中的单点故障。</p>
+<p>NameNode所在机器通常会配置有大量内存（RAM）</p>
+<h3 id="datanode职责"><a href="#datanode职责" class="headerlink" title="datanode职责"></a>datanode职责</h3><p>DataNode负责最终数据块block的存储。是集群的从角色，也称为Slave。</p>
+<p>DataNode启动时，会将自己注册到NameNode并汇报自己负责持有的块列表。</p>
+<p>当某个DataNode关闭时，不会影响数据的可用性。NameNode将安排由其他DataNode管理的块进行副本复制。</p>
+<p>DataNode所在机器通常配置有大量的硬盘空间，因为实际数据存储在DataNode中。</p>
+<h2 id="HDFS写数据流程（上传文件）"><a href="#HDFS写数据流程（上传文件）" class="headerlink" title="HDFS写数据流程（上传文件）"></a>HDFS写数据流程（上传文件）</h2><h3 id="Pipeline管道"><a href="#Pipeline管道" class="headerlink" title="Pipeline管道"></a>Pipeline管道</h3><p>Pipeline是HDFS在上传文件写数据过程中采用的一种数据传输方式。</p>
+<p>客户端将数据写入第一个数据节点，第一个数据节点保存数据之后再将块复制到第二个数据节点，后者保存后将其复制到第三个数据节点。</p>
+<p><img src="/2021/08/13/Hadoop-HDFS/image-20221212230023760.png" alt="image-20221212230023760"></p>
+<p>数据以管道的方式，顺序的沿着一个方向传输，这样能够充分利用每个机器的带宽，避免网络瓶颈和高延迟时的连接，最小化推送所有数据的延时。</p>
+<p>在线性推送模式下，每台机器所有的出口带宽都用于以最快的速度传输数据，而不是在多个接受者之间分配带宽。</p>
+<h3 id="ACK应答响应"><a href="#ACK应答响应" class="headerlink" title="ACK应答响应"></a>ACK应答响应</h3><p>ACK（Acknowledge character）即是确认字符，在数据通信中，接收方发送给发送方的一种传输类控制字符。表示发来的数据已确认接收无误。</p>
+<p>在HDFS pipeline管道传输数据的过程中，传输的反方向会进行ACK校验，确保数据传输安全。</p>
+<p><img src="/2021/08/13/Hadoop-HDFS/image-20221212230559137.png" alt="image-20221212230559137"></p>
+<h3 id="默认3副本存储策略"><a href="#默认3副本存储策略" class="headerlink" title="默认3副本存储策略"></a>默认3副本存储策略</h3><p>默认副本存储策略是由BlockPlacementPolicyDefault指定。</p>
+<ul>
+<li>第一块副本：优先客户端本地，否则随机</li>
+<li>第二块副本：不同于第一块副本的不同机架</li>
+<li>第三块副本：第二块副本相同机架不通过机器</li>
+</ul>
+<p><img src="/2021/08/13/Hadoop-HDFS/image-20221212232028347.png" alt="image-20221212232028347"></p>
+<h3 id="写数据完整流程图"><a href="#写数据完整流程图" class="headerlink" title="写数据完整流程图"></a>写数据完整流程图</h3><p><img src="/2021/08/13/Hadoop-HDFS/image-20221212225725826.png" alt="image-20221212225725826"></p>
+<h3 id="写数据流程"><a href="#写数据流程" class="headerlink" title="写数据流程"></a>写数据流程</h3><ol>
+<li>HDFS客户端创建对象实例DistributedFileSystem，该对象中封装了与HDFS文件系统操作相关的方法。</li>
+<li>调用DistributedFileSystem对象的create()方法，通过RPC请求NameNode创建文件。NameNode执行各种检查判断：目标文件是否存在、父目录是否存在、客户端是否具有创建该文件的权限。检查通过，NameNode就会为本次请求记下一条记录，返回FSDataOutputStream输出流对象给客户端用于写数据。</li>
+<li>客户端通过FSDataOutputStream输出流开始写入数据。</li>
+<li>客户端写入数据时，将数据分成一个个数据包（packet默认64K），内部组件DataStreamer请求NameNode挑选出适合存储数据副本的一组DataNode地址，默认是3副本存储。DataStreamer将数据包流式传输到pipeline的第一个DataNode，该DataNode存储数据包并将它们发送到pipeline的第二个DataNode。同样，第二个DataNode存储数据包并且发送给第三个DataNode。</li>
+<li>传输的反方向上，会通过ACK机制校验数据包传输是否成功。</li>
+<li>客户端完成数据写入后，在FSDataOutputStream输出流上调用close()方法关闭。</li>
+<li>DistributedFileSystem联系NameNode告知其文件写入完成，等待NameNode确认。因为NameNode已经知道文件是由哪些块组成（DataStream请求分配数据块），因此仅需等待最小复制块即可成功返回。最小复制是由参数dfs.namenode.replication.min指定，默认是1。</li>
+</ol>
+<h2 id="HDFS读数据流程（下载文件）"><a href="#HDFS读数据流程（下载文件）" class="headerlink" title="HDFS读数据流程（下载文件）"></a>HDFS读数据流程（下载文件）</h2><h3 id="读数据完整流程图"><a href="#读数据完整流程图" class="headerlink" title="读数据完整流程图"></a>读数据完整流程图</h3><p><img src="/2021/08/13/Hadoop-HDFS/image-20221213094517559.png" alt="image-20221213094517559"></p>
+<h3 id="读数据流程"><a href="#读数据流程" class="headerlink" title="读数据流程"></a>读数据流程</h3><ol>
+<li>HDFS客户端创建对象实例DistributedFileSystem，调用该对象的open()方法来打开希望读取的文件。</li>
+<li>DistributedFileSystem使用RPC调用namenode来确定文件中前几块的块位置（分批次读取）信息。对于每个块，namenode返回具体有该模块所有副本的datanode位置地址列表，并且该地址列表是排序好的，与客户端的网络拓扑距离近的排序靠前。</li>
+<li>DistributedFileSystem将FSDataInputStream输入流返回到客户端以供其读取数据。</li>
+<li>客户端在FSDataInputStream输入流上调用read()方法。然后，已存储DataNode地址的InputStream连接到文件中第一个块的最近的DataNode。数据从DataNode流回客户端，结果客户端可以在流上重复调用read()。</li>
+<li>当该块结束时，FSDataInputStream将关闭与DataNode的连接，然后寻找下一个block块的最佳datanode位置。这些操作对用户来说是透明的。所以用户感觉起来它一直在读取一个连续的流。客户端从流中读取数据时，也会根据需要询问NameNode来检索下一批数据块的DataNode位置信息。</li>
+<li>一旦客户端完成读取，就对FSDataInputStream调用close()方法。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a> -->
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"><i class="fa fa-tag"></i>  大数据</a>
+              <!-- <a href="/tags/Hadoop/" rel="tag"># Hadoop</a> -->
+              <a href="/tags/Hadoop/" rel="tag"><i class="fa fa-tag"></i>  Hadoop</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/12/Hadoop%E5%9F%BA%E7%A1%80/" rel="prev" title="Hadoop-基础">
+      <i class="fa fa-chevron-left"></i> Hadoop-基础
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/08/14/Hadoop-MapReduce/" rel="next" title="Hadoop-MapReduce">
+      Hadoop-MapReduce <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HDFS%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.</span> <span class="nav-text">HDFS分布式文件系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">2.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F%E6%A0%B8%E5%BF%83%E5%B1%9E%E6%80%A7"><span class="nav-number">3.</span> <span class="nav-text">分布式存储系统核心属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HDFS%E7%AE%80%E4%BB%8B"><span class="nav-number">4.</span> <span class="nav-text">HDFS简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HDFS%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">5.</span> <span class="nav-text">HDFS应用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HDFS%E9%87%8D%E8%A6%81%E7%89%B9%E6%80%A7"><span class="nav-number">6.</span> <span class="nav-text">HDFS重要特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84"><span class="nav-number">6.1.</span> <span class="nav-text">主从架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%9D%97%E5%AD%98%E5%82%A8"><span class="nav-number">6.2.</span> <span class="nav-text">分块存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%AF%E6%9C%AC%E6%9C%BA%E5%88%B6"><span class="nav-number">6.3.</span> <span class="nav-text">副本机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%83%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86"><span class="nav-number">6.4.</span> <span class="nav-text">元数据管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#namespace"><span class="nav-number">6.5.</span> <span class="nav-text">namespace</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%9D%97%E5%AD%98%E5%82%A8"><span class="nav-number">6.6.</span> <span class="nav-text">数据块存储</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HDFS-shell"><span class="nav-number"></span> <span class="nav-text">HDFS shell</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">基本命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%8D%8F%E8%AE%AE"><span class="nav-number">2.</span> <span class="nav-text">文件系统协议</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HDFS%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E4%B8%8E%E6%9C%BA%E5%88%B6"><span class="nav-number"></span> <span class="nav-text">HDFS工作流程与机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HDFS%E9%9B%86%E7%BE%A4%E8%A7%92%E8%89%B2%E4%B8%8E%E8%81%8C%E8%B4%A3"><span class="nav-number">1.</span> <span class="nav-text">HDFS集群角色与职责</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E8%A7%92%E8%89%B2%EF%BC%9Anamenode"><span class="nav-number">1.1.</span> <span class="nav-text">主角色：namenode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E8%A7%92%E8%89%B2%EF%BC%9Adatanode"><span class="nav-number">1.2.</span> <span class="nav-text">从角色：datanode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E8%A7%92%E8%89%B2%E8%BE%85%E5%8A%A9%E8%A7%92%E8%89%B2%EF%BC%9Asecondarynamenode"><span class="nav-number">1.3.</span> <span class="nav-text">主角色辅助角色：secondarynamenode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#namenode%E8%81%8C%E8%B4%A3"><span class="nav-number">1.4.</span> <span class="nav-text">namenode职责</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#datanode%E8%81%8C%E8%B4%A3"><span class="nav-number">1.5.</span> <span class="nav-text">datanode职责</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HDFS%E5%86%99%E6%95%B0%E6%8D%AE%E6%B5%81%E7%A8%8B%EF%BC%88%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">HDFS写数据流程（上传文件）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pipeline%E7%AE%A1%E9%81%93"><span class="nav-number">2.1.</span> <span class="nav-text">Pipeline管道</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ACK%E5%BA%94%E7%AD%94%E5%93%8D%E5%BA%94"><span class="nav-number">2.2.</span> <span class="nav-text">ACK应答响应</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%BB%98%E8%AE%A43%E5%89%AF%E6%9C%AC%E5%AD%98%E5%82%A8%E7%AD%96%E7%95%A5"><span class="nav-number">2.3.</span> <span class="nav-text">默认3副本存储策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E6%95%B0%E6%8D%AE%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">2.4.</span> <span class="nav-text">写数据完整流程图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E6%95%B0%E6%8D%AE%E6%B5%81%E7%A8%8B"><span class="nav-number">2.5.</span> <span class="nav-text">写数据流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HDFS%E8%AF%BB%E6%95%B0%E6%8D%AE%E6%B5%81%E7%A8%8B%EF%BC%88%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">HDFS读数据流程（下载文件）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BB%E6%95%B0%E6%8D%AE%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">3.1.</span> <span class="nav-text">读数据完整流程图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BB%E6%95%B0%E6%8D%AE%E6%B5%81%E7%A8%8B"><span class="nav-number">3.2.</span> <span class="nav-text">读数据流程</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>

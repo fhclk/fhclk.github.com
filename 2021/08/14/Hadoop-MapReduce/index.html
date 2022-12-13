@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="分布式计算分而治之思想分布式计算分布式计算是一种计算方法，它将应用分解成许多小的部分，分配给多台计算机进行处理。从而节约整体计算时间，提高计算效率。 MapReduce思想MapReduce思想核心：先分再合，分而治之。即把一个复杂的问题，按照一定的“分解”方法分为等价的规模较小的若干部分，然后逐个解决，分别找出各部分的结果，然后把各部分的结果组成整个问题的最终结果。   Map表示第一阶段，负责">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hadoop-MapReduce">
+<meta property="og:url" content="http://fhclk.github.io/2021/08/14/Hadoop-MapReduce/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="分布式计算分而治之思想分布式计算分布式计算是一种计算方法，它将应用分解成许多小的部分，分配给多台计算机进行处理。从而节约整体计算时间，提高计算效率。 MapReduce思想MapReduce思想核心：先分再合，分而治之。即把一个复杂的问题，按照一定的“分解”方法分为等价的规模较小的若干部分，然后逐个解决，分别找出各部分的结果，然后把各部分的结果组成整个问题的最终结果。   Map表示第一阶段，负责">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/14/Hadoop-MapReduce/image-20221213101954806.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/14/Hadoop-MapReduce/image-20221213102715695.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/14/Hadoop-MapReduce/image-20221213103050117.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/14/Hadoop-MapReduce/image-20221213110013345.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/14/Hadoop-MapReduce/image-20221213111404853.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/14/Hadoop-MapReduce/image-20221213113122471.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/14/Hadoop-MapReduce/image-20221213142024380.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/14/Hadoop-MapReduce/image-20221213142808652.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/14/Hadoop-MapReduce/image-20221213143229439.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/14/Hadoop-MapReduce/image-20221213144448734.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/14/Hadoop-MapReduce/image-20221213144901309.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/08/14/Hadoop-MapReduce/image-20221213145258144.png">
+<meta property="article:published_time" content="2021-08-14T02:17:09.000Z">
+<meta property="article:modified_time" content="2022-12-13T08:22:30.486Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="大数据">
+<meta property="article:tag" content="Hadoop">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/2021/08/14/Hadoop-MapReduce/image-20221213101954806.png">
+
+<link rel="canonical" href="http://fhclk.github.io/2021/08/14/Hadoop-MapReduce/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Hadoop-MapReduce | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/08/14/Hadoop-MapReduce/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hadoop-MapReduce
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-08-14 10:17:09" itemprop="dateCreated datePublished" datetime="2021-08-14T10:17:09+08:00">2021-08-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-12-13 16:22:30" itemprop="dateModified" datetime="2022-12-13T16:22:30+08:00">2022-12-13</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="分布式计算分而治之思想"><a href="#分布式计算分而治之思想" class="headerlink" title="分布式计算分而治之思想"></a>分布式计算分而治之思想</h1><h2 id="分布式计算"><a href="#分布式计算" class="headerlink" title="分布式计算"></a>分布式计算</h2><p>分布式计算是一种计算方法，它将应用分解成许多小的部分，分配给多台计算机进行处理。从而节约整体计算时间，提高计算效率。</p>
+<h2 id="MapReduce思想"><a href="#MapReduce思想" class="headerlink" title="MapReduce思想"></a>MapReduce思想</h2><p>MapReduce思想核心：<strong>先分再合，分而治之</strong>。即把一个复杂的问题，按照一定的“分解”方法分为等价的规模较小的若干部分，然后逐个解决，分别找出各部分的结果，然后把各部分的结果组成整个问题的最终结果。</p>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213101954806.png" alt="image-20221213101954806"></p>
+<ul>
+<li>Map表示第一阶段，负责“拆分”：即把复杂的任务分解成若干个“简单的子任务”来处理。可以进行拆分的前提是这些小任务可以并行计算，彼此间几乎没有依赖关系。</li>
+<li>Reduce表示第二阶段，负责“合并”：即对map阶段的结果进行全局汇总。</li>
+<li>这两个阶段合起来就是MapReduce思想的体现。</li>
+</ul>
+<h2 id="大数据处理场景"><a href="#大数据处理场景" class="headerlink" title="大数据处理场景"></a>大数据处理场景</h2><p>采用MapReduce分而治之策略，首先Map阶段进行拆分，把大数据拆分成若个份小数据，多个程序同时并行计算产生中间结果；然后Reduce聚合阶段，通过程序对并行的结果进行最终的汇总计算，得出最终结果。</p>
+<p><strong>不可拆分的计算任务或相互间有依赖关系的数据无法进行并行计算</strong></p>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213102715695.png" alt="image-20221213102715695"></p>
+<h2 id="构建抽象编程模型"><a href="#构建抽象编程模型" class="headerlink" title="构建抽象编程模型"></a>构建抽象编程模型</h2><ul>
+<li><p>MapReduce借鉴了函数式语言中的思想，用Map和Reduce两个函数提供了高层的并行编程抽象模型。</p>
+<p>map：对一组数据元素进行某种重复式的处理</p>
+<p>reduce：对Map的中间结果进行某种进一步的结果处理</p>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213103050117.png" alt="image-20221213103050117"></p>
+</li>
+<li><p>MapReduce中定义了如下的Map和Reduce两个抽象的编程接口，由用户去编程实现：</p>
+<p>map：（k1; v1) -&gt; (k2; v2)</p>
+<p>reduce：(k2: [v2]) -&gt; (k3; v3)</p>
+</li>
+<li><p>通过以上两个编程接口，可以看出MapReduce处理的数据类型是&lt;key, value&gt;键值对。</p>
+</li>
+</ul>
+<h2 id="统一架构，隐藏底层细节"><a href="#统一架构，隐藏底层细节" class="headerlink" title="统一架构，隐藏底层细节"></a>统一架构，隐藏底层细节</h2><p>MapReduce设计并统一了计算框架，隐藏了绝大多数系统层面的处理细节。</p>
+<h1 id="MapReduce介绍"><a href="#MapReduce介绍" class="headerlink" title="MapReduce介绍"></a>MapReduce介绍</h1><p>Hadoop MapReduce是一个分布式计算框架，用于轻松编写分布式应用程序，这些应用程序以可靠，容错的方式并行处理大型硬件集群（多节点）上的大量数据（TB级别）。</p>
+<p>MapReduce是一种面向海量数据处理的一种指导思想，也是一种用于大规模数据进行分布式计算的编程模型。</p>
+<p><strong>MapReduce特点</strong></p>
+<ul>
+<li><p>易于编程</p>
+<p>提供了用于二次开发的接口</p>
+</li>
+<li><p>良好的扩展</p>
+<p>可以通过增加机器（计算节点）来扩展它的计算能力</p>
+</li>
+<li><p>高容错性</p>
+<p>分布式搭建和部署，当某一个节点出现故障时，可以把上面的任务转移到另一个节点上运行，不影响整个任务。这个过程Hadoop内部完成</p>
+</li>
+<li><p>适合海量数据的离线处理</p>
+<p>可以处理GB、TB、PB级别数据</p>
+</li>
+</ul>
+<p><strong>MapReduce局限性</strong></p>
+<ul>
+<li>实时计算性能差</li>
+<li>不能进行流式计算</li>
+</ul>
+<h1 id="MapReduce实例进程"><a href="#MapReduce实例进程" class="headerlink" title="MapReduce实例进程"></a>MapReduce实例进程</h1><p>一个完整的MapReduce程序在分布式运行时有三类</p>
+<ul>
+<li>MRAppMaster：负责整个MR程序的过程调度及状态协调</li>
+<li>MapTask：负责map阶段的整个数据处理流程</li>
+<li>ReduceTask：负责reduce阶段的整个数据处理流程</li>
+</ul>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213110013345.png" alt="image-20221213110013345"></p>
+<h1 id="MapReduce阶段组成"><a href="#MapReduce阶段组成" class="headerlink" title="MapReduce阶段组成"></a>MapReduce阶段组成</h1><ul>
+<li>一个MapReduce编程模型只能包含一个Map阶段和一个Reduce阶段，或者只有Map阶段。</li>
+<li>不能有很多个Map阶段、多个Reduce阶段的情形。</li>
+<li>如果用户的业务逻辑非常复杂，那就只能多个MapReduce程序串行运行。</li>
+</ul>
+<img src="/2021/08/14/Hadoop-MapReduce/image-20221213111404853.png" alt="image-20221213111404853" style="zoom: 80%;">
+
+
+
+<h1 id="MapReduce数据类型"><a href="#MapReduce数据类型" class="headerlink" title="MapReduce数据类型"></a>MapReduce数据类型</h1><p>整个MapReduce程序中，数据都是以KV兼职对的形式流转的。</p>
+<p>在实际编程解决各种业务问题中，需要考虑每个阶段的输入输出kv分别是什么。</p>
+<p>MapReduce中内置了很多默认属性，比如排序、分组等，都和数据的k有关。</p>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213113122471.png" alt="image-20221213113122471"></p>
+<h1 id="MapReduce执行流程"><a href="#MapReduce执行流程" class="headerlink" title="MapReduce执行流程"></a>MapReduce执行流程</h1><h2 id="MapReduce整体执行流程图"><a href="#MapReduce整体执行流程图" class="headerlink" title="MapReduce整体执行流程图"></a>MapReduce整体执行流程图</h2><p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213142024380.png" alt="image-20221213142024380"></p>
+<h2 id="Map阶段执行流程"><a href="#Map阶段执行流程" class="headerlink" title="Map阶段执行流程"></a>Map阶段执行流程</h2><ul>
+<li>第一阶段：把输入目录下文件按照一定的标准逐个进行逻辑切片，形成切片规划。默认Split size &#x3D; Block size （128M），每一个切片由一个MapTask处理。（getSplits）</li>
+<li>第二阶段：对切片中的数据按照一定的规则读取解析返回&lt;key, value&gt;对。默认是按行读取数据。key是每一行的起始位置偏移量，value是本行的文本内容。（TextInutFormat）</li>
+<li>第三阶段：调用Mapper类中的map方法处理数据。每读取解析出来的一个&lt;key, value&gt;，调用一次map方法。</li>
+<li>第四阶段：按照一定的规则对map输出的键值对进行分区partition。默认不分区，因为只有一个reducetask。分区的数量就是reducetask运行的数量。</li>
+<li>第五阶段：Map输出数据写入内存缓冲区，达到比例溢出到磁盘上。溢出spill的时候根据key进行排序sort。默认根据key字典排序。</li>
+<li>第六阶段：对所有溢出文件进行最终的merge合并，成为一个文件。</li>
+</ul>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213142808652.png" alt="image-20221213142808652"></p>
+<h2 id="Reduce阶段执行流程"><a href="#Reduce阶段执行流程" class="headerlink" title="Reduce阶段执行流程"></a>Reduce阶段执行流程</h2><ul>
+<li>第一阶段：ReduceTask会主动从MapTask复制拉取属于需要自己处理的数据。</li>
+<li>第二阶段：把拉取来的数据，全部进行merge合并，即把分散的数据合并成一个大的数据。再对合并后的数据排序。</li>
+<li>第三阶段：对排序后的键值对调用reduce方法。键相等的键值对调用一次reduce方法。最后把这些输出的键值对写入到HDFS文件中。</li>
+</ul>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213143229439.png" alt="image-20221213143229439"></p>
+<h2 id="Shuffle机制"><a href="#Shuffle机制" class="headerlink" title="Shuffle机制"></a>Shuffle机制</h2><h3 id="shuffle概念"><a href="#shuffle概念" class="headerlink" title="shuffle概念"></a>shuffle概念</h3><p>Shuffle的本意是洗牌、混洗的意思，把一组有规则地数据尽量打乱成无规则地数据。</p>
+<p>在MapReduce中，Shuffle更像是洗牌的逆过程，指的是将map端的无规则输出按指定的规则“打乱”成具有一定规则的数据，以便reduce端接收处理。</p>
+<p>一般把从Map产生输出开始到Reduce取得数据作为输入之前的过程称之为shuffle。</p>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213144448734.png" alt="image-20221213144448734"></p>
+<h3 id="Map端Shuffle"><a href="#Map端Shuffle" class="headerlink" title="Map端Shuffle"></a>Map端Shuffle</h3><p>Collect阶段：将MapTask的结果收集输出到默认大小为100M的环形缓冲区，保存之前会对key进行分区的计算，默认Hash分区。</p>
+<p>Spill阶段：当内存的数据达到一定的阈值的时候，就会将数据写入磁盘，在将数据写入磁盘之前需要对数据进行一次排序的操作，如果配置了combiner，还会将有相同分区号和key的数据进行排序。</p>
+<p>Merge阶段：把所有溢出的文件进行一次合并操作，以确保一个MapTask最终只产生一个中间数据文件。</p>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213144901309.png" alt="image-20221213144901309"></p>
+<h3 id="Reduce端Shuffle"><a href="#Reduce端Shuffle" class="headerlink" title="Reduce端Shuffle"></a>Reduce端Shuffle</h3><p>Copy阶段：ReduceTask启动Fetcher线程到已经完成MapTask的节点上复制一份属于自己的数据。</p>
+<p>Merge阶段：在ReduceTask远程复制数据的同时，会在后台开启两个线程对内存到本地的数据文件进行合并操作。</p>
+<p>Sort阶段：在对数据进行合并的同时，会进行排序操作，由于MapTask阶段已经对数据进行了局部的排序，ReduceTask只需保证Copy的数据的最终整体有效性即可。</p>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213145258144.png" alt="image-20221213145258144"></p>
+<h3 id="shuffle机制弊病"><a href="#shuffle机制弊病" class="headerlink" title="shuffle机制弊病"></a>shuffle机制弊病</h3><p>Shuffle是MapReduce成的核心与精髓，是MapReduce的灵魂所在。</p>
+<p>Shuffle也是MapReduce被诟病最多的地方。MapReduce相比较于Spark、Flink计算引擎慢的原因，根Shuffle机制有很大的关系。Shuffle频繁涉及到数据在内存、磁盘之间的多次往复。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a> -->
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"><i class="fa fa-tag"></i>  大数据</a>
+              <!-- <a href="/tags/Hadoop/" rel="tag"># Hadoop</a> -->
+              <a href="/tags/Hadoop/" rel="tag"><i class="fa fa-tag"></i>  Hadoop</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/13/Hadoop-HDFS/" rel="prev" title="Hadoop-HDFS">
+      <i class="fa fa-chevron-left"></i> Hadoop-HDFS
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/08/15/Hadoop-Yarn/" rel="next" title="Hadoop-Yarn">
+      Hadoop-Yarn <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E5%88%86%E8%80%8C%E6%B2%BB%E4%B9%8B%E6%80%9D%E6%83%B3"><span class="nav-number">1.</span> <span class="nav-text">分布式计算分而治之思想</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97"><span class="nav-number">1.1.</span> <span class="nav-text">分布式计算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MapReduce%E6%80%9D%E6%83%B3"><span class="nav-number">1.2.</span> <span class="nav-text">MapReduce思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E5%9C%BA%E6%99%AF"><span class="nav-number">1.3.</span> <span class="nav-text">大数据处理场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E6%8A%BD%E8%B1%A1%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.4.</span> <span class="nav-text">构建抽象编程模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%9F%E4%B8%80%E6%9E%B6%E6%9E%84%EF%BC%8C%E9%9A%90%E8%97%8F%E5%BA%95%E5%B1%82%E7%BB%86%E8%8A%82"><span class="nav-number">1.5.</span> <span class="nav-text">统一架构，隐藏底层细节</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MapReduce%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">MapReduce介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MapReduce%E5%AE%9E%E4%BE%8B%E8%BF%9B%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">MapReduce实例进程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MapReduce%E9%98%B6%E6%AE%B5%E7%BB%84%E6%88%90"><span class="nav-number">4.</span> <span class="nav-text">MapReduce阶段组成</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MapReduce%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">5.</span> <span class="nav-text">MapReduce数据类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MapReduce%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-number">6.</span> <span class="nav-text">MapReduce执行流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MapReduce%E6%95%B4%E4%BD%93%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">6.1.</span> <span class="nav-text">MapReduce整体执行流程图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Map%E9%98%B6%E6%AE%B5%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-number">6.2.</span> <span class="nav-text">Map阶段执行流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reduce%E9%98%B6%E6%AE%B5%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-number">6.3.</span> <span class="nav-text">Reduce阶段执行流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Shuffle%E6%9C%BA%E5%88%B6"><span class="nav-number">6.4.</span> <span class="nav-text">Shuffle机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#shuffle%E6%A6%82%E5%BF%B5"><span class="nav-number">6.4.1.</span> <span class="nav-text">shuffle概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Map%E7%AB%AFShuffle"><span class="nav-number">6.4.2.</span> <span class="nav-text">Map端Shuffle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reduce%E7%AB%AFShuffle"><span class="nav-number">6.4.3.</span> <span class="nav-text">Reduce端Shuffle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shuffle%E6%9C%BA%E5%88%B6%E5%BC%8A%E7%97%85"><span class="nav-number">6.4.4.</span> <span class="nav-text">shuffle机制弊病</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>

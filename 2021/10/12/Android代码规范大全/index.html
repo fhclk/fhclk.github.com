@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1. Android  的工具规范工欲善其事，必先利其器。 由于 Android 基本都基于 Android Studio 进行开发，所以工具规范全部以 Android Studio 为前提。  必须使用最新的稳定版本的 Android Studio 进行开发；  编码格式必须统一为 UTF-8；  删除多余的 import，减少警告出现，可利用 AS 的 Optimize Imports（Set">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android代码规范大全">
+<meta property="og:url" content="http://fhclk.github.io/2021/10/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83%E5%A4%A7%E5%85%A8/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="1. Android  的工具规范工欲善其事，必先利其器。 由于 Android 基本都基于 Android Studio 进行开发，所以工具规范全部以 Android Studio 为前提。  必须使用最新的稳定版本的 Android Studio 进行开发；  编码格式必须统一为 UTF-8；  删除多余的 import，减少警告出现，可利用 AS 的 Optimize Imports（Set">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3994917-1a291e03ae423f05.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3994917-61e300e496a95f64.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/943/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3994917-3f7f4bc33a6934fa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3994917-f606ccbb39f443da.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3994917-7f2d624a1a0604ab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3994917-3b14e3dc15e966f8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3994917-03c995a36e14ed45.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/728/format/webp">
+<meta property="article:published_time" content="2021-10-12T02:07:01.000Z">
+<meta property="article:modified_time" content="2022-12-12T02:39:40.462Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/3994917-1a291e03ae423f05.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp">
+
+<link rel="canonical" href="http://fhclk.github.io/2021/10/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83%E5%A4%A7%E5%85%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Android代码规范大全 | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/10/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83%E5%A4%A7%E5%85%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android代码规范大全
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-10-12 10:07:01" itemprop="dateCreated datePublished" datetime="2021-10-12T10:07:01+08:00">2021-10-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-12-12 10:39:40" itemprop="dateModified" datetime="2022-12-12T10:39:40+08:00">2022-12-12</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="1-Android-的工具规范"><a href="#1-Android-的工具规范" class="headerlink" title="1. Android  的工具规范"></a>1. Android  的工具规范</h1><p>工欲善其事，必先利其器。</p>
+<p>由于 Android 基本都基于 Android Studio 进行开发，所以工具规范全部以 Android Studio 为前提。</p>
+<ol>
+<li><p>必须使用最新的稳定版本的 Android Studio 进行开发；</p>
+</li>
+<li><p>编码格式必须统一为 UTF-8；</p>
+</li>
+<li><p>删除多余的 import，减少警告出现，可利用 AS 的 Optimize Imports（Settings -&gt; Keymap -&gt; Optimize Imports）快捷键，设置自己的喜好。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3994917-1a291e03ae423f05.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp" alt="img"></p>
+</li>
+<li><p>编辑完 .java、.kt、.xml 等文件后必须格式化（需要在设置好以下几点的前提下）</p>
+</li>
+</ol>
+<blockquote>
+<p>Reformat Code 的必要性，一定需要保证 IDE 配置一致为前提，尽可能贴切于 Android Studio 默认。<br>强烈建议对于比较长的老代码局部格式化，不全局格式化</p>
+</blockquote>
+<ul>
+<li><p>每行字符数不得超过 160 字符，设置 Editor -&gt; Code Style</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3994917-61e300e496a95f64.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/943/format/webp" alt="img"></p>
+</li>
+<li><p>全部设置为单路径引用，<code>kotlinx.android.synthetic.main</code> 除外。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3994917-3f7f4bc33a6934fa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp" alt="img"></p>
+<p>Java Code Style</p>
+</li>
+</ul>
+<p><img src="https://upload-images.jianshu.io/upload_images/3994917-f606ccbb39f443da.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp" alt="img"></p>
+<p>Kotlin Code Style</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3994917-7f2d624a1a0604ab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp" alt="img"></p>
+<p>XML Code Style</p>
+<p>以上几处设置完毕，其他采用 Android Studio 默认方式，再进行 Reformat Code 快捷键即可。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3994917-3b14e3dc15e966f8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp" alt="img"></p>
+<p>Reformat Code 快捷键设置</p>
+<h1 id="2-Android-的分包规范"><a href="#2-Android-的分包规范" class="headerlink" title="2. Android 的分包规范"></a>2. Android 的分包规范</h1><p>前面强调了工具的统一配置，再利用 Android Studio 本身的功能便可把代码风格变得一致。接下来就带来第二部分：Android 的分包规范。</p>
+<p>对于分包，我们需要达成一致，我们采用 PBF 方式，不推荐使用 PBL 方式。</p>
+<blockquote>
+<p>PBF（按功能分包 Package By Feature）<br>PBL（按层分包 Package By Layer）</p>
+</blockquote>
+<p>PBF 可能不是很好区分在哪个功能中，不过也比 PBL 要好找很多，且 PBF 与 PBL 相比较有如下优势：</p>
+<ul>
+<li>package 内高内聚，package 间低耦合<br>哪块要添新功能，只改某一个 package 下的东西，而PBL 需要改多个 package，非常麻烦。</li>
+<li>package 有私有作用域（package-private scope）<br>原则上一个 package 下的不允许其他类访问都是不应该加上 public 的。</li>
+<li>很容易删除功能<br>统计发现新功能没人用，这个版本那块功能得去掉。如果是 PBL，得从功能入口到整个业务流程把受到牵连的所有能删的代码和 class 都揪出来删掉，一不小心就完蛋。如果是 PBF，好说，先删掉对应包，再删掉功能入口（删掉包后入口肯定报错了），完事。</li>
+<li>高度抽象<br>解决问题的一般方法是从抽象到具体，PBF 包名是对功能模块的抽象，包内的 class 是实现细节，符合从抽象到具体，而 PBL 弄反了。PBF 从确定 AppName 开始，根据功能模块划分 package，再考虑每块的具体实现细节，而 PBL 从一开始就要考虑要不要 dao 层，要不要 com 层等等。</li>
+<li>只通过 class 来分离逻辑代码<br>PBL 既分离 class 又分离 package，而 PBF 只通过 class 来分离逻辑代码。</li>
+<li>package 的大小有意义了<br>PBL 中包的大小无限增长是合理的，因为功能越添越多，而 PBF 中包太大（包里 class 太多）表示这块需要重构（划分子包）。</li>
+</ul>
+<h1 id="3-Android-的命名规范"><a href="#3-Android-的命名规范" class="headerlink" title="3. Android 的命名规范"></a>3. Android 的命名规范</h1><p>代码中的命名严禁使用拼音与英文混合的方式，更不允许直接使用中文的方式。正确的英文拼写和语法可以让阅读者易于理解，避免歧义。</p>
+<blockquote>
+<p>注意：即使纯拼音命名方式也要避免采用。但国际通用的名称，可视同英文，比如 <code>toutiao</code>、<code>douyin</code> 等。</p>
+</blockquote>
+<h2 id="3-1-包名"><a href="#3-1-包名" class="headerlink" title="3.1 包名"></a>3.1 包名</h2><p>Android 里面有 package 的概念，所以需要约定一下包名命名规范。</p>
+<p>包名全部小写，不允许出现中文、大写字母或者下划线，前面为子模块命名，再根据 PBF 方式进行命名。</p>
+<h2 id="3-2-类名"><a href="#3-2-类名" class="headerlink" title="3.2 类名"></a>3.2 类名</h2><p>类名都以 <code>UpperCamelCase</code> 风格编写。</p>
+<p>类名通常是名词或名词短语，接口名称有时可能是形容词或形容词短语。现在还没有特定的规则或行之有效的约定来命名注解类型。</p>
+<p>名词，采用大驼峰命名法，尽量避免缩写，除非该缩写是众所周知的， 比如 HTML、URL，如果类名称中包含单词缩写，则单词缩写的每个字母均应大写。</p>
+<table>
+<thead>
+<tr>
+<th align="left">类</th>
+<th align="left">描述</th>
+<th align="left">例如</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>Activity</code> 类</td>
+<td align="left">模块名 + <code>Activity</code></td>
+<td align="left">闪屏页类 <code>SplashActivity</code></td>
+</tr>
+<tr>
+<td align="left"><code>Fragment</code> 类</td>
+<td align="left">模块名 + <code>Fragment</code></td>
+<td align="left">主页类 <code>HomeFragment</code></td>
+</tr>
+<tr>
+<td align="left"><code>Service</code> 类</td>
+<td align="left">模块名 + <code>Service</code></td>
+<td align="left">时间服务 <code>TimeService</code></td>
+</tr>
+<tr>
+<td align="left"><code>BroadcastReceiver</code> 类</td>
+<td align="left">功能名 + <code>Receiver</code></td>
+<td align="left">推送接收 <code>JPushReceiver</code></td>
+</tr>
+<tr>
+<td align="left"><code>ContentProvider</code> 类</td>
+<td align="left">功能名 + <code>Provider</code></td>
+<td align="left"><code>ShareProvider</code></td>
+</tr>
+<tr>
+<td align="left">自定义 View</td>
+<td align="left">功能名 + View&#x2F;ViewGroup(组件名称)</td>
+<td align="left"><code>ShapeButton</code></td>
+</tr>
+<tr>
+<td align="left">Dialog对话框</td>
+<td align="left">功能名+Dialog</td>
+<td align="left"><code>ImagePickerDialog</code></td>
+</tr>
+<tr>
+<td align="left"><code>Adapter</code> 类</td>
+<td align="left">模块名 + <code>Adapter</code></td>
+<td align="left">课程详情适配器 <code>LessonDetailAdapter</code></td>
+</tr>
+<tr>
+<td align="left">解析类</td>
+<td align="left">功能名 + <code>Parser</code></td>
+<td align="left">首页解析类 <code>HomePosterParser</code></td>
+</tr>
+<tr>
+<td align="left">工具方法类</td>
+<td align="left">功能名 + <code>Utils</code> 或 <code>Manager</code></td>
+<td align="left">线程池管理类：<code>ThreadPoolManager</code> 日志工具类：<code>LogUtils</code>（<code>Logger</code> 也可） 打印工具类：<code>PrinterUtils</code></td>
+</tr>
+<tr>
+<td align="left">数据库类</td>
+<td align="left">功能名 +  <code>DBHelper</code></td>
+<td align="left">新闻数据库：<code>NewsDBHelper</code></td>
+</tr>
+<tr>
+<td align="left">自定义的共享基础类</td>
+<td align="left"><code>Base</code> + 基础</td>
+<td align="left"><code>BaseActivity</code>, <code>BaseFragment</code></td>
+</tr>
+<tr>
+<td align="left">抽象类</td>
+<td align="left"><code>Base</code> &#x2F; <code>Abstract</code> 开头</td>
+<td align="left"><code>AbstractLogin</code></td>
+</tr>
+<tr>
+<td align="left">异常类</td>
+<td align="left"><code>Exception</code> 结尾</td>
+<td align="left"><code>LoginException</code></td>
+</tr>
+<tr>
+<td align="left">接口</td>
+<td align="left"><code>able</code> &#x2F; <code>ible</code> 结尾 &#x2F; I 开头</td>
+<td align="left"><code>Runnable</code>, <code>Accessible</code> ，<code>ILoginView</code></td>
+</tr>
+</tbody></table>
+<p>测试类的命名以它要测试的类的名称开始，以 Test 结束。例如：<code>HashTest</code> 或 <code>HashIntegrationTest</code>。</p>
+<p>接口（interface）：命名规则与类一样采用大驼峰命名法，多以 able 或 ible 结尾，如 <code>interface Runnable</code>、<code>interface Accessible</code>。</p>
+<blockquote>
+<p>注意：如果项目采用 MVP，所有 Model、View、Presenter 的接口都以 I 为前缀，不加后缀，其他的接口采用上述命名规则。</p>
+</blockquote>
+<h2 id="3-3-方法名"><a href="#3-3-方法名" class="headerlink" title="3.3 方法名"></a>3.3 方法名</h2><p>方法名都以 <code>lowerCamelCase</code> 风格编写。</p>
+<p>方法名通常是动词或动词短语。</p>
+<table>
+<thead>
+<tr>
+<th align="left">方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>initXX()</code></td>
+<td>初始化相关方法，使用 init 为前缀标识，如初始化布局 <code>initView()</code></td>
+</tr>
+<tr>
+<td align="left"><code>isXX()</code>, <code>checkXX()</code></td>
+<td>方法返回值为 boolean 型的请使用 is&#x2F;check 为前缀标识</td>
+</tr>
+<tr>
+<td align="left"><code>getXX()</code></td>
+<td>返回某个值的方法，使用 get 为前缀标识</td>
+</tr>
+<tr>
+<td align="left"><code>setXX()</code></td>
+<td>设置某个属性值</td>
+</tr>
+<tr>
+<td align="left"><code>handleXX()</code>, <code>processXX()</code></td>
+<td>对数据进行处理的方法</td>
+</tr>
+<tr>
+<td align="left"><code>displayXX()</code>, <code>showXX()</code></td>
+<td>弹出提示框和提示信息，使用 display&#x2F;show 为前缀标识</td>
+</tr>
+<tr>
+<td align="left"><code>updateXX()</code></td>
+<td>更新数据</td>
+</tr>
+<tr>
+<td align="left"><code>saveXX()</code>, <code>insertXX()</code></td>
+<td>保存或插入数据</td>
+</tr>
+<tr>
+<td align="left"><code>resetXX()</code></td>
+<td>重置数据</td>
+</tr>
+<tr>
+<td align="left"><code>clearXX()</code></td>
+<td>清除数据</td>
+</tr>
+<tr>
+<td align="left"><code>removeXX()</code>, <code>deleteXX()</code></td>
+<td>移除数据或者视图等，如 <code>removeView()</code></td>
+</tr>
+<tr>
+<td align="left"><code>drawXX()</code></td>
+<td>绘制数据或效果相关的，使用 draw 前缀标识</td>
+</tr>
+</tbody></table>
+<h2 id="3-4-变量命名"><a href="#3-4-变量命名" class="headerlink" title="3.4 变量命名"></a>3.4 变量命名</h2><p>这里的变量为广义的变量，包括了常量、局部变量、全局变量等，它们的基础规则是：</p>
+<ul>
+<li>类型需要是名词 &#x2F; 名词短语；</li>
+<li>采用 <code>lowerCamelCase</code> 风格；</li>
+</ul>
+<p>在具体的变量命名时，会根据该变量的类型不同而附加额外的命名规则：</p>
+<table>
+<thead>
+<tr>
+<th align="left">类型</th>
+<th align="left">说明</th>
+<th align="left">例如</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">常量</td>
+<td align="left">大写 &amp; 下划线隔开，Kotlin 一定要 const val</td>
+<td align="left"><code>const val TYPE_NORMAL = 1</code>   <code>static final TYPE_NORMAL = 1</code></td>
+</tr>
+<tr>
+<td align="left">临时变量名</td>
+<td align="left">整型：<code>i</code>、<code>j</code>、<code>k</code>、<code>m</code>、<code>n</code> ，字符型一般用 <code>c</code>、<code>d</code>、<code>e</code></td>
+<td align="left"><code>for(int i = 0;i &lt; len; i++)</code></td>
+</tr>
+<tr>
+<td align="left">其他变量</td>
+<td align="left"><code>lowerCamelCase</code> 风格即可，私有变量也不要使用 <code>m</code> 开头</td>
+<td align="left"><code>private int tmp;</code></td>
+</tr>
+<tr>
+<td align="left">Kotlin</td>
+<td align="left">只读变量使用 <code>val</code>，可变变量使用 <code>var</code>，尽可能使用 <code>val</code></td>
+<td align="left"><code>var tmp = 0</code>  <code>val defaultIndex = 0</code></td>
+</tr>
+</tbody></table>
+<h2 id="3-5-资源命名"><a href="#3-5-资源命名" class="headerlink" title="3.5 资源命名"></a>3.5 资源命名</h2><p>Android 的资源包括：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3994917-03c995a36e14ed45.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/728/format/webp" alt="img"></p>
+<p>资源文件命名为全部小写，采用下划线命名法。</p>
+<h3 id="3-5-1-动画资源文件（anim-x2F-和-animator-x2F-）"><a href="#3-5-1-动画资源文件（anim-x2F-和-animator-x2F-）" class="headerlink" title="3.5.1 动画资源文件（anim&#x2F; 和 animator&#x2F;）"></a>3.5.1 动画资源文件（anim&#x2F; 和 animator&#x2F;）</h3><p>安卓主要包含属性动画和视图动画，其视图动画包括补间动画和逐帧动画。属性动画文件需要放在 <code>res/animator/</code> 目录下，视图动画文件需放在 <code>res/anim/</code> 目录下。命名规则：<code>&#123;模块名_&#125;逻辑名称</code>。</p>
+<blockquote>
+<p>说明：<code>&#123;&#125;</code> 中的内容为可选，<code>逻辑名称</code> 可由多个单词加下划线组成。例如：<code>refresh_progress.xml</code>、<code>market_cart_add.xml</code>、<code>market_cart_remove.xml</code>。</p>
+</blockquote>
+<p>如果是普通的补间动画或者属性动画，可采用：<code>动画类型_方向</code> 的命名方式。</p>
+<p>例如：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>fade_in</code></td>
+<td>淡入</td>
+</tr>
+<tr>
+<td><code>fade_out</code></td>
+<td>淡出</td>
+</tr>
+<tr>
+<td><code>push_down_in</code></td>
+<td>从下方推入</td>
+</tr>
+<tr>
+<td><code>push_down_out</code></td>
+<td>从下方推出</td>
+</tr>
+<tr>
+<td><code>push_left</code></td>
+<td>推向左方</td>
+</tr>
+<tr>
+<td><code>slide_in_from_top</code></td>
+<td>从头部滑动进入</td>
+</tr>
+<tr>
+<td><code>zoom_enter</code></td>
+<td>变形进入</td>
+</tr>
+<tr>
+<td><code>slide_in</code></td>
+<td>滑动进入</td>
+</tr>
+<tr>
+<td><code>shrink_to_middle</code></td>
+<td>中间缩小</td>
+</tr>
+</tbody></table>
+<h3 id="3-5-2-颜色资源文件（color-x2F-）"><a href="#3-5-2-颜色资源文件（color-x2F-）" class="headerlink" title="3.5.2 颜色资源文件（color&#x2F;）"></a>3.5.2 颜色资源文件（color&#x2F;）</h3><p>color&#x2F; 是专门用于存放颜色相关资源的文件夹。命名规则：<code>类型&#123;_模块名&#125;_逻辑名称</code>。</p>
+<blockquote>
+<p>说明：<code>&#123;&#125;</code> 中的内容为可选。例如：<code>sel_btn_font.xml</code>。</p>
+</blockquote>
+<p>颜色资源也可以放于 <code>res/drawable/</code> 目录，引用时则用 <code>@drawable</code> 来引用，但不推荐这么做，最好还是把两者分开。</p>
+<h3 id="3-5-3-图片资源文件（drawable-x2F-和-mipmap-x2F-）"><a href="#3-5-3-图片资源文件（drawable-x2F-和-mipmap-x2F-）" class="headerlink" title="3.5.3 图片资源文件（drawable&#x2F; 和 mipmap&#x2F;）"></a>3.5.3 图片资源文件（drawable&#x2F; 和 mipmap&#x2F;）</h3><p><code>res/drawable/</code> 目录下放的是位图文件（.png、.9.png、.jpg、.gif）或编译为可绘制对象资源子类型的 XML 文件，而 <code>res/mipmap/</code> 目录下放的是不同密度的启动图标，所以 <code>res/mipmap/</code> 只用于存放启动图标，其余图片资源文件都应该放到 <code>res/drawable/</code> 目录下。</p>
+<p>命名规则：<code>类型&#123;_模块名&#125;_逻辑名称</code>、<code>类型&#123;_模块名&#125;_颜色</code>。</p>
+<blockquote>
+<p>说明：<code>&#123;&#125;</code> 中的内容为可选；<code>类型</code> 可以是可绘制对象资源类型，也可以是控件类型最后可加后缀 <code>_small</code> 表示小图，<code>_big</code> 表示大图。</p>
+</blockquote>
+<p>例如：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>btn_main_about.png</code></td>
+<td>主页关于按键 <code>类型_模块名_逻辑名称</code></td>
+</tr>
+<tr>
+<td><code>btn_back.png</code></td>
+<td>返回按键 <code>类型_逻辑名称</code></td>
+</tr>
+<tr>
+<td><code>divider_maket_white.png</code></td>
+<td>商城白色分割线 <code>类型_模块名_颜色</code></td>
+</tr>
+<tr>
+<td><code>ic_edit.png</code></td>
+<td>编辑图标 <code>类型_逻辑名称</code></td>
+</tr>
+<tr>
+<td><code>bg_main.png</code></td>
+<td>主页背景 <code>类型_逻辑名称</code></td>
+</tr>
+<tr>
+<td><code>btn_red.png</code></td>
+<td>红色按键 <code>类型_颜色</code></td>
+</tr>
+<tr>
+<td><code>btn_red_big.png</code></td>
+<td>红色大按键 <code>类型_颜色</code></td>
+</tr>
+<tr>
+<td><code>ic_avatar_small.png</code></td>
+<td>小头像图标 <code>类型_逻辑名称</code></td>
+</tr>
+<tr>
+<td><code>bg_input.png</code></td>
+<td>输入框背景 <code>类型_逻辑名称</code></td>
+</tr>
+<tr>
+<td><code>divider_white.png</code></td>
+<td>白色分割线 <code>类型_颜色</code></td>
+</tr>
+<tr>
+<td><code>bg_main_head.png</code></td>
+<td>主页头部背景 <code>类型_模块名_逻辑名称</code></td>
+</tr>
+<tr>
+<td><code>def_search_cell.png</code></td>
+<td>搜索页面默认单元图片 <code>类型_模块名_逻辑名称</code></td>
+</tr>
+<tr>
+<td><code>ic_more_help.png</code></td>
+<td>更多帮助图标 <code>类型_逻辑名称</code></td>
+</tr>
+<tr>
+<td><code>divider_list_line.png</code></td>
+<td>列表分割线 <code>类型_逻辑名称</code></td>
+</tr>
+<tr>
+<td><code>sel_search_ok.xml</code></td>
+<td>搜索界面确认选择器 <code>类型_模块名_逻辑名称</code></td>
+</tr>
+<tr>
+<td><code>shape_music_ring.xml</code></td>
+<td>音乐界面环形形状 <code>类型_模块名_逻辑名称</code></td>
+</tr>
+</tbody></table>
+<p>如果有多种形态，如按钮选择器：<code>sel_btn_xx.xml</code>，采用如下命名：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sel_btn_xx</code></td>
+<td>作用在 <code>btn_xx</code> 上的 <code>selector</code></td>
+</tr>
+<tr>
+<td><code>btn_xx_normal</code></td>
+<td>默认状态效果</td>
+</tr>
+<tr>
+<td><code>btn_xx_pressed</code></td>
+<td><code>state_pressed</code> 点击效果</td>
+</tr>
+<tr>
+<td><code>btn_xx_focused</code></td>
+<td><code>state_focused</code> 聚焦效果</td>
+</tr>
+<tr>
+<td><code>btn_xx_disabled</code></td>
+<td><code>state_enabled</code> 不可用效果</td>
+</tr>
+<tr>
+<td><code>btn_xx_checked</code></td>
+<td><code>state_checked</code> 选中效果</td>
+</tr>
+<tr>
+<td><code>btn_xx_selected</code></td>
+<td><code>state_selected</code> 选中效果</td>
+</tr>
+<tr>
+<td><code>btn_xx_hovered</code></td>
+<td><code>state_hovered</code> 悬停效果</td>
+</tr>
+<tr>
+<td><code>btn_xx_checkable</code></td>
+<td><code>state_checkable</code> 可选效果</td>
+</tr>
+<tr>
+<td><code>btn_xx_activated</code></td>
+<td><code>state_activated</code> 激活效果</td>
+</tr>
+<tr>
+<td><code>btn_xx_window_focused</code></td>
+<td><code>state_window_focused</code> 窗口聚焦效果</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>注意：使用 Android Studio 的插件 SelectorChapek 可以快速生成 selector，前提是命名要规范。</p>
+</blockquote>
+<h3 id="3-5-4-布局资源文件（layout-x2F-）"><a href="#3-5-4-布局资源文件（layout-x2F-）" class="headerlink" title="3.5.4 布局资源文件（layout&#x2F;）"></a>3.5.4 布局资源文件（layout&#x2F;）</h3><p>命名规则：<code>类型_模块名</code>、<code>&#123;模块名_&#125;类型_逻辑名称</code>。(也采用 PBF，方便查看，尤其在大项目中)</p>
+<blockquote>
+<p>说明：<code>&#123;&#125;</code> 中的内容为可选。</p>
+</blockquote>
+<p>例如：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Activity</code></td>
+<td><code>main_activity.xml</code></td>
+<td>主窗体 <code>模块名_类型</code></td>
+</tr>
+<tr>
+<td><code>Fragment</code></td>
+<td><code>music_fragment.xml</code></td>
+<td>音乐片段 <code>模块名_类型</code></td>
+</tr>
+<tr>
+<td><code>Dialog</code></td>
+<td><code>loading_dialog.xml</code></td>
+<td>加载对话框 <code>逻辑名称_类型</code></td>
+</tr>
+<tr>
+<td><code>PopupWindow</code></td>
+<td><code>info_ppw.xml</code></td>
+<td>信息弹窗（PopupWindow） <code>逻辑名称_类型</code></td>
+</tr>
+<tr>
+<td><code>adapter</code> 的列表项</td>
+<td><code>main_song_item.xml</code></td>
+<td>主页歌曲列表项 <code>模块名_类型_逻辑名称</code></td>
+</tr>
+</tbody></table>
+<h3 id="3-5-5-布局资源-id-命名"><a href="#3-5-5-布局资源-id-命名" class="headerlink" title="3.5.5 布局资源 id 命名"></a>3.5.5 布局资源 id 命名</h3><p>命名规则：<code>&#123;模块名_&#125;_逻辑名_view 缩写（功能）</code>，例如： <code>main_search_btn</code>、<code>back_btn</code>。此外，采用 Kotlinx 直接获取布局文件的时候，id 命名采用驼峰样式。</p>
+<blockquote>
+<p>说明：<code>&#123;&#125;</code> 中的内容为可选。参考 GoogleSamples Demo：<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=https://github.com/android/architecture-samples">https://github.com/android/architecture-samples</a></p>
+</blockquote>
+<p>例如：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>规范</th>
+<th>命名示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>TextView</code></td>
+<td><code>xxx_text</code></td>
+<td><code>user_login_text</code></td>
+</tr>
+<tr>
+<td><code>EditText</code></td>
+<td><code>xxx_edit</code></td>
+<td><code>user_login_edit</code></td>
+</tr>
+<tr>
+<td><code>ImageView</code></td>
+<td><code>xxx_iv</code></td>
+<td><code>user_login_iv</code></td>
+</tr>
+<tr>
+<td><code>Button</code></td>
+<td><code>xxx_btn</code></td>
+<td><code>user_login_btn</code></td>
+</tr>
+<tr>
+<td><code>CheckBox</code></td>
+<td><code>xxx_cb</code></td>
+<td><code>user_login_cb</code></td>
+</tr>
+<tr>
+<td><code>GridView</code></td>
+<td><code>xxx_gv</code></td>
+<td><code>user_login_gv</code></td>
+</tr>
+<tr>
+<td><code>ListView</code></td>
+<td><code>xxx_lv</code></td>
+<td><code>user_login_lv</code></td>
+</tr>
+<tr>
+<td><code>RecyclerView</code></td>
+<td><code>xxx_rv</code></td>
+<td><code>user_login_rv</code></td>
+</tr>
+<tr>
+<td><code>RadioButton</code></td>
+<td><code>xxx_rb</code></td>
+<td><code>user_login_rb</code></td>
+</tr>
+<tr>
+<td><code>LinearLayout</code></td>
+<td><code>xxx_ll</code></td>
+<td><code>user_login_ll</code></td>
+</tr>
+<tr>
+<td><code>RelativeLayout</code></td>
+<td><code>xxx_rl</code></td>
+<td><code>user_login_rl</code></td>
+</tr>
+<tr>
+<td><code>FrameLayout</code></td>
+<td><code>xxx_fl</code></td>
+<td><code>user_login_fl</code></td>
+</tr>
+<tr>
+<td><code>GridLayout</code></td>
+<td><code>xxx_gl</code></td>
+<td><code>user_login_gl</code></td>
+</tr>
+<tr>
+<td><code>ConstraintLayout</code></td>
+<td><code>xxx_cl</code></td>
+<td><code>user_login_cl</code></td>
+</tr>
+</tbody></table>
+<h3 id="3-5-6-菜单资源文件（menu-x2F-）"><a href="#3-5-6-菜单资源文件（menu-x2F-）" class="headerlink" title="3.5.6 菜单资源文件（menu&#x2F;）"></a>3.5.6 菜单资源文件（menu&#x2F;）</h3><p>菜单相关的资源文件应放在该目录下。命名规则：<code>&#123;模块名_&#125;逻辑名称</code></p>
+<blockquote>
+<p>说明：<code>&#123;&#125;</code> 中的内容为可选。例如：<code>main_drawer.xml</code>、<code>navigation.xml</code>。</p>
+</blockquote>
+<h3 id="3-5-7-colors-xml"><a href="#3-5-7-colors-xml" class="headerlink" title="3.5.7 colors.xml"></a>3.5.7 colors.xml</h3><p><code>&lt;color&gt;</code> 的 <code>name</code> 命名使用下划线命名法，在你的 <code>colors.xml</code> 文件中应该只是映射颜色的名称一个 ARGB 值，而没有其它的。不要使用它为不同的按钮来定义 ARGB 值。</p>
+<p>例如，不要像下面这样做：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;button_foreground&quot;</span>&gt;</span>#FFFFFF<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;button_background&quot;</span>&gt;</span>#2A91BD<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;comment_background_inactive&quot;</span>&gt;</span>#5F5F5F<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;comment_background_active&quot;</span>&gt;</span>#939393<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;comment_foreground&quot;</span>&gt;</span>#FFFFFF<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;comment_foreground_important&quot;</span>&gt;</span>#FF9D2F<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;comment_shadow&quot;</span>&gt;</span>#323232<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>使用这种格式，会非常容易重复定义 ARGB 值，而且如果应用要改变基色的话会非常困难。同时，这些定义是跟一些环境关联起来的，如 <code>button</code> 或者 <code>comment</code>，应该放到一个按钮风格中，而不是在 <code>colors.xml</code> 文件中。</p>
+<p>相反，应该这样做：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- grayscale --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;white&quot;</span>     &gt;</span>#FFFFFF<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;gray_light&quot;</span>&gt;</span>#DBDBDB<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;gray&quot;</span>      &gt;</span>#939393<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;gray_dark&quot;</span> &gt;</span>#5F5F5F<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;black&quot;</span>     &gt;</span>#323232<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- basic colors --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;green&quot;</span>&gt;</span>#27D34D<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;blue&quot;</span>&gt;</span>#2A91BD<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;orange&quot;</span>&gt;</span>#FF9D2F<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;red&quot;</span>&gt;</span>#FF432F<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>向应用设计者那里要这个调色板，名称不需要跟 <code>&quot;green&quot;</code>、<code>&quot;blue&quot;</code> 等等相同。<code>&quot;brand_primary&quot;</code>、<code>&quot;brand_secondary&quot;</code>、<code>&quot;brand_negative&quot;</code> 这样的名字也是完全可以接受的。像这样规范的颜色很容易修改或重构，会使应用一共使用了多少种不同的颜色变得非常清晰。通常一个具有审美价值的 UI 来说，减少使用颜色的种类是非常重要的。</p>
+<blockquote>
+<p>注意：如果某些颜色和主题有关，那就单独写一个 <code>colors_theme.xml</code>。</p>
+</blockquote>
+<h3 id="3-5-8-strings-xml"><a href="#3-5-8-strings-xml" class="headerlink" title="3.5.8 strings.xml"></a>3.5.8 strings.xml</h3><p><code>&lt;string&gt;</code> 的 <code>name</code> 命名使用下划线命名法，采用以下规则：<code>&#123;模块名_&#125;逻辑名称</code>，这样方便同一个界面的所有 <code>string</code> 都放到一起，方便查找。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>main_menu_about</code></td>
+<td>主菜单按键文字</td>
+</tr>
+<tr>
+<td><code>friend_title</code></td>
+<td>好友模块标题栏</td>
+</tr>
+<tr>
+<td><code>friend_dialog_del</code></td>
+<td>好友删除提示</td>
+</tr>
+<tr>
+<td><code>login_check_email</code></td>
+<td>登录验证</td>
+</tr>
+<tr>
+<td><code>dialog_title</code></td>
+<td>弹出框标题</td>
+</tr>
+<tr>
+<td><code>button_ok</code></td>
+<td>确认键</td>
+</tr>
+<tr>
+<td><code>loading</code></td>
+<td>加载文字</td>
+</tr>
+</tbody></table>
+<h3 id="3-5-9-styles-xml"><a href="#3-5-9-styles-xml" class="headerlink" title="3.5.9 styles.xml"></a>3.5.9 styles.xml</h3><style> 的 name 命名使用大驼峰命名法，几乎每个项目都需要适当的使用 styles.xml 文件，因为对于一个视图来说，有一个重复的外观是很常见的，将所有的外观细节属性（colors、padding、font）放在 styles.xml 文件中。 在应用中对于大多数文本内容，最起码你应该有一个通用的 styles.xml 文件，例如：
+
+
+
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;ContentText&quot;</span>&gt;</span><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">&quot;android:textSize&quot;</span>&gt;</span>@dimen/font_normal<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">&quot;android:textColor&quot;</span>&gt;</span>@color/basic_black<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+应用到 `TextView` 中：
+
+
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:text</span>=<span class="string">&quot;@string/price&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">style</span>=<span class="string">&quot;@style/ContentText&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+或许你需要为按钮控件做同样的事情，不要停止在那里，将一组相关的和重复 `android:xxxx` 的属性放到一个通用的 `<style>` 中。
+
+# 4. Android 的注释规范
+
+## 4.1 类注释
+
+每个类完成后应该有作者姓名和联系方式的注释，对自己的代码负责。
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * &lt;pre&gt;</span></span><br><span class="line"><span class="comment"> *     author : nanchen</span></span><br><span class="line"><span class="comment"> *     e-mail : xxx@xx</span></span><br><span class="line"><span class="comment"> *     time   : 2021/01/18</span></span><br><span class="line"><span class="comment"> *     desc   : xxxx 描述</span></span><br><span class="line"><span class="comment"> *     version: 1.0</span></span><br><span class="line"><span class="comment"> * &lt;/pre&gt;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WelcomeActivity</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+具体可以在 AS 中自己配制，进入 Settings -> Editor -> File and Code Templates -> Includes -> File Header，输入
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * &lt;pre&gt;</span></span><br><span class="line"><span class="comment"> *     author : $&#123;USER&#125;</span></span><br><span class="line"><span class="comment"> *     e-mail : xxx@xx</span></span><br><span class="line"><span class="comment"> *     time   : $&#123;YEAR&#125;/$&#123;MONTH&#125;/$&#123;DAY&#125;</span></span><br><span class="line"><span class="comment"> *     desc   :</span></span><br><span class="line"><span class="comment"> *     version: 1.0</span></span><br><span class="line"><span class="comment"> * &lt;/pre&gt;</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+这样便可在每次新建类的时候自动加上该头注释。
+
+## 4.2 方法注释
+
+每一个成员方法（包括自定义成员方法、覆盖方法、属性方法）的方法头都必须做方法头注释，在方法前一行输入 `/** + 回车` 或者设置 `Fix doc comment`（Settings -> Keymap -> Fix doc comment）快捷键，AS 便会帮你生成模板，我们只需要补全参数即可，如下所示。**`@param` , `@return` , `@throws` , `@deprecated` 这 4 种标记出现的时候，描述都不能为空。当描述无法在一行中容纳，连续行至少需要再缩进 4 个空格。**
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Report an accessibility action to this view&#x27;s parents for delegated processing.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;Implementations of &#123;<span class="doctag">@link</span> #performAccessibilityAction(int, Bundle)&#125; may internally</span></span><br><span class="line"><span class="comment"> * call this method to delegate an accessibility action to a supporting parent. If the parent</span></span><br><span class="line"><span class="comment"> * returns true from its</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> ViewParent#onNestedPrePerformAccessibilityAction(View, int, android.os.Bundle)&#125;</span></span><br><span class="line"><span class="comment"> * method this method will return true to signify that the action was consumed.&lt;/p&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;This method is useful for implementing nested scrolling child views. If</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> #isNestedScrollingEnabled()&#125; returns true and the action is a scrolling action</span></span><br><span class="line"><span class="comment"> * a custom view implementation may invoke this method to allow a parent to consume the</span></span><br><span class="line"><span class="comment"> * scroll first. If this method returns true the custom view should skip its own scrolling</span></span><br><span class="line"><span class="comment"> * behavior.&lt;/p&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> action Accessibility action to delegate</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> arguments Optional action arguments</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> true if the action was consumed by a parent</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">dispatchNestedPrePerformAccessibilityAction</span><span class="params">(<span class="type">int</span> action, Bundle arguments)</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">ViewParent</span> <span class="variable">p</span> <span class="operator">=</span> getParent(); p != <span class="literal">null</span>; p = p.getParent()) &#123;</span><br><span class="line">        <span class="keyword">if</span> (p.onNestedPrePerformAccessibilityAction(<span class="built_in">this</span>, action, arguments)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+## 4.3 块注释
+
+块注释与其周围的代码在同一缩进级别。它们可以是 `/* ... */` 风格，也可以是 `// ...` 风格（**`//` 后最好带一个空格**）。对于多行的 `/* ... */` 注释，后续行必须从 `*` 开始， 并且与前一行的 `*` 对齐。以下示例注释都是 OK 的。
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * This is okay.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// And so</span></span><br><span class="line"><span class="comment">// is this.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Or you can</span></span><br><span class="line"><span class="comment">* even do this. */</span></span><br></pre></td></tr></table></figure>
+
+注释不要封闭在由星号或其它字符绘制的框架里。
+
+> Tip：在写多行注释时，如果你希望在必要时能重新换行（即注释像段落风格一样），那么使用
+> `/* ... */`。
+
+比如：
+
+
+
+![img](https:////upload-images.jianshu.io/upload_images/3994917-2a34deef5a6d8bca.png?imageMogr2/auto-orient/strip|imageView2/2/w/810/format/webp)
+
+## 4.4 全局变量的注释
+
+全局变量的注释样式如下（注意注释之间有空格）：
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The next available accessibility id.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> nextAccessibilityViewId;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The animation currently associated with this view.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">Animation</span> <span class="variable">currentAnimation</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+## 4.5 其他一些注释
+
+AS 已帮你集成了一些注释模板，我们只需要直接使用即可，在代码中输入 `TODO`、`FIXME` 等这些注释模板，回车后便会出现如下注释。
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// <span class="doctag">TODO:</span> 17/3/14 需要实现，但目前还未实现的功能的说明</span></span><br><span class="line"><span class="comment">// <span class="doctag">FIXME:</span> 17/3/14 需要修正，甚至代码是错误的，不能工作，需要修复的说明</span></span><br></pre></td></tr></table></figure>
+
+## 4.5 注释必须遵守的规范
+
+### 4.5.1 不言自明的方法不要加注释。
+
+比如 `Item getItem(int index)` 是一段自说明的代码，我们可以直接从方法的命名就能知道它是干嘛的，所以不需要增加注释。
+
+### 4.5.2 提测的代码不应该有 TODO 这样的注释
+
+# 5. 代码样式规范
+
+## 5.1 使用标准大括号样式
+
+左大括号不单独占一行，与其前面的代码位于同一行：
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="title function_">func</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (something) &#123;</span><br><span class="line">            <span class="comment">// ...</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (somethingElse) &#123;</span><br><span class="line">            <span class="comment">// ...</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// ...</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+我们需要在条件语句周围添加大括号。例外情况：如果整个条件语句（条件和主体）适合放在同一行，那么您可以（但不是必须）将其全部放在一行上。例如，我们接受以下样式：
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (condition) &#123;</span><br><span class="line">    body();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+同样也接受以下样式：
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (condition) body();</span><br></pre></td></tr></table></figure>
+
+但不接受以下样式：
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (condition)</span><br><span class="line">    body();  <span class="comment">// bad!</span></span><br></pre></td></tr></table></figure>
+
+## 5.2 编写简短方法
+
+在可行的情况下，尽量编写短小精炼的方法。我们了解，有些情况下较长的方法是恰当的，因此对方法的代码长度没有做出硬性限制。如果某个方法的代码超出 40 行，请考虑是否可以在不破坏程序结构的前提下对其拆解。
+
+## 5.3 类成员的顺序
+
+这并没有唯一的正确解决方案，但如果都使用一致的顺序将会提高代码的可读性，推荐使用如下排序：
+
+1. 常量（Kotlin 伴生对象放在开头）
+2. 字段
+3. 构造函数
+4. 重写函数和回调
+5. 公有函数
+6. 私有函数
+7. 内部类或接口
+
+例如：
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MainActivity</span> <span class="keyword">extends</span> <span class="title class_">Activity</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">TAG</span> <span class="operator">=</span> MainActivity.class.getSimpleName();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String mTitle;</span><br><span class="line">    <span class="keyword">private</span> TextView mTextViewTitle;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">()</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setTitle</span><span class="params">(String title)</span> &#123;</span><br><span class="line">        mTitle = title;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">setUpView</span><span class="params">()</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">AnInnerClass</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+如果类继承于 Android 组件（例如 `Activity` 或 `Fragment`），那么把重写函数按照他们的生命周期进行排序是一个非常好的习惯，例如，`Activity` 实现了 `onCreate()`、`onDestroy()`、`onPause()`、`onResume()`，它的正确排序如下所示：
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MainActivity</span> <span class="keyword">extends</span> <span class="title class_">Activity</span> &#123;</span><br><span class="line">    <span class="comment">//Order matches Activity lifecycle</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onResume</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onPause</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onDestroy</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+## 5.4 函数参数的排序
+
+在 Android 开发过程中，`Context` 在函数参数中是再常见不过的了，我们最好把 `Context` 作为其第一个参数。
+
+正相反，我们把回调接口应该作为其最后一个参数。
+
+例如：
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Context always goes first</span></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">loadUser</span><span class="params">(Context context, <span class="type">int</span> userId)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Callbacks always go last</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">loadUserAsync</span><span class="params">(Context context, <span class="type">int</span> userId, UserCallback callback)</span>;</span><br></pre></td></tr></table></figure>
+
+## 5.5 字符串常量的命名和值
+
+Android SDK 中的很多类都用到了键值对函数，比如 `SharedPreferences`、`Bundle`、`Intent`，所以，即便是一个小应用，我们最终也不得不编写大量的字符串常量。
+
+当时用到这些类的时候，我们 **必须** 将它们的键定义为 `static final` 字段，并遵循以下指示作为前缀。
+
+| 类                 | 字段名前缀  |
+| ------------------ | ----------- |
+| SharedPreferences  | `PREF_`     |
+| Bundle             | `BUNDLE_`   |
+| Fragment Arguments | `ARGUMENT_` |
+| Intent Extra       | `EXTRA_`    |
+| Intent Action      | `ACTION_`   |
+
+说明：虽然 `Fragment.getArguments()` 得到的也是 `Bundle` ，但因为这是 `Bundle` 的常用用法，所以特意为此定义一个不同的前缀。
+
+例如：
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 注意：字段的值与名称相同以避免重复问题</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PREF_EMAIL</span> <span class="operator">=</span> <span class="string">&quot;PREF_EMAIL&quot;</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">BUNDLE_AGE</span> <span class="operator">=</span> <span class="string">&quot;BUNDLE_AGE&quot;</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ARGUMENT_USER_ID</span> <span class="operator">=</span> <span class="string">&quot;ARGUMENT_USER_ID&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 与意图相关的项使用完整的包名作为值的前缀</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">EXTRA_SURNAME</span> <span class="operator">=</span> <span class="string">&quot;com.myapp.extras.EXTRA_SURNAME&quot;</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ACTION_OPEN_USER</span> <span class="operator">=</span> <span class="string">&quot;com.myapp.action.ACTION_OPEN_USER&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+## 5.6 行长限制
+
+代码中每一行文本的长度都应该不超过 160 个字符。虽然关于此规则存在很多争论，但最终决定仍是以 160 个字符为上限，如果行长超过了 160（AS 窗口右侧的竖线就是设置的行宽末尾 ），我们通常有两种方法来缩减行长。
+
+- 提取一个局部变量或方法（最好）。
+- 使用换行符将一行换成多行。
+
+不过存在以下例外情况：
+
+- 如果备注行包含长度超过 160 个字符的示例命令或文字网址，那么为了便于剪切和粘贴，该行可以超过 160 个字符。
+- 导入语句行可以超出此限制，因为用户很少会看到它们（这也简化了工具编写流程）。
+
+### 5.6.1 换行策略
+
+这没有一个准确的解决方案来决定如何换行，通常不同的解决方案都是有效的，但是有一些规则可以应用于常见的情况。
+
+#### 5.6.1.1 操作符的换行
+
+除赋值操作符之外，我们把换行符放在操作符之前，例如：
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">longName</span> <span class="operator">=</span> anotherVeryLongVariable + anEvenLongerOne - thisRidiculousLongOne</span><br><span class="line">        + theFinalOne;</span><br></pre></td></tr></table></figure>
+
+赋值操作符的换行我们放在其后，例如：
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">longName</span> <span class="operator">=</span></span><br><span class="line">        anotherVeryLongVariable + anEvenLongerOne - thisRidiculousLongOne + theFinalOne;</span><br></pre></td></tr></table></figure>
+
+#### 5.6.1.2 函数链的换行
+
+当同一行中调用多个函数时（比如使用构建器时），对每个函数的调用应该在新的一行中，我们把换行符插入在 `.` 之前。
+
+例如：
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Picasso.with(context).load(<span class="string">&quot;https://blankj.com/images/avatar.jpg&quot;</span>).into(ivAvatar);</span><br></pre></td></tr></table></figure>
+
+我们应该使用如下规则：
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Picasso.with(context)</span><br><span class="line">        .load(<span class="string">&quot;https://blankj.com/images/avatar.jpg&quot;</span>)</span><br><span class="line">        .into(ivAvatar);</span><br></pre></td></tr></table></figure>
+
+#### 5.6.1.3 多参数的换行
+
+当一个方法有很多参数或者参数很长的时候，我们应该在每个 `,` 后面进行换行。
+
+比如：
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">loadPicture(context, <span class="string">&quot;https://blankj.com/images/avatar.jpg&quot;</span>, ivAvatar, <span class="string">&quot;Avatar of the user&quot;</span>, clickListener);</span><br></pre></td></tr></table></figure>
+
+我们应该使用如下规则：
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">loadPicture(context,</span><br><span class="line">        <span class="string">&quot;https://blankj.com/images/avatar.jpg&quot;</span>,</span><br><span class="line">        ivAvatar,</span><br><span class="line">        <span class="string">&quot;Avatar of the user&quot;</span>,</span><br><span class="line">        clickListener);</span><br></pre></td></tr></table></figure>
+
+#### 5.6.1.4 RxJava 链式的换行
+
+RxJava 的每个操作符都需要换新行，并且把换行符插入在 `.` 之前。
+
+例如：
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Observable&lt;Location&gt; <span class="title function_">syncLocations</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> mDatabaseHelper.getAllLocations()</span><br><span class="line">            .concatMap(<span class="keyword">new</span> <span class="title class_">Func1</span>&lt;Location, Observable&lt;? <span class="keyword">extends</span> <span class="title class_">Location</span>&gt;&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                 <span class="keyword">public</span> Observable&lt;? <span class="keyword">extends</span> <span class="title class_">Location</span>&gt; call(Location location) &#123;</span><br><span class="line">                     <span class="keyword">return</span> mRetrofitService.getLocation(location.id);</span><br><span class="line">                 &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">            .retry(<span class="keyword">new</span> <span class="title class_">Func2</span>&lt;Integer, Throwable, Boolean&gt;() &#123;</span><br><span class="line">                 <span class="meta">@Override</span></span><br><span class="line">                 <span class="keyword">public</span> Boolean <span class="title function_">call</span><span class="params">(Integer numRetries, Throwable throwable)</span> &#123;</span><br><span class="line">                     <span class="keyword">return</span> throwable <span class="keyword">instanceof</span> RetrofitError;</span><br><span class="line">                 &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+参考文档：
+
+
+原文链接：https://www.jianshu.com/p/e3afd461ebce
+</style>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/Android/" rel="tag"># Android</a> -->
+              <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i>  Android</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/28/Mysql-8-%E7%89%88%E6%9C%AC%E4%BF%AE%E6%94%B9root%E5%AF%86%E7%A0%81/" rel="prev" title="Mysql 8.*版本修改root密码">
+      <i class="fa fa-chevron-left"></i> Mysql 8.*版本修改root密码
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/23/kotlin%E5%9F%BA%E7%A1%80/" rel="next" title="Kotlin基础">
+      Kotlin基础 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Android-%E7%9A%84%E5%B7%A5%E5%85%B7%E8%A7%84%E8%8C%83"><span class="nav-number">1.</span> <span class="nav-text">1. Android  的工具规范</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Android-%E7%9A%84%E5%88%86%E5%8C%85%E8%A7%84%E8%8C%83"><span class="nav-number">2.</span> <span class="nav-text">2. Android 的分包规范</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Android-%E7%9A%84%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="nav-number">3.</span> <span class="nav-text">3. Android 的命名规范</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-%E5%8C%85%E5%90%8D"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 包名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-%E7%B1%BB%E5%90%8D"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 类名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-%E6%96%B9%E6%B3%95%E5%90%8D"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 方法名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-%E5%8F%98%E9%87%8F%E5%91%BD%E5%90%8D"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 变量命名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5-%E8%B5%84%E6%BA%90%E5%91%BD%E5%90%8D"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 资源命名</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-1-%E5%8A%A8%E7%94%BB%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6%EF%BC%88anim-x2F-%E5%92%8C-animator-x2F-%EF%BC%89"><span class="nav-number">3.5.1.</span> <span class="nav-text">3.5.1 动画资源文件（anim&#x2F; 和 animator&#x2F;）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-2-%E9%A2%9C%E8%89%B2%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6%EF%BC%88color-x2F-%EF%BC%89"><span class="nav-number">3.5.2.</span> <span class="nav-text">3.5.2 颜色资源文件（color&#x2F;）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-3-%E5%9B%BE%E7%89%87%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6%EF%BC%88drawable-x2F-%E5%92%8C-mipmap-x2F-%EF%BC%89"><span class="nav-number">3.5.3.</span> <span class="nav-text">3.5.3 图片资源文件（drawable&#x2F; 和 mipmap&#x2F;）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-4-%E5%B8%83%E5%B1%80%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6%EF%BC%88layout-x2F-%EF%BC%89"><span class="nav-number">3.5.4.</span> <span class="nav-text">3.5.4 布局资源文件（layout&#x2F;）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-5-%E5%B8%83%E5%B1%80%E8%B5%84%E6%BA%90-id-%E5%91%BD%E5%90%8D"><span class="nav-number">3.5.5.</span> <span class="nav-text">3.5.5 布局资源 id 命名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-6-%E8%8F%9C%E5%8D%95%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6%EF%BC%88menu-x2F-%EF%BC%89"><span class="nav-number">3.5.6.</span> <span class="nav-text">3.5.6 菜单资源文件（menu&#x2F;）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-7-colors-xml"><span class="nav-number">3.5.7.</span> <span class="nav-text">3.5.7 colors.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-8-strings-xml"><span class="nav-number">3.5.8.</span> <span class="nav-text">3.5.8 strings.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-9-styles-xml"><span class="nav-number">3.5.9.</span> <span class="nav-text">3.5.9 styles.xml</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>

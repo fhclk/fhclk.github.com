@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="微服务定义微服务架构是一种架构风格和架构思想，它倡导我们在传统软件应用架构的基础上，将系统业务按照功能拆分为更加细粒度的服务，所拆分的每一个服务都是一个独立的应用，这些应用对外提供公共的API，可以独立承担对外服务的职责，通过此种思想方式所开发的软件服务实体就是“微服务”，而围绕着微服务思想构建的一系列体系结构(包括开发、测试、部署等)。 微服务优缺点微服务特点一：快速响应需求变化采用单体巨型非微">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微服务">
+<meta property="og:url" content="http://fhclk.github.io/2020/12/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="微服务定义微服务架构是一种架构风格和架构思想，它倡导我们在传统软件应用架构的基础上，将系统业务按照功能拆分为更加细粒度的服务，所拆分的每一个服务都是一个独立的应用，这些应用对外提供公共的API，可以独立承担对外服务的职责，通过此种思想方式所开发的软件服务实体就是“微服务”，而围绕着微服务思想构建的一系列体系结构(包括开发、测试、部署等)。 微服务优缺点微服务特点一：快速响应需求变化采用单体巨型非微">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://fhclk.github.io/2020/12/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1/image-20210820095240441.png">
+<meta property="article:published_time" content="2020-12-12T02:11:36.000Z">
+<meta property="article:modified_time" content="2022-12-12T02:37:07.476Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="架构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/2020/12/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1/image-20210820095240441.png">
+
+<link rel="canonical" href="http://fhclk.github.io/2020/12/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>微服务 | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/12/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          微服务
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-12 10:11:36" itemprop="dateCreated datePublished" datetime="2020-12-12T10:11:36+08:00">2020-12-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-12-12 10:37:07" itemprop="dateModified" datetime="2022-12-12T10:37:07+08:00">2022-12-12</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="微服务定义"><a href="#微服务定义" class="headerlink" title="微服务定义"></a>微服务定义</h4><p>微服务架构是一种架构风格和架构思想，它倡导我们在传统软件应用架构的基础上，将系统业务按照功能拆分为更加细粒度的服务，所拆分的每一个服务都是一个独立的应用，这些应用对外提供公共的API，可以独立承担对外服务的职责，通过此种思想方式所开发的软件服务实体就是“微服务”，而围绕着微服务思想构建的一系列体系结构(包括开发、测试、部署等)。</p>
+<h5 id="微服务优缺点"><a href="#微服务优缺点" class="headerlink" title="微服务优缺点"></a>微服务优缺点</h5><h6 id="微服务特点一：快速响应需求变化"><a href="#微服务特点一：快速响应需求变化" class="headerlink" title="微服务特点一：快速响应需求变化"></a>微服务特点一：快速响应需求变化</h6><p>采用单体巨型非微服务架构有个问题，系统里面的业务模块非常多，大家一 起发布、修改、编译很难进行协调，很难做到敏捷开发、发 布、上线。</p>
+<p>微服务本质上是小微程序，相比较来说，很重要的特点是拆分概念。微服务首先是拆分，把大的拆成小的，把整体拆成部分。每个部分单独开发迭代。</p>
+<blockquote>
+<p>微服务的优点：拆完以后更灵活，各个子系统可以独立开发、独立测试、独立部署、独立进程，最后再集成。</p>
+</blockquote>
+<p>独立开发拆分以后自主性更强了，独立开发、独立测试、独立部署、独立进程，是 微服务快速响应业务需求变化的重要特点。</p>
+<h6 id="微服务特点二：敏捷开发、敏捷运维DevOps"><a href="#微服务特点二：敏捷开发、敏捷运维DevOps" class="headerlink" title="微服务特点二：敏捷开发、敏捷运维DevOps"></a>微服务特点二：敏捷开发、敏捷运维DevOps</h6><blockquote>
+<p>微服务的优点：本质上是拆完以后更好开发。</p>
+</blockquote>
+<p>总结如下：</p>
+<ol>
+<li>易于替换；</li>
+<li>独立部署；</li>
+<li>专注某个任务；</li>
+<li>高度解耦；</li>
+<li>基于功能进行组织：商品、支付、评论、机票、新闻、酒店、游戏等；</li>
+<li>服务可以使用不同的语言、系统、平台；</li>
+<li>通信使用语言中立的协议，通常是http；</li>
+<li>独立技术栈；</li>
+<li>易于测试；</li>
+</ol>
+<h4 id="微服务Microservice的设计原则"><a href="#微服务Microservice的设计原则" class="headerlink" title="微服务Microservice的设计原则"></a>微服务Microservice的设计原则</h4><blockquote>
+<p>需求第一</p>
+</blockquote>
+<p>一定要以需求为出发点。所有的架构好与坏一定是相对的，相对他处的一个需求背景。因为微服务架构能够在某些业务场景中具备优势，所以它相比传统的架构，他有一些优点但是同时也存在着缺点，它不完美。 </p>
+<blockquote>
+<p>单一职责</p>
+</blockquote>
+<p>我们的服务尽量是体现单一职责的思想，粒度不是越细越好，也不是越 粗越好。</p>
+<blockquote>
+<p>协议统一</p>
+</blockquote>
+<p>尽量去统一协议，目前的协议主要是 rest。</p>
+<blockquote>
+<p>独立开发</p>
+</blockquote>
+<p>独立开发一般咱们这里面提到的我们说的是模块拆分以后开发人员一般是独立我们按照模块进行拆分，然后每个人负责一块，每个人熟悉一块代码和逻辑业务逻辑这样的话开发时间都会相对来说高很多。</p>
+<blockquote>
+<p>独立部署</p>
+</blockquote>
+<p>独立部署这也是微服架构的很重要的一个原则，微服务架构拆分以后又会出现可能很多程序很多进程，而且每一个模块不是所有的都更新只需要迭代我那一块就行了，就是体现了我们说叫分而治之的这样一个思想，大家一起统一部署。</p>
+<h4 id="微服务Microservice的拆分原则"><a href="#微服务Microservice的拆分原则" class="headerlink" title="微服务Microservice的拆分原则"></a>微服务Microservice的拆分原则</h4><ol>
+<li><p>按照业务模块拆分</p>
+</li>
+<li><p>DDD思路可以借鉴，不能照搬</p>
+<p>DDD 本身不是架构设计模式，DDD 是一种但是在向对象设计的一个思想或者原则，它是用来解决复杂业务逻辑的一个拆分问题的，它本身并不解决整个架构层次的问题，它是解决业务层的，理解这一点。</p>
+</li>
+<li><p>单一职责（Single Responsibility）</p>
+</li>
+</ol>
+<h4 id="微服务设计的关注点"><a href="#微服务设计的关注点" class="headerlink" title="微服务设计的关注点"></a>微服务设计的关注点</h4><ol>
+<li>并发性</li>
+<li>可用性</li>
+<li>安全性</li>
+<li>密等性</li>
+<li>重用性</li>
+</ol>
+<h4 id="微服务架构设计的5大考量"><a href="#微服务架构设计的5大考量" class="headerlink" title="微服务架构设计的5大考量"></a>微服务架构设计的5大考量</h4><ol>
+<li>微服务拆分</li>
+<li>微服务高可用</li>
+<li>微数据安全</li>
+<li>微服务数据同步</li>
+<li>微服务监控</li>
+</ol>
+<h4 id="微服务的经典设计模式"><a href="#微服务的经典设计模式" class="headerlink" title="微服务的经典设计模式"></a>微服务的经典设计模式</h4><h5 id="微服务架构设计模式"><a href="#微服务架构设计模式" class="headerlink" title="微服务架构设计模式"></a>微服务架构设计模式</h5><ol>
+<li>业务分解：DDD模式</li>
+<li>DataBase PerService 每数据库单服务</li>
+<li>API Gateway pattern API网关模式</li>
+<li>Client-side 和 Remote Procedure Invocation 模式</li>
+<li>Messaging 和 Procedure Invocation 模式</li>
+<li>Single Service per Host 和 Multiple Services per Host 模式</li>
+<li>AOP: Microservice chassis pattern</li>
+<li>Externalized Configuration</li>
+<li>Service Component Test 和 Service Integration Contract Test</li>
+<li>Circuit Breaker 断路器模式</li>
+<li>Access Token 访问令牌模式</li>
+<li>观察者模式： Distributed tracing、 Health check API</li>
+<li>UI模式：MVC、MVP、MVVM模式</li>
+</ol>
+<p><img src="/2020/12/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1/image-20210820095240441.png" alt="image-20210820095240441"></p>
+<p>如图所示，以微服务架构为中心向外发散，有许多设计模式，正下方有两个，一个叫客户端发现，一个叫服务端发现，服务的注册和发现机制也是一个设计模式，微服架构属于更复杂的分布架构，里面也会用到消息通信，通过消息和数据库、其他微服务进行消息补偿。 </p>
+<p>网关的微服务太多，只有一个出口，需要给它同一个代理；安全问题，如图中Access token，和令牌相关的；另外还有高并发的熔断限流，circuit breaker 叫断路器模式，熔断相关，分布式日志、分布式加策、追踪、服务拆分模式、单数据库模式、单实例、单数据库模式多服务共享数据库模式、服务编排模式、统一配置模式等等。</p>
+<p>这里主要是分布式架构领域相关的设计模式，还有分布式事务模式，一般用的都是补偿的方式。 </p>
+<p>服务拆分的一般借鉴 DDD 模式，但不是照搬，不能完全等同。</p>
+<h5 id="微服务设计模式分类"><a href="#微服务设计模式分类" class="headerlink" title="微服务设计模式分类"></a>微服务设计模式分类</h5><h6 id="应用架构模式"><a href="#应用架构模式" class="headerlink" title="应用架构模式"></a>应用架构模式</h6><ol>
+<li>单点登录</li>
+<li>注册发现</li>
+<li>熔断限流</li>
+<li>断路器</li>
+<li>网关模式</li>
+<li>消息补偿模式</li>
+<li>令牌模式</li>
+</ol>
+<h6 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h6><ol>
+<li>分库 Single Service</li>
+<li>共库多 Service</li>
+<li>多库同步</li>
+<li>事务性补偿</li>
+</ol>
+<h6 id="日志追踪模式"><a href="#日志追踪模式" class="headerlink" title="日志追踪模式"></a>日志追踪模式</h6><ol>
+<li><p>观察者模式 paterns</p>
+</li>
+<li><p>Log aggregation</p>
+</li>
+<li><p>Application metrics</p>
+</li>
+<li><p>Audit logging</p>
+</li>
+<li><p>Distributed tracing</p>
+</li>
+<li><p>Exception tracking</p>
+</li>
+<li><p>Health check API</p>
+</li>
+<li><p>Log deployments and changes</p>
+</li>
+<li><p>分布式链路追踪模式</p>
+</li>
+</ol>
+<h6 id="UI模式"><a href="#UI模式" class="headerlink" title="UI模式"></a>UI模式</h6><ol>
+<li>MVC</li>
+<li>MVP</li>
+<li>MVVM</li>
+<li>Server-side page fragment composition</li>
+<li>Client-side UI composition</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"># 架构</a> -->
+              <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"><i class="fa fa-tag"></i>  架构</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/01/Redis/" rel="prev" title="Redis">
+      <i class="fa fa-chevron-left"></i> Redis
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/04/14/Android-Jetpack%E4%B9%8BLifecycle/" rel="next" title="Android Jetpack之Lifecycle">
+      Android Jetpack之Lifecycle <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%AE%9A%E4%B9%89"><span class="nav-number">1.</span> <span class="nav-text">微服务定义</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-number">1.1.</span> <span class="nav-text">微服务优缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%89%B9%E7%82%B9%E4%B8%80%EF%BC%9A%E5%BF%AB%E9%80%9F%E5%93%8D%E5%BA%94%E9%9C%80%E6%B1%82%E5%8F%98%E5%8C%96"><span class="nav-number">1.1.1.</span> <span class="nav-text">微服务特点一：快速响应需求变化</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%89%B9%E7%82%B9%E4%BA%8C%EF%BC%9A%E6%95%8F%E6%8D%B7%E5%BC%80%E5%8F%91%E3%80%81%E6%95%8F%E6%8D%B7%E8%BF%90%E7%BB%B4DevOps"><span class="nav-number">1.1.2.</span> <span class="nav-text">微服务特点二：敏捷开发、敏捷运维DevOps</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1Microservice%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="nav-number">2.</span> <span class="nav-text">微服务Microservice的设计原则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1Microservice%E7%9A%84%E6%8B%86%E5%88%86%E5%8E%9F%E5%88%99"><span class="nav-number">3.</span> <span class="nav-text">微服务Microservice的拆分原则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%85%B3%E6%B3%A8%E7%82%B9"><span class="nav-number">4.</span> <span class="nav-text">微服务设计的关注点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E7%9A%845%E5%A4%A7%E8%80%83%E9%87%8F"><span class="nav-number">5.</span> <span class="nav-text">微服务架构设计的5大考量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9A%84%E7%BB%8F%E5%85%B8%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.</span> <span class="nav-text">微服务的经典设计模式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.1.</span> <span class="nav-text">微服务架构设计模式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%88%86%E7%B1%BB"><span class="nav-number">6.2.</span> <span class="nav-text">微服务设计模式分类</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.2.1.</span> <span class="nav-text">应用架构模式</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">6.2.2.</span> <span class="nav-text">数据库</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E8%BF%BD%E8%B8%AA%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.2.3.</span> <span class="nav-text">日志追踪模式</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#UI%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.2.4.</span> <span class="nav-text">UI模式</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>
