@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="介绍 视图（view）是一个虚拟表，非真实存在，其本质是根据SQL语句获取动态的数据集，并为其命名，用户使用时只需使用视图名称即可获取结果集，并可以将其当作表来使用。 数据库中只存放了视图的定义，而并没有存放视图中的数据。这些数据存放在原来的表中。 使用视图查询数据时，数据库系统会从原来的表中取出对应的数据。因此，视图中的数据是依赖于原来的表中的数据的。一旦表中的数据发生改变，显示在视图中的数据也">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL视图">
+<meta property="og:url" content="http://fhclk.github.io/2020/08/26/MySQL%E8%A7%86%E5%9B%BE/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="介绍 视图（view）是一个虚拟表，非真实存在，其本质是根据SQL语句获取动态的数据集，并为其命名，用户使用时只需使用视图名称即可获取结果集，并可以将其当作表来使用。 数据库中只存放了视图的定义，而并没有存放视图中的数据。这些数据存放在原来的表中。 使用视图查询数据时，数据库系统会从原来的表中取出对应的数据。因此，视图中的数据是依赖于原来的表中的数据的。一旦表中的数据发生改变，显示在视图中的数据也">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-08-26T03:05:09.000Z">
+<meta property="article:modified_time" content="2022-12-20T05:41:23.009Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://fhclk.github.io/2020/08/26/MySQL%E8%A7%86%E5%9B%BE/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>MySQL视图 | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/08/26/MySQL%E8%A7%86%E5%9B%BE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MySQL视图
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-08-26 11:05:09" itemprop="dateCreated datePublished" datetime="2020-08-26T11:05:09+08:00">2020-08-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-12-20 13:41:23" itemprop="dateModified" datetime="2022-12-20T13:41:23+08:00">2022-12-20</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><ul>
+<li>视图（view）是一个虚拟表，非真实存在，其本质是根据SQL语句获取动态的数据集，并为其命名，用户使用时只需使用视图名称即可获取结果集，并可以将其当作表来使用。</li>
+<li>数据库中只存放了视图的定义，而并没有存放视图中的数据。这些数据存放在原来的表中。</li>
+<li>使用视图查询数据时，数据库系统会从原来的表中取出对应的数据。因此，视图中的数据是依赖于原来的表中的数据的。一旦表中的数据发生改变，显示在视图中的数据也会发生改变。</li>
+</ul>
+<h1 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h1><ul>
+<li>简化代码，可以把重复使用的查询封装成视图重复使用，同时可以使复杂的查询易于理解和使用。</li>
+<li>安全原因，如果一张表中有很多数据，很多信息不希望让所有人看到，此时可以使用视图视，如：社会保险基金表，可以用视图只显示姓名，地址，而不显示社会保险号和工资数等，可以对不同的用户，设定不同的视图。</li>
+</ul>
+<h1 id="视图的创建"><a href="#视图的创建" class="headerlink" title="视图的创建"></a>视图的创建</h1><p>语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> [<span class="keyword">or</span> replace] [algorithm <span class="operator">=</span> &#123;undefined <span class="operator">|</span> <span class="keyword">merge</span> <span class="operator">|</span> temptable&#125;]</span><br><span class="line"><span class="keyword">view</span> view_name [(column_list)]</span><br><span class="line"><span class="keyword">as</span> select_statement</span><br><span class="line">[<span class="keyword">with</span> [<span class="keyword">cascaded</span> <span class="operator">|</span> <span class="keyword">local</span>] <span class="keyword">check</span> option]</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">参数说明：</span></span><br><span class="line"><span class="comment">（1）algorithm：可选项，表示视图选择的算法。</span></span><br><span class="line"><span class="comment">（2）view_name ：表示要创建的视图名称。</span></span><br><span class="line"><span class="comment">（3）column_list：可选项，指定视图中各个属性的名词，默认情况下与SELECT语句中的查询的属性相同。</span></span><br><span class="line"><span class="comment">（4）select_statement</span></span><br><span class="line"><span class="comment">：表示一个完整的查询语句，将查询记录导入视图中。</span></span><br><span class="line"><span class="comment">（5）[with [cascaded | local] check option]：可选项，表示更新视图时要保证在该视图的权限范围之内。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">OR</span> REPLACE <span class="keyword">view</span> view1_emp</span><br><span class="line"><span class="keyword">AS</span></span><br><span class="line"><span class="keyword">select</span> emp_name, department <span class="keyword">from</span> emp;</span><br><span class="line"></span><br><span class="line"><span class="keyword">show</span> <span class="keyword">full</span> tables;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="更新视图"><a href="#更新视图" class="headerlink" title="更新视图"></a>更新视图</h1><p>某些视图是可更新的。也就是说，可以在UPDATE、DELETE或INSERT等语句中使用它们，以更新基表的内容。对于可更新的视图，在视图中的行和基表中的行之间必须具有一对一的关系。</p>
+<p>如果视图包含下述结构中的任何一种，那么它就是不可更新的：</p>
+<ul>
+<li>聚合函数（SUM(), MIN(), MAX(), COUNT()等）</li>
+<li>DISTINCT</li>
+<li>GROUP BY</li>
+<li>HAVING</li>
+<li>UNION或UNION ALL</li>
+<li>位于选择列表中的子查询</li>
+<li>JOIN</li>
+<li>FROM子句中的不可更新视图</li>
+<li>WHERE子句中的子查询，引用FROM子句中的表。</li>
+<li>仅引用文字值（在该情况下，没有要更新的基本表）</li>
+</ul>
+<p>视图中虽然可以更新数据，但是有很多的限制。一般情况下，最好将视图作为查询数据的虚拟表，而不要通过视图更新数据。因为，使用视图更新数据时，如果没有全面考虑在视图中更新数据的限制，就可能会造成数据更新失败。</p>
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--  ---------更新视图-------</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace <span class="keyword">view</span> view1_emp</span><br><span class="line"><span class="keyword">as</span> </span><br><span class="line"><span class="keyword">select</span> ename,job <span class="keyword">from</span> emp;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">update</span> view1_emp <span class="keyword">set</span> ename <span class="operator">=</span> <span class="string">&#x27;周瑜&#x27;</span> <span class="keyword">where</span> ename <span class="operator">=</span> <span class="string">&#x27;鲁肃&#x27;</span>;  <span class="comment">-- 可以修改</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> view1_emp <span class="keyword">values</span>(<span class="string">&#x27;孙权&#x27;</span>,<span class="string">&#x27;文员&#x27;</span>);  <span class="comment">-- 不可以插入</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- ----------视图包含聚合函数不可更新--------------</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace <span class="keyword">view</span> view2_emp</span><br><span class="line"><span class="keyword">as</span> </span><br><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(<span class="operator">*</span>) cnt <span class="keyword">from</span> emp;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> view2_emp <span class="keyword">values</span>(<span class="number">100</span>);</span><br><span class="line"><span class="keyword">update</span> view2_emp <span class="keyword">set</span> cnt <span class="operator">=</span> <span class="number">100</span>; </span><br><span class="line"></span><br><span class="line"><span class="comment">-- ----------视图包含distinct不可更新---------</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace <span class="keyword">view</span> view3_emp</span><br><span class="line"><span class="keyword">as</span> </span><br><span class="line"><span class="keyword">select</span> <span class="keyword">distinct</span> job <span class="keyword">from</span> emp;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> view3_emp <span class="keyword">values</span>(<span class="string">&#x27;财务&#x27;</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">-- ----------视图包含goup by 、having不可更新------------------</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace <span class="keyword">view</span> view4_emp</span><br><span class="line"><span class="keyword">as</span> </span><br><span class="line"><span class="keyword">select</span> deptno ,<span class="built_in">count</span>(<span class="operator">*</span>) cnt <span class="keyword">from</span> emp <span class="keyword">group</span> <span class="keyword">by</span> deptno <span class="keyword">having</span>  cnt <span class="operator">&gt;</span> <span class="number">2</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> view4_emp <span class="keyword">values</span>(<span class="number">30</span>,<span class="number">100</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- ----------------视图包含union或者union all不可更新----------------</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace <span class="keyword">view</span> view5_emp</span><br><span class="line"><span class="keyword">as</span> </span><br><span class="line"><span class="keyword">select</span> empno,ename <span class="keyword">from</span> emp <span class="keyword">where</span> empno <span class="operator">&lt;=</span> <span class="number">1005</span></span><br><span class="line"><span class="keyword">union</span> </span><br><span class="line"><span class="keyword">select</span> empno,ename <span class="keyword">from</span> emp <span class="keyword">where</span> empno <span class="operator">&gt;</span> <span class="number">1005</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> view5_emp <span class="keyword">values</span>(<span class="number">1015</span>,<span class="string">&#x27;韦小宝&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- -------------------视图包含子查询不可更新--------------------</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace <span class="keyword">view</span> view6_emp</span><br><span class="line"><span class="keyword">as</span> </span><br><span class="line"><span class="keyword">select</span> empno,ename,sal <span class="keyword">from</span> emp <span class="keyword">where</span> sal <span class="operator">=</span> (<span class="keyword">select</span> <span class="built_in">max</span>(sal) <span class="keyword">from</span> emp);</span><br><span class="line"> </span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> view6_emp <span class="keyword">values</span>(<span class="number">1015</span>,<span class="string">&#x27;韦小宝&#x27;</span>,<span class="number">30000</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- ----------------------视图包含join不可更新-----------------</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace <span class="keyword">view</span> view7_emp</span><br><span class="line"><span class="keyword">as</span> </span><br><span class="line"><span class="keyword">select</span> dname,ename,sal <span class="keyword">from</span> emp a <span class="keyword">join</span>  dept b  <span class="keyword">on</span> a.deptno <span class="operator">=</span> b.deptno;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> view7_emp(dname,ename,sal) <span class="keyword">values</span>(<span class="string">&#x27;行政部&#x27;</span>,<span class="string">&#x27;韦小宝&#x27;</span>,<span class="number">30000</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">-- --------------------视图包含常量文字值不可更新-------------------</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace <span class="keyword">view</span> view8_emp</span><br><span class="line"><span class="keyword">as</span> </span><br><span class="line"><span class="keyword">select</span> <span class="string">&#x27;行政部&#x27;</span> dname,<span class="string">&#x27;杨过&#x27;</span>  ename;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> view8_emp <span class="keyword">values</span>(<span class="string">&#x27;行政部&#x27;</span>,<span class="string">&#x27;韦小宝&#x27;</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="其他操作"><a href="#其他操作" class="headerlink" title="其他操作"></a>其他操作</h1><h2 id="重命名视图"><a href="#重命名视图" class="headerlink" title="重命名视图"></a>重命名视图</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- rename table 视图名 to 新视图名; </span></span><br><span class="line">rename <span class="keyword">table</span> view1_emp <span class="keyword">to</span> my_view1</span><br></pre></td></tr></table></figure>
+
+<h2 id="删除视图"><a href="#删除视图" class="headerlink" title="删除视图"></a>删除视图</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- drop view 视图名[,视图名…];</span></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">view</span> if <span class="keyword">exists</span> view_student;</span><br></pre></td></tr></table></figure>
+
+<p>删除视图时，只能删除视图的定义，不会删除数据。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/MySQL/" rel="tag"># MySQL</a> -->
+              <a href="/tags/MySQL/" rel="tag"><i class="fa fa-tag"></i>  MySQL</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/08/24/MySQL%E5%87%BD%E6%95%B0/" rel="prev" title="MySQL的函数">
+      <i class="fa fa-chevron-left"></i> MySQL的函数
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/08/29/MySQL%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" rel="next" title="MySQL存储过程">
+      MySQL存储过程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%86%E5%9B%BE%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="nav-number">3.</span> <span class="nav-text">视图的创建</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E8%A7%86%E5%9B%BE"><span class="nav-number">4.</span> <span class="nav-text">更新视图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%93%8D%E4%BD%9C"><span class="nav-number">5.</span> <span class="nav-text">其他操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E5%91%BD%E5%90%8D%E8%A7%86%E5%9B%BE"><span class="nav-number">5.1.</span> <span class="nav-text">重命名视图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E8%A7%86%E5%9B%BE"><span class="nav-number">5.2.</span> <span class="nav-text">删除视图</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">69</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>

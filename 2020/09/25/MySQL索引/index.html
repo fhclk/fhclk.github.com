@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="概述索引是通过某种算法，构建出一个数据模型，用于快速找出在某个列中有一特定值的行，不使用索引，MySQL必须从第一条记录开始读完整个表，直到找出相关的行，表越大，查询数据所花费的时间就越多，如果表中查询的列有一个索引，MySQL能够快速到达一个位置去搜索数据文件，而不必查看所有数据，那么将会节省很大一部分时间。　 索引类似一本书的目录，比如要查找 student 这个单词，可以先找到s开头的页然后">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL索引">
+<meta property="og:url" content="http://fhclk.github.io/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="概述索引是通过某种算法，构建出一个数据模型，用于快速找出在某个列中有一特定值的行，不使用索引，MySQL必须从第一条记录开始读完整个表，直到找出相关的行，表越大，查询数据所花费的时间就越多，如果表中查询的列有一个索引，MySQL能够快速到达一个位置去搜索数据文件，而不必查看所有数据，那么将会节省很大一部分时间。　 索引类似一本书的目录，比如要查找 student 这个单词，可以先找到s开头的页然后">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://fhclk.github.io/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220164302151.png">
+<meta property="og:image" content="http://fhclk.github.io/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220164116837.png">
+<meta property="og:image" content="http://fhclk.github.io/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220164211225.png">
+<meta property="og:image" content="http://fhclk.github.io/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220171943098.png">
+<meta property="og:image" content="http://fhclk.github.io/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220175309107.png">
+<meta property="og:image" content="http://fhclk.github.io/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220175445697.png">
+<meta property="og:image" content="http://fhclk.github.io/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220175534706.png">
+<meta property="og:image" content="http://fhclk.github.io/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220175726596.png">
+<meta property="og:image" content="http://fhclk.github.io/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220175754136.png">
+<meta property="og:image" content="http://fhclk.github.io/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220175953725.png">
+<meta property="og:image" content="http://fhclk.github.io/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220180044443.png">
+<meta property="article:published_time" content="2020-09-25T02:33:01.000Z">
+<meta property="article:modified_time" content="2022-12-20T10:01:24.951Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220164302151.png">
+
+<link rel="canonical" href="http://fhclk.github.io/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>MySQL索引 | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MySQL索引
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-09-25 10:33:01" itemprop="dateCreated datePublished" datetime="2020-09-25T10:33:01+08:00">2020-09-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-12-20 18:01:24" itemprop="dateModified" datetime="2022-12-20T18:01:24+08:00">2022-12-20</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>索引是通过某种算法，构建出一个数据模型，用于快速找出在某个列中有一特定值的行，不使用索引，MySQL必须从第一条记录开始读完整个表，直到找出相关的行，表越大，查询数据所花费的时间就越多，如果表中查询的列有一个索引，MySQL能够快速到达一个位置去搜索数据文件，而不必查看所有数据，那么将会节省很大一部分时间。　</p>
+<p>索引类似一本书的目录，比如要查找 student 这个单词，可以先找到s开头的页然后向后查找，这个就类似索引。</p>
+<h1 id="索引的分类"><a href="#索引的分类" class="headerlink" title="索引的分类"></a>索引的分类</h1><p>索引是存储引擎用来快速查找记录的一种数据结构，按照实现的方式类分，主要有Hash索引和B+Tree索引。</p>
+<p>按照功能划分，索引划为以下分类:</p>
+<img src="/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220164302151.png" alt="image-20221220164302151" style="zoom:67%;">
+
+<h2 id="Hash索引"><a href="#Hash索引" class="headerlink" title="Hash索引"></a>Hash索引</h2><img src="/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220164116837.png" alt="image-20221220164116837" style="zoom:67%;">
+
+
+
+<h2 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B+Tree索引"></a>B+Tree索引</h2><p><img src="/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220164211225.png" alt="image-20221220164211225"></p>
+<h2 id="单列索引"><a href="#单列索引" class="headerlink" title="单列索引"></a>单列索引</h2><p>一个索引只包含单个列，但一个表中可以有多个单列索引。</p>
+<h3 id="普通索引"><a href="#普通索引" class="headerlink" title="普通索引"></a>普通索引</h3><p>MySQL中基本索引类型，没有什么限制，允许在定义索引的列中插入重复值和空值，纯粹为了查询数据更快一点。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> database mydb5;</span><br><span class="line">use mydb5;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 方式1-创建表的时候直接指定</span></span><br><span class="line"><span class="keyword">create</span>  <span class="keyword">table</span> student(</span><br><span class="line">    sid <span class="type">int</span> <span class="keyword">primary</span> key,</span><br><span class="line">    card_id <span class="type">varchar</span>(<span class="number">20</span>),</span><br><span class="line">    name <span class="type">varchar</span>(<span class="number">20</span>),</span><br><span class="line">    gender <span class="type">varchar</span>(<span class="number">20</span>),</span><br><span class="line">    age <span class="type">int</span>,</span><br><span class="line">    birth <span class="type">date</span>, </span><br><span class="line">    phone_num <span class="type">varchar</span>(<span class="number">20</span>),</span><br><span class="line">    score <span class="keyword">double</span>,</span><br><span class="line">    index index_name(name) <span class="comment">-- 给name列创建索引</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 方式2-直接创建</span></span><br><span class="line"><span class="comment">-- create index indexname on tablename(columnname); </span></span><br><span class="line"><span class="keyword">create</span> index index_gender <span class="keyword">on</span> student(gender); </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 方式3-修改表结构(添加索引)</span></span><br><span class="line"><span class="comment">-- alter table tablename add index indexname(columnname)</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> student <span class="keyword">add</span> index index_age(age);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 1、查看数据库所有索引 </span></span><br><span class="line"><span class="comment">-- select * from mysql.`innodb_index_stats` a where a.`database_name` = &#x27;数据库名’; </span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> mysql.`innodb_index_stats` a <span class="keyword">where</span> a.`database_name` <span class="operator">=</span> <span class="string">&#x27;mydb5&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 2、查看表中所有索引 </span></span><br><span class="line"><span class="comment">-- select * from mysql.`innodb_index_stats` a where a.`database_name` = &#x27;数据库名&#x27; and a.table_name like &#x27;%表名%’; </span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> mysql.`innodb_index_stats` a <span class="keyword">where</span> a.`database_name` <span class="operator">=</span> <span class="string">&#x27;mydb5&#x27;</span> <span class="keyword">and</span> a.table_name <span class="keyword">like</span> <span class="string">&#x27;%student%&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 3、查看表中所有索引 </span></span><br><span class="line"><span class="comment">-- show index from table_name; </span></span><br><span class="line"><span class="keyword">show</span> index <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="唯一索引"><a href="#唯一索引" class="headerlink" title="唯一索引"></a>唯一索引</h3><p>唯一索引与前面的普通索引类似，不同的就是：索引列的值必须唯一，但允许有空值。如果是组合索引，则列值的组合必须唯一。它有以下几种创建方式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 方式1-创建表的时候直接指定</span></span><br><span class="line"><span class="keyword">create</span>  <span class="keyword">table</span> student2(</span><br><span class="line">    sid <span class="type">int</span> <span class="keyword">primary</span> key,</span><br><span class="line">    card_id <span class="type">varchar</span>(<span class="number">20</span>),</span><br><span class="line">    name <span class="type">varchar</span>(<span class="number">20</span>),</span><br><span class="line">    gender <span class="type">varchar</span>(<span class="number">20</span>),</span><br><span class="line">    age <span class="type">int</span>,</span><br><span class="line">    birth <span class="type">date</span>, </span><br><span class="line">    phone_num <span class="type">varchar</span>(<span class="number">20</span>),</span><br><span class="line">    score <span class="keyword">double</span>,</span><br><span class="line">    <span class="keyword">unique</span> index_card_id(card_id) <span class="comment">-- 给card_id列创建索引</span></span><br><span class="line">);</span><br><span class="line"><span class="comment">-- 方式2-直接创建</span></span><br><span class="line"><span class="comment">-- create unique index 索引名 on 表名(列名) </span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">unique</span> index index_card_id <span class="keyword">on</span> student2(card_id);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 方式3-修改表结构(添加索引)</span></span><br><span class="line"><span class="comment">-- alter table 表名 add unique [索引名] (列名)</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> student2 <span class="keyword">add</span> <span class="keyword">unique</span> index_phone_num(phone_num)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 删除索引</span></span><br><span class="line"><span class="keyword">drop</span> index index_card_id <span class="keyword">on</span> student2 </span><br><span class="line"><span class="comment">-- 或 </span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> student2 <span class="keyword">drop</span> index index_phone_num</span><br></pre></td></tr></table></figure>
+
+<h3 id="主键索引"><a href="#主键索引" class="headerlink" title="主键索引"></a>主键索引</h3><p>每张表一般都会有自己的主键，当我们在创建表时，MySQL会自动在主键列上建立一个索引，这就是主键索引。主键是具有唯一性并且不允许为NULL，所以他是一种特殊的唯一索引。</p>
+<h2 id="组合索引"><a href="#组合索引" class="headerlink" title="组合索引"></a>组合索引</h2><ul>
+<li>组合索引也叫复合索引，指的是我们在建立索引的时候使用多个字段，例如同时使用身份证和手机号建立索引，同样的可以建立为普通索引或者是唯一索引。</li>
+<li>复合索引的使用复合最左原则。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 组合索引</span></span><br><span class="line">use mydb5;</span><br><span class="line"><span class="comment">-- 创建索引的基本语法-- 普通索引</span></span><br><span class="line"><span class="comment">-- create index indexname on table_name(column1(length),column2(length)); </span></span><br><span class="line"><span class="keyword">create</span> index index_phone_name <span class="keyword">on</span> student(phone_num,name);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 操作-删除索引</span></span><br><span class="line"><span class="keyword">drop</span> index index_phone_name <span class="keyword">on</span> student; </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建索引的基本语法-- 唯一索引</span></span><br><span class="line"><span class="keyword">create</span>  <span class="keyword">unique</span> index index_phone_name <span class="keyword">on</span> student(phone_num,name);</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> student <span class="keyword">where</span> name <span class="operator">=</span> <span class="string">&#x27;张三&#x27;</span>; </span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> student <span class="keyword">where</span> phone_num <span class="operator">=</span> <span class="string">&#x27;15100046637&#x27;</span>; </span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> student <span class="keyword">where</span> phone_num <span class="operator">=</span> <span class="string">&#x27;15100046637&#x27;</span> <span class="keyword">and</span> name <span class="operator">=</span> <span class="string">&#x27;张三&#x27;</span>; </span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> student <span class="keyword">where</span> name <span class="operator">=</span> <span class="string">&#x27;张三&#x27;</span> <span class="keyword">and</span> phone_num <span class="operator">=</span> <span class="string">&#x27;15100046637&#x27;</span>; </span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment">  三条sql只有 2、3、4能使用的到索引idx_phone_name,因为条件里面必须包含索引前面的字段才能够进行匹配。</span></span><br><span class="line"><span class="comment">  而3和4相比where条件的顺序不一样，为什么4可以用到索引呢？是因为mysql本身就有一层sql优化，他会根据sql来识别出来该用哪个索引，我们可以理解为3和4在mysql眼中是等价的。 </span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="全文索引"><a href="#全文索引" class="headerlink" title="全文索引"></a>全文索引</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><ul>
+<li>全文索引的关键字是fulltext</li>
+<li>全文索引主要用来查找文本中的关键字，而不是直接与索引中的值相比较，它更像是一个搜索引擎，基于相似度的查询，而不是简单的where语句的参数匹配。</li>
+<li>用 like + % 就可以实现模糊匹配了，为什么还要全文索引？like + % 在文本比较少时是合适的，但是对于大量的文本数据检索，是不可想象的。全文索引在大量的数据面前，能比 like + % 快 N 倍，速度不是一个数量级，但是全文索引可能存在精度问题。</li>
+</ul>
+<p>全文索引的版本、存储引擎、数据类型的支持情况：</p>
+<ul>
+<li>MySQL 5.6 以前的版本，只有 MyISAM 存储引擎支持全文索引；</li>
+<li>MySQL 5.6 及以后的版本，MyISAM 和 InnoDB 存储引擎均支持全文索引;</li>
+<li>只有字段的数据类型为 char、varchar、text 及其系列才可以建全文索引；</li>
+<li>在数据量较大时候，现将数据放入一个没有全局索引的表中，然后再用create index创建fulltext索引，要比先为一张表建立fulltext然后再将数据写入的速度快很多；</li>
+<li>测试或使用全文索引时，要先看一下自己的 MySQL 版本、存储引擎和数据类型是否支持全文索引。</li>
+</ul>
+<p>MySQL 中的全文索引，有两个变量，最小搜索长度和最大搜索长度，对于长度小于最小搜索长度和大于最大搜索长度的词语，都不会被索引。通俗点就是说，想对一个词语使用全文索引搜索，那么这个词语的长度必须在以上两个变量的区间内。这两个的默认值可以使用以下命令查看:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;%ft%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<img src="/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220171943098.png" alt="image-20221220171943098" style="zoom:80%;">
+
+<p>参数解释:</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>参数名称</th>
+<th>默认值</th>
+<th>最小值</th>
+<th>最大值</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>ft_min_word_len</td>
+<td>4</td>
+<td>1</td>
+<td>3600</td>
+<td>MyISAM 引擎表全文索引包含的最小词长度</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ft_query_expansion_limit</td>
+<td>20</td>
+<td>0</td>
+<td>1000</td>
+<td>MyISAM引擎表使用 with query expansion 进行全文搜索的最大匹配数</td>
+</tr>
+<tr>
+<td>3</td>
+<td>innodb_ft_min_token_size</td>
+<td>3</td>
+<td>0</td>
+<td>16</td>
+<td>InnoDB 引擎表全文索引包含的最小词长度</td>
+</tr>
+<tr>
+<td>4</td>
+<td>innodb_ft_max_token_size</td>
+<td>84</td>
+<td>10</td>
+<td>84</td>
+<td>InnoDB 引擎表全文索引包含的最大词长度</td>
+</tr>
+</tbody></table>
+<h3 id="创建索引"><a href="#创建索引" class="headerlink" title="创建索引"></a>创建索引</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建表的时候添加全文索引</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> t_article (</span><br><span class="line">     id <span class="type">int</span> <span class="keyword">primary</span> key auto_increment ,</span><br><span class="line">     title <span class="type">varchar</span>(<span class="number">255</span>) ,</span><br><span class="line">     content <span class="type">varchar</span>(<span class="number">1000</span>) ,</span><br><span class="line">     writing_date <span class="type">date</span> <span class="comment">-- , </span></span><br><span class="line">     <span class="comment">-- fulltext (content) -- 创建全文检索</span></span><br><span class="line">);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> t_article <span class="keyword">values</span>(<span class="keyword">null</span>,&quot;Yesterday Once More&quot;,&quot;When I was young I listen to the radio&quot;,<span class="string">&#x27;2021-10-01&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> t_article <span class="keyword">values</span>(<span class="keyword">null</span>,&quot;Right Here Waiting&quot;,&quot;Oceans apart, day after day,and I slowly go insane&quot;,<span class="string">&#x27;2021-10-02&#x27;</span>); </span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> t_article <span class="keyword">values</span>(<span class="keyword">null</span>,&quot;My Heart Will Go On&quot;,&quot;every night in my dreams,i see you, i feel you&quot;,<span class="string">&#x27;2021-10-03&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> t_article <span class="keyword">values</span>(<span class="keyword">null</span>,&quot;Everything I Do&quot;,&quot;eLook into my eyes,You will see what you mean to me&quot;,<span class="string">&#x27;2021-10-04&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> t_article <span class="keyword">values</span>(<span class="keyword">null</span>,&quot;Called To Say I Love You&quot;,&quot;say love you no new year&#x27;s day, to celebrate&quot;,<span class="string">&#x27;2021-10-05&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> t_article <span class="keyword">values</span>(<span class="keyword">null</span>,&quot;Nothing&#x27;s Gonna Change My Love For You&quot;,&quot;if i had to live my life without you near me&quot;,<span class="string">&#x27;2021-10-06&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> t_article <span class="keyword">values</span>(<span class="keyword">null</span>,&quot;Everybody&quot;,&quot;We&#x27;re gonna bring the flavor show U how.&quot;,<span class="string">&#x27;2021-10-07&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 修改表结构添加全文索引</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t_article <span class="keyword">add</span> fulltext index_content(content)</span><br><span class="line"> </span><br><span class="line"><span class="comment">-- 直接添加全文索引</span></span><br><span class="line"><span class="keyword">create</span> fulltext index index_content <span class="keyword">on</span> t_article(content);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="使用索引"><a href="#使用索引" class="headerlink" title="使用索引"></a>使用索引</h3><p>使用全文索引和常用的模糊匹配使用 like + % 不同，全文索引有自己的语法格式，使用 match 和 against 关键字，格式:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">match</span> (col1,col2,...)  against(expr [search_modifier])</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> t_article <span class="keyword">where</span> <span class="keyword">match</span>(content) against(<span class="string">&#x27;yo&#x27;</span>); <span class="comment">-- 没有结果 单词数需要大于等于3 </span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> t_article <span class="keyword">where</span> <span class="keyword">match</span>(content) against(<span class="string">&#x27;you&#x27;</span>); <span class="comment">-- 有结果</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="空间索引"><a href="#空间索引" class="headerlink" title="空间索引"></a>空间索引</h2><ul>
+<li>MySQL在5.7之后的版本支持了空间索引，而且支持OpenGIS几何数据模型</li>
+<li>空间索引是对空间数据类型的字段建立的索引，MYSQL中的空间数据类型有4种，分别是GEOMETRY、POINT、LINESTRING、POLYGON。</li>
+<li>MYSQL使用SPATIAL关键字进行扩展，使得能够用于创建正规索引类型的语法创建空间索引。</li>
+<li>创建空间索引的列，必须将其声明为NOT NULL。</li>
+<li>空间索引一般是用的比较少，了解即可。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>类型</strong></th>
+<th><strong>含义</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Geometry</td>
+<td>空间数据</td>
+<td>任何一种空间类型</td>
+</tr>
+<tr>
+<td>Point</td>
+<td>点</td>
+<td>坐标值</td>
+</tr>
+<tr>
+<td>LineString</td>
+<td>线</td>
+<td>有一系列点连接而成</td>
+</tr>
+<tr>
+<td>Polygon</td>
+<td>多边形</td>
+<td>由多条线组成</td>
+</tr>
+</tbody></table>
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> shop_info (</span><br><span class="line">  id  <span class="type">int</span>  <span class="keyword">primary</span> key auto_increment comment <span class="string">&#x27;id&#x27;</span>,</span><br><span class="line">  shop_name <span class="type">varchar</span>(<span class="number">64</span>) <span class="keyword">not</span> <span class="keyword">null</span> comment <span class="string">&#x27;门店名称&#x27;</span>,</span><br><span class="line">  geom_point geometry <span class="keyword">not</span> <span class="keyword">null</span> comment <span class="string">&#x27;经纬度&#x27;</span>,</span><br><span class="line">  spatial key geom_index(geom_point)</span><br><span class="line">);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="查询索引"><a href="#查询索引" class="headerlink" title="查询索引"></a>查询索引</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 1、查看数据库所有索引 </span></span><br><span class="line"><span class="comment">-- select * from mysql.`innodb_index_stats` a where a.`database_name` = &#x27;数据库名’; </span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> mysql.`innodb_index_stats` a <span class="keyword">where</span> a.`database_name` <span class="operator">=</span> <span class="string">&#x27;mydb5&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 2、查看表中所有索引 </span></span><br><span class="line"><span class="comment">-- select * from mysql.`innodb_index_stats` a where a.`database_name` = &#x27;数据库名&#x27; and a.table_name like &#x27;%表名%’; </span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> mysql.`innodb_index_stats` a <span class="keyword">where</span> a.`database_name` <span class="operator">=</span> <span class="string">&#x27;mydb5&#x27;</span> <span class="keyword">and</span> a.table_name <span class="keyword">like</span> <span class="string">&#x27;%student%&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 3、查看表中所有索引 </span></span><br><span class="line"><span class="comment">-- show index from table_name; </span></span><br><span class="line"><span class="keyword">show</span> index <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="删除索引"><a href="#删除索引" class="headerlink" title="删除索引"></a>删除索引</h1><p>格式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">drop</span> index 索引名 <span class="keyword">on</span> 表名 </span><br><span class="line"><span class="comment">-- 或 </span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">drop</span> index 索引名</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">drop</span> index index_gender <span class="keyword">on</span> student </span><br><span class="line"><span class="comment">-- 或 </span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> student <span class="keyword">drop</span> index index_name</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="索引的优点"><a href="#索引的优点" class="headerlink" title="索引的优点"></a>索引的优点</h1><ul>
+<li>大大加快数据的查询速度</li>
+<li>使用分组和排序进行数据查询时，可以显著减少查询时分组和排序的时间</li>
+<li>创建唯一索引，能够保证数据库表中每一行数据的唯一性</li>
+<li>在实现数据的参考完整性方面，可以加速表和表之间的连接</li>
+</ul>
+<h1 id="索引的缺点"><a href="#索引的缺点" class="headerlink" title="索引的缺点"></a>索引的缺点</h1><ul>
+<li>创建索引和维护索引需要消耗时间，并且随着数据量的增加，时间也会增加</li>
+<li>索引需要占据磁盘空间</li>
+<li>对数据表中的数据进行增加，修改，删除时，索引也要动态的维护，降低了维护的速度</li>
+</ul>
+<h1 id="创建索引的原则"><a href="#创建索引的原则" class="headerlink" title="创建索引的原则"></a>创建索引的原则</h1><ul>
+<li>更新频繁的列不应设置索引</li>
+<li>数据量小的表不要使用索引（毕竟总共2页的文档，还要目录吗？）</li>
+<li>重复数据多的字段不应设为索引（比如性别，只有男和女，一般来说：重复的数据超过百分之15就不该建索引）</li>
+<li>首先应该考虑对where 和 order by 涉及的列上建立索引</li>
+</ul>
+<h1 id="索引的原理"><a href="#索引的原理" class="headerlink" title="索引的原理"></a>索引的原理</h1><p>一般来说，索引本身也很大，不可能全部存储在内存中，因此索引往往以索引文件的形式存储的磁盘上。这样的话，索引查找过程中就要产生磁盘I&#x2F;O消耗，相对于内存存取，I&#x2F;O存取的消耗要高几个数量级，所以评价一个数据结构作为索引的优劣最重要的指标就是在查找过程中磁盘I&#x2F;O操作次数的渐进复杂度。换句话说，索引的结构组织要尽量减少查找过程中磁盘I&#x2F;O的存取次数。</p>
+<h2 id="相关算法"><a href="#相关算法" class="headerlink" title="相关算法"></a>相关算法</h2><h3 id="Hash算法"><a href="#Hash算法" class="headerlink" title="Hash算法"></a>Hash算法</h3><img src="/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220175309107.png" alt="image-20221220175309107" style="zoom:80%;">
+
+<p><strong>优点</strong>：通过字段的值计算的hash值，定位数据非常快。</p>
+<p><strong>缺点</strong>：不能进行范围查找，因为散列表中的值是无序的，无法进行大小的比较。</p>
+<h3 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h3><p><img src="/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220175445697.png" alt="image-20221220175445697"></p>
+<p>特性：分为左子树、右子树和根节点，左子树比根节点值要小，右子树比根节点值要大。</p>
+<p>缺点：有可能产生不平衡 类似于链表的结构 。</p>
+<h3 id="平衡二叉树"><a href="#平衡二叉树" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h3><p><img src="/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220175534706.png" alt="image-20221220175534706"></p>
+<p>特点：</p>
+<p>a、它的左子树和右子树都是平衡二叉树</p>
+<p>b、左子树比中间小，右子树比中间值</p>
+<p>c、左子树和右子树的深度之差的绝对值不超过1</p>
+<p>缺点：</p>
+<p>a、插入操作需要旋转</p>
+<p>b、支持范围查询，但回旋查询效率较低，比如要查找大于8的，会回旋到父节点7、10。</p>
+<p>c、如果存放几百条数据的情况下，树高度越高，查询效率会越慢</p>
+<h3 id="BTREE树"><a href="#BTREE树" class="headerlink" title="BTREE树"></a>BTREE树</h3><p>目前大部分数据库系统及文件系统都采用B-Tree或其变种B+Tree作为索引结构，Btree结构可以有效的解决之前的相关算法遇到的问题。</p>
+<h4 id="B-Tree"><a href="#B-Tree" class="headerlink" title="B-Tree"></a>B-Tree</h4><img src="/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220175726596.png" alt="image-20221220175726596" style="zoom:80%;">
+
+<h4 id="B-Tree-1"><a href="#B-Tree-1" class="headerlink" title="B+Tree"></a>B+Tree</h4><img src="/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220175754136.png" alt="image-20221220175754136" style="zoom:80%;">
+
+<h4 id="MyISAM引擎使用B-Tree"><a href="#MyISAM引擎使用B-Tree" class="headerlink" title="MyISAM引擎使用B+Tree"></a>MyISAM引擎使用B+Tree</h4><p>MyISAM引擎使用B+Tree作为索引结构，叶节点的data域存放的是数据记录的地址。</p>
+<img src="/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220175953725.png" alt="image-20221220175953725" style="zoom:80%;">
+
+<h4 id="InnoDB引擎使用B-Tree"><a href="#InnoDB引擎使用B-Tree" class="headerlink" title="InnoDB引擎使用B+Tree"></a>InnoDB引擎使用B+Tree</h4><p>InnoDB的叶节点的data域存放的是数据，相比MyISAM效率要高一些，但是比较占硬盘内存大小。</p>
+<p><img src="/2020/09/25/MySQL%E7%B4%A2%E5%BC%95/image-20221220180044443.png" alt="image-20221220180044443"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/MySQL/" rel="tag"># MySQL</a> -->
+              <a href="/tags/MySQL/" rel="tag"><i class="fa fa-tag"></i>  MySQL</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/19/MySQL%E8%A7%A6%E5%8F%91%E5%99%A8/" rel="prev" title="MySQL触发器">
+      <i class="fa fa-chevron-left"></i> MySQL触发器
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/29/MySQL%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/" rel="next" title="MySQL存储引擎">
+      MySQL存储引擎 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-number">2.</span> <span class="nav-text">索引的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hash%E7%B4%A2%E5%BC%95"><span class="nav-number">2.1.</span> <span class="nav-text">Hash索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#B-Tree%E7%B4%A2%E5%BC%95"><span class="nav-number">2.2.</span> <span class="nav-text">B+Tree索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E5%88%97%E7%B4%A2%E5%BC%95"><span class="nav-number">2.3.</span> <span class="nav-text">单列索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E7%B4%A2%E5%BC%95"><span class="nav-number">2.3.1.</span> <span class="nav-text">普通索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95"><span class="nav-number">2.3.2.</span> <span class="nav-text">唯一索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E9%94%AE%E7%B4%A2%E5%BC%95"><span class="nav-number">2.3.3.</span> <span class="nav-text">主键索引</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E5%90%88%E7%B4%A2%E5%BC%95"><span class="nav-number">2.4.</span> <span class="nav-text">组合索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A8%E6%96%87%E7%B4%A2%E5%BC%95"><span class="nav-number">2.5.</span> <span class="nav-text">全文索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.5.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95"><span class="nav-number">2.5.2.</span> <span class="nav-text">创建索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%B4%A2%E5%BC%95"><span class="nav-number">2.5.3.</span> <span class="nav-text">使用索引</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E7%B4%A2%E5%BC%95"><span class="nav-number">2.6.</span> <span class="nav-text">空间索引</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E7%B4%A2%E5%BC%95"><span class="nav-number">3.</span> <span class="nav-text">查询索引</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E7%B4%A2%E5%BC%95"><span class="nav-number">4.</span> <span class="nav-text">删除索引</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E4%BC%98%E7%82%B9"><span class="nav-number">5.</span> <span class="nav-text">索引的优点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="nav-number">6.</span> <span class="nav-text">索引的缺点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95%E7%9A%84%E5%8E%9F%E5%88%99"><span class="nav-number">7.</span> <span class="nav-text">创建索引的原则</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-number">8.</span> <span class="nav-text">索引的原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E7%AE%97%E6%B3%95"><span class="nav-number">8.1.</span> <span class="nav-text">相关算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Hash%E7%AE%97%E6%B3%95"><span class="nav-number">8.1.1.</span> <span class="nav-text">Hash算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">8.1.2.</span> <span class="nav-text">二叉树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">8.1.3.</span> <span class="nav-text">平衡二叉树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BTREE%E6%A0%91"><span class="nav-number">8.1.4.</span> <span class="nav-text">BTREE树</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#B-Tree"><span class="nav-number">8.1.4.1.</span> <span class="nav-text">B-Tree</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-Tree-1"><span class="nav-number">8.1.4.2.</span> <span class="nav-text">B+Tree</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MyISAM%E5%BC%95%E6%93%8E%E4%BD%BF%E7%94%A8B-Tree"><span class="nav-number">8.1.4.3.</span> <span class="nav-text">MyISAM引擎使用B+Tree</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#InnoDB%E5%BC%95%E6%93%8E%E4%BD%BF%E7%94%A8B-Tree"><span class="nav-number">8.1.4.4.</span> <span class="nav-text">InnoDB引擎使用B+Tree</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">69</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>
