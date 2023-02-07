@@ -151,6 +151,111 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/02/22/HBase%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/22/HBase%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">HBase基础</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-22 20:12:05" itemprop="dateCreated datePublished" datetime="2022-02-22T20:12:05+08:00">2022-02-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-12-22 17:48:19" itemprop="dateModified" datetime="2022-12-22T17:48:19+08:00">2022-12-22</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>Apache HBase是以HDFS为数据存储的，一种分布式、可扩展的NoSQL数据库。</p>
+<h3 id="HBase数据模型"><a href="#HBase数据模型" class="headerlink" title="HBase数据模型"></a>HBase数据模型</h3><p>Bigtable是一个稀疏的、分布式的、持久的多维排序map（映射）。该映射由行键、列键和时间戳索引；映射中的每个值都是一个未解释的字节数组。</p>
+<p>HBase 使用与 Bigtable 非常相似的数据模型。用户将数据行存储在带标签的表中。数据行具有可排序的键和任意数量的列。</p>
+<p>HBase 数据模型的关键在于稀疏、分布式、多维、排序的映射。其中映射 map指代非关系型数据库的 key-Value 结构。</p>
+<h3 id="HBase逻辑结构"><a href="#HBase逻辑结构" class="headerlink" title="HBase逻辑结构"></a>HBase逻辑结构</h3><p>HBase 可以用于存储多种结构的数据。以json为例，存储的数据原貌为：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;row_key1&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;personal_info&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;city&quot;</span><span class="punctuation">:</span><span class="string">&quot;北京&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;phone&quot;</span><span class="punctuation">:</span><span class="string">&quot;131********&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;office_info&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;tel&quot;</span><span class="punctuation">:</span><span class="string">&quot;010-1111111&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;address&quot;</span><span class="punctuation">:</span><span class="string">&quot;atguigu&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;row_key11&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;personal_info&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;city&quot;</span><span class="punctuation">:</span><span class="string">&quot;上海&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;phone&quot;</span><span class="punctuation">:</span><span class="string">&quot;132********&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;office_info&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;tel&quot;</span><span class="punctuation">:</span><span class="string">&quot;010-1111111&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/02/22/HBase%E5%9F%BA%E7%A1%80/image-20221222144917988.png" alt="image-20221222144917988"></p>
+<h3 id="HBase物理存储结构"><a href="#HBase物理存储结构" class="headerlink" title="HBase物理存储结构"></a>HBase物理存储结构</h3><p>物理存储结构即为数据映射关系，而在概念视图的空单元格，底层实际根本不存储。</p>
+<p><img src="/2022/02/22/HBase%E5%9F%BA%E7%A1%80/image-20221222145117938.png" alt="image-20221222145117938"></p>
+<h3 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h3><h4 id="NameSpace"><a href="#NameSpace" class="headerlink" title="NameSpace"></a>NameSpace</h4><p>命名空间，类似于关系型数据库的 database 概念，每个命名空间下有多个表。HBase 两个自带的命名空间，分别是 hbase 和 default，hbase 中存放的是 HBase 内置的表，default表是用户默认使用的命名空间。</p>
+<h4 id="Table"><a href="#Table" class="headerlink" title="Table"></a>Table</h4><p>类似于关系型数据库的表概念。不同的是，HBase 定义表时只需要声明列族即可，不需要声明具体的列。因为数据存储时稀疏的，所有往 HBase 写入数据时，字段可以动态、按需指定。因此，和关系型数据库相比，HBase 能够轻松应对字段变更的场景。</p>
+<h4 id="Row"><a href="#Row" class="headerlink" title="Row"></a>Row</h4><p>HBase 表中的每行数据都由一个 <strong>RowKey</strong> 和多个 <strong>Column</strong>（列）组成，数据是按照 RowKey的字典顺序存储的，并且查询数据时只能根据 RowKey 进行检索，所以 RowKey 的设计十分重要。</p>
+<h4 id="Column"><a href="#Column" class="headerlink" title="Column"></a>Column</h4><p>HBase 中的每个列都由 Column Family(列族)和 Column Qualifier（列限定符）进行限定，例如 info：name，info：age。建表时，只需指明列族，而列限定符无需预先定义。</p>
+<h4 id="Timestamp"><a href="#Timestamp" class="headerlink" title="Timestamp"></a>Timestamp</h4><p>用于标识数据的不同版本（version），每条数据写入时，系统会自动为其加上该字段，其值为写入 HBase 的时间。</p>
+<h4 id="Cell"><a href="#Cell" class="headerlink" title="Cell"></a>Cell</h4><p>由{rowkey, column Family：column Qualifier, timestamp} 唯一确定的单元。cell 中的数据全部是字节码形式存贮。</p>
+<h3 id="HBase基本架构"><a href="#HBase基本架构" class="headerlink" title="HBase基本架构"></a>HBase基本架构</h3><p><img src="/2022/02/22/HBase%E5%9F%BA%E7%A1%80/image-20221222150205283.png" alt="image-20221222150205283"></p>
+<p>角色：</p>
+<p><strong>Master</strong></p>
+<p>实现类为 HMaster，负责监控集群中所有的 RegionServer 实例。主要作用如下：</p>
+<p>（1）管理元数据表格 hbase:meta，接收用户对表格创建修改删除的命令并执行。</p>
+<p>（2）监控 region 是否需要进行负载均衡，故障转移和 region 的拆分。</p>
+<p>通过启动多个后台线程监控实现上述功能：</p>
+<p>① LoadBalancer 负载均衡器</p>
+<p>​	周期性监控 region 分布在 regionServer 上面是否均衡，由参数 hbase.balancer.period 控制周期时间，默认 5 分钟。</p>
+<p>② CatalogJanitor 元数据管理器</p>
+<p>​	定期检查和清理 hbase:meta 中的数据。meta 表内容在进阶中介绍。</p>
+<p>③ MasterProcWAL master 预写日志处理器</p>
+<p>​	把 master 需要执行的任务记录到预写日志 WAL 中，如果 master 宕机，让 backupMaster读取日志继续干。</p>
+<p><strong>Region Server</strong></p>
+<p>Region Server 实现类为 HRegionServer，主要作用如下:</p>
+<p>（1）负责数据 cell 的处理，例如写入数据 put，查询数据 get 等</p>
+<p>（2）拆分合并 region 的实际执行者，有 master 监控，有 regionServer 执行。</p>
+<p><strong>Zookeeper</strong></p>
+<p>HBase 通过 Zookeeper 来做 master 的高可用、记录 RegionServer 的部署信息、并且存储有 meta 表的位置信息。</p>
+<p>HBase 对于数据的读写操作时直接访问 Zookeeper 的，在 2.3 版本推出 Master Registry模式，客户端可以直接访问 master。使用此功能，会加大对 master 的压力，减轻对 Zookeeper的压力。</p>
+<p><strong>HDFS</strong></p>
+<p>HDFS 为 Hbase 提供最终的底层数据存储服务，同时为 HBase 提供高容错的支持。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/02/18/SparkSQL/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2987,6 +3092,189 @@ RxJava 的每个操作符都需要换新行，并且把换行符插入在 `.` �
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/09/05/Zookeeper%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/05/Zookeeper%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">Zookeeper基础</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-05 19:46:26" itemprop="dateCreated datePublished" datetime="2021-09-05T19:46:26+08:00">2021-09-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-12-22 21:29:36" itemprop="dateModified" datetime="2022-12-22T21:29:36+08:00">2022-12-22</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Zookeeper 是一个开源的分布式的，为分布式框架提供协调服务的 Apache 项目。</p>
+<p>Zookeeper从设计模式角度来理解：是一个基于观察者模式设计的分布式服务管理框架，它负责存储和管理大家都关心的数据，然后接受观察者的注册，一旦这些数据的状态发生变化，Zookeeper就将负责通知已经在Zookeeper上注册的那些观察者做出相应的反应。</p>
+<h1 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h1><p><img src="/2021/09/05/Zookeeper%E5%9F%BA%E7%A1%80/image-20221222175240031.png" alt="image-20221222175240031"></p>
+<p>1）Zookeeper：一个领导者（Leader），多个跟随者（Follower）组成的集群。</p>
+<p>2）集群中只要有<strong>半数以上</strong>节点存活，Zookeeper集群就能正常服务。所以Zookeeper适合安装奇数台服务器。</p>
+<p>3）全局数据一致：每个Server保存一份相同的数据副本，Client无论连接到哪个Server，数据都是一致的。</p>
+<p>4）更新请求顺序执行，来自同一个Client的更新请求按其发送顺序依次执行。</p>
+<p>5）数据更新原子性，一次数据更新要么成功，要么失败。</p>
+<p>6）实时性，在一定时间范围内，Client能读到最新数据。</p>
+<h1 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h1><p>ZooKeeper 数据模型的结构与 Unix 文件系统很类似，整体上可以看作是一棵树，每个节点称做一个 ZNode。每一个 ZNode 默认能够存储 1MB 的数据，每个 ZNode 都可以通过其路径唯一标识。</p>
+<p><img src="/2021/09/05/Zookeeper%E5%9F%BA%E7%A1%80/image-20221222175458038.png" alt="image-20221222175458038"></p>
+<h1 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h1><p>提供的服务包括：统一命名服务、统一配置管理、统一集群管理、服务器节点动态上下线、软负载均衡等。</p>
+<h2 id="统一命名服务"><a href="#统一命名服务" class="headerlink" title="统一命名服务"></a>统一命名服务</h2><p>在分布式环境下，经常需要对应用&#x2F;服务进行统一命名，便于识别。</p>
+<p>例如：IP不容易记住，而域名容易记住。</p>
+<p><img src="/2021/09/05/Zookeeper%E5%9F%BA%E7%A1%80/image-20221222180310023.png" alt="image-20221222180310023"></p>
+<h2 id="统一配置管理"><a href="#统一配置管理" class="headerlink" title="统一配置管理"></a>统一配置管理</h2><p>分布式环境下，配置文件同步非常常见。</p>
+<ol>
+<li>一般要求一个集群中，所有节点的配置信息是一致的，比如 Kafka 集群。</li>
+<li>对配置文件修改后，希望能够快速同步到各个节点上。</li>
+</ol>
+<p>配置管理可交由ZooKeeper实现。</p>
+<ol>
+<li>可将配置信息写入ZooKeeper上的一个Znode。</li>
+<li>各个客户端服务器监听这个Znode。</li>
+<li>一 旦Znode中的数据被修改，ZooKeeper将通知各个客户端服务器。</li>
+</ol>
+<p><img src="/2021/09/05/Zookeeper%E5%9F%BA%E7%A1%80/image-20221222180246437.png" alt="image-20221222180246437"></p>
+<h2 id="统一集群管理"><a href="#统一集群管理" class="headerlink" title="统一集群管理"></a>统一集群管理</h2><p>分布式环境中，实时掌握每个节点的状态是必要的。可根据节点实时状态做出一些调整。</p>
+<p>ZooKeeper可以实现实时监控节点状态变化。</p>
+<ol>
+<li>可将节点信息写入ZooKeeper上的一个ZNode。</li>
+<li>监听这个ZNode可获取它的实时状态变化。</li>
+</ol>
+<p><img src="/2021/09/05/Zookeeper%E5%9F%BA%E7%A1%80/image-20221222180613159.png" alt="image-20221222180613159"></p>
+<h2 id="服务器节点动态上下线"><a href="#服务器节点动态上下线" class="headerlink" title="服务器节点动态上下线"></a>服务器节点动态上下线</h2><p>客户端能实时洞察到服务器上下线的变化</p>
+<p><img src="/2021/09/05/Zookeeper%E5%9F%BA%E7%A1%80/image-20221222181132287.png" alt="image-20221222181132287"></p>
+<h2 id="软负载均衡"><a href="#软负载均衡" class="headerlink" title="软负载均衡"></a>软负载均衡</h2><p>在Zookeeper中记录每台服务器的访问数，让访问数最少的服务器去处理最新的客户端请求。</p>
+<p><img src="/2021/09/05/Zookeeper%E5%9F%BA%E7%A1%80/image-20221222181433313.png" alt="image-20221222181433313"></p>
+<h1 id="Zookeeper本地安装"><a href="#Zookeeper本地安装" class="headerlink" title="Zookeeper本地安装"></a>Zookeeper本地安装</h1><p><strong>安装前准备</strong></p>
+<p>（1）安装 JDK</p>
+<p>（2）拷贝 apache-zookeeper-3.5.7-bin.tar.gz 安装包到 Linux 系统下</p>
+<p>（3）解压到指定目录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[user@node1 software]$ tar -zxvf apache-zookeeper-3.5.7-bin.tar.gz -C /opt/module/</span><br></pre></td></tr></table></figure>
+
+
+
+<p>（4）修改名称</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[user@node1 module]$ mv apache-zookeeper-3.5.7 -bin/ zookeeper-3.5.7</span><br></pre></td></tr></table></figure>
+
+<p><strong>配置修改</strong></p>
+<p>（1）将&#x2F;opt&#x2F;module&#x2F;zookeeper-3.5.7&#x2F;conf 这个路径下的 zoo_sample.cfg 修改为 zoo.cfg；</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[user@node1 conf]$ mv zoo_sample.cfg zoo.cfg</span><br></pre></td></tr></table></figure>
+
+
+
+<p>（2）打开 zoo.cfg 文件，修改 dataDir 路径：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[user@node1 zookeeper-3.5.7]$ vim zoo.cfg</span><br></pre></td></tr></table></figure>
+
+
+
+<p>修改如下内容：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">dataDir</span>=<span class="string">/opt/module/zookeeper-3.5.7/zkData</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>（3）在&#x2F;opt&#x2F;module&#x2F;zookeeper-3.5.7&#x2F;这个目录上创建 zkData 文件夹</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[user@node1 zookeeper-3.5.7]$ mkdir zkData</span><br></pre></td></tr></table></figure>
+
+<p><strong>操作 Zookeeper</strong></p>
+<p>（1）启动 Zookeeper</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[user@node1 zookeeper-3.5.7]$ bin/zkServer.sh start</span><br></pre></td></tr></table></figure>
+
+
+
+<p>（2）查看进程是否启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[user@node1 zookeeper-3.5.7]$ jps</span><br><span class="line">4020 Jps</span><br><span class="line">4001 QuorumPeerMain</span><br></pre></td></tr></table></figure>
+
+
+
+<p>（3）查看状态</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[user@node1 zookeeper-3.5.7]$ bin/zkServer.sh status</span><br><span class="line">ZooKeeper JMX enabled by default</span><br><span class="line">Using config: /opt/module/zookeeper-3.5.7/bin/../conf/zoo.cfg</span><br><span class="line">Mode: standalone</span><br></pre></td></tr></table></figure>
+
+
+
+<p>（4）启动客户端</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[user@node1 zookeeper-3.5.7]$ bin/zkCli.sh</span><br></pre></td></tr></table></figure>
+
+
+
+<p>（5）退出客户端：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 0] quit</span><br></pre></td></tr></table></figure>
+
+
+
+<p>（6）停止 Zookeeper</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[user@node1 zookeeper-3.5.7]$ bin/zkServer.sh stop</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="配置参数解读"><a href="#配置参数解读" class="headerlink" title="配置参数解读"></a>配置参数解读</h1><p>Zookeeper中的配置文件zoo.cfg中参数含义解读如下:</p>
+<ol>
+<li><p>tickTime &#x3D; 2000：通信心跳时间，Zookeeper服务器与客户端心跳时间，单位毫秒。</p>
+<p><img src="/2021/09/05/Zookeeper%E5%9F%BA%E7%A1%80/image-20221222212750034.png" alt="image-20221222212750034"></p>
+</li>
+<li><p>initLimit &#x3D; 10：LF初始通信时限。</p>
+<p>Leader和Follower初始连接时能容忍的最多心跳数（tickTime的数量）</p>
+</li>
+<li><p>syncLimit &#x3D; 5：LF同步通信时限。</p>
+<p>Leader和Follower之间通信时间如果超过syncLimit * tickTime，Leader认为Follwer死掉，从服务器列表中删除Follwer。</p>
+</li>
+<li><p>dataDir：保存Zookeeper中的数据。</p>
+<p>注意：默认的tmp目录，容易被Linux系统定期删除，所以一般不用默认的tmp目录。</p>
+</li>
+<li><p>clientPort &#x3D; 2181：客户端连接端口，通常不做修改。</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/09/01/Hadoop-Hive/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3065,168 +3353,10 @@ RxJava 的每个操作符都需要换新行，并且把换行符插入在 `.` �
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/08/28/Mysql-8-%E7%89%88%E6%9C%AC%E4%BF%AE%E6%94%B9root%E5%AF%86%E7%A0%81/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/28/Mysql-8-%E7%89%88%E6%9C%AC%E4%BF%AE%E6%94%B9root%E5%AF%86%E7%A0%81/" class="post-title-link" itemprop="url">Mysql 8.*版本修改root密码</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-08-28 23:00:17" itemprop="dateCreated datePublished" datetime="2021-08-28T23:00:17+08:00">2021-08-28</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-12-14 14:46:35" itemprop="dateModified" datetime="2022-12-14T14:46:35+08:00">2022-12-14</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="查看版本"><a href="#查看版本" class="headerlink" title="查看版本"></a>查看版本</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> version() <span class="keyword">from</span> dual;</span><br></pre></td></tr></table></figure>
-
-<h4 id="登录mysql"><a href="#登录mysql" class="headerlink" title="登录mysql"></a>登录mysql</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p </span><br><span class="line">Enter password:   <span class="comment">#如果没设置密码，直接回车</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="查询用户密码"><a href="#查询用户密码" class="headerlink" title="查询用户密码"></a>查询用户密码</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> host,<span class="keyword">user</span>,authentication_string <span class="keyword">from</span> mysql.user;</span><br></pre></td></tr></table></figure>
-
-<p>host: 允许用户登录的ip‘位置’%表示可以远程；<br>user:当前数据库的用户名；<br>authentication_string: 用户密码（后面有提到此字段）；</p>
-<h4 id="设置（或修改）root用户密码"><a href="#设置（或修改）root用户密码" class="headerlink" title="设置（或修改）root用户密码"></a>设置（或修改）root用户密码</h4><p>默认root密码为空的话 ，下面使用navicat就无法连接，所以我们需要修改root的密码。<br>这是很关键的一步。此处踩过N多坑，后来查阅很多才知道在mysql 5.7.9以后废弃了password字段和password()函数；authentication_string:字段表示用户密码。<br>修改root密码的步骤：</p>
-<ol>
-<li>如果当前root用户authentication_string字段下有内容，先将其设置为空，否则直接进行二步骤。</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">use mysql; </span><br><span class="line"><span class="keyword">update</span> <span class="keyword">user</span> <span class="keyword">set</span> authentication_string<span class="operator">=</span><span class="string">&#x27;&#x27;</span> <span class="keyword">where</span> <span class="keyword">user</span><span class="operator">=</span><span class="string">&#x27;root&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>使用ALTER修改root用户密码,方法为 ALTER user ‘root‘@’localhost’ IDENTIFIED BY ‘新密码’。如下：</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">user</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">&#x27;JOhydhLfMsWyBcn#&#x27;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>此处有两点需要注意：</p>
-<ol>
-<li>不需要flush privileges来刷新权限。</li>
-<li>密码要包含大写字母，小写字母，数字，特殊符号。</li>
-</ol>
-<p>修改成功； 重新使用用户名密码登录即可；</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/08/22/Spring-Boot%E6%95%B4%E5%90%88SpringSecurity/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/22/Spring-Boot%E6%95%B4%E5%90%88SpringSecurity/" class="post-title-link" itemprop="url">Spring Boot整合SpringSecurity</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-08-22 21:25:06 / 修改时间：23:47:54" itemprop="dateCreated datePublished" datetime="2021-08-22T21:25:06+08:00">2021-08-22</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="SpringSecurity"><a href="#SpringSecurity" class="headerlink" title="SpringSecurity"></a>SpringSecurity</h3><blockquote>
-<p>SpringSecurity是一个强大的可高度定制的认证和授权框架，对于Spring应用来说它是一套Web安全标准。</p>
-<p>SpringSecurity注重于为Java应用提供认证和授权功能，像所有Spring项目一样，它对自定义需求具有强大的扩展性</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -3294,14 +3424,14 @@ RxJava 的每个操作符都需要换新行，并且把换行符插入在 `.` �
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">69</span>
+          <span class="site-state-item-count">71</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">17</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

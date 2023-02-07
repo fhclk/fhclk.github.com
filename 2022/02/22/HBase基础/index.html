@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="简介定义Apache HBase是以HDFS为数据存储的，一种分布式、可扩展的NoSQL数据库。 HBase数据模型Bigtable是一个稀疏的、分布式的、持久的多维排序map（映射）。该映射由行键、列键和时间戳索引；映射中的每个值都是一个未解释的字节数组。 HBase 使用与 Bigtable 非常相似的数据模型。用户将数据行存储在带标签的表中。数据行具有可排序的键和任意数量的列。 HBase">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HBase基础">
+<meta property="og:url" content="http://fhclk.github.io/2022/02/22/HBase%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="简介定义Apache HBase是以HDFS为数据存储的，一种分布式、可扩展的NoSQL数据库。 HBase数据模型Bigtable是一个稀疏的、分布式的、持久的多维排序map（映射）。该映射由行键、列键和时间戳索引；映射中的每个值都是一个未解释的字节数组。 HBase 使用与 Bigtable 非常相似的数据模型。用户将数据行存储在带标签的表中。数据行具有可排序的键和任意数量的列。 HBase">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://fhclk.github.io/2022/02/22/HBase%E5%9F%BA%E7%A1%80/image-20221222144917988.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/02/22/HBase%E5%9F%BA%E7%A1%80/image-20221222145117938.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/02/22/HBase%E5%9F%BA%E7%A1%80/image-20221222150205283.png">
+<meta property="article:published_time" content="2022-02-22T12:12:05.000Z">
+<meta property="article:modified_time" content="2022-12-22T09:48:19.888Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="大数据">
+<meta property="article:tag" content="HBase">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/2022/02/22/HBase%E5%9F%BA%E7%A1%80/image-20221222144917988.png">
+
+<link rel="canonical" href="http://fhclk.github.io/2022/02/22/HBase%E5%9F%BA%E7%A1%80/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>HBase基础 | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/02/22/HBase%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HBase基础
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-22 20:12:05" itemprop="dateCreated datePublished" datetime="2022-02-22T20:12:05+08:00">2022-02-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-12-22 17:48:19" itemprop="dateModified" datetime="2022-12-22T17:48:19+08:00">2022-12-22</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>Apache HBase是以HDFS为数据存储的，一种分布式、可扩展的NoSQL数据库。</p>
+<h3 id="HBase数据模型"><a href="#HBase数据模型" class="headerlink" title="HBase数据模型"></a>HBase数据模型</h3><p>Bigtable是一个稀疏的、分布式的、持久的多维排序map（映射）。该映射由行键、列键和时间戳索引；映射中的每个值都是一个未解释的字节数组。</p>
+<p>HBase 使用与 Bigtable 非常相似的数据模型。用户将数据行存储在带标签的表中。数据行具有可排序的键和任意数量的列。</p>
+<p>HBase 数据模型的关键在于稀疏、分布式、多维、排序的映射。其中映射 map指代非关系型数据库的 key-Value 结构。</p>
+<h3 id="HBase逻辑结构"><a href="#HBase逻辑结构" class="headerlink" title="HBase逻辑结构"></a>HBase逻辑结构</h3><p>HBase 可以用于存储多种结构的数据。以json为例，存储的数据原貌为：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;row_key1&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;personal_info&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;city&quot;</span><span class="punctuation">:</span><span class="string">&quot;北京&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;phone&quot;</span><span class="punctuation">:</span><span class="string">&quot;131********&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;office_info&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;tel&quot;</span><span class="punctuation">:</span><span class="string">&quot;010-1111111&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;address&quot;</span><span class="punctuation">:</span><span class="string">&quot;atguigu&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;row_key11&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;personal_info&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;city&quot;</span><span class="punctuation">:</span><span class="string">&quot;上海&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;phone&quot;</span><span class="punctuation">:</span><span class="string">&quot;132********&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;office_info&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;tel&quot;</span><span class="punctuation">:</span><span class="string">&quot;010-1111111&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/02/22/HBase%E5%9F%BA%E7%A1%80/image-20221222144917988.png" alt="image-20221222144917988"></p>
+<h3 id="HBase物理存储结构"><a href="#HBase物理存储结构" class="headerlink" title="HBase物理存储结构"></a>HBase物理存储结构</h3><p>物理存储结构即为数据映射关系，而在概念视图的空单元格，底层实际根本不存储。</p>
+<p><img src="/2022/02/22/HBase%E5%9F%BA%E7%A1%80/image-20221222145117938.png" alt="image-20221222145117938"></p>
+<h3 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h3><h4 id="NameSpace"><a href="#NameSpace" class="headerlink" title="NameSpace"></a>NameSpace</h4><p>命名空间，类似于关系型数据库的 database 概念，每个命名空间下有多个表。HBase 两个自带的命名空间，分别是 hbase 和 default，hbase 中存放的是 HBase 内置的表，default表是用户默认使用的命名空间。</p>
+<h4 id="Table"><a href="#Table" class="headerlink" title="Table"></a>Table</h4><p>类似于关系型数据库的表概念。不同的是，HBase 定义表时只需要声明列族即可，不需要声明具体的列。因为数据存储时稀疏的，所有往 HBase 写入数据时，字段可以动态、按需指定。因此，和关系型数据库相比，HBase 能够轻松应对字段变更的场景。</p>
+<h4 id="Row"><a href="#Row" class="headerlink" title="Row"></a>Row</h4><p>HBase 表中的每行数据都由一个 <strong>RowKey</strong> 和多个 <strong>Column</strong>（列）组成，数据是按照 RowKey的字典顺序存储的，并且查询数据时只能根据 RowKey 进行检索，所以 RowKey 的设计十分重要。</p>
+<h4 id="Column"><a href="#Column" class="headerlink" title="Column"></a>Column</h4><p>HBase 中的每个列都由 Column Family(列族)和 Column Qualifier（列限定符）进行限定，例如 info：name，info：age。建表时，只需指明列族，而列限定符无需预先定义。</p>
+<h4 id="Timestamp"><a href="#Timestamp" class="headerlink" title="Timestamp"></a>Timestamp</h4><p>用于标识数据的不同版本（version），每条数据写入时，系统会自动为其加上该字段，其值为写入 HBase 的时间。</p>
+<h4 id="Cell"><a href="#Cell" class="headerlink" title="Cell"></a>Cell</h4><p>由{rowkey, column Family：column Qualifier, timestamp} 唯一确定的单元。cell 中的数据全部是字节码形式存贮。</p>
+<h3 id="HBase基本架构"><a href="#HBase基本架构" class="headerlink" title="HBase基本架构"></a>HBase基本架构</h3><p><img src="/2022/02/22/HBase%E5%9F%BA%E7%A1%80/image-20221222150205283.png" alt="image-20221222150205283"></p>
+<p>角色：</p>
+<p><strong>Master</strong></p>
+<p>实现类为 HMaster，负责监控集群中所有的 RegionServer 实例。主要作用如下：</p>
+<p>（1）管理元数据表格 hbase:meta，接收用户对表格创建修改删除的命令并执行。</p>
+<p>（2）监控 region 是否需要进行负载均衡，故障转移和 region 的拆分。</p>
+<p>通过启动多个后台线程监控实现上述功能：</p>
+<p>① LoadBalancer 负载均衡器</p>
+<p>​	周期性监控 region 分布在 regionServer 上面是否均衡，由参数 hbase.balancer.period 控制周期时间，默认 5 分钟。</p>
+<p>② CatalogJanitor 元数据管理器</p>
+<p>​	定期检查和清理 hbase:meta 中的数据。meta 表内容在进阶中介绍。</p>
+<p>③ MasterProcWAL master 预写日志处理器</p>
+<p>​	把 master 需要执行的任务记录到预写日志 WAL 中，如果 master 宕机，让 backupMaster读取日志继续干。</p>
+<p><strong>Region Server</strong></p>
+<p>Region Server 实现类为 HRegionServer，主要作用如下:</p>
+<p>（1）负责数据 cell 的处理，例如写入数据 put，查询数据 get 等</p>
+<p>（2）拆分合并 region 的实际执行者，有 master 监控，有 regionServer 执行。</p>
+<p><strong>Zookeeper</strong></p>
+<p>HBase 通过 Zookeeper 来做 master 的高可用、记录 RegionServer 的部署信息、并且存储有 meta 表的位置信息。</p>
+<p>HBase 对于数据的读写操作时直接访问 Zookeeper 的，在 2.3 版本推出 Master Registry模式，客户端可以直接访问 master。使用此功能，会加大对 master 的压力，减轻对 Zookeeper的压力。</p>
+<p><strong>HDFS</strong></p>
+<p>HDFS 为 Hbase 提供最终的底层数据存储服务，同时为 HBase 提供高容错的支持。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a> -->
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"><i class="fa fa-tag"></i>  大数据</a>
+              <!-- <a href="/tags/HBase/" rel="tag"># HBase</a> -->
+              <a href="/tags/HBase/" rel="tag"><i class="fa fa-tag"></i>  HBase</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/18/SparkSQL/" rel="prev" title="SparkSQL">
+      <i class="fa fa-chevron-left"></i> SparkSQL
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HBase%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">HBase数据模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HBase%E9%80%BB%E8%BE%91%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.2.</span> <span class="nav-text">HBase逻辑结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HBase%E7%89%A9%E7%90%86%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.3.</span> <span class="nav-text">HBase物理存储结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.4.</span> <span class="nav-text">数据模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#NameSpace"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">NameSpace</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Table"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">Table</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Row"><span class="nav-number">1.1.4.3.</span> <span class="nav-text">Row</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Column"><span class="nav-number">1.1.4.4.</span> <span class="nav-text">Column</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Timestamp"><span class="nav-number">1.1.4.5.</span> <span class="nav-text">Timestamp</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Cell"><span class="nav-number">1.1.4.6.</span> <span class="nav-text">Cell</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HBase%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84"><span class="nav-number">1.1.5.</span> <span class="nav-text">HBase基本架构</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">71</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>
