@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="HBase安装部署Hadoop部署安装部署Hadoop，并启动 Zookeeper部署安装部署Zookeeper，并启动 HBase部署安装 解压HBase 1(base) [root@node1 server]# tar -zxvf hbase-2.5.2-bin.tar.gz     配置环境变量   1(base) [root@node1 server]# vim &#x2F;etc&#x2F;profile">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HBase实操">
+<meta property="og:url" content="http://fhclk.github.io/2022/02/24/HBase%E5%AE%9E%E6%93%8D/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="HBase安装部署Hadoop部署安装部署Hadoop，并启动 Zookeeper部署安装部署Zookeeper，并启动 HBase部署安装 解压HBase 1(base) [root@node1 server]# tar -zxvf hbase-2.5.2-bin.tar.gz     配置环境变量   1(base) [root@node1 server]# vim &#x2F;etc&#x2F;profile">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://fhclk.github.io/2022/02/24/HBase%E5%AE%9E%E6%93%8D/image-20221228134110955.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/02/24/HBase%E5%AE%9E%E6%93%8D/image-20221228134313416.png">
+<meta property="article:published_time" content="2022-02-24T12:01:22.000Z">
+<meta property="article:modified_time" content="2023-01-04T05:42:44.276Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="大数据">
+<meta property="article:tag" content="HBase">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/2022/02/24/HBase%E5%AE%9E%E6%93%8D/image-20221228134110955.png">
+
+<link rel="canonical" href="http://fhclk.github.io/2022/02/24/HBase%E5%AE%9E%E6%93%8D/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>HBase实操 | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/02/24/HBase%E5%AE%9E%E6%93%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HBase实操
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-24 20:01:22" itemprop="dateCreated datePublished" datetime="2022-02-24T20:01:22+08:00">2022-02-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-04 13:42:44" itemprop="dateModified" datetime="2023-01-04T13:42:44+08:00">2023-01-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="HBase安装部署"><a href="#HBase安装部署" class="headerlink" title="HBase安装部署"></a>HBase安装部署</h1><h2 id="Hadoop部署"><a href="#Hadoop部署" class="headerlink" title="Hadoop部署"></a>Hadoop部署</h2><p>安装部署Hadoop，并启动</p>
+<h2 id="Zookeeper部署"><a href="#Zookeeper部署" class="headerlink" title="Zookeeper部署"></a>Zookeeper部署</h2><p>安装部署Zookeeper，并启动</p>
+<h2 id="HBase部署"><a href="#HBase部署" class="headerlink" title="HBase部署"></a>HBase部署</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><ol>
+<li><p>解压HBase</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 server]# tar -zxvf hbase-2.5.2-bin.tar.gz </span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>配置环境变量</p>
+</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 server]# vim /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>在文件末尾添加</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export HBASE_HOME=/export/server/hbase-2.5.2</span><br><span class="line">export PATH=$PATH:$HBASE_HOME/bin</span><br></pre></td></tr></table></figure>
+
+<p>使环境变量生效</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 server]# source /etc/profile</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><ol>
+<li><p>编辑hbase-2.5.2&#x2F;conf下的hbase-env.sh文件，末尾添加</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/export/server/jdk1.8.0_241/</span><br><span class="line">export HBASE_MANAGES_ZK=false</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>编辑hbase-site.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- HBase数据在HDFS中的存放的路径 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.rootdir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://node1.itcast.cn:8020/hbase<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- Hbase的运行模式。false是单机模式，true是分布式模式。若为false,Hbase和Zookeeper会运行在同一个JVM里面 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.cluster.distributed<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- ZooKeeper的地址 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.zookeeper.quorum<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">value</span>&gt;</span>node1.itcast.cn,node2.itcast.cn,node3.itcast.cn<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- ZooKeeper快照的存储位置 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.zookeeper.property.dataDir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">value</span>&gt;</span>/export/server/zookeeper-3.7.1/data<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--  V2.1版本，在分布式情况下, 设置为false --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.unsafe.stream.capability.enforce<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">value</span>&gt;</span>false<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>修改regionservers ，<code>vim regionservers </code></p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">node1.itcast.cn</span></span><br><span class="line"><span class="attr">node2.itcast.cn</span></span><br><span class="line"><span class="attr">node3.itcast.cn</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>解决 HBase 和 Hadoop 的 log4j 兼容性问题，修改 HBase 的 jar 包，使用 Hadoop 的 jar 包</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 conf]# mv /export/server/hbase-2.5.2/lib/client-facing-thirdparty/slf4j-api-1.7.33.jar /export/server/hbase-2.5.2/lib/client-facing-thirdparty/slf4j-api-1.7.33.jar.bak</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>发送到其他服务器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 server]# scp -r ./hbase-2.5.2/ root@node2:/export/server/</span><br><span class="line">(base) [root@node1 server]# scp -r ./hbase-2.5.2/ root@node3:/export/server/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动HBase</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">启动zookeeper</span></span><br><span class="line">(base) [root@node1 ~]# ./bin/zk.sh start</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">启动hdfs</span></span><br><span class="line">(base) [root@node1 ~]# start-dfs.sh</span><br><span class="line">(base) [root@node1 ~]# start-hbase.sh</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>验证是否启动成功</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 logs]# hbase shell</span><br><span class="line">SLF4J: Failed to load class &quot;org.slf4j.impl.StaticLoggerBinder&quot;.</span><br><span class="line">SLF4J: Defaulting to no-operation (NOP) logger implementation</span><br><span class="line">SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.</span><br><span class="line">SLF4J: Failed to load class &quot;org.slf4j.impl.StaticMDCBinder&quot;.</span><br><span class="line">SLF4J: Defaulting to no-operation MDCAdapter implementation.</span><br><span class="line">SLF4J: See http://www.slf4j.org/codes.html#no_static_mdc_binder for further details.</span><br><span class="line">HBase Shell</span><br><span class="line">Use &quot;help&quot; to get list of supported commands.</span><br><span class="line">Use &quot;exit&quot; to quit this interactive shell.</span><br><span class="line">For Reference, please visit: http://hbase.apache.org/2.0/book.html#shell</span><br><span class="line">Version 2.5.2, r3e28acf0b819f4b4a1ada2b98d59e05b0ef94f96, Thu Nov 24 02:06:40 UTC 2022</span><br><span class="line">Took 0.0015 seconds                                                                                                                                                                       </span><br><span class="line">hbase:001:0&gt; </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>打开web查看</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://node1.itcast.cn:16010/master-status</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>注意：</p>
+<p>如果在启动时，日志文件中报如下错误（原因是hbase和Hadoop有冲突包）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">2022-12-26 17:28:44,670 ERROR [RS-EventLoopGroup-1-2] util.NettyFutureUtils (NettyFutureUtils.java:lambda$addListener$0(58)) - Unexpected error caught when processing netty</span><br><span class="line">java.lang.IllegalArgumentException: object is not an instance of declaring class</span><br><span class="line">        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</span><br><span class="line">        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)</span><br><span class="line">        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</span><br><span class="line">        at java.lang.reflect.Method.invoke(Method.java:498)</span><br><span class="line">        at org.apache.hadoop.hbase.io.asyncfs.ProtobufDecoder.&lt;init&gt;(ProtobufDecoder.java:64)</span><br><span class="line">        at org.apache.hadoop.hbase.io.asyncfs.FanOutOneBlockAsyncDFSOutputHelper.processWriteBlockResponse(FanOutOneBlockAsyncDFSOutputHelper.java:348)</span><br><span class="line">        at org.apache.hadoop.hbase.io.asyncfs.FanOutOneBlockAsyncDFSOutputHelper.access$100(FanOutOneBlockAsyncDFSOutputHelper.java:120)</span><br><span class="line">        at org.apache.hadoop.hbase.io.asyncfs.FanOutOneBlockAsyncDFSOutputHelper$4.operationComplete(FanOutOneBlockAsyncDFSOutputHelper.java:430)</span><br><span class="line">        at org.apache.hadoop.hbase.util.NettyFutureUtils.lambda$addListener$0(NettyFutureUtils.java:56)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.util.concurrent.DefaultPromise.notifyListener0(DefaultPromise.java:578)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.util.concurrent.DefaultPromise.notifyListenersNow(DefaultPromise.java:552)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.util.concurrent.DefaultPromise.notifyListeners(DefaultPromise.java:491)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.util.concurrent.DefaultPromise.addListener(DefaultPromise.java:184)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.util.concurrent.DefaultPromise.addListener(DefaultPromise.java:35)</span><br><span class="line">        at org.apache.hadoop.hbase.util.NettyFutureUtils.addListener(NettyFutureUtils.java:52)</span><br><span class="line">        at org.apache.hadoop.hbase.io.asyncfs.FanOutOneBlockAsyncDFSOutputHelper.initialize(FanOutOneBlockAsyncDFSOutputHelper.java:424)</span><br><span class="line">        at org.apache.hadoop.hbase.io.asyncfs.FanOutOneBlockAsyncDFSOutputHelper.access$300(FanOutOneBlockAsyncDFSOutputHelper.java:120)</span><br><span class="line">        at org.apache.hadoop.hbase.io.asyncfs.FanOutOneBlockAsyncDFSOutputHelper$5.operationComplete(FanOutOneBlockAsyncDFSOutputHelper.java:482)</span><br><span class="line">        at org.apache.hadoop.hbase.io.asyncfs.FanOutOneBlockAsyncDFSOutputHelper$5.operationComplete(FanOutOneBlockAsyncDFSOutputHelper.java:477)</span><br><span class="line">        at org.apache.hadoop.hbase.util.NettyFutureUtils.lambda$addListener$0(NettyFutureUtils.java:56)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.util.concurrent.DefaultPromise.notifyListener0(DefaultPromise.java:578)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.util.concurrent.DefaultPromise.notifyListeners0(DefaultPromise.java:571)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.util.concurrent.DefaultPromise.notifyListenersNow(DefaultPromise.java:550)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.util.concurrent.DefaultPromise.notifyListeners(DefaultPromise.java:491)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.util.concurrent.DefaultPromise.setValue0(DefaultPromise.java:616)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.util.concurrent.DefaultPromise.setSuccess0(DefaultPromise.java:605)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.util.concurrent.DefaultPromise.trySuccess(DefaultPromise.java:104)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.channel.DefaultChannelPromise.trySuccess(DefaultChannelPromise.java:84)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe.fulfillConnectPromise(AbstractEpollChannel.java:653)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe.finishConnect(AbstractEpollChannel.java:691)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe.epollOutReady(AbstractEpollChannel.java:567)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.channel.epoll.EpollEventLoop.processReady(EpollEventLoop.java:489)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.channel.epoll.EpollEventLoop.run(EpollEventLoop.java:397)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)</span><br><span class="line">        at org.apache.hbase.thirdparty.io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)</span><br><span class="line">        at java.lang.Thread.run(Thread.java:748)</span><br></pre></td></tr></table></figure>
+
+<p>解决方法：将hadoop下的slf4j*.jar拷贝到hbase下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node2 client-facing-thirdparty]#  cp /export/server/hadoop-3.3.0/share/hadoop/common/lib/slf4j-api-1.7.25.jar /export/server/hbase-2.5.2/lib/client-facing-thirdparty/</span><br></pre></td></tr></table></figure>
+
+<p>修改hbase-env.sh文件</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">export</span> <span class="string">HBASE_DISABLE_HADOOP_CLASSPATH_LOOKUP=&quot;true&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>重启hbase</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# stop-hbase.sh</span><br><span class="line">(base) [root@node1 ~]# start-hbase.sh</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="HBase-Shell操作"><a href="#HBase-Shell操作" class="headerlink" title="HBase Shell操作"></a>HBase Shell操作</h1><h2 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h2><h3 id="进入-HBase-客户端命令行"><a href="#进入-HBase-客户端命令行" class="headerlink" title="进入 HBase 客户端命令行"></a>进入 HBase 客户端命令行</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# hbase shell</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看帮助命令"><a href="#查看帮助命令" class="headerlink" title="查看帮助命令"></a>查看帮助命令</h3><p>能够展示 HBase 中所有能使用的命令，主要使用的命令有 namespace 命令空间相关，DDL 创建修改表格，DML 写入读取数据。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">hbase:006:0&gt; help</span><br><span class="line">hbase:008:0&gt; help &#x27;create_namespace&#x27;</span><br><span class="line">Create namespace; pass namespace name,</span><br><span class="line">and optionally a dictionary of namespace configuration.</span><br><span class="line">Examples:</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">  hbase&gt; </span><span class="language-bash">create_namespace <span class="string">&#x27;ns1&#x27;</span></span></span><br><span class="line"><span class="meta prompt_">  hbase&gt; </span><span class="language-bash">create_namespace <span class="string">&#x27;ns1&#x27;</span>, &#123;<span class="string">&#x27;PROPERTY_NAME&#x27;</span>=&gt;<span class="string">&#x27;PROPERTY_VALUE&#x27;</span>&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="namespace"><a href="#namespace" class="headerlink" title="namespace"></a>namespace</h2><h3 id="创建命名空间"><a href="#创建命名空间" class="headerlink" title="创建命名空间"></a>创建命名空间</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hbase:011:0&gt; create_namespace &#x27;bigdata&#x27;</span><br><span class="line">Took 0.1728 seconds</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看所有命名空间"><a href="#查看所有命名空间" class="headerlink" title="查看所有命名空间"></a>查看所有命名空间</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hbase:012:0&gt; list_namespace</span><br><span class="line">NAMESPACE                                                                    </span><br><span class="line">bigdata                                                                                 </span><br><span class="line">default                                                                                 </span><br><span class="line">hbase                                                                           </span><br><span class="line">3 row(s)</span><br><span class="line">Took 0.0370 seconds </span><br></pre></td></tr></table></figure>
+
+<h2 id="DDL"><a href="#DDL" class="headerlink" title="DDL"></a>DDL</h2><h3 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h3><p>在 bigdata 命名空间中创建表格 student，两个列族。info 列族数据维护的版本数为 5 个，如果不写默认版本数为 1。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hbase:017:0&gt; create &#x27;bigdata:student&#x27;, &#123;NAME =&gt; &#x27;info&#x27;, VERSIONS =&gt; 5&#125;, &#123;NAME =&gt; &#x27;msg&#x27;&#125;</span><br><span class="line">Created table bigdata:student</span><br><span class="line">Took 0.6948 seconds                                                                                                                                                                       </span><br><span class="line">=&gt; Hbase::Table - bigdata:student</span><br></pre></td></tr></table></figure>
+
+<p>如果创建表格只有一个列族，没有列族属性，可以简写。</p>
+<p>如果不写命名空间，使用默认的命名空间 default。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hbase:019:0&gt; create &#x27;student1&#x27;,&#x27;info&#x27;</span><br><span class="line">Created table student1</span><br><span class="line">Took 0.6286 seconds                                                                                                                                                                       </span><br><span class="line">=&gt; Hbase::Table - student1</span><br></pre></td></tr></table></figure>
+
+<p><strong>HBase列蔟的数量应该越少越好</strong></p>
+<ul>
+<li><p>两个及以上的列蔟HBase性能并不是很好</p>
+</li>
+<li><p>一个列蔟所存储的数据达到flush的阈值时，表中所有列蔟将同时进行flush操作</p>
+</li>
+<li><p>这将带来不必要的I&#x2F;O开销，列蔟越多，对性能影响越大</p>
+</li>
+</ul>
+<h3 id="查看表"><a href="#查看表" class="headerlink" title="查看表"></a>查看表</h3><p>查看表有两个命令：list 和 describe</p>
+<p><strong>list</strong></p>
+<p>查看所有的表名</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hbase:020:0&gt; list</span><br><span class="line">TABLE                                                                            </span><br><span class="line">bigdata:student                                                                                     </span><br><span class="line">student1                                                                           </span><br><span class="line">2 row(s)</span><br><span class="line">Took 0.0113 seconds                                                                                                                                                                       </span><br><span class="line">=&gt; [&quot;bigdata:student&quot;, &quot;student1&quot;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>describe</strong></p>
+<p>查看一个表的详情</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">hbase:023:0&gt; describe &#x27;student1&#x27;</span><br><span class="line">Table student1 is ENABLED                                                                            </span><br><span class="line">student1, &#123;TABLE_ATTRIBUTES =&gt; &#123;METADATA =&gt; &#123;&#x27;hbase.store.file-tracker.impl&#x27; =&gt; &#x27;DEFAULT&#x27;&#125;&#125;&#125;        </span><br><span class="line">COLUMN FAMILIES DESCRIPTION                                                     </span><br><span class="line">&#123;NAME =&gt; &#x27;info&#x27;, INDEX_BLOCK_ENCODING =&gt; &#x27;NONE&#x27;, VERSIONS =&gt; &#x27;1&#x27;, KEEP_DELETED_CELLS =&gt; &#x27;FALSE&#x27;, DATA_BLOCK_ENCODING =&gt; &#x27;NONE&#x27;, TTL =&gt; &#x27;FOREVER&#x27;, MIN_VERSIONS =&gt; &#x27;0&#x27;, REPLICATION_SCOPE =</span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="string">&#x27;0&#x27;</span>, BLOOMFILTER =&gt; <span class="string">&#x27;ROW&#x27;</span>, IN_MEMORY =&gt; <span class="string">&#x27;false&#x27;</span>, COMPRESSION =&gt; <span class="string">&#x27;NONE&#x27;</span>, BLOCKCACHE =&gt; <span class="string">&#x27;true&#x27;</span>, BLOCKSIZE =&gt; <span class="string">&#x27;65536 B (64KB)&#x27;</span>&#125;</span>                                                            </span><br><span class="line"></span><br><span class="line">1 row(s)</span><br><span class="line">Quota is disabled</span><br><span class="line">Took 0.1416 seconds</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改表"><a href="#修改表" class="headerlink" title="修改表"></a>修改表</h3><p>表名创建时写的所有和列族相关的信息，都可以后续通过 alter 修改，包括增加删除列族。</p>
+<p>（1）增加列族和修改信息都使用覆盖的方法</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">hbase:026:0&gt; alter &#x27;student1&#x27;, &#123;NAME =&gt; &#x27;f1&#x27;, VERSIONS =&gt; 3&#125;</span><br><span class="line">Updating all regions with the new schema...</span><br><span class="line">1/1 regions updated.</span><br><span class="line">Done.</span><br><span class="line">Took 2.6222 seconds                                                                                                                                                                       </span><br><span class="line">hbase:028:0&gt; describe &#x27;student1&#x27;</span><br><span class="line">Table student1 is ENABLED                                                                </span><br><span class="line">student1, &#123;TABLE_ATTRIBUTES =&gt; &#123;METADATA =&gt; &#123;&#x27;hbase.store.file-tracker.impl&#x27; =&gt; &#x27;DEFAULT&#x27;&#125;&#125;&#125;          </span><br><span class="line">COLUMN FAMILIES DESCRIPTION                                                     </span><br><span class="line">&#123;NAME =&gt; &#x27;f1&#x27;, INDEX_BLOCK_ENCODING =&gt; &#x27;NONE&#x27;, VERSIONS =&gt; &#x27;3&#x27;, KEEP_DELETED_CELLS =&gt; &#x27;FALSE&#x27;, DATA_BLOCK_ENCODING =&gt; &#x27;NONE&#x27;, TTL =&gt; &#x27;FOREVER&#x27;, MIN_VERSIONS =&gt; &#x27;0&#x27;, REPLICATION_SCOPE =&gt; </span><br><span class="line">&#x27;0&#x27;, BLOOMFILTER =&gt; &#x27;ROW&#x27;, IN_MEMORY =&gt; &#x27;false&#x27;, COMPRESSION =&gt; &#x27;NONE&#x27;, BLOCKCACHE =&gt; &#x27;true&#x27;, BLOCKSIZE =&gt; &#x27;65536 B (64KB)&#x27;&#125;                                                              </span><br><span class="line"></span><br><span class="line">&#123;NAME =&gt; &#x27;info&#x27;, INDEX_BLOCK_ENCODING =&gt; &#x27;NONE&#x27;, VERSIONS =&gt; &#x27;1&#x27;, KEEP_DELETED_CELLS =&gt; &#x27;FALSE&#x27;, DATA_BLOCK_ENCODING =&gt; &#x27;NONE&#x27;, TTL =&gt; &#x27;FOREVER&#x27;, MIN_VERSIONS =&gt; &#x27;0&#x27;, REPLICATION_SCOPE =</span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="string">&#x27;0&#x27;</span>, BLOOMFILTER =&gt; <span class="string">&#x27;ROW&#x27;</span>, IN_MEMORY =&gt; <span class="string">&#x27;false&#x27;</span>, COMPRESSION =&gt; <span class="string">&#x27;NONE&#x27;</span>, BLOCKCACHE =&gt; <span class="string">&#x27;true&#x27;</span>, BLOCKSIZE =&gt; <span class="string">&#x27;65536 B (64KB)&#x27;</span>&#125;</span>                                                            </span><br><span class="line"></span><br><span class="line">2 row(s)</span><br><span class="line">Quota is disabled</span><br><span class="line">Took 0.0401 seconds </span><br></pre></td></tr></table></figure>
+
+<p>（2）删除信息使用特殊的语法</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">方式1</span></span><br><span class="line">hbase:032:0&gt; alter &#x27;student1&#x27;, NAME =&gt; &#x27;f1&#x27;, METHOD =&gt; &#x27;delete&#x27;</span><br><span class="line">Updating all regions with the new schema...</span><br><span class="line">1/1 regions updated.</span><br><span class="line">Done.</span><br><span class="line">Took 1.7268 seconds                                                                                                                                                                       </span><br><span class="line">hbase:033:0&gt; describe &#x27;student1&#x27;</span><br><span class="line">Table student1 is ENABLED                                                                               </span><br><span class="line">student1, &#123;TABLE_ATTRIBUTES =&gt; &#123;METADATA =&gt; &#123;&#x27;hbase.store.file-tracker.impl&#x27; =&gt; &#x27;DEFAULT&#x27;&#125;&#125;&#125;         </span><br><span class="line">COLUMN FAMILIES DESCRIPTION                                                                                                                                                               </span><br><span class="line">&#123;NAME =&gt; &#x27;info&#x27;, INDEX_BLOCK_ENCODING =&gt; &#x27;NONE&#x27;, VERSIONS =&gt; &#x27;1&#x27;, KEEP_DELETED_CELLS =&gt; &#x27;FALSE&#x27;, DATA_BLOCK_ENCODING =&gt; &#x27;NONE&#x27;, TTL =&gt; &#x27;FOREVER&#x27;, MIN_VERSIONS =&gt; &#x27;0&#x27;, REPLICATION_SCOPE =</span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="string">&#x27;0&#x27;</span>, BLOOMFILTER =&gt; <span class="string">&#x27;ROW&#x27;</span>, IN_MEMORY =&gt; <span class="string">&#x27;false&#x27;</span>, COMPRESSION =&gt; <span class="string">&#x27;NONE&#x27;</span>, BLOCKCACHE =&gt; <span class="string">&#x27;true&#x27;</span>, BLOCKSIZE =&gt; <span class="string">&#x27;65536 B (64KB)&#x27;</span>&#125;</span>                                                            </span><br><span class="line"></span><br><span class="line">1 row(s)</span><br><span class="line">Quota is disabled</span><br><span class="line">Took 0.0446 seconds </span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">方式2</span></span><br><span class="line">hbase:032:0&gt; alter &#x27;student1&#x27;, &#x27;delete&#x27; =&gt; &#x27;f1&#x27;</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除表"><a href="#删除表" class="headerlink" title="删除表"></a>删除表</h3><p>shell 中删除表格,需要先将表格状态设置为不可用。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">hbase:043:0&gt; disable &#x27;student1&#x27;</span><br><span class="line">Took 0.3552 seconds                                                                                                                                                                       </span><br><span class="line">hbase:044:0&gt; drop &#x27;student1&#x27;</span><br><span class="line">Took 0.3517 seconds                                                                                                                                                                       </span><br><span class="line">hbase:045:0&gt; list</span><br><span class="line">TABLE                                                                                                                                                                                     </span><br><span class="line">bigdata:student                                                                                                                                                                           </span><br><span class="line">1 row(s)</span><br><span class="line">Took 0.0080 seconds                                                                                                                                                                       </span><br><span class="line">=&gt; [&quot;bigdata:student&quot;]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="DML"><a href="#DML" class="headerlink" title="DML"></a>DML</h2><h3 id="写入数据"><a href="#写入数据" class="headerlink" title="写入数据"></a>写入数据</h3><p>在 HBase 中如果想要写入数据，只能添加结构中最底层的 cell。可以手动写入时间戳指定 cell 的版本，推荐不写默认使用当前的系统时间。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hbase:058:0&#x27; put &#x27;bigdata:student&#x27;,&#x27;1001&#x27;,&#x27;info:name&#x27;,&#x27;zhangsan&#x27;</span><br><span class="line">hbase:059:0&#x27; put &#x27;bigdata:student&#x27;,&#x27;1001&#x27;,&#x27;info:name&#x27;,&#x27;lisi&#x27;</span><br><span class="line">hbase:060:0&#x27; pub &#x27;bigdata:student&#x27;,&#x27;1001&#x27;,&#x27;info:age&#x27;,&#x27;18&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>如果重复写入相同 rowKey，相同列的数据，会写入多个版本进行覆盖。</p>
+<h3 id="读取数据"><a href="#读取数据" class="headerlink" title="读取数据"></a>读取数据</h3><p>读取数据的方法有两个：get 和 scan。</p>
+<p><strong>get</strong></p>
+<p>最大范围是一行数据，也可以进行列的过滤，读取数据的结果为多行 cell。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hbase:063:0&#x27; get &#x27;bigdata:student&#x27;,&#x27;1001&#x27;</span><br><span class="line">hbase:064:0&#x27; get &#x27;bigdata:student&#x27;,&#x27;1001&#x27;, &#123;COLUMN =&gt; &#x27;info:name&#x27;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>也可以修改读取 cell 的版本数，默认读取一个。最多能够读取当前列族设置的维护版本数。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbase:066:0&gt;get &#x27;bigdata:student&#x27;,&#x27;1001&#x27; , &#123;COLUMN =&gt; &#x27;info:name&#x27;, VERSIONS =&gt; 6&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>scan</strong></p>
+<p>scan 是扫描数据，能够读取多行数据，不建议扫描过多的数据，推荐使用 startRow 和stopRow 来控制读取的数据，默认范围左闭右开。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbase:067:0&gt; scan &#x27;bigdata:student&#x27;,&#123;STARTROW =&gt; &#x27;1001&#x27;,STOPROW =&gt; &#x27;1002&#x27;&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>实际开发中使用 shell 的机会不多，所有丰富的使用方法到 API 中介绍。</p>
+</blockquote>
+<h3 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h3><p>删除数据的方法有两个：delete 和 deleteall。</p>
+<p><strong>delete</strong></p>
+<p>delete 表示删除一个版本的数据，即为 1 个 cell，不填写版本默认删除最新的一个版本。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbase:068:0&#x27; delete &#x27;bigdata:student&#x27;,&#x27;1001&#x27;,&#x27;info:name&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><strong>deleteall</strong></p>
+<p>deleteall 表示删除所有版本的数据，即为当前行当前列的多个 cell。（执行命令会标记数据为要删除，不会直接将数据彻底删除，删除数据只在特定时期清理磁盘时进行）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbase:069:0&#x27; deleteall &#x27;bigdata:student&#x27;,&#x27;1001&#x27;,&#x27;info:name&#x27;</span><br></pre></td></tr></table></figure>
+
+<h3 id="清空表数据"><a href="#清空表数据" class="headerlink" title="清空表数据"></a>清空表数据</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbase:004:0&gt; truncate &#x27;bigdata:student&#x27;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="HBase高可用"><a href="#HBase高可用" class="headerlink" title="HBase高可用"></a>HBase高可用</h1><p>在当前的HBase集群中，只有一个Master，一旦Master出现故障，将会导致HBase不再可用。所以，在实际的生产环境中，是非常有必要搭建一个高可用的HBase集群的。</p>
+<p>HBase的高可用配置其实就是HMaster的高可用。要搭建HBase的高可用，只需要再选择一个节点作为HMaster，在HBase的conf目录下创建文件backup-masters，然后再backup-masters添加备份Master的记录。一条记录代表一个backup master，可以在文件配置多个记录。</p>
+<h2 id="搭建HBase高可用"><a href="#搭建HBase高可用" class="headerlink" title="搭建HBase高可用"></a>搭建HBase高可用</h2><ol>
+<li>在hbase的conf文件夹中创建 backup-masters 文件</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /export/server/hbase-2.5.2/conf</span><br><span class="line">touch backup-masters</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>将node2和node3添加到该文件中</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim backup-masters</span><br><span class="line">node2</span><br><span class="line">node3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将backup-masters文件分发到所有的服务器节点中</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scp backup-masters root@node2:$PWD</span><br><span class="line">scp backup-masters root@node3:$PWD</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>重新启动hbase</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">stop-hbase.sh</span><br><span class="line">start-hbase.sh</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>查看webui，检查Backup Masters中是否有node2、node3</p>
+<p><img src="/2022/02/24/HBase%E5%AE%9E%E6%93%8D/image-20221228134110955.png" alt="image-20221228134110955"></p>
+</li>
+<li><p>杀掉node1节点上的master</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kill -9 HMaster进程id</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>访问<a target="_blank" rel="noopener" href="http://node1:16010/master-status">http://node2:16010</a>和<a href="http://node3:16010，观察是否选举了新的Master">http://node3:16010，观察是否选举了新的Master</a></p>
+<p><img src="/2022/02/24/HBase%E5%AE%9E%E6%93%8D/image-20221228134313416.png" alt="image-20221228134313416"></p>
+</li>
+</ol>
+<h1 id="HBASE-Java编程"><a href="#HBASE-Java编程" class="headerlink" title="HBASE Java编程"></a>HBASE Java编程</h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><h3 id="创建IDEA-Maven项目"><a href="#创建IDEA-Maven项目" class="headerlink" title="创建IDEA Maven项目"></a>创建IDEA Maven项目</h3><p>groupId：cn.st</p>
+<p>artifactId：hbase_op</p>
+<h3 id="导入pom依赖"><a href="#导入pom依赖" class="headerlink" title="导入pom依赖"></a>导入pom依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">repositories</span>&gt;</span><span class="comment">&lt;!-- 代码库 --&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">id</span>&gt;</span>aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">releases</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;/<span class="name">releases</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">snapshots</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">enabled</span>&gt;</span>false<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">updatePolicy</span>&gt;</span>never<span class="tag">&lt;/<span class="name">updatePolicy</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;/<span class="name">snapshots</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br><span class="line"></span><br><span class="line">   <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.hbase<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hbase-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.4.13<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>commons-io<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-io<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.testng<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>testng<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">version</span>&gt;</span>6.14.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line">   <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="复制HBase和Hadoop配置文件"><a href="#复制HBase和Hadoop配置文件" class="headerlink" title="复制HBase和Hadoop配置文件"></a>复制HBase和Hadoop配置文件</h3><p>将以下三个配置文件复制到resource目录中</p>
+<ul>
+<li><p>hbase-site.xml</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sz /export/server/hbase-2.5.2/conf/hbase-site.xml</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>core-site.xml</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sz /export/server/hadoop-3.3.0/etc/hadoop/core-site.xml</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>log4j.properties</p>
+</li>
+</ul>
+<p>注意：确认配置文件中的服务器节点hostname&#x2F;ip地址配置正确</p>
+<h3 id="创建包结构和类"><a href="#创建包结构和类" class="headerlink" title="创建包结构和类"></a>创建包结构和类</h3><ol>
+<li><p>在<strong>test</strong>目录创建 cn.st.hbase.admin.api_test 包结构</p>
+</li>
+<li><p>创建TableAdminTest类</p>
+</li>
+</ol>
+<h3 id="创建Hbase连接以及admin管理对象"><a href="#创建Hbase连接以及admin管理对象" class="headerlink" title="创建Hbase连接以及admin管理对象"></a>创建Hbase连接以及admin管理对象</h3><p>要操作Hbase也需要建立Hbase的连接。此处我们仍然使用TestNG来编写测试。使用@BeforeTest初始化HBase连接，创建admin对象、@AfterTest关闭连接。</p>
+<p>实现步骤：</p>
+<ol>
+<li><p>使用HbaseConfiguration.create()创建Hbase配置</p>
+</li>
+<li><p>使用ConnectionFactory.createConnection()创建Hbase连接</p>
+</li>
+<li><p>要创建表，需要基于Hbase连接获取admin管理对象</p>
+</li>
+<li><p>使用admin.close、connection.close关闭连接</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.st.hbase.admin.api_test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.conf.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.HBaseConfiguration;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.TableName;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.client.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.util.Bytes;</span><br><span class="line"><span class="keyword">import</span> org.junit.After;</span><br><span class="line"><span class="keyword">import</span> org.testng.annotations.AfterTest;</span><br><span class="line"><span class="keyword">import</span> org.testng.annotations.BeforeTest;</span><br><span class="line"><span class="keyword">import</span> org.testng.annotations.Test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TableAdminTest</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Configuration configuration;</span><br><span class="line">    <span class="keyword">private</span> Connection connection;</span><br><span class="line">    <span class="keyword">private</span> Admin admin;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@BeforeTest</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">beforeTest</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        configuration = HBaseConfiguration.create();</span><br><span class="line">        connection = ConnectionFactory.createConnection(configuration);</span><br><span class="line">        admin = connection.getAdmin();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@AfterTest</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterTest</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        admin.close();</span><br><span class="line">        connection.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="使用Java创建表"><a href="#使用Java创建表" class="headerlink" title="使用Java创建表"></a>使用Java创建表</h3><p>创建一个名为WATER_BILL的表，包含一个列蔟C1。</p>
+<p>实现步骤：</p>
+<ol>
+<li><p>判断表是否存在。存在，则退出</p>
+</li>
+<li><p>使用TableDescriptorBuilder.newBuilder构建表描述构建器</p>
+</li>
+<li><p>使用ColumnFamilyDescriptorBuilder.newBuilder构建列蔟描述构建器</p>
+</li>
+<li><p>构建列蔟描述，构建表描述</p>
+</li>
+<li><p>创建表</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 创建表</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@throws</span> IOException</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="meta">@Test</span></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">createTableTest</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">       <span class="comment">//表名</span></span><br><span class="line">       <span class="type">String</span> <span class="variable">TABLE_NAME</span> <span class="operator">=</span> <span class="string">&quot;WATER_BILL&quot;</span>;</span><br><span class="line">       <span class="comment">//列簇名</span></span><br><span class="line">       <span class="type">String</span> <span class="variable">COLUMN_FAMILY</span> <span class="operator">=</span> <span class="string">&quot;C1&quot;</span>;</span><br><span class="line"></span><br><span class="line">       <span class="comment">//判断表是否存在</span></span><br><span class="line">       <span class="keyword">if</span> (admin.tableExists(TableName.valueOf(TABLE_NAME))) &#123;</span><br><span class="line">           <span class="keyword">return</span>;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="comment">//构建表描述构建器</span></span><br><span class="line">       <span class="type">TableDescriptorBuilder</span> <span class="variable">tableDescriptorBuilder</span> <span class="operator">=</span> TableDescriptorBuilder.newBuilder(TableName.valueOf(TABLE_NAME));</span><br><span class="line">       <span class="type">ColumnFamilyDescriptorBuilder</span> <span class="variable">columnFamilyDescriptorBuilder</span> <span class="operator">=</span> ColumnFamilyDescriptorBuilder.newBuilder(Bytes.toBytes(COLUMN_FAMILY));</span><br><span class="line"></span><br><span class="line">       <span class="comment">//构建列簇描述构建器</span></span><br><span class="line">       <span class="type">ColumnFamilyDescriptor</span> <span class="variable">columnFamilyDescriptor</span> <span class="operator">=</span> columnFamilyDescriptorBuilder.build();</span><br><span class="line"></span><br><span class="line">       <span class="comment">//添加列簇</span></span><br><span class="line">       tableDescriptorBuilder.setColumnFamily(columnFamilyDescriptor);</span><br><span class="line">       <span class="type">TableDescriptor</span> <span class="variable">tableDescriptor</span> <span class="operator">=</span> tableDescriptorBuilder.build();</span><br><span class="line"></span><br><span class="line">       <span class="comment">//创建表</span></span><br><span class="line">       admin.createTable(tableDescriptor);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="使用Java删除表"><a href="#使用Java删除表" class="headerlink" title="使用Java删除表"></a>使用Java删除表</h3><p>实现步骤：</p>
+<ol>
+<li><p>判断表是否存在</p>
+</li>
+<li><p>如果存在，则禁用表</p>
+</li>
+<li><p>再删除表</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">dropTableTest</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">       <span class="type">TableName</span> <span class="variable">tableName</span> <span class="operator">=</span> TableName.valueOf(<span class="string">&quot;WATER_BILL&quot;</span>);</span><br><span class="line"></span><br><span class="line">       <span class="comment">//判断表是否存在</span></span><br><span class="line">       <span class="keyword">if</span> (admin.tableExists(tableName)) &#123;</span><br><span class="line">           <span class="comment">//禁用表</span></span><br><span class="line">           admin.disableTable(tableName);</span><br><span class="line">           <span class="comment">//删除表</span></span><br><span class="line">           admin.deleteTable(tableName);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="插入列数据"><a href="#插入列数据" class="headerlink" title="插入列数据"></a>插入列数据</h3><p>实现步骤：</p>
+<ol>
+<li><p>使用Hbase连接获取Htable</p>
+</li>
+<li><p>构建ROWKEY、列蔟名、列名</p>
+</li>
+<li><p>构建Put对象（对应put命令）</p>
+</li>
+<li><p>添加姓名列</p>
+</li>
+<li><p>使用Htable表对象执行put操作</p>
+</li>
+<li><p>关闭Htable表对象</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addTest</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">       <span class="comment">//获取table</span></span><br><span class="line">       <span class="type">TableName</span> <span class="variable">tableName</span> <span class="operator">=</span> TableName.valueOf(<span class="string">&quot;WATER_BILL&quot;</span>);</span><br><span class="line">       <span class="type">Table</span> <span class="variable">table</span> <span class="operator">=</span> connection.getTable(tableName);</span><br><span class="line"></span><br><span class="line">       <span class="comment">//构建rowkey，列簇名，列名</span></span><br><span class="line">       <span class="type">String</span> <span class="variable">rowkey</span> <span class="operator">=</span> <span class="string">&quot;00000001&quot;</span>;</span><br><span class="line">       <span class="type">String</span> <span class="variable">cfName</span> <span class="operator">=</span> <span class="string">&quot;C1&quot;</span>;</span><br><span class="line">       <span class="type">String</span> <span class="variable">colName</span> <span class="operator">=</span> <span class="string">&quot;NAME&quot;</span>;</span><br><span class="line">       <span class="type">String</span> <span class="variable">colADDRESS</span> <span class="operator">=</span> <span class="string">&quot;ADDRESS&quot;</span>;</span><br><span class="line">       <span class="type">String</span> <span class="variable">colSEX</span> <span class="operator">=</span> <span class="string">&quot;SEX&quot;</span>;</span><br><span class="line">       <span class="type">String</span> <span class="variable">colPAY_DATE</span> <span class="operator">=</span> <span class="string">&quot;PAY_DATE&quot;</span>;</span><br><span class="line">       <span class="type">String</span> <span class="variable">colNUM_CURRENT</span> <span class="operator">=</span> <span class="string">&quot;NUM_CURRENT&quot;</span>;</span><br><span class="line">       <span class="type">String</span> <span class="variable">colNUM_PREVIOUS</span> <span class="operator">=</span> <span class="string">&quot;NUM_PREVIOUS&quot;</span>;</span><br><span class="line">       <span class="type">String</span> <span class="variable">colNUM_USAGE</span> <span class="operator">=</span> <span class="string">&quot;NUM_USAGE&quot;</span>;</span><br><span class="line">       <span class="type">String</span> <span class="variable">colTOTAL_MONEY</span> <span class="operator">=</span> <span class="string">&quot;TOTAL_MONEY&quot;</span>;</span><br><span class="line">       <span class="type">String</span> <span class="variable">colRECORD_DATE</span> <span class="operator">=</span> <span class="string">&quot;RECORD_DATE&quot;</span>;</span><br><span class="line">       <span class="type">String</span> <span class="variable">colLATEST_DATE</span> <span class="operator">=</span> <span class="string">&quot;LATEST_DATE&quot;</span>;</span><br><span class="line"></span><br><span class="line">       <span class="comment">//构建Put对象（对应put命令）</span></span><br><span class="line">       <span class="type">Put</span> <span class="variable">put</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Put</span>(Bytes.toBytes(rowkey));</span><br><span class="line">       <span class="comment">//添加姓名列</span></span><br><span class="line">       put.addColumn(Bytes.toBytes(cfName), Bytes.toBytes(colName), Bytes.toBytes(<span class="string">&quot;张三&quot;</span>));</span><br><span class="line">       put.addColumn(Bytes.toBytes(cfName), Bytes.toBytes(colADDRESS), Bytes.toBytes(<span class="string">&quot;云南省昆明市&quot;</span>));</span><br><span class="line">       put.addColumn(Bytes.toBytes(cfName), Bytes.toBytes(colSEX), Bytes.toBytes(<span class="string">&quot;男&quot;</span>));</span><br><span class="line">       put.addColumn(Bytes.toBytes(cfName), Bytes.toBytes(colPAY_DATE), Bytes.toBytes(<span class="string">&quot;2021-05-10&quot;</span>));</span><br><span class="line">       put.addColumn(Bytes.toBytes(cfName), Bytes.toBytes(colNUM_CURRENT), Bytes.toBytes(<span class="string">&quot;308.1&quot;</span>));</span><br><span class="line">       put.addColumn(Bytes.toBytes(cfName), Bytes.toBytes(colNUM_PREVIOUS), Bytes.toBytes(<span class="string">&quot;283.1&quot;</span>));</span><br><span class="line">       put.addColumn(Bytes.toBytes(cfName), Bytes.toBytes(colNUM_USAGE), Bytes.toBytes(<span class="string">&quot;25&quot;</span>));</span><br><span class="line">       put.addColumn(Bytes.toBytes(cfName), Bytes.toBytes(colTOTAL_MONEY), Bytes.toBytes(<span class="string">&quot;150&quot;</span>));</span><br><span class="line">       put.addColumn(Bytes.toBytes(cfName), Bytes.toBytes(colRECORD_DATE), Bytes.toBytes(<span class="string">&quot;2021-04-25&quot;</span>));</span><br><span class="line">       put.addColumn(Bytes.toBytes(cfName), Bytes.toBytes(colLATEST_DATE), Bytes.toBytes(<span class="string">&quot;2021-06-09&quot;</span>));</span><br><span class="line"></span><br><span class="line">       <span class="comment">//使用Htable表对象执行put</span></span><br><span class="line">       table.put(put);</span><br><span class="line">       table.close();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="查看数据"><a href="#查看数据" class="headerlink" title="查看数据"></a>查看数据</h3><p>实现步骤：</p>
+<ol>
+<li><p>获取HTable</p>
+</li>
+<li><p>使用rowkey构建Get对象</p>
+</li>
+<li><p>执行get请求</p>
+</li>
+<li><p>获取所有单元格</p>
+</li>
+<li><p>打印rowkey</p>
+</li>
+<li><p>迭代单元格列表</p>
+</li>
+<li><p>关闭表</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">getOneTest</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="comment">// 1. 获取HTable</span></span><br><span class="line">    <span class="type">TableName</span> <span class="variable">waterBillTableName</span> <span class="operator">=</span> TableName.valueOf(<span class="string">&quot;WATER_BILL&quot;</span>);</span><br><span class="line">    <span class="type">Table</span> <span class="variable">waterBilltable</span> <span class="operator">=</span> connection.getTable(waterBillTableName);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 使用rowkey构建Get对象</span></span><br><span class="line">    <span class="type">Get</span> <span class="variable">get</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Get</span>(Bytes.toBytes(<span class="string">&quot;00000001&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 执行get请求</span></span><br><span class="line">    <span class="type">Result</span> <span class="variable">result</span> <span class="operator">=</span> waterBilltable.get(get);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 获取所有单元格</span></span><br><span class="line">    List&lt;Cell&gt; cellList = result.listCells();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 打印rowkey</span></span><br><span class="line">    System.out.println(<span class="string">&quot;rowkey =&gt; &quot;</span> + Bytes.toString(result.getRow()));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 5. 迭代单元格列表</span></span><br><span class="line">    <span class="keyword">for</span> (Cell cell : cellList) &#123;</span><br><span class="line">        <span class="comment">// 打印列蔟名</span></span><br><span class="line">        System.out.print(Bytes.toString(cell.getQualifierArray(), cell.getQualifierOffset(), cell.getQualifierLength()));</span><br><span class="line">        System.out.println(<span class="string">&quot; =&gt; &quot;</span> + Bytes.toString(cell.getValueArray(), cell.getValueOffset(), cell.getValueLength()));</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 6. 关闭表</span></span><br><span class="line">    waterBilltable.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="删除数据-1"><a href="#删除数据-1" class="headerlink" title="删除数据"></a>删除数据</h3><p>实现步骤：</p>
+<ol>
+<li><p>获取HTable对象</p>
+</li>
+<li><p>根据rowkey构建delete对象</p>
+</li>
+<li><p>执行delete请求</p>
+</li>
+<li><p>关闭表</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">deleteOneTest</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="comment">// 1. 获取HTable对象</span></span><br><span class="line">    <span class="type">Table</span> <span class="variable">waterBillTable</span> <span class="operator">=</span> connection.getTable(TableName.valueOf(<span class="string">&quot;WATER_BILL&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 根据rowkey构建delete对象</span></span><br><span class="line">    <span class="type">Delete</span> <span class="variable">delete</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Delete</span>(Bytes.toBytes(<span class="string">&quot;00000001&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 执行delete请求</span></span><br><span class="line">    waterBillTable.delete(delete);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 关闭表</span></span><br><span class="line">    waterBillTable.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="导入数据"><a href="#导入数据" class="headerlink" title="导入数据"></a>导入数据</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbase org.apache.hadoop.hbase.mapreduce.Import 表名 HDFS数据文件路径</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="导出数据"><a href="#导出数据" class="headerlink" title="导出数据"></a>导出数据</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbase org.apache.hadoop.hbase.mapreduce.Export 表名 HDFS数据文件路径</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="过滤器的使用"><a href="#过滤器的使用" class="headerlink" title="过滤器的使用"></a>过滤器的使用</h3><p>实现步骤：</p>
+<ol>
+<li><p>获取表</p>
+</li>
+<li><p>构建scan请求对象</p>
+</li>
+<li><p>构建两个过滤器</p>
+</li>
+</ol>
+<p>​		a) 构建两个日期范围过滤器（注意此处请使用RECORD_DATE——抄表日期比较</p>
+<p>​		b) 构建过滤器列表</p>
+<ol start="4">
+<li><p>执行scan扫描请求</p>
+</li>
+<li><p>迭代打印result</p>
+</li>
+<li><p>迭代单元格列表</p>
+</li>
+<li><p>关闭ResultScanner（这玩意把转换成一个个的类似get的操作，注意要关闭释放资源）</p>
+</li>
+<li><p>关闭表</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">queryTest1</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="comment">// 1. 获取表</span></span><br><span class="line">    <span class="type">Table</span> <span class="variable">waterBillTable</span> <span class="operator">=</span> connection.getTable(TableName.valueOf(<span class="string">&quot;WATER_BILL&quot;</span>));</span><br><span class="line">    <span class="comment">// 2. 构建scan请求对象</span></span><br><span class="line">    <span class="type">Scan</span> <span class="variable">scan</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scan</span>();</span><br><span class="line">    <span class="comment">// 3. 构建两个过滤器</span></span><br><span class="line">    <span class="comment">// 3.1 构建日期范围过滤器（注意此处请使用RECORD_DATE——抄表日期比较</span></span><br><span class="line">    <span class="type">SingleColumnValueFilter</span> <span class="variable">startDateFilter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SingleColumnValueFilter</span>(Bytes.toBytes(<span class="string">&quot;C1&quot;</span>)</span><br><span class="line">            , Bytes.toBytes(<span class="string">&quot;RECORD_DATE&quot;</span>)</span><br><span class="line">            , CompareOperator.GREATER_OR_EQUAL</span><br><span class="line">            , Bytes.toBytes(<span class="string">&quot;2020-06-01&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="type">SingleColumnValueFilter</span> <span class="variable">endDateFilter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SingleColumnValueFilter</span>(Bytes.toBytes(<span class="string">&quot;C1&quot;</span>)</span><br><span class="line">            , Bytes.toBytes(<span class="string">&quot;RECORD_DATE&quot;</span>)</span><br><span class="line">            , CompareOperator.LESS_OR_EQUAL</span><br><span class="line">            , Bytes.toBytes(<span class="string">&quot;2020-06-30&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3.2 构建过滤器列表</span></span><br><span class="line">    <span class="type">FilterList</span> <span class="variable">filterList</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FilterList</span>(FilterList.Operator.MUST_PASS_ALL</span><br><span class="line">            , startDateFilter</span><br><span class="line">            , endDateFilter);</span><br><span class="line"></span><br><span class="line">    scan.setFilter(filterList);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 执行scan扫描请求</span></span><br><span class="line">    <span class="type">ResultScanner</span> <span class="variable">resultScan</span> <span class="operator">=</span> waterBillTable.getScanner(scan);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 5. 迭代打印result</span></span><br><span class="line">    <span class="keyword">for</span> (Result result : resultScan) &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;rowkey -&gt; &quot;</span> + Bytes.toString(result.getRow()));</span><br><span class="line">        System.out.println(<span class="string">&quot;------&quot;</span>);</span><br><span class="line"></span><br><span class="line">        List&lt;Cell&gt; cellList = result.listCells();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 6. 迭代单元格列表</span></span><br><span class="line">        <span class="keyword">for</span> (Cell cell : cellList) &#123;</span><br><span class="line">            <span class="comment">// 打印列蔟名</span></span><br><span class="line">            System.out.print(Bytes.toString(cell.getQualifierArray(), cell.getQualifierOffset(), cell.getQualifierLength()));</span><br><span class="line">            System.out.println(<span class="string">&quot; =&gt; &quot;</span> + Bytes.toString(cell.getValueArray(), cell.getValueOffset(), cell.getValueLength()));</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;------&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">resultScanner.close();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 7. 关闭表</span></span><br><span class="line">    waterBillTable.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="乱码问题"><a href="#乱码问题" class="headerlink" title="乱码问题"></a>乱码问题</h3><p>可以根据列来判断，使用哪种方式转换字节码。如下：</p>
+<ol>
+<li><p>NUM_CURRENT</p>
+</li>
+<li><p>NUM_PREVIOUS</p>
+</li>
+<li><p>NUM_USAGE</p>
+</li>
+<li><p>TOTAL_MONEY</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">colName</span> <span class="operator">=</span> Bytes.toString(cell.getQualifierArray(), cell.getQualifierOffset(), cell.getQualifierLength());</span><br><span class="line">System.out.print(colName);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(colName.equals(<span class="string">&quot;NUM_CURRENT&quot;</span>)</span><br><span class="line">        || colName.equals(<span class="string">&quot;NUM_PREVIOUS&quot;</span>)</span><br><span class="line">        || colName.equals(<span class="string">&quot;NUM_USAGE&quot;</span>)</span><br><span class="line">        || colName.equals(<span class="string">&quot;TOTAL_MONEY&quot;</span>)) &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot; =&gt; &quot;</span> + Bytes.toDouble(cell.getValueArray(), cell.getValueOffset()));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot; =&gt; &quot;</span> + Bytes.toString(cell.getValueArray(), cell.getValueOffset(), cell.getValueLength()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a> -->
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"><i class="fa fa-tag"></i>  大数据</a>
+              <!-- <a href="/tags/HBase/" rel="tag"># HBase</a> -->
+              <a href="/tags/HBase/" rel="tag"><i class="fa fa-tag"></i>  HBase</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/22/HBase%E5%9F%BA%E7%A1%80/" rel="prev" title="HBase基础">
+      <i class="fa fa-chevron-left"></i> HBase基础
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/02/26/HBase%E8%BF%9B%E9%98%B6/" rel="next" title="HBase进阶">
+      HBase进阶 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HBase%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2"><span class="nav-number">1.</span> <span class="nav-text">HBase安装部署</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hadoop%E9%83%A8%E7%BD%B2"><span class="nav-number">1.1.</span> <span class="nav-text">Hadoop部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper%E9%83%A8%E7%BD%B2"><span class="nav-number">1.2.</span> <span class="nav-text">Zookeeper部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase%E9%83%A8%E7%BD%B2"><span class="nav-number">1.3.</span> <span class="nav-text">HBase部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.3.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">1.3.2.</span> <span class="nav-text">配置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HBase-Shell%E6%93%8D%E4%BD%9C"><span class="nav-number">2.</span> <span class="nav-text">HBase Shell操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">2.1.</span> <span class="nav-text">基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5-HBase-%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%91%BD%E4%BB%A4%E8%A1%8C"><span class="nav-number">2.1.1.</span> <span class="nav-text">进入 HBase 客户端命令行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%B8%AE%E5%8A%A9%E5%91%BD%E4%BB%A4"><span class="nav-number">2.1.2.</span> <span class="nav-text">查看帮助命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#namespace"><span class="nav-number">2.2.</span> <span class="nav-text">namespace</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4"><span class="nav-number">2.2.1.</span> <span class="nav-text">创建命名空间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%89%80%E6%9C%89%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4"><span class="nav-number">2.2.2.</span> <span class="nav-text">查看所有命名空间</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DDL"><span class="nav-number">2.3.</span> <span class="nav-text">DDL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%A1%A8"><span class="nav-number">2.3.1.</span> <span class="nav-text">创建表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E8%A1%A8"><span class="nav-number">2.3.2.</span> <span class="nav-text">查看表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E8%A1%A8"><span class="nav-number">2.3.3.</span> <span class="nav-text">修改表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E8%A1%A8"><span class="nav-number">2.3.4.</span> <span class="nav-text">删除表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DML"><span class="nav-number">2.4.</span> <span class="nav-text">DML</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE"><span class="nav-number">2.4.1.</span> <span class="nav-text">写入数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE"><span class="nav-number">2.4.2.</span> <span class="nav-text">读取数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE"><span class="nav-number">2.4.3.</span> <span class="nav-text">删除数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B8%85%E7%A9%BA%E8%A1%A8%E6%95%B0%E6%8D%AE"><span class="nav-number">2.4.4.</span> <span class="nav-text">清空表数据</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HBase%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">HBase高可用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%AD%E5%BB%BAHBase%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="nav-number">3.1.</span> <span class="nav-text">搭建HBase高可用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HBASE-Java%E7%BC%96%E7%A8%8B"><span class="nav-number">4.</span> <span class="nav-text">HBASE Java编程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">4.1.</span> <span class="nav-text">准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAIDEA-Maven%E9%A1%B9%E7%9B%AE"><span class="nav-number">4.1.1.</span> <span class="nav-text">创建IDEA Maven项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5pom%E4%BE%9D%E8%B5%96"><span class="nav-number">4.1.2.</span> <span class="nav-text">导入pom依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6HBase%E5%92%8CHadoop%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">4.1.3.</span> <span class="nav-text">复制HBase和Hadoop配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%8C%85%E7%BB%93%E6%9E%84%E5%92%8C%E7%B1%BB"><span class="nav-number">4.1.4.</span> <span class="nav-text">创建包结构和类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAHbase%E8%BF%9E%E6%8E%A5%E4%BB%A5%E5%8F%8Aadmin%E7%AE%A1%E7%90%86%E5%AF%B9%E8%B1%A1"><span class="nav-number">4.1.5.</span> <span class="nav-text">创建Hbase连接以及admin管理对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Java%E5%88%9B%E5%BB%BA%E8%A1%A8"><span class="nav-number">4.1.6.</span> <span class="nav-text">使用Java创建表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Java%E5%88%A0%E9%99%A4%E8%A1%A8"><span class="nav-number">4.1.7.</span> <span class="nav-text">使用Java删除表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E5%88%97%E6%95%B0%E6%8D%AE"><span class="nav-number">4.1.8.</span> <span class="nav-text">插入列数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%95%B0%E6%8D%AE"><span class="nav-number">4.1.9.</span> <span class="nav-text">查看数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE-1"><span class="nav-number">4.1.10.</span> <span class="nav-text">删除数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E6%95%B0%E6%8D%AE"><span class="nav-number">4.1.11.</span> <span class="nav-text">导入数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%BC%E5%87%BA%E6%95%B0%E6%8D%AE"><span class="nav-number">4.1.12.</span> <span class="nav-text">导出数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%87%E6%BB%A4%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">4.1.13.</span> <span class="nav-text">过滤器的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98"><span class="nav-number">4.1.14.</span> <span class="nav-text">乱码问题</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">117</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>

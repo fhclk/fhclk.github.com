@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本地模式下载地址：https:&#x2F;&#x2F;archive.apache.org&#x2F;dist&#x2F;flink&#x2F;flink-1.14.4&#x2F; 上传至服务器并解压 12(base) [root@node1 software]# tar -zxvf flink-1.14.4-bin-scala_2.12.tgz (base) [root@node1 software]# mv flink-1.14.4 ..&#x2F;server">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flink部署">
+<meta property="og:url" content="http://fhclk.github.io/2022/04/05/Flink%E9%83%A8%E7%BD%B2/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="本地模式下载地址：https:&#x2F;&#x2F;archive.apache.org&#x2F;dist&#x2F;flink&#x2F;flink-1.14.4&#x2F; 上传至服务器并解压 12(base) [root@node1 software]# tar -zxvf flink-1.14.4-bin-scala_2.12.tgz (base) [root@node1 software]# mv flink-1.14.4 ..&#x2F;server">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230109222916850.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230112210400794.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230112213516777.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230112213240807.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230112213800713.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230112214233687.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230112214257160.png">
+<meta property="article:published_time" content="2022-04-05T12:11:23.000Z">
+<meta property="article:modified_time" content="2023-01-12T13:51:32.168Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="大数据">
+<meta property="article:tag" content="Flink">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230109222916850.png">
+
+<link rel="canonical" href="http://fhclk.github.io/2022/04/05/Flink%E9%83%A8%E7%BD%B2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Flink部署 | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/04/05/Flink%E9%83%A8%E7%BD%B2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Flink部署
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-05 20:11:23" itemprop="dateCreated datePublished" datetime="2022-04-05T20:11:23+08:00">2022-04-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-12 21:51:32" itemprop="dateModified" datetime="2023-01-12T21:51:32+08:00">2023-01-12</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="本地模式"><a href="#本地模式" class="headerlink" title="本地模式"></a>本地模式</h1><h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>地址：<a target="_blank" rel="noopener" href="https://archive.apache.org/dist/flink/flink-1.14.4/">https://archive.apache.org/dist/flink/flink-1.14.4/</a></p>
+<p>上传至服务器并解压</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 software]# tar -zxvf flink-1.14.4-bin-scala_2.12.tgz </span><br><span class="line">(base) [root@node1 software]# mv flink-1.14.4 ../server/</span><br></pre></td></tr></table></figure>
+
+<h2 id="启动集群"><a href="#启动集群" class="headerlink" title="启动集群"></a>启动集群</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/start-cluster.sh </span><br><span class="line">Starting cluster.</span><br><span class="line">Starting standalonesession daemon on host node1.st.cn.</span><br><span class="line">Starting taskexecutor daemon on host node1.st.cn.</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="提交作业（Job）"><a href="#提交作业（Job）" class="headerlink" title="提交作业（Job）"></a>提交作业（Job）</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/flink run examples/streaming/WordCount.jar </span><br><span class="line">Executing WordCount example with default input data set.</span><br><span class="line">Use --input to specify file input.</span><br><span class="line">Printing result to stdout. Use --output to specify output path.</span><br><span class="line">Job has been submitted with JobID a07000e74ea02367d29e972662fd9914</span><br><span class="line">Program execution finished</span><br><span class="line">Job with JobID a07000e74ea02367d29e972662fd9914 has finished.</span><br><span class="line">Job Runtime: 1390 ms</span><br><span class="line"></span><br><span class="line">(base) [root@node1 flink-1.14.4]# tail log/flink-*-taskexecutor-*.out</span><br><span class="line">(nymph,1)</span><br><span class="line">(in,3)</span><br><span class="line">(thy,1)</span><br><span class="line">(orisons,1)</span><br><span class="line">(be,4)</span><br><span class="line">(all,2)</span><br><span class="line">(my,1)</span><br><span class="line">(sins,1)</span><br><span class="line">(remember,1)</span><br><span class="line">(d,4)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="停止集群"><a href="#停止集群" class="headerlink" title="停止集群"></a>停止集群</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/stop-cluster.sh </span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="集群部署"><a href="#集群部署" class="headerlink" title="集群部署"></a>集群部署</h1><h2 id="规划"><a href="#规划" class="headerlink" title="规划"></a>规划</h2><p>node1节点 -  JobManager</p>
+<p>node2节点  -  TaskManager</p>
+<p>node3节点  -  TaskManager</p>
+<h2 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h2><ol>
+<li><p>修改conf下的flink-conf.yaml文件。修改jobmanager.rpc.address为node1</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">jobmanager.rpc.address:</span> <span class="string">node1</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>修改workers文件，添加node2和node3节点</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim conf/workers</span><br><span class="line">node2</span><br><span class="line">node3</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>将flink拷贝到node2和node3节点上</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 server]# scp -r flink-1.14.4 root@node2:/export/server/</span><br><span class="line">(base) [root@node1 server]# scp -r flink-1.14.4 root@node3:/export/server/</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>启动集群</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/start-cluster.sh</span><br><span class="line">(base) [root@node1 flink-1.14.4]# jps</span><br><span class="line">4080 StandaloneSessionClusterEntrypoint</span><br><span class="line">4165 Jps</span><br></pre></td></tr></table></figure>
+
+<p>分别在node2和node3上使用jps查看进程。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node2 ~]# jps</span><br><span class="line">2441 Jps</span><br><span class="line">2317 TaskManagerRunner</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>web查看 <a target="_blank" rel="noopener" href="http://node1:8081/">http://node1:8081/</a></p>
+<p><img src="/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230109222916850.png" alt="image-20230109222916850"></p>
+</li>
+<li><p>关闭集群</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/stop-cluster.sh </span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="提交Job"><a href="#提交Job" class="headerlink" title="提交Job"></a>提交Job</h2><h3 id="Flink-web上提交"><a href="#Flink-web上提交" class="headerlink" title="Flink web上提交"></a>Flink web上提交</h3><h3 id="命令行提交"><a href="#命令行提交" class="headerlink" title="命令行提交"></a>命令行提交</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/flink run -m node1:8081 -c com.st.wc.StreamWordCount -p 2 ~/data/FlinkStudy-1.0-SNAPSHOT.jar</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">打印出jobId</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="命令行取消"><a href="#命令行取消" class="headerlink" title="命令行取消"></a>命令行取消</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/flink cancel jobId</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="部署模式"><a href="#部署模式" class="headerlink" title="部署模式"></a>部署模式</h1><h2 id="会话模式（Session-Mode）"><a href="#会话模式（Session-Mode）" class="headerlink" title="会话模式（Session Mode）"></a>会话模式（Session Mode）</h2><p>会话模式最符合常规思维。需要先启动一个集群，保持一个会话，在这个会话中通过客户端提交作业。集群启动时所有资源已经确定，所以所有提交的作业会竞争集群中的资源。</p>
+<p>会话模式适合单个规模小、执行时间短的大量作业。</p>
+<h2 id="单作业模式（Per-Job-Mode）"><a href="#单作业模式（Per-Job-Mode）" class="headerlink" title="单作业模式（Per-Job Mode）"></a>单作业模式（Per-Job Mode）</h2><p>会话模式因为资源共享会导致很多问题，所以为了更好的隔离资源，可以考虑为每个提交的作业启动一个集群，这就是所谓的单作业模式。</p>
+<p>一个集群对应一个作业。由客户端运行应用程序，然后启动集群，作业被提交各JobManager，进而分发给TaskManager执行。作业完成后，集群就会关闭，释放资源。</p>
+<p>这些特性使得单作业模式在生产环境中更加稳定，所以是实际应用的首选模式。</p>
+<p>Flink本身无法直接这样运行，一般需要借助资源管理框架来启动集群，如YARN、Kubernetes。</p>
+<h2 id="应用模式（Application-Mode）"><a href="#应用模式（Application-Mode）" class="headerlink" title="应用模式（Application Mode）"></a>应用模式（Application Mode）</h2><p>会话模式和单作业模式中，应用代码都是在客户端上执行，然后由客户端提交给JobManager的。但是这种方式客户端需要占用大量网络带宽，去下载依赖和把二进制数据发送给JobManager。</p>
+<p>解决方法是，不用客户端，直接把应用提交到JobManager上运行。而这意味着需要为每一个提交的应用单独启动一个JobManager，即创建一个集群。这个JobManager只为执行这一个应用存在，执行结束后JobManager就关闭了，这就是所谓的应用模式。</p>
+<p>应用模式下，直接由JobManager执行应用程序，即使这个应用包含了多个作业，也只创建一个一个集群。</p>
+<h1 id="独立模式（Standalone）"><a href="#独立模式（Standalone）" class="headerlink" title="独立模式（Standalone）"></a>独立模式（Standalone）</h1><p>独立运行，不依赖任何资源管理平台。</p>
+<h1 id="YARN模式"><a href="#YARN模式" class="headerlink" title="YARN模式"></a>YARN模式</h1><p>Flink1.8之前需要与Hadoop的版本匹配，具体内容参考Flink官网。</p>
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><h3 id="配置HADOOP-CLASSPATH环境变量"><a href="#配置HADOOP-CLASSPATH环境变量" class="headerlink" title="配置HADOOP_CLASSPATH环境变量"></a>配置HADOOP_CLASSPATH环境变量</h3><p>编辑&#x2F;etc&#x2F;profile文件，添加</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export HADOOP_CLASSPATH=`hadoop classpath`</span><br></pre></td></tr></table></figure>
+
+<p>刷新环境变量。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改yarn-site-xml"><a href="#修改yarn-site-xml" class="headerlink" title="修改yarn-site.xml"></a>修改yarn-site.xml</h3><p>修改&#x2F;export&#x2F;server&#x2F;hadoop-3.3.0&#x2F;etc&#x2F;hadoop&#x2F;yarn-site.xml文件</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 关闭yarn内存检查 --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 是否启动一个线程检查每个任务正使用的虚拟内存量，如果任务超出分配值，则直接将其杀掉，默认为 true --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 因为对于 flink 使用 yarn 模式下，很容易内存超标，这个时候 yarn 会自动杀掉 job，因此需要关掉--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.pmem-check-enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">value</span>&gt;</span>false<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.vmem-check-enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">value</span>&gt;</span>false<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="启用集群"><a href="#启用集群" class="headerlink" title="启用集群"></a>启用集群</h2><p>Flink提供了两种在YARN上运行的模式，分别为Session-Cluster和Per-Job-Cluster模式。</p>
+<h3 id="Session-Cluster模式"><a href="#Session-Cluster模式" class="headerlink" title="Session-Cluster模式"></a>Session-Cluster模式</h3><p>Session-Cluster 模式需要先启动集群，然后再提交作业，接着会向 yarn 申请一块空间后，资源永远保持不变。如果资源满了，下一个作业就无法提交，只能等到yarn 中的其中一个作业执行完成后，释放了资源，下个作业才会正常提交。所有作业共享 Dispatcher 和 ResourceManager；共享资源；适合规模小执行时间短的作业。</p>
+<p>在 yarn 中初始化一个 flink 集群，开辟指定的资源，以后提交任务都向这里提交。这个 flink 集群会常驻在 yarn 集群中，除非手工停止。</p>
+<p><img src="/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230112210400794.png" alt="image-20230112210400794"></p>
+<h4 id="启用"><a href="#启用" class="headerlink" title="启用"></a>启用</h4><ol>
+<li><p>启动Hadoop集群</p>
+<p><code>start-all.sh</code></p>
+</li>
+<li><p>启动yarn-session</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/yarn-session.sh -n 2 -s 2 -jm 1024 -nm test -d</span><br></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<p>-n(–container)：TaskManager 的数量。</p>
+<p>-s(–slots)： 每个 TaskManager 的 slot 数量，默认一个 slot 一个 core，默认每个</p>
+<p>taskmanager 的 slot 的个数为 1，有时可以多一些 taskmanager，做冗余。</p>
+<p>-jm：JobManager 的内存（单位 MB)。</p>
+<p>-tm：每个 taskmanager 的内存（单位 MB)。</p>
+<p>-nm：yarn 的 appName(现在 yarn 的 ui 上的名字)。</p>
+<p>-d：后台执行。</p>
+<p><img src="/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230112213516777.png" alt="image-20230112213516777"></p>
+</li>
+<li><p>执行任务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/flink run -c com.st.wc.StreamWordCount ~/data/flinkStudy-1.0-SNAPSHOT.jar  --host localhost -port 7777</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>到yarn控制台查看任务状态</p>
+<p><img src="/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230112213240807.png" alt="image-20230112213240807"></p>
+</li>
+<li><p>取消yarn-session</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# yarn application --kill application_1673529466861_0001</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="Per-Job-Cluster"><a href="#Per-Job-Cluster" class="headerlink" title="Per Job Cluster"></a>Per Job Cluster</h3><p>一个 Job 会对应一个集群，每提交一个作业会根据自身的情况，都会单独向 yarn申请资源，直到作业执行完成，一个作业的失败与否并不会影响下一个作业的正常提交和运行。独享 Dispatcher 和 ResourceManager，按需接受资源申请；适合规模大长时间运行的作业。</p>
+<p>每次提交都会创建一个新的 flink 集群，任务之间互相独立，互不影响，方便管理。任务执行完成之后创建的集群也会消失。</p>
+<p><img src="/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230112213800713.png" alt="image-20230112213800713"></p>
+<h4 id="启用-1"><a href="#启用-1" class="headerlink" title="启用"></a>启用</h4><ol>
+<li><p>启动Hadoop集群</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start-all.sh</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>不启动yarn-session，直接运行job</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/flink run -d -t yarn-per-job -c com.st.wc.StreamWordCount ~/data/flinkStudy-1.0-SNAPSHOT.jar --host localhost -port 7777</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">早期另一种写法</span></span><br><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/flink run -m yarn-cluster -c com.st.wc.StreamWordCount ~/data/flinkStudy-1.0-SNAPSHOT.jar --host localhost -port 7777</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>​		<img src="/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230112214233687.png" alt="image-20230112214233687"></p>
+<ol start="3">
+<li>到yarn控制台查看任务状态</li>
+</ol>
+<p><img src="/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230112214257160.png" alt="image-20230112214257160"></p>
+<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><p>idea maven打包， 插件maven-assembly-plugin</p>
+<p>在pom.xml添加插件</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">           <span class="comment">&lt;!-- 该插件用于将Scala代码编译成class文件 --&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.alchim31.maven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>scala-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.4.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                       <span class="comment">&lt;!-- 声明绑定到maven的compile阶段 --&gt;</span></span><br><span class="line">                       <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                           <span class="tag">&lt;<span class="name">goal</span>&gt;</span>compile<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-assembly-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.3.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;<span class="name">descriptorRefs</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;<span class="name">descriptorRef</span>&gt;</span>jar-with-dependencies<span class="tag">&lt;/<span class="name">descriptorRef</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;/<span class="name">descriptorRefs</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;<span class="name">id</span>&gt;</span>make-assembly<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                           <span class="tag">&lt;<span class="name">goal</span>&gt;</span>single<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a> -->
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"><i class="fa fa-tag"></i>  大数据</a>
+              <!-- <a href="/tags/Flink/" rel="tag"># Flink</a> -->
+              <a href="/tags/Flink/" rel="tag"><i class="fa fa-tag"></i>  Flink</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/04/04/Flink%E4%B8%8A%E6%89%8B/" rel="prev" title="Flink上手">
+      <i class="fa fa-chevron-left"></i> Flink上手
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/" rel="next" title="Flink运行时架构">
+      Flink运行时架构 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">本地模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD"><span class="nav-number">1.1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E9%9B%86%E7%BE%A4"><span class="nav-number">1.2.</span> <span class="nav-text">启动集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E4%BA%A4%E4%BD%9C%E4%B8%9A%EF%BC%88Job%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">提交作业（Job）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%9C%E6%AD%A2%E9%9B%86%E7%BE%A4"><span class="nav-number">1.4.</span> <span class="nav-text">停止集群</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2"><span class="nav-number">2.</span> <span class="nav-text">集群部署</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%84%E5%88%92"><span class="nav-number">2.1.</span> <span class="nav-text">规划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE"><span class="nav-number">2.2.</span> <span class="nav-text">修改配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E4%BA%A4Job"><span class="nav-number">2.3.</span> <span class="nav-text">提交Job</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Flink-web%E4%B8%8A%E6%8F%90%E4%BA%A4"><span class="nav-number">2.3.1.</span> <span class="nav-text">Flink web上提交</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%8F%90%E4%BA%A4"><span class="nav-number">2.3.2.</span> <span class="nav-text">命令行提交</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%96%E6%B6%88"><span class="nav-number">2.3.3.</span> <span class="nav-text">命令行取消</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">部署模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%9A%E8%AF%9D%E6%A8%A1%E5%BC%8F%EF%BC%88Session-Mode%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">会话模式（Session Mode）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E4%BD%9C%E4%B8%9A%E6%A8%A1%E5%BC%8F%EF%BC%88Per-Job-Mode%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">单作业模式（Per-Job Mode）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E6%A8%A1%E5%BC%8F%EF%BC%88Application-Mode%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">应用模式（Application Mode）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8B%AC%E7%AB%8B%E6%A8%A1%E5%BC%8F%EF%BC%88Standalone%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">独立模式（Standalone）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#YARN%E6%A8%A1%E5%BC%8F"><span class="nav-number">5.</span> <span class="nav-text">YARN模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2"><span class="nav-number">5.1.</span> <span class="nav-text">部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEHADOOP-CLASSPATH%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">5.1.1.</span> <span class="nav-text">配置HADOOP_CLASSPATH环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9yarn-site-xml"><span class="nav-number">5.1.2.</span> <span class="nav-text">修改yarn-site.xml</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E7%94%A8%E9%9B%86%E7%BE%A4"><span class="nav-number">5.2.</span> <span class="nav-text">启用集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Session-Cluster%E6%A8%A1%E5%BC%8F"><span class="nav-number">5.2.1.</span> <span class="nav-text">Session-Cluster模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E7%94%A8"><span class="nav-number">5.2.1.1.</span> <span class="nav-text">启用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Per-Job-Cluster"><span class="nav-number">5.2.2.</span> <span class="nav-text">Per Job Cluster</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E7%94%A8-1"><span class="nav-number">5.2.2.1.</span> <span class="nav-text">启用</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%A9%E5%B1%95"><span class="nav-number">6.</span> <span class="nav-text">扩展</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">117</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>

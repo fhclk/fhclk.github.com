@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="启动Hadoop1start-all.sh    Hadoop网站12http:&#x2F;&#x2F;node1:9870http:&#x2F;&#x2F;node1:8088    Hive启动1234&#x2F;export&#x2F;server&#x2F;apache-hive-3.1.2-bin&#x2F;bin&#x2F;hive --service hiveserver2# 后台进程nohup &#x2F;export&#x2F;server&#x2F;apache-hive-3.1.2-bin&#x2F;b">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hive实操">
+<meta property="og:url" content="http://fhclk.github.io/2021/09/03/Hive%E5%AE%9E%E6%93%8D/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="启动Hadoop1start-all.sh    Hadoop网站12http:&#x2F;&#x2F;node1:9870http:&#x2F;&#x2F;node1:8088    Hive启动1234&#x2F;export&#x2F;server&#x2F;apache-hive-3.1.2-bin&#x2F;bin&#x2F;hive --service hiveserver2# 后台进程nohup &#x2F;export&#x2F;server&#x2F;apache-hive-3.1.2-bin&#x2F;b">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://fhclk.github.io/2021/09/03/Hive%E5%AE%9E%E6%93%8D/image-20221117162952820.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/09/03/Hive%E5%AE%9E%E6%93%8D/image-20221117163245142.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/09/03/Hive%E5%AE%9E%E6%93%8D/image-20221118110146902.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/09/03/Hive%E5%AE%9E%E6%93%8D/image-20221118110552438.png">
+<meta property="article:published_time" content="2021-09-03T03:13:02.000Z">
+<meta property="article:modified_time" content="2023-01-31T02:32:37.930Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="大数据">
+<meta property="article:tag" content="Hadoop">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/2021/09/03/Hive%E5%AE%9E%E6%93%8D/image-20221117162952820.png">
+
+<link rel="canonical" href="http://fhclk.github.io/2021/09/03/Hive%E5%AE%9E%E6%93%8D/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Hive实操 | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/09/03/Hive%E5%AE%9E%E6%93%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hive实操
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-03 11:13:02" itemprop="dateCreated datePublished" datetime="2021-09-03T11:13:02+08:00">2021-09-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-31 10:32:37" itemprop="dateModified" datetime="2023-01-31T10:32:37+08:00">2023-01-31</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="启动Hadoop"><a href="#启动Hadoop" class="headerlink" title="启动Hadoop"></a>启动Hadoop</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start-all.sh</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="Hadoop网站"><a href="#Hadoop网站" class="headerlink" title="Hadoop网站"></a>Hadoop网站</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://node1:9870</span><br><span class="line">http://node1:8088</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="Hive"><a href="#Hive" class="headerlink" title="Hive"></a>Hive</h4><h5 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/export/server/apache-hive-3.1.2-bin/bin/hive --service hiveserver2</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">后台进程</span></span><br><span class="line">nohup /export/server/apache-hive-3.1.2-bin/bin/hive --service metastore &amp;</span><br><span class="line">nohup /export/server/apache-hive-3.1.2-bin/bin/hive --service hiveserver2 &amp;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="数据库database"><a href="#数据库database" class="headerlink" title="数据库database"></a>数据库database</h5><p>在Hive中，默认的数据库叫做default，存储数据位置位于HDFS的&#x2F;user&#x2F;hive&#x2F;warehouse下。</p>
+<p>用户自己创建的数据库存储位置&#x2F;user&#x2F;hive&#x2F;warehouse&#x2F;database_name.db下</p>
+<h5 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> (DATABASE<span class="operator">|</span>SCHEMA) [IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>] database_name</span><br><span class="line">[COMMENT database_comment]</span><br><span class="line">[LOCATION hdfs_path]</span><br><span class="line">[<span class="keyword">WITH</span> DBPROPERTIES (property_name<span class="operator">=</span>property_value, ...)]</span><br></pre></td></tr></table></figure>
+
+<p>COMMENT:  数据库的注释说明语句</p>
+<p>LOCATION: 指定数据库在HDFS存储位置，默认&#x2F;user&#x2F;hive&#x2F;warehouse&#x2F;dbname.db</p>
+<p>WITH DBPROPERTIES: 用于指定一些数据库的属性配置</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> DATABASE IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> itcast</span><br><span class="line">comment &quot;this is my first db&quot;</span><br><span class="line"><span class="keyword">with</span> dbproperties (<span class="string">&#x27;createdBy&#x27;</span><span class="operator">=</span><span class="string">&#x27;fhclk&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="选择数据库"><a href="#选择数据库" class="headerlink" title="选择数据库"></a>选择数据库</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use database</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="删除数据库"><a href="#删除数据库" class="headerlink" title="删除数据库"></a>删除数据库</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">drop</span> database</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> (DATABASE<span class="operator">|</span>SCHEMA) [IF <span class="keyword">EXISTS</span>] database_name [RESTRICT<span class="operator">|</span>CASCADE];</span><br></pre></td></tr></table></figure>
+
+<p>默认行为是RESTRICT，这意味着仅在数据库为空时才删除它。</p>
+<p>要删除带有表的数据库（不为空的数据库），我们可以使用CASCADE。</p>
+<h5 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> [IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>] [db_name.]table_name</span><br><span class="line">(col_name data_type [COMMENT col_comment], ... )</span><br><span class="line">[COMMENT table_comment]</span><br><span class="line">[<span class="type">ROW</span> FORMAT DELIMITED …];</span><br></pre></td></tr></table></figure>
+
+<h6 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h6><ul>
+<li>Hive数据类型指的是表中列的字段类型；</li>
+<li>整体分为两类：原生数据类型（primitive data type）和复杂数据类型（complex data type）。</li>
+<li>最常用的数据类型是字符串String和数字类型Int</li>
+</ul>
+<p><img src="/2021/09/03/Hive%E5%AE%9E%E6%93%8D/image-20221117162952820.png" alt="image-20221117162952820"></p>
+<h6 id="分隔符指定语法"><a href="#分隔符指定语法" class="headerlink" title="分隔符指定语法"></a>分隔符指定语法</h6><ul>
+<li><strong>ROW FORMAT DELIMITED</strong>语法用于指定字段之间等相关的分隔符，这样Hive才能正确的读取解析数据。</li>
+<li>或者说只有分隔符指定正确，解析数据成功，我们才能在表中看到数据。</li>
+</ul>
+<p><img src="/2021/09/03/Hive%E5%AE%9E%E6%93%8D/image-20221117163245142.png" alt="image-20221117163245142"></p>
+<h5 id="默认分隔符"><a href="#默认分隔符" class="headerlink" title="默认分隔符"></a>默认分隔符</h5><ul>
+<li>Hive建表时如果没有row format语法指定分隔符，则采用默认分隔符；</li>
+<li><strong>默认的分割符是</strong> ‘\001’，是一种特殊的字符，使用的是ASCII编码的值，键盘是打不出来的。</li>
+</ul>
+<h5 id="常用show语句"><a href="#常用show语句" class="headerlink" title="常用show语句"></a>常用show语句</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--1、显示所有数据库 SCHEMAS和DATABASES的用法 功能一样</span></span><br><span class="line"><span class="keyword">show</span> databases;</span><br><span class="line"><span class="keyword">show</span> schemas;</span><br><span class="line"><span class="comment">--2、显示当前数据库所有表</span></span><br><span class="line"><span class="keyword">show</span> tables;</span><br><span class="line"><span class="keyword">SHOW</span> TABLES [<span class="keyword">IN</span> database_name]; <span class="comment">--指定某个数据库</span></span><br><span class="line"><span class="comment">--3、查询显示一张表的元数据信息</span></span><br><span class="line"><span class="keyword">desc</span> formatted t_team_ace_player;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="load"><a href="#load" class="headerlink" title="load"></a>load</h5><p>不管路径在哪里，只有把数据文件移动到对应的表文件夹下面，Hive才能映射解析成功;</p>
+<p>最原始暴力的方式就是使用hadoop fs –put|-mv等方式直接将数据移动到表文件夹下；</p>
+<p>但是，Hive官方推荐使用Load命令将数据加载到表中。</p>
+<p>Load英文单词的含义为：加载、装载；</p>
+<p>所谓加载是指：将数据文件移动到与Hive表对应的位置，移动时是纯复制、移动操作。</p>
+<p>纯复制、移动指在数据load加载到表中时，Hive不会对表中的数据内容进行任何转换，任何操作</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LOAD DATA [<span class="keyword">LOCAL</span>] INPATH <span class="string">&#x27;filepath&#x27;</span> [OVERWRITE] <span class="keyword">INTO</span> <span class="keyword">TABLE</span> tablename;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>filepath</strong>表示待移动数据的路径。可以指向文件（在这种情况下，Hive将文件移动到表中），也可以指向目录（在这种情况下，Hive将把该目录中的所有文件移动到表中）。</p>
+</li>
+<li><p>filepath文件路径支持下面三种形式，要结合LOCAL关键字一起考虑：</p>
+</li>
+</ul>
+<ol>
+<li><p>相对路径，例如：project&#x2F;data1 </p>
+</li>
+<li><p>绝对路径，例如：&#x2F;user&#x2F;hive&#x2F;project&#x2F;data1 </p>
+</li>
+<li><p>具有schema的完整URI，例如：hdfs:&#x2F;&#x2F;namenode:9000&#x2F;user&#x2F;hive&#x2F;project&#x2F;data1</p>
+</li>
+</ol>
+<h5 id="insert"><a href="#insert" class="headerlink" title="insert"></a>insert</h5><p>Hive官方推荐加载数据的方式：</p>
+<p>清洗数据成为结构化文件，再使用Load语法加载数据到表中。这样的效率更高。</p>
+<p>也可以使用insert语法把数据插入到指定的表中，最常用的配合是<strong>把查询返回的结果插入到另一张表中</strong>。</p>
+<h5 id="insert-select"><a href="#insert-select" class="headerlink" title="insert+select"></a>insert+select</h5><ul>
+<li>insert+select表示：将后面查询返回的结果作为内容插入到指定表中。</li>
+</ul>
+<ol>
+<li><p>需要保证查询结果列的数目和需要插入数据表格的列数目一致。</p>
+</li>
+<li><p>如果查询出来的数据类型和插入表格对应的列数据类型不一致，将会进行转换，但是不能保证转换一定成功，转换失败的数据将会为NULL。</p>
+</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">TABLE</span> tablename <span class="keyword">select</span> statement1 <span class="keyword">FROM</span> from_statement;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="select"><a href="#select" class="headerlink" title="select"></a>select</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> [<span class="keyword">ALL</span> <span class="operator">|</span> <span class="keyword">DISTINCT</span>] select_expr, select_expr, ...</span><br><span class="line"><span class="keyword">FROM</span> table_reference</span><br><span class="line">[<span class="keyword">WHERE</span> where_condition]</span><br><span class="line">[<span class="keyword">GROUP</span> <span class="keyword">BY</span> col_list]</span><br><span class="line">[<span class="keyword">ORDER</span> <span class="keyword">BY</span> col_list]</span><br><span class="line">[LIMIT [<span class="keyword">offset</span>,] <span class="keyword">rows</span>];</span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="select-expr"><a href="#select-expr" class="headerlink" title="select_expr"></a>select_expr</h6><p>select_expr表示检索查询返回的列，必须至少有一个select_expr。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> [<span class="keyword">ALL</span> <span class="operator">|</span> <span class="keyword">DISTINCT</span>] select_expr, select_expr, ...</span><br><span class="line"><span class="keyword">FROM</span> table_reference</span><br><span class="line">[<span class="keyword">WHERE</span> where_condition]</span><br><span class="line">[<span class="keyword">GROUP</span> <span class="keyword">BY</span> col_list]</span><br><span class="line">[<span class="keyword">ORDER</span> <span class="keyword">BY</span> col_list]</span><br><span class="line">[LIMIT [<span class="keyword">offset</span>,] <span class="keyword">rows</span>];</span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="聚合操作"><a href="#聚合操作" class="headerlink" title="聚合操作"></a>聚合操作</h6><ul>
+<li><p>SQL中拥有很多可用于计数和计算的内建函数，其使用的语法是：<strong>SELECT function(列) FROM</strong> <strong>表</strong>。</p>
+</li>
+<li><p>这里我们要介绍的叫做<strong>聚合（Aggregate）操作函数</strong>，如：Count、Sum、Max、Min、Avg等函数。</p>
+</li>
+<li><p>聚合函数的最大特点是不管原始数据有多少行记录，经过聚合操作只返回一条数据，这一条数据就是聚合的结果</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">AVG(column) 返回某列的平均值</span><br><span class="line">COUNT(column) 返回某列的行数（不包括 NULL 值）</span><br><span class="line">COUNT(*) 返回被选行数</span><br><span class="line">MAX(column) 返回某列的最高值</span><br><span class="line">MIN(column) 返回某列的最低值</span><br><span class="line">SUM(column) 返回某列的总和</span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="group-by"><a href="#group-by" class="headerlink" title="group by"></a>group by</h6><p>GROUP BY语句用于结合聚合函数，<strong>根据一个或多个列对结果集进行分组</strong>；</p>
+<p>如果没有group by语法，则表中的所有行数据当成一组。</p>
+<ul>
+<li><p>出现在GROUP BY中select_expr的字段：<strong>要么是<strong><strong>GROUP BY</strong></strong>分组的字段</strong>；<strong>要么是被聚合函数应用的字段</strong>。</p>
+</li>
+<li><p>原因：避免出现一个字段多个值的歧义。</p>
+</li>
+</ul>
+<ol>
+<li><p>分组字段出现select_expr中，一定没有歧义，因为就是基于该字段分组的，同一组中必相同；</p>
+</li>
+<li><p>被聚合函数应用的字段，也没歧义，因为聚合函数的本质就是多进一出，最终返回一个结果。</p>
+</li>
+</ol>
+<h6 id="having"><a href="#having" class="headerlink" title="having"></a>having</h6><p>在SQL中增加HAVING子句原因是，WHERE关键字无法与聚合函数一起使用。</p>
+<p>HAVING子句可以让我们筛选分组后的各组数据,并且可以在Having中使用聚合函数，因为此时where，group by已经执行结束，结果集已经确定。</p>
+<h6 id="having-与where的区别"><a href="#having-与where的区别" class="headerlink" title="having 与where的区别"></a>having 与where的区别</h6><ul>
+<li><p>having是在分组后对数据进行过滤</p>
+</li>
+<li><p>where是在分组前对数据进行过滤</p>
+</li>
+<li><p>having后面可以使用聚合函数</p>
+</li>
+<li><p>where后面不可以使用聚合函数</p>
+</li>
+</ul>
+<h6 id="order-by"><a href="#order-by" class="headerlink" title="order by"></a>order by</h6><ul>
+<li><p>ORDER BY 语句用于<strong>根据指定的列对结果集进行排序</strong>。</p>
+</li>
+<li><p>ORDER BY 语句默认按照升序（<strong>ASC</strong>）对记录进行排序。如果您希望按照降序对记录进行排序，可以使用<strong>DESC</strong>关键字</p>
+</li>
+</ul>
+<h6 id="limit"><a href="#limit" class="headerlink" title="limit"></a>limit</h6><ul>
+<li><p>LIMIT用于限制SELECT语句返回的行数。</p>
+</li>
+<li><p>LIMIT接受一个或两个数字参数，这两个参数都必须是非负整数常量。</p>
+</li>
+<li><p>第一个参数指定要返回的第一行的偏移量（从 Hive 2.0.0开始），第二个参数指定要返回的最大行数。当给出单个参数时，它代表最大行数，并且偏移量默认为0。</p>
+</li>
+</ul>
+<h6 id="执行顺序"><a href="#执行顺序" class="headerlink" title="执行顺序"></a>执行顺序</h6><ul>
+<li>在查询过程中执行顺序：<strong>from &gt; where &gt; group（含聚合）&gt; having &gt;order &gt; select；</strong></li>
+</ul>
+<ol>
+<li><p>聚合语句(sum,min,max,avg,count)要比having子句优先执行</p>
+</li>
+<li><p>where子句在查询过程中执行优先级别优先于聚合语句(sum,min,max,avg,count)</p>
+</li>
+</ol>
+<h6 id="inner-join"><a href="#inner-join" class="headerlink" title="inner join"></a>inner join</h6><ul>
+<li><p><strong>内连接</strong>是最常见的一种连接，它也被称为普通连接，其中inner可以省略：inner join &#x3D;&#x3D; join ；</p>
+</li>
+<li><p>只有进行连接的两个表中都存在与连接条件相匹配的数据才会被留下来。</p>
+</li>
+</ul>
+<p><img src="/2021/09/03/Hive%E5%AE%9E%E6%93%8D/image-20221118110146902.png" alt="image-20221118110146902"></p>
+<h6 id="left-join"><a href="#left-join" class="headerlink" title="left join"></a>left join</h6><ul>
+<li><p>left join中文叫做是<strong>左外连接</strong>(Left Outer Join)或者左连接，其中outer可以省略，left outer join是早期的写法。</p>
+</li>
+<li><p>left join的核心就在于left左。左指的是join关键字左边的表，简称左表。</p>
+</li>
+<li><p>通俗解释：join时以左表的全部数据为准，右边与之关联；左表数据全部返回，右表关联上的显示返回，关联不上的显示null返回。</p>
+</li>
+</ul>
+<p><img src="/2021/09/03/Hive%E5%AE%9E%E6%93%8D/image-20221118110552438.png" alt="image-20221118110552438"></p>
+<h5 id="hive-内置函数"><a href="#hive-内置函数" class="headerlink" title="hive 内置函数"></a>hive 内置函数</h5><ol>
+<li><p>使用<strong>show functions</strong>查看当下可用的所有函数；</p>
+</li>
+<li><p>通过<strong>describe function extended funcname</strong>来查看函数的使用方式。</p>
+</li>
+</ol>
+<h6 id="分类标准"><a href="#分类标准" class="headerlink" title="分类标准"></a>分类标准</h6><ul>
+<li><p>Hive的函数分为两大类：<strong>内置函数</strong>（Built-in Functions）、<strong>用户定义函数****UDF</strong>（User-Defined Functions）：</p>
+</li>
+<li><p>内置函数可分为：数值类型函数、日期类型函数、字符串类型函数、集合函数、条件函数等；</p>
+</li>
+<li><p>用户定义函数根据输入输出的行数可分为3类：UDF、UDAF、UDTF。</p>
+</li>
+</ul>
+<p>用户定义函数UDF分类标准</p>
+<p><strong>UDF</strong>（User-Defined-Function）普通函数，一进一出</p>
+<p><strong>UDAF</strong>（User-Defined Aggregation Function）聚合函数，多进一出</p>
+<p><strong>UDTF</strong>（User-Defined Table-Generating Functions）表生成函数，一进多出</p>
+<h6 id="内置函数"><a href="#内置函数" class="headerlink" title="内置函数"></a>内置函数</h6><h6 id="String-Functions字符串函数"><a href="#String-Functions字符串函数" class="headerlink" title="String Functions字符串函数"></a>String Functions字符串函数</h6><blockquote>
+<p>•字符串长度函数：length</p>
+<p>•字符串反转函数：reverse</p>
+<p>•字符串连接函数：concat</p>
+<p>•带分隔符字符串连接函数：concat_ws</p>
+<p>•字符串截取函数：substr,substring</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">------------String Functions 字符串函数------------</span></span><br><span class="line"><span class="keyword">select</span> length(&quot;itcast&quot;);</span><br><span class="line"><span class="keyword">select</span> reverse(&quot;itcast&quot;);</span><br><span class="line"><span class="keyword">select</span> concat(&quot;angela&quot;,&quot;baby&quot;);</span><br><span class="line"><span class="comment">--带分隔符字符串连接函数：concat_ws(separator, [string | array(string)]+)</span></span><br><span class="line"><span class="keyword">select</span> concat_ws(<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;www&#x27;</span>, <span class="keyword">array</span>(<span class="string">&#x27;itcast&#x27;</span>, <span class="string">&#x27;cn&#x27;</span>));</span><br><span class="line"><span class="comment">--字符串截取函数：substr(str, pos[, len]) 或者 substring(str, pos[, len])</span></span><br><span class="line"><span class="keyword">select</span> substr(&quot;angelababy&quot;,<span class="number">-2</span>); <span class="comment">--pos是从1开始的索引，如果为负数则倒着数</span></span><br><span class="line"><span class="keyword">select</span> substr(&quot;angelababy&quot;,<span class="number">2</span>,<span class="number">2</span>);</span><br><span class="line"><span class="comment">--分割字符串函数: split(str, regex)</span></span><br><span class="line"><span class="keyword">select</span> split(<span class="string">&#x27;apache hive&#x27;</span>, <span class="string">&#x27; &#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="Date-Functions-日期函数"><a href="#Date-Functions-日期函数" class="headerlink" title="Date Functions 日期函数"></a>Date Functions 日期函数</h6><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">----------- Date Functions 日期函数 -----------------</span></span><br><span class="line"><span class="comment">--获取当前日期: current_date</span></span><br><span class="line"><span class="keyword">select</span> <span class="built_in">current_date</span>();</span><br><span class="line"><span class="comment">--获取当前UNIX时间戳函数: unix_timestamp</span></span><br><span class="line"><span class="keyword">select</span> unix_timestamp();</span><br><span class="line"><span class="comment">--日期转UNIX时间戳函数: unix_timestamp</span></span><br><span class="line"><span class="keyword">select</span> unix_timestamp(&quot;2011-12-07 13:01:03&quot;);</span><br><span class="line"><span class="comment">--指定格式日期转UNIX时间戳函数: unix_timestamp</span></span><br><span class="line"><span class="keyword">select</span> unix_timestamp(<span class="string">&#x27;20111207 13:01:03&#x27;</span>,<span class="string">&#x27;yyyyMMdd HH:mm:ss&#x27;</span>);</span><br><span class="line"><span class="comment">--UNIX时间戳转日期函数: from_unixtime</span></span><br><span class="line"><span class="keyword">select</span> from_unixtime(<span class="number">1618238391</span>);</span><br><span class="line"><span class="keyword">select</span> from_unixtime(<span class="number">0</span>, <span class="string">&#x27;yyyy-MM-dd HH:mm:ss&#x27;</span>);</span><br><span class="line"><span class="comment">--日期比较函数: datediff 日期格式要求&#x27;yyyy-MM-dd HH:mm:ss&#x27; or &#x27;yyyy-MM-dd&#x27;</span></span><br><span class="line"><span class="keyword">select</span> datediff(<span class="string">&#x27;2012-12-08&#x27;</span>,<span class="string">&#x27;2012-05-09&#x27;</span>);</span><br><span class="line"><span class="comment">--日期增加函数: date_add</span></span><br><span class="line"><span class="keyword">select</span> date_add(<span class="string">&#x27;2012-02-28&#x27;</span>,<span class="number">10</span>);</span><br><span class="line"><span class="comment">--日期减少函数: date_sub</span></span><br><span class="line"><span class="keyword">select</span> date_sub(<span class="string">&#x27;2012-01-1&#x27;</span>,<span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="Mathmatical-Functions-数学函数"><a href="#Mathmatical-Functions-数学函数" class="headerlink" title="Mathmatical Functions 数学函数"></a>Mathmatical Functions 数学函数</h6><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">----Mathematical Functions 数学函数-------------</span></span><br><span class="line"><span class="comment">--取整函数: round 返回double类型的整数值部分 （遵循四舍五入）</span></span><br><span class="line"><span class="keyword">select</span> round(<span class="number">3.1415926</span>);</span><br><span class="line"><span class="comment">--指定精度取整函数: round(double a, int d) 返回指定精度d的double类型</span></span><br><span class="line"><span class="keyword">select</span> round(<span class="number">3.1415926</span>,<span class="number">4</span>);</span><br><span class="line"><span class="comment">--取随机数函数: rand 每次执行都不一样 返回一个0到1范围内的随机数</span></span><br><span class="line"><span class="keyword">select</span> rand();</span><br><span class="line"><span class="comment">--指定种子取随机数函数: rand(int seed) 得到一个稳定的随机数序列</span></span><br><span class="line"><span class="keyword">select</span> rand(<span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h6 id="Conditional-Functions-条件函数"><a href="#Conditional-Functions-条件函数" class="headerlink" title="Conditional Functions 条件函数"></a>Conditional Functions 条件函数</h6><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-----Conditional Functions 条件函数------------------</span></span><br><span class="line"><span class="comment">--使用之前课程创建好的student表数据</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> student limit <span class="number">3</span>;</span><br><span class="line"><span class="comment">--if条件判断: if(boolean testCondition, T valueTrue, T valueFalseOrNull)</span></span><br><span class="line"><span class="keyword">select</span> if(<span class="number">1</span><span class="operator">=</span><span class="number">2</span>,<span class="number">100</span>,<span class="number">200</span>);</span><br><span class="line"><span class="keyword">select</span> if(sex <span class="operator">=</span><span class="string">&#x27;男&#x27;</span>,<span class="string">&#x27;M&#x27;</span>,<span class="string">&#x27;W&#x27;</span>) <span class="keyword">from</span> student limit <span class="number">3</span>;</span><br><span class="line"><span class="comment">--空值转换函数: nvl(T value, T default_value)</span></span><br><span class="line"><span class="keyword">select</span> nvl(&quot;allen&quot;,&quot;itcast&quot;);</span><br><span class="line"><span class="keyword">select</span> nvl(<span class="keyword">null</span>,&quot;itcast&quot;);</span><br><span class="line"><span class="comment">--条件转换函数: CASE a WHEN b THEN c [WHEN d THEN e]* [ELSE f] END</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">case</span> <span class="number">100</span> <span class="keyword">when</span> <span class="number">50</span> <span class="keyword">then</span> <span class="string">&#x27;tom&#x27;</span> <span class="keyword">when</span> <span class="number">100</span> <span class="keyword">then</span> <span class="string">&#x27;mary&#x27;</span> <span class="keyword">else</span> <span class="string">&#x27;tim&#x27;</span> <span class="keyword">end</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">case</span> sex <span class="keyword">when</span> <span class="string">&#x27;男&#x27;</span> <span class="keyword">then</span> <span class="string">&#x27;male&#x27;</span> <span class="keyword">else</span> <span class="string">&#x27;female&#x27;</span> <span class="keyword">end</span> <span class="keyword">from</span> student limit <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a> -->
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"><i class="fa fa-tag"></i>  大数据</a>
+              <!-- <a href="/tags/Hadoop/" rel="tag"># Hadoop</a> -->
+              <a href="/tags/Hadoop/" rel="tag"><i class="fa fa-tag"></i>  Hadoop</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/01/Hadoop-Hive/" rel="prev" title="Hadoop-Hive">
+      <i class="fa fa-chevron-left"></i> Hadoop-Hive
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/05/Zookeeper%E5%9F%BA%E7%A1%80/" rel="next" title="Zookeeper基础">
+      Zookeeper基础 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8Hadoop"><span class="nav-number">1.</span> <span class="nav-text">启动Hadoop</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hadoop%E7%BD%91%E7%AB%99"><span class="nav-number">2.</span> <span class="nav-text">Hadoop网站</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hive"><span class="nav-number">3.</span> <span class="nav-text">Hive</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8"><span class="nav-number">3.1.</span> <span class="nav-text">启动</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93database"><span class="nav-number">3.2.</span> <span class="nav-text">数据库database</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">3.3.</span> <span class="nav-text">创建数据库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">3.4.</span> <span class="nav-text">选择数据库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">3.5.</span> <span class="nav-text">删除数据库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%A1%A8"><span class="nav-number">3.6.</span> <span class="nav-text">创建表</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.6.1.</span> <span class="nav-text">数据类型</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%86%E9%9A%94%E7%AC%A6%E6%8C%87%E5%AE%9A%E8%AF%AD%E6%B3%95"><span class="nav-number">3.6.2.</span> <span class="nav-text">分隔符指定语法</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%BB%98%E8%AE%A4%E5%88%86%E9%9A%94%E7%AC%A6"><span class="nav-number">3.7.</span> <span class="nav-text">默认分隔符</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8show%E8%AF%AD%E5%8F%A5"><span class="nav-number">3.8.</span> <span class="nav-text">常用show语句</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#load"><span class="nav-number">3.9.</span> <span class="nav-text">load</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#insert"><span class="nav-number">3.10.</span> <span class="nav-text">insert</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#insert-select"><span class="nav-number">3.11.</span> <span class="nav-text">insert+select</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#select"><span class="nav-number">3.12.</span> <span class="nav-text">select</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#select-expr"><span class="nav-number">3.12.1.</span> <span class="nav-text">select_expr</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C"><span class="nav-number">3.12.2.</span> <span class="nav-text">聚合操作</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#group-by"><span class="nav-number">3.12.3.</span> <span class="nav-text">group by</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#having"><span class="nav-number">3.12.4.</span> <span class="nav-text">having</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#having-%E4%B8%8Ewhere%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">3.12.5.</span> <span class="nav-text">having 与where的区别</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#order-by"><span class="nav-number">3.12.6.</span> <span class="nav-text">order by</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#limit"><span class="nav-number">3.12.7.</span> <span class="nav-text">limit</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F"><span class="nav-number">3.12.8.</span> <span class="nav-text">执行顺序</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#inner-join"><span class="nav-number">3.12.9.</span> <span class="nav-text">inner join</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#left-join"><span class="nav-number">3.12.10.</span> <span class="nav-text">left join</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#hive-%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0"><span class="nav-number">3.13.</span> <span class="nav-text">hive 内置函数</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%86%E7%B1%BB%E6%A0%87%E5%87%86"><span class="nav-number">3.13.1.</span> <span class="nav-text">分类标准</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0"><span class="nav-number">3.13.2.</span> <span class="nav-text">内置函数</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#String-Functions%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%87%BD%E6%95%B0"><span class="nav-number">3.13.3.</span> <span class="nav-text">String Functions字符串函数</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Date-Functions-%E6%97%A5%E6%9C%9F%E5%87%BD%E6%95%B0"><span class="nav-number">3.13.4.</span> <span class="nav-text">Date Functions 日期函数</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Mathmatical-Functions-%E6%95%B0%E5%AD%A6%E5%87%BD%E6%95%B0"><span class="nav-number">3.13.5.</span> <span class="nav-text">Mathmatical Functions 数学函数</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Conditional-Functions-%E6%9D%A1%E4%BB%B6%E5%87%BD%E6%95%B0"><span class="nav-number">3.13.6.</span> <span class="nav-text">Conditional Functions 条件函数</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">117</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>

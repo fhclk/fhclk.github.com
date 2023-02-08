@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Ganglia安装与部署Ganglia 由 gmond、gmetad 和 gweb 三部分组成。 gmond（Ganglia Monitoring Daemon）是一种轻量级服务，安装在每台需要收集指标数据的节点主机上。使用 gmond，你可以很容易收集很多系统指标数据，如 CPU、内存、磁盘、网络和活跃进程的数据等。 gmetad（Ganglia Meta Daemon）整合所有信息，并将其以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flume监控-Ganglia">
+<meta property="og:url" content="http://fhclk.github.io/2021/09/25/Flume%E7%9B%91%E6%8E%A7-Ganglia/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="Ganglia安装与部署Ganglia 由 gmond、gmetad 和 gweb 三部分组成。 gmond（Ganglia Monitoring Daemon）是一种轻量级服务，安装在每台需要收集指标数据的节点主机上。使用 gmond，你可以很容易收集很多系统指标数据，如 CPU、内存、磁盘、网络和活跃进程的数据等。 gmetad（Ganglia Meta Daemon）整合所有信息，并将其以">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://fhclk.github.io/2021/09/25/Flume%E7%9B%91%E6%8E%A7-Ganglia/image-20230202130842851.png">
+<meta property="article:published_time" content="2021-09-25T13:04:34.000Z">
+<meta property="article:modified_time" content="2023-02-02T05:14:01.792Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="大数据">
+<meta property="article:tag" content="Flume">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/2021/09/25/Flume%E7%9B%91%E6%8E%A7-Ganglia/image-20230202130842851.png">
+
+<link rel="canonical" href="http://fhclk.github.io/2021/09/25/Flume%E7%9B%91%E6%8E%A7-Ganglia/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Flume监控-Ganglia | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/09/25/Flume%E7%9B%91%E6%8E%A7-Ganglia/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Flume监控-Ganglia
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-25 21:04:34" itemprop="dateCreated datePublished" datetime="2021-09-25T21:04:34+08:00">2021-09-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-02 13:14:01" itemprop="dateModified" datetime="2023-02-02T13:14:01+08:00">2023-02-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Ganglia安装与部署"><a href="#Ganglia安装与部署" class="headerlink" title="Ganglia安装与部署"></a>Ganglia安装与部署</h1><p>Ganglia 由 gmond、gmetad 和 gweb 三部分组成。</p>
+<p>gmond（Ganglia Monitoring Daemon）是一种轻量级服务，安装在每台需要收集指标数据的节点主机上。使用 gmond，你可以很容易收集很多系统指标数据，如 CPU、内存、磁盘、网络和活跃进程的数据等。</p>
+<p>gmetad（Ganglia Meta Daemon）整合所有信息，并将其以 RRD 格式存储至磁盘的服务。</p>
+<p>gweb（Ganglia Web）Ganglia 可视化工具，gweb 是一种利用浏览器显示 gmetad 所存储数据的 PHP 前端。在 Web 界面中以图表方式展现集群的运行状态下收集的多种不同指标数据。</p>
+<h2 id="安装ganglia"><a href="#安装ganglia" class="headerlink" title="安装ganglia"></a>安装ganglia</h2><ol>
+<li><p>规划</p>
+<p>node1: web gmetad gmod</p>
+<p>node2: gmod</p>
+<p>node3: gmod</p>
+</li>
+<li><p>在node1、node2、node3上分别安装epel-release</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# yum -y install epel-release</span><br><span class="line">(base) [root@node2 ~]# yum -y install epel-release</span><br><span class="line">(base) [root@node3 ~]# yum -y install epel-release</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>在node1上安装</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# yum -y install ganglia-gmetad</span><br><span class="line">(base) [root@node1 ~]# yum -y install ganglia-web</span><br><span class="line">(base) [root@node1 ~]# yum -y install ganglia-gmond</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>在node2和node3上安装</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node2 ~]# yum -y install ganglia-gmond</span><br><span class="line">(base) [root@node3 ~]# yum -y install ganglia-gmond</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="配置参数"><a href="#配置参数" class="headerlink" title="配置参数"></a>配置参数</h2><ol>
+<li>在 node1 修改配置文件&#x2F;etc&#x2F;httpd&#x2F;conf.d&#x2F;ganglia.conf</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# vim /etc/httpd/conf.d/ganglia.conf </span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># Ganglia monitoring system php web frontend</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"></span></span><br><span class="line">Alias /ganglia /usr/share/ganglia</span><br><span class="line"></span><br><span class="line">&lt;Location /ganglia&gt;</span><br><span class="line"><span class="meta prompt_">  #</span><span class="language-bash">Require <span class="built_in">local</span></span></span><br><span class="line"><span class="meta prompt_">  # </span><span class="language-bash">通过 windows 访问 ganglia,需要配置 Linux 对应的主机(windows)ip 地址</span></span><br><span class="line">   Require ip 192.168.88.1</span><br><span class="line"><span class="meta prompt_">  # </span><span class="language-bash">Require ip 10.1.2.3</span></span><br><span class="line"><span class="meta prompt_">  # </span><span class="language-bash">Require host example.org</span></span><br><span class="line">&lt;/Location&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="2">
+<li>在 node1 修改配置文件&#x2F;etc&#x2F;ganglia&#x2F;gmetad.conf</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# vim /etc/ganglia/gmetad.conf</span><br></pre></td></tr></table></figure>
+
+<p>文件中修改</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data_source &quot;my cluster&quot; node1</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="3">
+<li>在 node1 node2 node3 修改配置文件&#x2F;etc&#x2F;ganglia&#x2F;gmond.conf</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# /etc/ganglia/gmond.conf</span><br></pre></td></tr></table></figure>
+
+<p>修改为：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">...</span></span><br><span class="line"><span class="attr">/*</span></span><br><span class="line"> <span class="attr">*</span> <span class="string">The cluster attributes specified will be used as part of the &lt;CLUSTER&gt;</span></span><br><span class="line"> <span class="attr">*</span> <span class="string">tag that will wrap all hosts collected by this instance.</span></span><br><span class="line"> <span class="attr">*/</span></span><br><span class="line"><span class="attr">cluster</span> <span class="string">&#123;</span></span><br><span class="line">  <span class="attr">name</span> = <span class="string">&quot;my cluster&quot;</span></span><br><span class="line">  <span class="attr">owner</span> = <span class="string">&quot;unspecified&quot;</span></span><br><span class="line">  <span class="attr">latlong</span> = <span class="string">&quot;unspecified&quot;</span></span><br><span class="line">  <span class="attr">url</span> = <span class="string">&quot;unspecified&quot;</span></span><br><span class="line"><span class="attr">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">/*</span> <span class="string">The host section describes attributes of the host, like the location */</span></span><br><span class="line"><span class="attr">host</span> <span class="string">&#123;</span></span><br><span class="line">  <span class="attr">location</span> = <span class="string">&quot;unspecified&quot;</span></span><br><span class="line"><span class="attr">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">/*</span> <span class="string">Feel free to specify as many udp_send_channels as you like.  Gmond</span></span><br><span class="line">   <span class="attr">used</span> <span class="string">to only support having a single channel */</span></span><br><span class="line"><span class="attr">udp_send_channel</span> <span class="string">&#123;</span></span><br><span class="line"><span class="comment">  #bind_hostname = yes # Highly recommended, soon to be default.</span></span><br><span class="line"><span class="comment">                       # This option tells gmond to use a source address</span></span><br><span class="line"><span class="comment">                       # that resolves to the machine&#x27;s hostname.  Without</span></span><br><span class="line"><span class="comment">                       # this, the metrics may appear to come from any</span></span><br><span class="line"><span class="comment">                       # interface and the DNS names associated with</span></span><br><span class="line"><span class="comment">                       # those IPs will be used to create the RRDs.</span></span><br><span class="line"><span class="comment">  #mcast_join = 239.2.11.71</span></span><br><span class="line">  <span class="attr">host</span> = <span class="string">node1</span></span><br><span class="line">  <span class="attr">port</span> = <span class="string">8649</span></span><br><span class="line">  <span class="attr">ttl</span> = <span class="string">1</span></span><br><span class="line"><span class="attr">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">/*</span> <span class="string">You can specify as many udp_recv_channels as you like as well. */</span></span><br><span class="line"><span class="attr">udp_recv_channel</span> <span class="string">&#123;</span></span><br><span class="line"><span class="comment">  # mcast_join = 239.2.11.71</span></span><br><span class="line">  <span class="attr">port</span> = <span class="string">8649</span></span><br><span class="line">  <span class="attr">bind</span> = <span class="string">0.0.0.0</span></span><br><span class="line">  <span class="attr">retry_bind</span> = <span class="string">true</span></span><br><span class="line"><span class="comment">  # Size of the UDP buffer. If you are handling lots of metrics you really</span></span><br><span class="line"><span class="comment">  # should bump it up to e.g. 10MB or even higher.</span></span><br><span class="line"><span class="comment">  # buffer = 10485760</span></span><br><span class="line"><span class="attr">&#125;</span></span><br><span class="line"><span class="attr">...</span></span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="4">
+<li>在 node1 修改配置文件&#x2F;etc&#x2F;selinux&#x2F;config</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# /etc/selinux/config</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># This file controls the state of SELinux on the system.</span></span><br><span class="line"><span class="comment"># SELINUX= can take one of these three values:</span></span><br><span class="line"><span class="comment">#     enforcing - SELinux security policy is enforced.</span></span><br><span class="line"><span class="comment">#     permissive - SELinux prints warnings instead of enforcing.</span></span><br><span class="line"><span class="comment">#     disabled - No SELinux policy is loaded.</span></span><br><span class="line"><span class="attr">SELINUX</span>=<span class="string">disabled</span></span><br><span class="line"><span class="comment"># SELINUXTYPE= can take one of three values:</span></span><br><span class="line"><span class="comment">#     targeted - Targeted processes are protected,</span></span><br><span class="line"><span class="comment">#     minimum - Modification of targeted policy. Only selected processes are protected. </span></span><br><span class="line"><span class="comment">#     mls - Multi Level Security protection.</span></span><br><span class="line"><span class="attr">SELINUXTYPE</span>=<span class="string">targeted </span></span><br></pre></td></tr></table></figure>
+
+<p>提示：selinux 生效需要重启，如果此时不想重启，可以临时生效之：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# setenforce 0</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="启动ganglia"><a href="#启动ganglia" class="headerlink" title="启动ganglia"></a>启动ganglia</h2><ol>
+<li><p>在node1、node2和node3启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# systemctl start gmond</span><br><span class="line">(base) [root@node2 ~]# systemctl start gmond</span><br><span class="line">(base) [root@node3 ~]# systemctl start gmond</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>在node1启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# systemctl start httpd</span><br><span class="line">(base) [root@node1 ~]# systemctl start gmetad</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="访问ganglia"><a href="#访问ganglia" class="headerlink" title="访问ganglia"></a>访问ganglia</h2><p><a target="_blank" rel="noopener" href="http://node1/ganglia">http://node1/ganglia</a></p>
+<p>提示：如果完成以上操作依然出现权限不足错误，请修改&#x2F;var&#x2F;lib&#x2F;ganglia 目录的权限：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# chmod -R 777 /var/lib/ganglia</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="Flume监控"><a href="#Flume监控" class="headerlink" title="Flume监控"></a>Flume监控</h1><ol>
+<li><p>启动Flume</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# bin/flume-ng agent \</span><br><span class="line">-c conf/ \</span><br><span class="line">-n a1 \</span><br><span class="line">-f job/flume-netcat-logger.conf \</span><br><span class="line">-Dflume.root.logger=INFO,console \</span><br><span class="line">-Dflume.monitoring.type=ganglia \</span><br><span class="line">-Dflume.monitoring.hosts=node1:8649</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>发送数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# nc localhost 44444</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>监控</p>
+<p><img src="/2021/09/25/Flume%E7%9B%91%E6%8E%A7-Ganglia/image-20230202130842851.png" alt="image-20230202130842851"></p>
+<table>
+<thead>
+<tr>
+<th>字段（图表名称）</th>
+<th>字段含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>EventPutAttemptCount</td>
+<td>source 尝试写入 channel 的事件总数量</td>
+</tr>
+<tr>
+<td>EventPutSuccessCount</td>
+<td>成功写入 channel 且提交的事件总数量</td>
+</tr>
+<tr>
+<td>EventTakeAttemptCount</td>
+<td>sink 尝试从 channel 拉取事件的总数量。</td>
+</tr>
+<tr>
+<td>EventTakeSuccessCount</td>
+<td>sink 成功读取的事件的总数量</td>
+</tr>
+<tr>
+<td>StartTime</td>
+<td>channel 启动的时间（毫秒）</td>
+</tr>
+<tr>
+<td>StopTime</td>
+<td>channel 停止的时间（毫秒）</td>
+</tr>
+<tr>
+<td>ChannelSize</td>
+<td>目前 channel 中事件的总数量</td>
+</tr>
+<tr>
+<td>ChannelFillPercentage</td>
+<td>channel 占用百分比</td>
+</tr>
+<tr>
+<td>ChannelCapacity</td>
+<td>channel 的容量</td>
+</tr>
+</tbody></table>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a> -->
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"><i class="fa fa-tag"></i>  大数据</a>
+              <!-- <a href="/tags/Flume/" rel="tag"># Flume</a> -->
+              <a href="/tags/Flume/" rel="tag"><i class="fa fa-tag"></i>  Flume</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/" rel="prev" title="Flume自定义">
+      <i class="fa fa-chevron-left"></i> Flume自定义
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/10/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83%E5%A4%A7%E5%85%A8/" rel="next" title="Android代码规范大全">
+      Android代码规范大全 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Ganglia%E5%AE%89%E8%A3%85%E4%B8%8E%E9%83%A8%E7%BD%B2"><span class="nav-number">1.</span> <span class="nav-text">Ganglia安装与部署</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85ganglia"><span class="nav-number">1.1.</span> <span class="nav-text">安装ganglia</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0"><span class="nav-number">1.2.</span> <span class="nav-text">配置参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8ganglia"><span class="nav-number">1.3.</span> <span class="nav-text">启动ganglia</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AEganglia"><span class="nav-number">1.4.</span> <span class="nav-text">访问ganglia</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Flume%E7%9B%91%E6%8E%A7"><span class="nav-number">2.</span> <span class="nav-text">Flume监控</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">117</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>

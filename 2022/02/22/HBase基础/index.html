@@ -20,18 +20,21 @@
     var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="简介定义Apache HBase是以HDFS为数据存储的，一种分布式、可扩展的NoSQL数据库。 HBase数据模型Bigtable是一个稀疏的、分布式的、持久的多维排序map（映射）。该映射由行键、列键和时间戳索引；映射中的每个值都是一个未解释的字节数组。 HBase 使用与 Bigtable 非常相似的数据模型。用户将数据行存储在带标签的表中。数据行具有可排序的键和任意数量的列。 HBase">
+  <meta name="description" content="简介定义Apache HBase是以HDFS为数据存储的，一种分布式、可扩展的NoSQL数据库。这意味着它不像传统的RDBMS数据库那样支持SQL作为查询语言。Hbase更像是分布式存储而不是分布式数据库，它缺少很多RDBMS系统的特性，比如列类型，辅助索引，触发器，和高级查询语言等待。 HBase特性 强读写一致，但不是“最终一致性”的数据存储，这使得它非常适合高速的计算聚合  自动分片，通过R">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HBase基础">
 <meta property="og:url" content="http://fhclk.github.io/2022/02/22/HBase%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="拾荒者">
-<meta property="og:description" content="简介定义Apache HBase是以HDFS为数据存储的，一种分布式、可扩展的NoSQL数据库。 HBase数据模型Bigtable是一个稀疏的、分布式的、持久的多维排序map（映射）。该映射由行键、列键和时间戳索引；映射中的每个值都是一个未解释的字节数组。 HBase 使用与 Bigtable 非常相似的数据模型。用户将数据行存储在带标签的表中。数据行具有可排序的键和任意数量的列。 HBase">
+<meta property="og:description" content="简介定义Apache HBase是以HDFS为数据存储的，一种分布式、可扩展的NoSQL数据库。这意味着它不像传统的RDBMS数据库那样支持SQL作为查询语言。Hbase更像是分布式存储而不是分布式数据库，它缺少很多RDBMS系统的特性，比如列类型，辅助索引，触发器，和高级查询语言等待。 HBase特性 强读写一致，但不是“最终一致性”的数据存储，这使得它非常适合高速的计算聚合  自动分片，通过R">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://fhclk.github.io/2022/02/22/HBase%E5%9F%BA%E7%A1%80/image-20221222144917988.png">
 <meta property="og:image" content="http://fhclk.github.io/2022/02/22/HBase%E5%9F%BA%E7%A1%80/image-20221222145117938.png">
 <meta property="og:image" content="http://fhclk.github.io/2022/02/22/HBase%E5%9F%BA%E7%A1%80/image-20221222150205283.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/02/22/HBase%E5%9F%BA%E7%A1%80/426671-fc9efc43916684c1.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/02/22/HBase%E5%9F%BA%E7%A1%80/426671-fc9efc43916684b1.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/02/22/HBase%E5%9F%BA%E7%A1%80/426671-726c0d6e0f57814a.png">
 <meta property="article:published_time" content="2022-02-22T12:12:05.000Z">
-<meta property="article:modified_time" content="2022-12-22T09:48:19.888Z">
+<meta property="article:modified_time" content="2022-12-28T10:40:01.639Z">
 <meta property="article:author" content="fhclk">
 <meta property="article:tag" content="大数据">
 <meta property="article:tag" content="HBase">
@@ -192,7 +195,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-12-22 17:48:19" itemprop="dateModified" datetime="2022-12-22T17:48:19+08:00">2022-12-22</time>
+                <time title="修改时间：2022-12-28 18:40:01" itemprop="dateModified" datetime="2022-12-28T18:40:01+08:00">2022-12-28</time>
               </span>
 
           
@@ -206,25 +209,170 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>Apache HBase是以HDFS为数据存储的，一种分布式、可扩展的NoSQL数据库。</p>
-<h3 id="HBase数据模型"><a href="#HBase数据模型" class="headerlink" title="HBase数据模型"></a>HBase数据模型</h3><p>Bigtable是一个稀疏的、分布式的、持久的多维排序map（映射）。该映射由行键、列键和时间戳索引；映射中的每个值都是一个未解释的字节数组。</p>
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>Apache HBase是以HDFS为数据存储的，一种分布式、可扩展的NoSQL数据库。这意味着它不像传统的RDBMS数据库那样支持SQL作为查询语言。Hbase更像是分布式存储而不是分布式数据库，它缺少很多RDBMS系统的特性，比如列类型，辅助索引，触发器，和高级查询语言等待。</p>
+<h2 id="HBase特性"><a href="#HBase特性" class="headerlink" title="HBase特性"></a>HBase特性</h2><ul>
+<li><p>强读写一致，但不是“最终一致性”的数据存储，这使得它非常适合高速的计算聚合</p>
+</li>
+<li><p>自动分片，通过Region分散在集群中，当行数增长的时候，Region也会自动的切分和再分配</p>
+</li>
+<li><p>自动的故障转移</p>
+</li>
+<li><p>Hadoop&#x2F;HDFS集成，和HDFS开箱即用</p>
+</li>
+<li><p>HBase通过MapReduce支持大规模并行处理，将HBase用作源和接收器</p>
+</li>
+<li><p>丰富的“简洁，高效”API，Thrift&#x2F;REST API，Java API</p>
+</li>
+<li><p>块缓存，布隆过滤器，可以高效的列查询优化</p>
+</li>
+<li><p>操作管理，Hbase提供了内置的web界面来操作，还可以监控JMX指标</p>
+</li>
+</ul>
+<h2 id="RDBMS与HBase的对比"><a href="#RDBMS与HBase的对比" class="headerlink" title="RDBMS与HBase的对比"></a>RDBMS与HBase的对比</h2><h3 id="关系型数据库"><a href="#关系型数据库" class="headerlink" title="关系型数据库"></a>关系型数据库</h3><p><strong>结构</strong></p>
+<ul>
+<li><p>数据库以表的形式存在</p>
+</li>
+<li><p>支持FAT、NTFS、EXT、文件系统</p>
+</li>
+<li><p>使用主键（PK）</p>
+</li>
+<li><p>通过外部中间件可以支持分库分表，但底层还是单机引擎</p>
+</li>
+<li><p>使用行、列、单元格</p>
+</li>
+</ul>
+<p><strong>功能</strong></p>
+<ul>
+<li><p>支持向上扩展（买更好的服务器）</p>
+</li>
+<li><p>使用SQL查询</p>
+</li>
+<li><p>面向行，即每一行都是一个连续单元</p>
+</li>
+<li><p>数据总量依赖于服务器配置</p>
+</li>
+<li><p>具有ACID支持</p>
+</li>
+<li><p>适合结构化数据</p>
+</li>
+<li><p>传统关系型数据库一般都是中心化的</p>
+</li>
+<li><p>支持事务</p>
+</li>
+<li><p>支持Join</p>
+</li>
+</ul>
+<h3 id="HBase"><a href="#HBase" class="headerlink" title="HBase"></a>HBase</h3><p><strong>结构</strong></p>
+<ul>
+<li><p>以表形式存在</p>
+</li>
+<li><p>支持HDFS文件系统</p>
+</li>
+<li><p>使用行键（row key）</p>
+</li>
+<li><p>原生支持分布式存储、计算引擎</p>
+</li>
+<li><p>使用行、列、列蔟和单元格</p>
+</li>
+</ul>
+<p><strong>功能</strong></p>
+<ul>
+<li><p>支持向外扩展</p>
+</li>
+<li><p>使用API和MapReduce、Spark、Flink来访问HBase表数据</p>
+</li>
+<li><p>面向列蔟，即每一个列蔟都是一个连续的单元</p>
+</li>
+<li><p>数据总量不依赖具体某台机器，而取决于机器数量</p>
+</li>
+<li><p>HBase不支持ACID（Atomicity、Consistency、Isolation、Durability）</p>
+</li>
+<li><p>适合结构化数据和非结构化数据</p>
+</li>
+<li><p>一般都是分布式的</p>
+</li>
+<li><p>HBase不支持事务，支持的是单行数据的事务操作</p>
+</li>
+<li><p>不支持Join</p>
+</li>
+</ul>
+<h2 id="HDFS对比HBase"><a href="#HDFS对比HBase" class="headerlink" title="HDFS对比HBase"></a>HDFS对比HBase</h2><h3 id="HDFS"><a href="#HDFS" class="headerlink" title="HDFS"></a>HDFS</h3><ul>
+<li>HDFS是一个非常适合存储大型文件的分布式文件系统</li>
+</ul>
+<h3 id="HBase-1"><a href="#HBase-1" class="headerlink" title="HBase"></a>HBase</h3><ul>
+<li><p>HBase构建在HDFS之上，并为大型表提供快速记录查找(和更新)</p>
+</li>
+<li><p>HBase内部将大量数据放在HDFS中名为「StoreFiles」的索引中，以便进行高速查找</p>
+</li>
+<li><p>Hbase比较适合做快速查询等需求，而不适合做大规模的OLAP应用</p>
+</li>
+</ul>
+<h2 id="Hive对比Hbase"><a href="#Hive对比Hbase" class="headerlink" title="Hive对比Hbase"></a>Hive对比Hbase</h2><h3 id="Hive"><a href="#Hive" class="headerlink" title="Hive"></a>Hive</h3><ul>
+<li>数据仓库工具</li>
+</ul>
+<p>​	Hive的本质其实就相当于将HDFS中已经存储的文件在Mysql中做了一个双射关系，以方便使用HQL去管理查询</p>
+<ul>
+<li>用于数据分析、清洗</li>
+</ul>
+<p>​	Hive适用于离线的数据分析和清洗，延迟较高</p>
+<ul>
+<li>基于HDFS、MapReduce</li>
+</ul>
+<p>​	Hive存储的数据依旧在DataNode上，编写的HQL语句终将是转换为MapReduce代码执行</p>
+<h3 id="HBase-2"><a href="#HBase-2" class="headerlink" title="HBase"></a>HBase</h3><ul>
+<li>NoSQL数据库</li>
+</ul>
+<p>​	是一种面向列存储的非关系型数据库。</p>
+<ul>
+<li>用于存储结构化和非结构化的数据</li>
+</ul>
+<p>​	适用于单表非关系型数据的存储，不适合做关联查询，类似JOIN等操作。</p>
+<ul>
+<li>基于HDFS</li>
+</ul>
+<p>​	数据持久化存储的体现形式是Hfile，存放于DataNode中，被ResionServer以region的形式进行管理</p>
+<ul>
+<li>延迟较低，接入在线业务使用</li>
+</ul>
+<p>​	面对大量的企业数据，HBase可以直线单表大量数据的存储，同时提供了高效的数据访问速度</p>
+<h3 id="总结Hive与HBase"><a href="#总结Hive与HBase" class="headerlink" title="总结Hive与HBase"></a>总结Hive与HBase</h3><ul>
+<li><p>Hive和Hbase是两种基于Hadoop的不同技术</p>
+</li>
+<li><p>Hive是一种类SQL的引擎，并且运行MapReduce任务</p>
+</li>
+<li><p>Hbase是一种在Hadoop之上的NoSQL 的Key&#x2F;value数据库</p>
+</li>
+<li><p>这两种工具是可以同时使用的。就像用Google来搜索，用FaceBook进行社交一样，Hive可以用来进行统计查询，HBase可以用来进行实时查询，数据也可以从Hive写到HBase，或者从HBase写回Hive</p>
+</li>
+</ul>
+<h2 id="HBase适用场合"><a href="#HBase适用场合" class="headerlink" title="HBase适用场合"></a>HBase适用场合</h2><p>Hbase不适合解决所有的问题：</p>
+<ul>
+<li><p>首先数据库量要足够多，如果有十亿及百亿行数据，那么Hbase是一个很好的选项，如果只有几百万行甚至不到的数据量，RDBMS是一个很好的选择。因为数据量小的话，真正能工作的机器量少，剩余的机器都处于空闲的状态</p>
+</li>
+<li><p>其次，如果你不需要辅助索引，静态类型的列，事务等特性，一个已经用RDBMS的系统想要切换到Hbase，则需要重新设计系统。</p>
+</li>
+<li><p>最后，保证硬件资源足够，每个HDFS集群在少于5个节点的时候，都不能表现的很好。因为HDFS默认的复制数量是3，再加上一个NameNode。</p>
+</li>
+</ul>
+<h1 id="核心"><a href="#核心" class="headerlink" title="核心"></a>核心</h1><h2 id="HBase数据模型"><a href="#HBase数据模型" class="headerlink" title="HBase数据模型"></a>HBase数据模型</h2><p>Bigtable是一个稀疏的、分布式的、持久的多维排序map（映射）。该映射由行键、列键和时间戳索引；映射中的每个值都是一个未解释的字节数组。</p>
 <p>HBase 使用与 Bigtable 非常相似的数据模型。用户将数据行存储在带标签的表中。数据行具有可排序的键和任意数量的列。</p>
 <p>HBase 数据模型的关键在于稀疏、分布式、多维、排序的映射。其中映射 map指代非关系型数据库的 key-Value 结构。</p>
-<h3 id="HBase逻辑结构"><a href="#HBase逻辑结构" class="headerlink" title="HBase逻辑结构"></a>HBase逻辑结构</h3><p>HBase 可以用于存储多种结构的数据。以json为例，存储的数据原貌为：</p>
+<h2 id="HBase逻辑结构"><a href="#HBase逻辑结构" class="headerlink" title="HBase逻辑结构"></a>HBase逻辑结构</h2><p>HBase 可以用于存储多种结构的数据。以json为例，存储的数据原貌为：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;row_key1&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;personal_info&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;city&quot;</span><span class="punctuation">:</span><span class="string">&quot;北京&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;phone&quot;</span><span class="punctuation">:</span><span class="string">&quot;131********&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;office_info&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;tel&quot;</span><span class="punctuation">:</span><span class="string">&quot;010-1111111&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;address&quot;</span><span class="punctuation">:</span><span class="string">&quot;atguigu&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;row_key11&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;personal_info&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;city&quot;</span><span class="punctuation">:</span><span class="string">&quot;上海&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;phone&quot;</span><span class="punctuation">:</span><span class="string">&quot;132********&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;office_info&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;tel&quot;</span><span class="punctuation">:</span><span class="string">&quot;010-1111111&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
 
 <p><img src="/2022/02/22/HBase%E5%9F%BA%E7%A1%80/image-20221222144917988.png" alt="image-20221222144917988"></p>
-<h3 id="HBase物理存储结构"><a href="#HBase物理存储结构" class="headerlink" title="HBase物理存储结构"></a>HBase物理存储结构</h3><p>物理存储结构即为数据映射关系，而在概念视图的空单元格，底层实际根本不存储。</p>
+<h2 id="HBase物理存储结构"><a href="#HBase物理存储结构" class="headerlink" title="HBase物理存储结构"></a>HBase物理存储结构</h2><p>物理存储结构即为数据映射关系，而在概念视图的空单元格，底层实际根本不存储。</p>
 <p><img src="/2022/02/22/HBase%E5%9F%BA%E7%A1%80/image-20221222145117938.png" alt="image-20221222145117938"></p>
-<h3 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h3><h4 id="NameSpace"><a href="#NameSpace" class="headerlink" title="NameSpace"></a>NameSpace</h4><p>命名空间，类似于关系型数据库的 database 概念，每个命名空间下有多个表。HBase 两个自带的命名空间，分别是 hbase 和 default，hbase 中存放的是 HBase 内置的表，default表是用户默认使用的命名空间。</p>
-<h4 id="Table"><a href="#Table" class="headerlink" title="Table"></a>Table</h4><p>类似于关系型数据库的表概念。不同的是，HBase 定义表时只需要声明列族即可，不需要声明具体的列。因为数据存储时稀疏的，所有往 HBase 写入数据时，字段可以动态、按需指定。因此，和关系型数据库相比，HBase 能够轻松应对字段变更的场景。</p>
-<h4 id="Row"><a href="#Row" class="headerlink" title="Row"></a>Row</h4><p>HBase 表中的每行数据都由一个 <strong>RowKey</strong> 和多个 <strong>Column</strong>（列）组成，数据是按照 RowKey的字典顺序存储的，并且查询数据时只能根据 RowKey 进行检索，所以 RowKey 的设计十分重要。</p>
-<h4 id="Column"><a href="#Column" class="headerlink" title="Column"></a>Column</h4><p>HBase 中的每个列都由 Column Family(列族)和 Column Qualifier（列限定符）进行限定，例如 info：name，info：age。建表时，只需指明列族，而列限定符无需预先定义。</p>
-<h4 id="Timestamp"><a href="#Timestamp" class="headerlink" title="Timestamp"></a>Timestamp</h4><p>用于标识数据的不同版本（version），每条数据写入时，系统会自动为其加上该字段，其值为写入 HBase 的时间。</p>
-<h4 id="Cell"><a href="#Cell" class="headerlink" title="Cell"></a>Cell</h4><p>由{rowkey, column Family：column Qualifier, timestamp} 唯一确定的单元。cell 中的数据全部是字节码形式存贮。</p>
-<h3 id="HBase基本架构"><a href="#HBase基本架构" class="headerlink" title="HBase基本架构"></a>HBase基本架构</h3><p><img src="/2022/02/22/HBase%E5%9F%BA%E7%A1%80/image-20221222150205283.png" alt="image-20221222150205283"></p>
+<h2 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h2><h3 id="NameSpace"><a href="#NameSpace" class="headerlink" title="NameSpace"></a>NameSpace</h3><p>命名空间，类似于关系型数据库的 database 概念，每个命名空间下有多个表。HBase 两个自带的命名空间，分别是 hbase 和 default，hbase 中存放的是 HBase 内置的表，default表是用户默认使用的命名空间。</p>
+<h3 id="Table"><a href="#Table" class="headerlink" title="Table"></a>Table</h3><p>类似于关系型数据库的表概念。不同的是，HBase 定义表时只需要声明列族即可，不需要声明具体的列。因为数据存储时稀疏的，所有往 HBase 写入数据时，字段可以动态、按需指定。因此，和关系型数据库相比，HBase 能够轻松应对字段变更的场景。</p>
+<h3 id="Row"><a href="#Row" class="headerlink" title="Row"></a>Row</h3><p>HBase 表中的每行数据都由一个 <strong>RowKey</strong> 和多个 <strong>Column</strong>（列）组成，数据是按照 RowKey的字典顺序存储的，并且查询数据时只能根据 RowKey 进行检索，所以 RowKey 的设计十分重要。</p>
+<h3 id="Column"><a href="#Column" class="headerlink" title="Column"></a>Column</h3><p>HBase 中的每个列都由 Column Family(列族)和 Column Qualifier（列限定符）进行限定，例如 info：name，info：age。建表时，只需指明列族，而列限定符无需预先定义。</p>
+<h3 id="Timestamp"><a href="#Timestamp" class="headerlink" title="Timestamp"></a>Timestamp</h3><p>用于标识数据的不同版本（version），每条数据写入时，系统会自动为其加上该字段，其值为写入 HBase 的时间。</p>
+<h3 id="Cell"><a href="#Cell" class="headerlink" title="Cell"></a>Cell</h3><p>由{rowkey, column Family：column Qualifier, timestamp} 唯一确定的单元。cell 中的数据全部是字节码形式存贮。</p>
+<h2 id="HBase基本架构"><a href="#HBase基本架构" class="headerlink" title="HBase基本架构"></a>HBase基本架构</h2><p><img src="/2022/02/22/HBase%E5%9F%BA%E7%A1%80/image-20221222150205283.png" alt="image-20221222150205283"></p>
 <p>角色：</p>
 <p><strong>Master</strong></p>
+<p>RegionServer要实时的向Master报告信息。Master知道全局的RegionServer运行情况，可以控制RegionServer的故障转移和Region的切分。</p>
 <p>实现类为 HMaster，负责监控集群中所有的 RegionServer 实例。主要作用如下：</p>
 <p>（1）管理元数据表格 hbase:meta，接收用户对表格创建修改删除的命令并执行。</p>
 <p>（2）监控 region 是否需要进行负载均衡，故障转移和 region 的拆分。</p>
@@ -236,14 +384,58 @@
 <p>③ MasterProcWAL master 预写日志处理器</p>
 <p>​	把 master 需要执行的任务记录到预写日志 WAL 中，如果 master 宕机，让 backupMaster读取日志继续干。</p>
 <p><strong>Region Server</strong></p>
+<p>理解为数据节点，存储数据的。</p>
 <p>Region Server 实现类为 HRegionServer，主要作用如下:</p>
 <p>（1）负责数据 cell 的处理，例如写入数据 put，查询数据 get 等</p>
 <p>（2）拆分合并 region 的实际执行者，有 master 监控，有 regionServer 执行。</p>
 <p><strong>Zookeeper</strong></p>
+<p>作为分布式的协调。RegionServer也会把自己的信息写到ZooKeeper中。</p>
 <p>HBase 通过 Zookeeper 来做 master 的高可用、记录 RegionServer 的部署信息、并且存储有 meta 表的位置信息。</p>
 <p>HBase 对于数据的读写操作时直接访问 Zookeeper 的，在 2.3 版本推出 Master Registry模式，客户端可以直接访问 master。使用此功能，会加大对 master 的压力，减轻对 Zookeeper的压力。</p>
 <p><strong>HDFS</strong></p>
 <p>HDFS 为 Hbase 提供最终的底层数据存储服务，同时为 HBase 提供高容错的支持。</p>
+<h3 id="架构细化"><a href="#架构细化" class="headerlink" title="架构细化"></a>架构细化</h3><p><img src="/2022/02/22/HBase%E5%9F%BA%E7%A1%80/426671-fc9efc43916684c1.png" alt="img"></p>
+<p>HMaster是Master Server的实现，负责监控集群中的RegionServer实例，同时是所有metadata改变的接口，在集群中，通常运行在NameNode上面，<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=http://blog.zahoor.in/2012/08/hbase-hmaster-architecture/">这里有一篇更细的HMaster介绍</a></p>
+<ul>
+<li>HMasterInterface暴露的接口，Table(createTable, modifyTable, removeTable, enable, disable),ColumnFamily (addColumn, modifyColumn, removeColumn),Region (move, assign, unassign)</li>
+<li>Master运行的后台线程：LoadBalancer线程，控制region来平衡集群的负载。CatalogJanitor线程，周期性的检查hbase:meta表。</li>
+</ul>
+<p>HRegionServer是RegionServer的实现，服务和管理Regions，集群中RegionServer运行在DataNode</p>
+<ul>
+<li>HRegionRegionInterface暴露接口：Data (get, put, delete, next, etc.)，Region (splitRegion, compactRegion, etc.)</li>
+<li>RegionServer后台线程：CompactSplitThread，MajorCompactionChecker，MemStoreFlusher，LogRoller</li>
+</ul>
+<p>Regions，代表table，Region有多个Store(列簇)，Store有一个Memstore和多个StoreFiles(HFiles)，StoreFiles的底层是Block。</p>
+<h2 id="存储设计"><a href="#存储设计" class="headerlink" title="存储设计"></a>存储设计</h2><p>在Hbase中，表被分割成多个更小的块然后分散的存储在不同的服务器上，这些小块叫做Regions，存放Regions的地方叫做RegionServer。Master进程负责处理不同的RegionServer之间的Region的分发。在Hbase实现中HRegionServer和HRegion类代表RegionServer和Region。HRegionServer除了包含一些HRegions之外，还处理两种类型的文件用于数据存储</p>
+<ul>
+<li>HLog， 预写日志文件，也叫做WAL(write-ahead log)</li>
+<li>HFile 真实的数据存储文件</li>
+</ul>
+<h3 id="HLog"><a href="#HLog" class="headerlink" title="HLog"></a>HLog</h3><ul>
+<li><p>MasterProcWAL：HMaster记录管理操作，比如解决冲突的服务器，表创建和其它DDLs等操作到它的WAL文件中，这个WALs存储在MasterProcWALs目录下，它不像RegionServer的WALs，HMaster的WAL也支持弹性操作，就是如果Master服务器挂了，其它的Master接管的时候继续操作这个文件。</p>
+</li>
+<li><p>WAL记录所有的Hbase数据改变，如果一个RegionServer在MemStore进行FLush的时候挂掉了，WAL可以保证数据的改变被应用到。如果写WAL失败了，那么修改数据的完整操作就是失败的。</p>
+</li>
+</ul>
+<ul>
+<li>通常情况，每个RegionServer只有一个WAL实例。在2.0之前，WAL的实现叫做HLog</li>
+<li>WAL位于*&#x2F;hbase&#x2F;WALs&#x2F;*目录下</li>
+<li>MultiWAL: 如果每个RegionServer只有一个WAL，由于HDFS必须是连续的，导致必须写WAL连续的，然后出现性能问题。MultiWAL可以让RegionServer同时写多个WAL并行的，通过HDFS底层的多管道，最终提升总的吞吐量，但是不会提升单个Region的吞吐量。</li>
+</ul>
+<ul>
+<li>WAL配置</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 启用multiwal</span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.wal.provider<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>multiwal<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Hfile"><a href="#Hfile" class="headerlink" title="Hfile"></a>Hfile</h3><p>HFile是Hbase在HDFS中存储数据的格式，它包含多层的索引，这样在Hbase检索数据的时候就不用完全的加载整个文件。索引的大小(keys的大小，数据量的大小)影响block的大小，在大数据集的情况下，block的大小设置为每个RegionServer 1GB也是常见的。</p>
+<h4 id="Hfile生成方式"><a href="#Hfile生成方式" class="headerlink" title="Hfile生成方式"></a>Hfile生成方式</h4><p>起初，HFile中并没有任何Block，数据还存在于MemStore中。</p>
+<p>Flush发生时，创建HFile Writer，第一个空的Data Block出现，初始化后的Data Block中为Header部分预留了空间，Header部分用来存放一个Data Block的元数据信息。</p>
+<p>而后，位于MemStore中的KeyValues被一个个append到位于内存中的第一个Data Block中：</p>
+<p><strong>注</strong>：如果配置了Data Block Encoding，则会在Append KeyValue的时候进行同步编码，编码后的数据不再是单纯的KeyValue模式。Data Block Encoding是HBase为了降低KeyValue结构性膨胀而提供的内部编码机制。</p>
+<p><img src="/2022/02/22/HBase%E5%9F%BA%E7%A1%80/426671-fc9efc43916684b1.png" alt="img"></p>
+<h4 id="读写流程"><a href="#读写流程" class="headerlink" title="读写流程"></a>读写流程</h4><p><img src="/2022/02/22/HBase%E5%9F%BA%E7%A1%80/426671-726c0d6e0f57814a.png" alt="img"></p>
 
     </div>
 
@@ -268,7 +460,10 @@
     <a href="/2022/02/18/SparkSQL/" rel="prev" title="SparkSQL">
       <i class="fa fa-chevron-left"></i> SparkSQL
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/02/24/HBase%E5%AE%9E%E6%93%8D/" rel="next" title="HBase实操">
+      HBase实操 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -336,7 +531,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HBase%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">HBase数据模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HBase%E9%80%BB%E8%BE%91%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.2.</span> <span class="nav-text">HBase逻辑结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HBase%E7%89%A9%E7%90%86%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.3.</span> <span class="nav-text">HBase物理存储结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.4.</span> <span class="nav-text">数据模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#NameSpace"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">NameSpace</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Table"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">Table</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Row"><span class="nav-number">1.1.4.3.</span> <span class="nav-text">Row</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Column"><span class="nav-number">1.1.4.4.</span> <span class="nav-text">Column</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Timestamp"><span class="nav-number">1.1.4.5.</span> <span class="nav-text">Timestamp</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Cell"><span class="nav-number">1.1.4.6.</span> <span class="nav-text">Cell</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HBase%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84"><span class="nav-number">1.1.5.</span> <span class="nav-text">HBase基本架构</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase%E7%89%B9%E6%80%A7"><span class="nav-number">1.2.</span> <span class="nav-text">HBase特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDBMS%E4%B8%8EHBase%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">1.3.</span> <span class="nav-text">RDBMS与HBase的对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.3.1.</span> <span class="nav-text">关系型数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HBase"><span class="nav-number">1.3.2.</span> <span class="nav-text">HBase</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HDFS%E5%AF%B9%E6%AF%94HBase"><span class="nav-number">1.4.</span> <span class="nav-text">HDFS对比HBase</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HDFS"><span class="nav-number">1.4.1.</span> <span class="nav-text">HDFS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HBase-1"><span class="nav-number">1.4.2.</span> <span class="nav-text">HBase</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hive%E5%AF%B9%E6%AF%94Hbase"><span class="nav-number">1.5.</span> <span class="nav-text">Hive对比Hbase</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Hive"><span class="nav-number">1.5.1.</span> <span class="nav-text">Hive</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HBase-2"><span class="nav-number">1.5.2.</span> <span class="nav-text">HBase</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93Hive%E4%B8%8EHBase"><span class="nav-number">1.5.3.</span> <span class="nav-text">总结Hive与HBase</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase%E9%80%82%E7%94%A8%E5%9C%BA%E5%90%88"><span class="nav-number">1.6.</span> <span class="nav-text">HBase适用场合</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83"><span class="nav-number">2.</span> <span class="nav-text">核心</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.1.</span> <span class="nav-text">HBase数据模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase%E9%80%BB%E8%BE%91%E7%BB%93%E6%9E%84"><span class="nav-number">2.2.</span> <span class="nav-text">HBase逻辑结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase%E7%89%A9%E7%90%86%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="nav-number">2.3.</span> <span class="nav-text">HBase物理存储结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.4.</span> <span class="nav-text">数据模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NameSpace"><span class="nav-number">2.4.1.</span> <span class="nav-text">NameSpace</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Table"><span class="nav-number">2.4.2.</span> <span class="nav-text">Table</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Row"><span class="nav-number">2.4.3.</span> <span class="nav-text">Row</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Column"><span class="nav-number">2.4.4.</span> <span class="nav-text">Column</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Timestamp"><span class="nav-number">2.4.5.</span> <span class="nav-text">Timestamp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cell"><span class="nav-number">2.4.6.</span> <span class="nav-text">Cell</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84"><span class="nav-number">2.5.</span> <span class="nav-text">HBase基本架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E7%BB%86%E5%8C%96"><span class="nav-number">2.5.1.</span> <span class="nav-text">架构细化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.6.</span> <span class="nav-text">存储设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HLog"><span class="nav-number">2.6.1.</span> <span class="nav-text">HLog</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hfile"><span class="nav-number">2.6.2.</span> <span class="nav-text">Hfile</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Hfile%E7%94%9F%E6%88%90%E6%96%B9%E5%BC%8F"><span class="nav-number">2.6.2.1.</span> <span class="nav-text">Hfile生成方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B"><span class="nav-number">2.6.2.2.</span> <span class="nav-text">读写流程</span></a></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -352,14 +547,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">71</span>
+          <span class="site-state-item-count">117</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -391,7 +586,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

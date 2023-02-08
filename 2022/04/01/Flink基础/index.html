@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="简介Apache Flink是一个框架和分布式处理引擎，用于对无界和有界数据流进行状态计算。Flink 被设计在所有常见的集群环境中运行，以内存执行速度和任意规模来执行计算。 Flink框架处理流程  Flink的应用场景    Flink的优势 低延迟 高吞吐 结果的准确性和良好的容错性  数据处理框架的演变传统数据处理框架事务处理  分析处理将数据从业务数据库复制到数仓，再进行分析和查询。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flink基础">
+<meta property="og:url" content="http://fhclk.github.io/2022/04/01/Flink%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="简介Apache Flink是一个框架和分布式处理引擎，用于对无界和有界数据流进行状态计算。Flink 被设计在所有常见的集群环境中运行，以内存执行速度和任意规模来执行计算。 Flink框架处理流程  Flink的应用场景    Flink的优势 低延迟 高吞吐 结果的准确性和良好的容错性  数据处理框架的演变传统数据处理框架事务处理  分析处理将数据从业务数据库复制到数仓，再进行分析和查询。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105113544522.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105114103338.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105115937806.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105130252994.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105130357991.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105131612625.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105132421767.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105132445886.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105150744099.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105151207986.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105152919040.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105153036876.png">
+<meta property="article:published_time" content="2022-04-01T08:32:57.000Z">
+<meta property="article:modified_time" content="2023-01-07T14:48:31.626Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="大数据">
+<meta property="article:tag" content="Flink">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105113544522.png">
+
+<link rel="canonical" href="http://fhclk.github.io/2022/04/01/Flink%E5%9F%BA%E7%A1%80/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Flink基础 | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/04/01/Flink%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Flink基础
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-01 16:32:57" itemprop="dateCreated datePublished" datetime="2022-04-01T16:32:57+08:00">2022-04-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-07 22:48:31" itemprop="dateModified" datetime="2023-01-07T22:48:31+08:00">2023-01-07</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Apache Flink是一个框架和分布式处理引擎，用于对无界和有界数据流进行状态计算。Flink 被设计在所有常见的集群环境中运行，以内存执行速度和任意规模来执行计算。</p>
+<h2 id="Flink框架处理流程"><a href="#Flink框架处理流程" class="headerlink" title="Flink框架处理流程"></a>Flink框架处理流程</h2><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105113544522.png" alt="image-20230105113544522" style="zoom:80%;">
+
+<h2 id="Flink的应用场景"><a href="#Flink的应用场景" class="headerlink" title="Flink的应用场景"></a>Flink的应用场景</h2><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105114103338.png" alt="image-20230105114103338" style="zoom:80%;">
+
+
+
+<h2 id="Flink的优势"><a href="#Flink的优势" class="headerlink" title="Flink的优势"></a>Flink的优势</h2><ul>
+<li>低延迟</li>
+<li>高吞吐</li>
+<li>结果的准确性和良好的容错性</li>
+</ul>
+<h2 id="数据处理框架的演变"><a href="#数据处理框架的演变" class="headerlink" title="数据处理框架的演变"></a>数据处理框架的演变</h2><h3 id="传统数据处理框架"><a href="#传统数据处理框架" class="headerlink" title="传统数据处理框架"></a>传统数据处理框架</h3><h4 id="事务处理"><a href="#事务处理" class="headerlink" title="事务处理"></a>事务处理</h4><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105115937806.png" alt="image-20230105115937806" style="zoom: 80%;">
+
+<h4 id="分析处理"><a href="#分析处理" class="headerlink" title="分析处理"></a>分析处理</h4><p>将数据从业务数据库复制到数仓，再进行分析和查询。</p>
+<img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105130252994.png" alt="image-20230105130252994" style="zoom:80%;">
+
+
+
+<h3 id="有状态的流式处理"><a href="#有状态的流式处理" class="headerlink" title="有状态的流式处理"></a>有状态的流式处理</h3><p><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105130357991.png" alt="image-20230105130357991"></p>
+<p>将业务数据通过管道的方式传输到应用逻辑处理程序中，应用逻辑存储到内存中（本地状态），定时的将处理完的数据存储到持久化存储中。</p>
+<p>存在的问题，在集群中，各个节点进行应用逻辑处理时都存储在各自的内存中，处理完成后再进行集合，容易出现乱序的问题，因为各节点处理速度是不确定的。</p>
+<h3 id="lambda架构"><a href="#lambda架构" class="headerlink" title="lambda架构"></a>lambda架构</h3><p>用两套系统，同时保证低延迟和结果准确。</p>
+<p><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105131612625.png" alt="image-20230105131612625"></p>
+<p>批处理，处理速度慢，但能够保证数据的准确。实时层，处理速度快，不能保证数据的准确。最后进行数据合并，保证最终数据的准确。</p>
+<p>缺点：需要同时维护两套系统，开发维护难度大。</p>
+<h3 id="新一代流处理器-Flink"><a href="#新一代流处理器-Flink" class="headerlink" title="新一代流处理器 - Flink"></a>新一代流处理器 - Flink</h3><p>核心特点</p>
+<ul>
+<li>高吞吐、低延迟</li>
+<li>结果的准确性</li>
+<li>精确一次（exactly - once）的状态一致性保证</li>
+<li>可以与众多常用存储系统连接</li>
+<li>高可用，支持动态扩展</li>
+</ul>
+<h2 id="流处理的应用场景"><a href="#流处理的应用场景" class="headerlink" title="流处理的应用场景"></a>流处理的应用场景</h2><h3 id="事件驱动型"><a href="#事件驱动型" class="headerlink" title="事件驱动型"></a>事件驱动型</h3><p>事件驱动型应用是一类具有状态的应用，它从一个或多个事件流提取数据，并根据到来的事件触发计算、状态更新或其他外部动作。比较典型的就是以 kafka 为代表的消息队列几乎都是事件驱动型应用。</p>
+<p><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105132421767.png" alt="image-20230105132421767"></p>
+<h3 id="数据分析型"><a href="#数据分析型" class="headerlink" title="数据分析型"></a>数据分析型</h3><h4 id="批处理"><a href="#批处理" class="headerlink" title="批处理"></a>批处理</h4><p>批处理的特点是有界、持久、大量，非常适合需要访问全套记录才能完成的计算工作，一般用于离线统计。</p>
+<h4 id="流处理"><a href="#流处理" class="headerlink" title="流处理"></a>流处理</h4><p>流处理的特点是无界、实时, 无需针对整个数据集执行操作，而是对通过系统传输的每个数据项执行操作，一般用于实时统计。</p>
+<p>在 spark 的世界观中，一切都是由批次组成的，离线数据是一个大批次，而实时数据是由一个一个无限的小批次组成的。</p>
+<p>而在 flink 的世界观中，一切都是由流组成的，离线数据是有界限的流，实时数据是一个没有界限的流，这就是所谓的有界流和无界流。</p>
+<h4 id="无界数据流"><a href="#无界数据流" class="headerlink" title="无界数据流"></a>无界数据流</h4><p>无界数据流有一个开始但是没有结束，它们不会在生成时终止并提供数据，必须连续处理无界流，也就是说必须在获取后立即处理 event。对于无界数据流我们无法等待所有数据都到达，因为输入是无界的，并且在任何时间点都不会完成。处理无界数据通常要求以特定顺序（例如事件发生的顺序）获取 event，以便能够推断结果完整性。</p>
+<h4 id="有界数据流"><a href="#有界数据流" class="headerlink" title="有界数据流"></a>有界数据流</h4><p>有界数据流有明确定义的开始和结束，可以在执行任何计算之前通过获取所有数据来处理有界流，处理有界流不需要有序获取，因为可以始终对有界数据集进行排序，有界流的处理也称为批处理。</p>
+<p><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105132445886.png" alt="image-20230105132445886"></p>
+<h3 id="数据管道型"><a href="#数据管道型" class="headerlink" title="数据管道型"></a>数据管道型</h3><p><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105150744099.png" alt="image-20230105150744099"></p>
+<h3 id="Flink分层API"><a href="#Flink分层API" class="headerlink" title="Flink分层API"></a>Flink分层API</h3><ul>
+<li>越顶层越抽象，表达含义越简明，使用越方便</li>
+<li>越底层越具体，表达能力越丰富，使用越灵活</li>
+</ul>
+<img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105151207986.png" alt="image-20230105151207986" style="zoom:80%;">
+
+<p>最底层级的抽象仅仅提供了有状态流，它将通过过程函数（Process Function）被嵌入到 DataStream API 中。底层过程函数（Process Function） 与 DataStream API相集成，使其可以对某些特定的操作进行底层的抽象，它允许用户可以自由地处理来自一个或多个数据流的事件，并使用一致的容错的状态。除此之外，用户可以注册事件时间并处理时间回调，从而使程序可以处理复杂的计算。</p>
+<p>实际上，大多数应用并不需要上述的底层抽象，而是针对核心 API（Core APIs）进行编程，比如 DataStream API（有界或无界流数据）以及 DataSet API（有界数据集）。这些 API 为数据处理提供了通用的构建模块，比如由用户定义的多种形式的转换（transformations），连接（joins），聚合（aggregations），窗口操作（windows）等等。DataSet API 为有界数据集提供了额外的支持，例如循环与迭代。这些 API处理的数据类型以类（classes）的形式由各自的编程语言所表示。</p>
+<p>Table API 是以表为中心的声明式编程，其中表可能会动态变化（在表达流数据时）。Table API 遵循（扩展的）关系模型：表有二维数据结构（schema）（类似于关系数据库中的表），同时 API 提供可比较的操作，例如 select、project、join、group-by、aggregate 等。Table API 程序声明式地定义了什么逻辑操作应该执行，而不是准确地确定这些操作代码的看上去如何。</p>
+<p>尽管 Table API 可以通过多种类型的用户自定义函数（UDF）进行扩展，其仍不如核心 API 更具表达能力，但是使用起来却更加简洁（代码量更少）。除此之外，Table API 程序在执行之前会经过内置优化器进行优化。</p>
+<p>你可以在表与 DataStream&#x2F;DataSet 之间无缝切换，以允许程序将 Table API 与DataStream 以及 DataSet 混合使用。</p>
+<p>Flink 提 供 的 最高 层 级 的 抽 象 是 SQL 。 这 一 层抽 象 在 语 法 与 表 达能 力 上 与Table API 类似，但是是以 SQL 查询表达式的形式表现程序。SQL 抽象与 Table API交互密切，同时 SQL 查询可以直接在 Table API 定义的表上执行。</p>
+<p>目前 Flink 作为批处理还不是主流，不如 Spark 成熟，所以 DataSet 使用的并不是很多。Flink Table API 和 Flink SQL 也并不完善，大多都由各大厂商自己定制。所以我们主要学习 DataStream API 的使用。实际上 Flink 作为最接近 Google DataFlow模型的实现，是流批统一的观点，所以基本上使用 DataStream 就可以了。</p>
+<h3 id="Flink和Spark的区别"><a href="#Flink和Spark的区别" class="headerlink" title="Flink和Spark的区别"></a>Flink和Spark的区别</h3><h4 id="数据处理架构"><a href="#数据处理架构" class="headerlink" title="数据处理架构"></a>数据处理架构</h4><h5 id="Spark"><a href="#Spark" class="headerlink" title="Spark"></a>Spark</h5><p><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105152919040.png" alt="image-20230105152919040"></p>
+<p>原则上是批处理，只是拆分成很小的批次。</p>
+<h5 id="Flink"><a href="#Flink" class="headerlink" title="Flink"></a>Flink</h5><p><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105153036876.png" alt="image-20230105153036876"></p>
+<h4 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h4><h5 id="Spark-1"><a href="#Spark-1" class="headerlink" title="Spark"></a>Spark</h5><p>Spark采用RDD模型，Spark streaming的DStream实际上就是一组小批数据RDD的集合</p>
+<h5 id="Flink-1"><a href="#Flink-1" class="headerlink" title="Flink"></a>Flink</h5><p>Flink基本数据模型是数据流，以及事件（Event）序列</p>
+<h4 id="运行时架构"><a href="#运行时架构" class="headerlink" title="运行时架构"></a>运行时架构</h4><h5 id="Spark-2"><a href="#Spark-2" class="headerlink" title="Spark"></a>Spark</h5><p>Spark是批计算，将DAG划分为不同的stage，一个完成后才可以计算下一个。</p>
+<h5 id="Flink-2"><a href="#Flink-2" class="headerlink" title="Flink"></a>Flink</h5><p>Flink是标准的流式执行模式，一个事件在一个节点处理完后可以直接发往下一个节点进行处理。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a> -->
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"><i class="fa fa-tag"></i>  大数据</a>
+              <!-- <a href="/tags/Flink/" rel="tag"># Flink</a> -->
+              <a href="/tags/Flink/" rel="tag"><i class="fa fa-tag"></i>  Flink</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/22/Kafka%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" rel="prev" title="Kafka源码解析">
+      <i class="fa fa-chevron-left"></i> Kafka源码解析
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/04/04/Flink%E4%B8%8A%E6%89%8B/" rel="next" title="Flink上手">
+      Flink上手 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Flink%E6%A1%86%E6%9E%B6%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text">Flink框架处理流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flink%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.2.</span> <span class="nav-text">Flink的应用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flink%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="nav-number">1.3.</span> <span class="nav-text">Flink的优势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E6%A1%86%E6%9E%B6%E7%9A%84%E6%BC%94%E5%8F%98"><span class="nav-number">1.4.</span> <span class="nav-text">数据处理框架的演变</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A0%E7%BB%9F%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E6%A1%86%E6%9E%B6"><span class="nav-number">1.4.1.</span> <span class="nav-text">传统数据处理框架</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">事务处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86"><span class="nav-number">1.4.1.2.</span> <span class="nav-text">分析处理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%89%E7%8A%B6%E6%80%81%E7%9A%84%E6%B5%81%E5%BC%8F%E5%A4%84%E7%90%86"><span class="nav-number">1.4.2.</span> <span class="nav-text">有状态的流式处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lambda%E6%9E%B6%E6%9E%84"><span class="nav-number">1.4.3.</span> <span class="nav-text">lambda架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E4%B8%80%E4%BB%A3%E6%B5%81%E5%A4%84%E7%90%86%E5%99%A8-Flink"><span class="nav-number">1.4.4.</span> <span class="nav-text">新一代流处理器 - Flink</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E5%A4%84%E7%90%86%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.5.</span> <span class="nav-text">流处理的应用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8%E5%9E%8B"><span class="nav-number">1.5.1.</span> <span class="nav-text">事件驱动型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%9E%8B"><span class="nav-number">1.5.2.</span> <span class="nav-text">数据分析型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%B9%E5%A4%84%E7%90%86"><span class="nav-number">1.5.2.1.</span> <span class="nav-text">批处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%81%E5%A4%84%E7%90%86"><span class="nav-number">1.5.2.2.</span> <span class="nav-text">流处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E7%95%8C%E6%95%B0%E6%8D%AE%E6%B5%81"><span class="nav-number">1.5.2.3.</span> <span class="nav-text">无界数据流</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%89%E7%95%8C%E6%95%B0%E6%8D%AE%E6%B5%81"><span class="nav-number">1.5.2.4.</span> <span class="nav-text">有界数据流</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%AE%A1%E9%81%93%E5%9E%8B"><span class="nav-number">1.5.3.</span> <span class="nav-text">数据管道型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Flink%E5%88%86%E5%B1%82API"><span class="nav-number">1.5.4.</span> <span class="nav-text">Flink分层API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Flink%E5%92%8CSpark%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.5.5.</span> <span class="nav-text">Flink和Spark的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E6%9E%B6%E6%9E%84"><span class="nav-number">1.5.5.1.</span> <span class="nav-text">数据处理架构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Spark"><span class="nav-number">1.5.5.1.1.</span> <span class="nav-text">Spark</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Flink"><span class="nav-number">1.5.5.1.2.</span> <span class="nav-text">Flink</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.5.5.2.</span> <span class="nav-text">数据模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Spark-1"><span class="nav-number">1.5.5.2.1.</span> <span class="nav-text">Spark</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Flink-1"><span class="nav-number">1.5.5.2.2.</span> <span class="nav-text">Flink</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84"><span class="nav-number">1.5.5.3.</span> <span class="nav-text">运行时架构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Spark-2"><span class="nav-number">1.5.5.3.1.</span> <span class="nav-text">Spark</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Flink-2"><span class="nav-number">1.5.5.3.2.</span> <span class="nav-text">Flink</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">117</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>

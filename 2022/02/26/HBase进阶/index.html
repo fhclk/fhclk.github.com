@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Master架构 Master，主要进程，具体实现类为HMaster，通常部署在namenode上。 Meta表格介绍禁止修改此表 全称 hbase：meta，只是在 list 命令中被过滤掉了，本质上和 HBase 的其他表格一样。 RowKey： ([table],[region start key],[region id]) 即 表名，region 起始位置和 regionID。 列： in">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HBase进阶">
+<meta property="og:url" content="http://fhclk.github.io/2022/02/26/HBase%E8%BF%9B%E9%98%B6/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="Master架构 Master，主要进程，具体实现类为HMaster，通常部署在namenode上。 Meta表格介绍禁止修改此表 全称 hbase：meta，只是在 list 命令中被过滤掉了，本质上和 HBase 的其他表格一样。 RowKey： ([table],[region start key],[region id]) 即 表名，region 起始位置和 regionID。 列： in">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://fhclk.github.io/2022/02/26/HBase%E8%BF%9B%E9%98%B6/image-20221227113711659.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/02/26/HBase%E8%BF%9B%E9%98%B6/image-20221227115325700.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/02/26/HBase%E8%BF%9B%E9%98%B6/image-20221227115624551.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/02/26/HBase%E8%BF%9B%E9%98%B6/image-20221227164519768.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/02/26/HBase%E8%BF%9B%E9%98%B6/image-20221227164743255.png">
+<meta property="article:published_time" content="2022-02-26T12:11:21.000Z">
+<meta property="article:modified_time" content="2023-01-04T07:46:19.632Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="大数据">
+<meta property="article:tag" content="HBase">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/2022/02/26/HBase%E8%BF%9B%E9%98%B6/image-20221227113711659.png">
+
+<link rel="canonical" href="http://fhclk.github.io/2022/02/26/HBase%E8%BF%9B%E9%98%B6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>HBase进阶 | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/02/26/HBase%E8%BF%9B%E9%98%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HBase进阶
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-26 20:11:21" itemprop="dateCreated datePublished" datetime="2022-02-26T20:11:21+08:00">2022-02-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-04 15:46:19" itemprop="dateModified" datetime="2023-01-04T15:46:19+08:00">2023-01-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Master架构"><a href="#Master架构" class="headerlink" title="Master架构"></a>Master架构</h1><p><img src="/2022/02/26/HBase%E8%BF%9B%E9%98%B6/image-20221227113711659.png" alt="image-20221227113711659"></p>
+<p>Master，主要进程，具体实现类为HMaster，通常部署在namenode上。</p>
+<h2 id="Meta表格介绍"><a href="#Meta表格介绍" class="headerlink" title="Meta表格介绍"></a>Meta表格介绍</h2><p><strong>禁止修改此表</strong></p>
+<p>全称 hbase：meta，只是在 list 命令中被过滤掉了，本质上和 HBase 的其他表格一样。</p>
+<p>RowKey：</p>
+<p>([table],[region start key],[region id]) 即 表名，region 起始位置和 regionID。</p>
+<p>列：</p>
+<p>info：regioninfo 为 region 信息，存储一个 HRegionInfo 对象。</p>
+<p>info：server 当前 region 所处的 RegionServer 信息，包含端口号。</p>
+<p>info：serverstartcode 当前 region 被分到 RegionServer 的起始时间。</p>
+<p>如果一个表处于切分的过程中，即 region 切分，还会多出两列 info：splitA 和 info：splitB，存储值也是 HRegionInfo 对象，拆分结束后，删除这两列。</p>
+<p>注意：在客户端对元数据进行操作的时候才会连接 master，如果对数据进行读写，直接连接zookeeper 读取目录&#x2F;hbase&#x2F;meta-region-server 节点信息，会记录 meta 表格的位置。直接读取即可，不需要访问 master，这样可以减轻 master 的压力，相当于 master 专注 meta 表的写操作，客户端可直接读取 meta 表。</p>
+<p>在 HBase 的 2.3 版本更新了一种新模式：Master Registry。客户端可以访问 master 来读取meta 表信息。加大了 master 的压力，减轻了 zookeeper 的压力。</p>
+<h2 id="RegionServer架构"><a href="#RegionServer架构" class="headerlink" title="RegionServer架构"></a>RegionServer架构</h2><p><img src="/2022/02/26/HBase%E8%BF%9B%E9%98%B6/image-20221227115325700.png" alt="image-20221227115325700"></p>
+<p>Region Server，主要进程，具体实现类为HRegionServer，通常部署在dataNode上。</p>
+<h3 id="MemStore"><a href="#MemStore" class="headerlink" title="MemStore"></a>MemStore</h3><p>写缓存，由于 HFile 中的数据要求是有序的，所以数据是先存储在 MemStore 中，排好序后，等到达刷写时机才会刷写到 HFile，每次刷写都会形成一个新的 HFile，写入到对应的文件夹 store 中。 </p>
+<h3 id="WAL"><a href="#WAL" class="headerlink" title="WAL"></a>WAL</h3><p>由于数据要经 MemStore 排序后才能刷写到 HFile，但把数据保存在内存中会有很高的概率导致数据丢失，为了解决这个问题，数据会先写在一个叫做 Write-Ahead logfile 的文件中，然后再写入 MemStore 中。所以在系统出现故障的时候，数据可以通过这个日志文件重建。</p>
+<h3 id="BlockCache"><a href="#BlockCache" class="headerlink" title="BlockCache"></a>BlockCache</h3><p>读缓存，每次查询出的数据会缓存在 BlockCache 中，方便下次查询。</p>
+<h2 id="写流程"><a href="#写流程" class="headerlink" title="写流程"></a>写流程</h2><p><img src="/2022/02/26/HBase%E8%BF%9B%E9%98%B6/image-20221227115624551.png" alt="image-20221227115624551"></p>
+<p>写流程从客户端创建连接开始，到最终刷写落盘到HDFS上结束。</p>
+<p>写流程顺序正如 API 编写顺序，首先创建 HBase 的重量级连接</p>
+<p>（1）首先访问 zookeeper，获取 hbase:meta 表位于哪个 Region Server；</p>
+<p>（2）访问对应的 Region Server，获取 hbase:meta 表，将其缓存到连接中，作为连接属性 MetaCache，由于 Meta 表格具有一定的数据量，导致了创建连接比较慢；之后使用创建的连接获取 Table，这是一个轻量级的连接，只有在第一次创建的时候会检查表格是否存在访问 RegionServer，之后在获取 Table 时不会访问 RegionServer；</p>
+<p>（3）调用Table的put方法写入数据，此时还需要解析RowKey，对照缓存的MetaCache，查看具体写入的位置有哪个 RegionServer；</p>
+<p>（4）将数据顺序写入（追加）到 WAL，此处写入是直接落盘的，并设置专门的线程控制 WAL 预写日志的滚动（类似 Flume）；</p>
+<p>（5）根据写入命令的 RowKey 和 ColumnFamily 查看具体写入到哪个 MemStory，并且在 MemStory 中排序；</p>
+<p>（6）向客户端发送 ack；</p>
+<p>（7 ）等达到 MemStore 的刷写时机后，将数据刷写到对应的 store 中。</p>
+<h2 id="MemStore-Flush"><a href="#MemStore-Flush" class="headerlink" title="MemStore Flush"></a>MemStore Flush</h2><p><strong>MemStore 刷写由多个线程控制，条件互相独立：</strong></p>
+<p>主要的刷写规则是控制刷写文件的大小，在每一个刷写线程中都会进行监控</p>
+<p>（1）当某个 memstroe 的大小达到了 hbase.hregion.memstore.flush.size（默认值 128M），其所在 region 的所有 memstore 都会刷写。</p>
+<p>当 memstore 的大小达到了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hbase.hregion.memstore.flush.size（默认值 128M）</span><br><span class="line">hbase.hregion.memstore.block.multiplier（默认值 4）</span><br></pre></td></tr></table></figure>
+
+<p>时，会刷写同时阻止继续往该 memstore 写数据（由于线程监控是周期性的，所有有可能面对数据洪峰，尽管可能性比较小）</p>
+<p>（2）由 HRegionServer 中的属性 MemStoreFlusher 内部线程 FlushHandler 控制。标准为LOWER_MARK（低水位线）和 HIGH_MARK（高水位线），意义在于避免写缓存使用过多的内存造成 OOM。</p>
+<p>当 region server 中 memstore 的总大小达到低水位线</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">java_heapsize</span><br><span class="line">hbase.regionserver.global.memstore.size（默认值 0.4）</span><br><span class="line">hbase.regionserver.global.memstore.size.lower.limit（默认值 0.95），</span><br></pre></td></tr></table></figure>
+
+<p>region 会按照其所有 memstore 的大小顺序（由大到小）依次进行刷写。直到 region server中所有 memstore 的总大小减小到上述值以下。</p>
+<p>当 region server 中 memstore 的总大小达到高水位线</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">java_heapsize</span><br><span class="line">hbase.regionserver.global.memstore.size（默认值 0.4）</span><br></pre></td></tr></table></figure>
+
+<p>时，会同时阻止继续往所有的 memstore 写数据。</p>
+<p>（3）为了避免数据过长时间处于内存之中，到达自动刷写的时间，也会触发 memstore flush。由 HRegionServer 的属性 PeriodicMemStoreFlusher 控制进行，由于重要性比较低，5min才会执行一次。</p>
+<p>自动刷新的时间间隔由该属性进行配置 hbase.regionserver.optionalcacheflushinterval（默认1 小时）。</p>
+<p>（4）当 WAL 文件的数量超过 hbase.regionserver.max.logs，region 会按照时间顺序依次进行刷写，直到 WAL 文件数量减小到 hbase.regionserver.max.log 以下（该属性名已经废弃，现无需手动设置，最大值为 32）。</p>
+<h2 id="读流程"><a href="#读流程" class="headerlink" title="读流程"></a>读流程</h2><h3 id="HFile结构"><a href="#HFile结构" class="headerlink" title="HFile结构"></a>HFile结构</h3><p>在了解读流程之前，需要先知道读取的数据是什么样子的。</p>
+<p>HFile 是存储在 HDFS 上面每一个 store 文件夹下实际存储数据的文件。里面存储多种内容。包括数据本身（keyValue 键值对）、元数据记录、文件信息、数据索引、元数据索引和一个固定长度的尾部信息（记录文件的修改情况）。</p>
+<p>键值对按照块大小（默认 64K）保存在文件中，数据索引按照块创建，块越多，索引越大。每一个 HFile 还会维护一个布隆过滤器（就像是一个很大的地图，文件中每有一种 key，就在对应的位置标记，读取时可以大致判断要 get 的 key 是否存在 HFile 中）。</p>
+<p>KeyValue 内容如下:</p>
+<p>rowlength ———–→ key 的长度</p>
+<p>row —————–→ key 的值</p>
+<p>columnfamilylength –→ 列族长度</p>
+<p>columnfamily ——–→ 列族</p>
+<p>columnqualifier —–→ 列名</p>
+<p>timestamp ———–→ 时间戳（默认系统时间）</p>
+<p>keytype ————-→ Put</p>
+<p>由于 HFile 存储经过序列化，所以无法直接查看。可以通过 HBase 提供的命令来查看存储在 HDFS 上面的 HFile 元数据内容。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@node1 hbase]$ bin/hbase hfile -m -f /hbase/data/命名空间/表名/regionID/列族/HFile名</span><br></pre></td></tr></table></figure>
+
+<h3 id="读流程-1"><a href="#读流程-1" class="headerlink" title="读流程"></a>读流程</h3><p><img src="/2022/02/26/HBase%E8%BF%9B%E9%98%B6/image-20221227164519768.png" alt="image-20221227164519768"></p>
+<p>写流程从客户端创建连接开始，到合并数据并返回客户端结束。</p>
+<p>创建连接同写流程。</p>
+<p>（1）创建 Table 对象发送 get 请求。</p>
+<p>（2）优先访问 Block Cache，查找是否之前读取过，并且可以读取 HFile 的索引信息和布隆过滤器。</p>
+<p>（3）不管读缓存中是否已经有数据了（可能已经过期了），都需要再次读取写缓存和store 中的文件。</p>
+<p>（4）最终将所有读取到的数据合并版本，按照 get 的要求返回即可。</p>
+<h3 id="合并读取数据优化"><a href="#合并读取数据优化" class="headerlink" title="合并读取数据优化"></a>合并读取数据优化</h3><p>每次读取数据都需要读取三个位置，最后进行版本的合并。效率会非常低，所有系统需要对此优化。</p>
+<p>（1）HFile 带有索引文件，读取对应 RowKey 数据会比较快。</p>
+<p>（2）Block Cache 会缓存之前读取的内容和元数据信息，如果 HFile 没有发生变化（记录在 HFile 尾信息中），则不需要再次读取。</p>
+<p>（3）使用布隆过滤器能够快速过滤当前 HFile 不存在需要读取的 RowKey，从而避免读取文件。（布隆过滤器使用 HASH 算法，不是绝对准确的，出错会造成多扫描一个文件，对读取数据结果没有影响）</p>
+<h2 id="StoreFile-Compaction"><a href="#StoreFile-Compaction" class="headerlink" title="StoreFile Compaction"></a>StoreFile Compaction</h2><p>由于 memstore 每次刷写都会生成一个新的 HFile，文件过多读取不方便，所以会进行文件的合并，清理掉过期和删除的数据，会进行 StoreFile Compaction。</p>
+<p>Compaction 分为两种，分别是 Minor Compaction 和 Major Compaction。Minor Compaction会将临近的若干个较小的 HFile 合并成一个较大的 HFile，并清理掉部分过期和删除的数据，有系统使用一组参数自动控制，Major Compaction 会将一个 Store 下的所有的 HFile 合并成一个大 HFile，并且<strong>会</strong>清理掉所有过期和删除的数据，由参数 hbase.hregion.majorcompaction控制，默认 7 天。</p>
+<p><img src="/2022/02/26/HBase%E8%BF%9B%E9%98%B6/image-20221227164743255.png" alt="image-20221227164743255"></p>
+<p>Minor Compaction 控制机制：</p>
+<p>参与到小合并的文件需要通过参数计算得到，有效的参数有 5 个</p>
+<p>（1）hbase.hstore.compaction.ratio（默认 1.2F）合并文件选择算法中使用的比率。</p>
+<p>（2）hbase.hstore.compaction.min（默认 3） 为 Minor Compaction 的最少文件个数。</p>
+<p>（3）hbase.hstore.compaction.max（默认 10） 为 Minor Compaction 最大文件个数。</p>
+<p>（4）hbase.hstore.compaction.min.size（默认 128M）为单个 Hfile 文件大小最小值，小于这个数会被合并。</p>
+<p>（5）hbase.hstore.compaction.max.size（默认 Long.MAX_VALUE）为单个 Hfile 文件大小最大值，高于这个数不会被合并。小合并机制为拉取整个 store 中的所有文件，做成一个集合。之后按照从旧到新的顺序遍历。</p>
+<p>判断条件为：</p>
+<p><strong>①</strong> 过小合并，过大不合并</p>
+<p><strong>②</strong> 文件大小&#x2F; hbase.hstore.compaction.ratio &lt; (剩余文件大小和) 则参与压缩。所有把比值设置过大，如 10 会最终合并为 1 个特别大的文件，相反设置为 0.4，会最终产生 4 个 storeFile。不建议修改默认值</p>
+<p><strong>③</strong> 满足压缩条件的文件个数达不到个数要求（3 &lt;&#x3D; count &lt;&#x3D; 10）则不压缩。</p>
+<h2 id="Region-Split"><a href="#Region-Split" class="headerlink" title="Region Split"></a>Region Split</h2><p>Region 切分分为两种，创建表格时候的预分区即自定义分区，同时系统默认还会启动一个切分规则，避免单个 Region 中的数据量太大。</p>
+<h3 id="预分区（自定义分区）"><a href="#预分区（自定义分区）" class="headerlink" title="预分区（自定义分区）"></a>预分区（自定义分区）</h3><p>每一个 region 维护着 startRow 与 endRowKey，如果加入的数据符合某个 region 维护的rowKey 范围，则该数据交给这个 region 维护。那么依照这个原则，我们可以将数据所要投放的分区提前大致的规划好，以提高 HBase 性能。</p>
+<h3 id="系统拆分"><a href="#系统拆分" class="headerlink" title="系统拆分"></a>系统拆分</h3><p>Region 的拆分是由 HRegionServer 完成的，在操作之前需要通过 ZK 汇报 master，修改对应的 Meta 表信息添加两列 info：splitA 和 info：splitB 信息。之后需要操作 HDFS 上面对应的文件，按照拆分后的 Region 范围进行标记区分，实际操作为创建文件引用，不会挪动数据。刚完成拆分的时候，两个 Region 都由原先的 RegionServer 管理。之后汇报给 Master，由Master将修改后的信息写入到Meta表中。等待下一次触发负载均衡机制，才会修改Region的管理服务者，而数据要等到下一次压缩时，才会实际进行移动。</p>
+<p>不管是否使用预分区，系统都会默认启动一套 Region 拆分规则。不同版本的拆分规则有差别。系统拆分策略的父类为 RegionSplitPolicy。</p>
+<p>0.94 版本之前 &#x3D;&gt; ConstantSizeRegionSplitPolicy</p>
+<p>（ 1 ） 当 1 个 region 中 的 某 个 Store 下 所 有 StoreFile 的 总 大 小 超 过hbase.hregion.max.filesize （10G），该 Region 就会进行拆分。0.94 版本之后，2.0 版本之前 &#x3D;&gt; IncreasingToUpperBoundRegionSplitPolicy</p>
+<p>（ 2 ） 当 1 个 region 中 的 某 个 Store 下 所 有 StoreFile 的 总 大 小 超 过Min(initialSize<em>R^3 ,hbase.hregion.max.filesize”)，该 Region 就会进行拆分。其中 initialSize 的默认值为 2</em>hbase.hregion.memstore.flush.size，R 为当前 Region Server 中属于该 Table 的Region 个数（0.94 版本之后）。</p>
+<p>具体的切分策略为：</p>
+<p>第一次 split：1^3 * 256 &#x3D; 256MB </p>
+<p>第二次 split：2^3 * 256 &#x3D; 2048MB </p>
+<p>第三次 split：3^3 * 256 &#x3D; 6912MB </p>
+<p>第四次 split：4^3 * 256 &#x3D; 16384MB &gt; 10GB，因此取较小的值 10GB </p>
+<p>后面每次 split 的 size 都是 10GB 了。</p>
+<p>2.0 版本之后 &#x3D;&gt; SteppingSplitPolicy</p>
+<p>（3）Hbase 2.0 引入了新的 split 策略：如果当前 RegionServer 上该表只有一个 Region，按照 2 * hbase.hregion.memstore.flush.size 分裂，否则按照 hbase.hregion.max.filesize 分裂。这叫大道至简，学海抽丝。</p>
+<h1 id="HBase优化"><a href="#HBase优化" class="headerlink" title="HBase优化"></a>HBase优化</h1><h2 id="RowKey设计优化"><a href="#RowKey设计优化" class="headerlink" title="RowKey设计优化"></a>RowKey设计优化</h2><p>一条数据的唯一标识就是 rowkey，那么这条数据存储于哪个分区，取决于 rowkey 处于哪个一个预分区的区间内，设计 rowkey的主要目的 ，就是让数据均匀的分布于所有的 region中，在一定程度上防止数据倾斜。接下来我们就谈一谈 rowkey 常用的设计方案。</p>
+<p>1）生成随机数、hash、散列值</p>
+<p>2）时间戳反转</p>
+<p>3）字符串拼接 </p>
+<h2 id="添加预分区优化"><a href="#添加预分区优化" class="headerlink" title="添加预分区优化"></a>添加预分区优化</h2><p>预分区的分区号同样需要遵守 rowKey 的 scan 原则。所有必须添加在 rowKey 的最前面，前缀为最简单的数字。同时使用 hash 算法将用户名和月份拼接决定分区号。（单独使用用户名会造成单一用户所有数据存储在一个分区）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">添加预分区优化</span><br><span class="line">startKey stopKey</span><br><span class="line">001</span><br><span class="line">001 002</span><br><span class="line">002 003</span><br><span class="line">...</span><br><span class="line">119 120</span><br><span class="line">分区号=&gt; hash(user+date(MM)) % 120</span><br><span class="line">分区号填充 如果得到 1 =&gt; 001</span><br><span class="line">rowKey 设计格式 =&gt; 分区号 date(yyyy-MM)^A^Auserdate(-dd hh:mm:ss ms)</span><br></pre></td></tr></table></figure>
+
+<h2 id="参数优化"><a href="#参数优化" class="headerlink" title="参数优化"></a>参数优化</h2><h3 id="Zookeeper-会话超时时间"><a href="#Zookeeper-会话超时时间" class="headerlink" title="Zookeeper 会话超时时间"></a>Zookeeper 会话超时时间</h3><p>hbase-site.xml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">属性：zookeeper.session.timeout</span><br><span class="line">解释：默认值为 90000 毫秒（90s）。当某个 RegionServer 挂掉，90s 之后 Master 才能察觉到。可适当减小此值，尽可能快地检测 regionserver 故障，可调整至 20-30s。</span><br><span class="line">看你能有都能忍耐超时，同时可以调整重试时间和重试次数</span><br><span class="line">hbase.client.pause（默认值 100ms）</span><br><span class="line">hbase.client.retries.number（默认 15 次）</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置-RPC-监听数量"><a href="#设置-RPC-监听数量" class="headerlink" title="设置 RPC 监听数量"></a>设置 RPC 监听数量</h3><p>hbase-site.xml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">属性：hbase.regionserver.handler.count</span><br><span class="line">解释：默认值为 30，用于指定 RPC 监听的数量，可以根据客户端的请求数进行调整，读写请求较多时，增加此值。</span><br></pre></td></tr></table></figure>
+
+<h3 id="手动控制-Major-Compaction"><a href="#手动控制-Major-Compaction" class="headerlink" title="手动控制 Major Compaction"></a>手动控制 Major Compaction</h3><p>hbase-site.xml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">属性：hbase.hregion.majorcompaction</span><br><span class="line">解释：默认值：604800000 秒（7 天）， Major Compaction 的周期，若关闭自动 Major Compaction，可将其设为 0。如果关闭一定记得自己手动合并，因为大合并非常有意义</span><br></pre></td></tr></table></figure>
+
+<h3 id="优化-HStore-文件大小"><a href="#优化-HStore-文件大小" class="headerlink" title="优化 HStore 文件大小"></a>优化 HStore 文件大小</h3><p>hbase-site.xml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">属性：hbase.hregion.max.filesize</span><br><span class="line">解释：默认值 10737418240（10GB），如果需要运行 HBase 的 MR 任务，可以减小此值，因为一个 region 对应一个 map 任务，如果单个 region 过大，会导致 map 任务执行时间过长。该值的意思就是，如果 HFile 的大小达到这个数值，则这个 region 会被切分为两个 Hfile。</span><br></pre></td></tr></table></figure>
+
+<h3 id="优化-HBase-客户端缓存"><a href="#优化-HBase-客户端缓存" class="headerlink" title="优化 HBase 客户端缓存"></a>优化 HBase 客户端缓存</h3><p>hbase-site.xml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">属性：hbase.client.write.buffer</span><br><span class="line">解释：默认值 2097152bytes（2M）用于指定 HBase 客户端缓存，增大该值可以减少 RPC调用次数，但是会消耗更多内存，反之则反之。一般我们需要设定一定的缓存大小，以达到减少 RPC 次数的目的。</span><br></pre></td></tr></table></figure>
+
+<h3 id="指定-scan-next-扫描-HBase-所获取的行数"><a href="#指定-scan-next-扫描-HBase-所获取的行数" class="headerlink" title="指定 scan.next 扫描 HBase 所获取的行数"></a>指定 scan.next 扫描 HBase 所获取的行数</h3><p>hbase-site.xml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">属性：hbase.client.scanner.caching</span><br><span class="line">解释：用于指定 scan.next 方法获取的默认行数，值越大，消耗内存越大。</span><br></pre></td></tr></table></figure>
+
+<h3 id="BlockCache-占用-RegionServer-堆内存的比例"><a href="#BlockCache-占用-RegionServer-堆内存的比例" class="headerlink" title="BlockCache 占用 RegionServer 堆内存的比例"></a>BlockCache 占用 RegionServer 堆内存的比例</h3><p>hbase-site.xml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">属性：hfile.block.cache.size</span><br><span class="line">解释：默认 0.4，读请求比较多的情况下，可适当调大</span><br></pre></td></tr></table></figure>
+
+<h3 id="MemStore-占用-RegionServer-堆内存的比例"><a href="#MemStore-占用-RegionServer-堆内存的比例" class="headerlink" title="MemStore 占用 RegionServer 堆内存的比例"></a>MemStore 占用 RegionServer 堆内存的比例</h3><p>hbase-site.xml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">属性：hbase.regionserver.global.memstore.size</span><br><span class="line">解释：默认 0.4，写请求较多的情况下，可适当调大</span><br></pre></td></tr></table></figure>
+
+<p>Lars Hofhansl（拉斯·霍夫汉斯）大神推荐 Region 设置 20G，刷写大小设置 128M，其它默认。</p>
+<h2 id="JVM-调优"><a href="#JVM-调优" class="headerlink" title="JVM 调优"></a>JVM 调优</h2><p>JVM 调优的思路有两部分：一是内存设置，二是垃圾回收器设置。</p>
+<p>垃圾回收的修改是使用并发垃圾回收，默认 PO+PS 是并行垃圾回收，会有大量的暂停。理由是 HBsae 大量使用内存用于存储数据，容易遭遇数据洪峰造成 OOM，同时写缓存的数据是不能垃圾回收的，主要回收的就是读缓存，而读缓存垃圾回收不影响性能，所以最终设置的效果可以总结为：防患于未然，早洗早轻松。</p>
+<h3 id="设置使用-CMS-收集器"><a href="#设置使用-CMS-收集器" class="headerlink" title="设置使用 CMS 收集器"></a>设置使用 CMS 收集器</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-XX:+UseConcMarkSweepGC</span><br></pre></td></tr></table></figure>
+
+<h3 id="保持新生代尽量小，同时尽早开启GC"><a href="#保持新生代尽量小，同时尽早开启GC" class="headerlink" title="保持新生代尽量小，同时尽早开启GC"></a>保持新生代尽量小，同时尽早开启GC</h3><p>例如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">//在内存占用到 70%的时候开启 GC</span><br><span class="line">-XX:CMSInitiatingOccupancyFraction=70</span><br><span class="line">//指定使用 70%，不让 JVM 动态调整</span><br><span class="line">-XX:+UseCMSInitiatingOccupancyOnly</span><br><span class="line">//新生代内存设置为 512m</span><br><span class="line">-Xmn512m</span><br><span class="line">//并行执行新生代垃圾回收</span><br><span class="line">-XX:+UseParNewGC</span><br><span class="line">// 设 置 scanner 扫 描 结 果 占 用 内 存 大 小 ， 在 hbase-site.xml 中，设置</span><br><span class="line">hbase.client.scanner.max.result.size(默认值为 2M)为 eden 空间的 1/8</span><br><span class="line">（大概在 64M）</span><br><span class="line">// 设置多个与 max.result.size * handler.count 相乘的结果小于 Survivor </span><br><span class="line">Space(新生代经过垃圾回收之后存活的对象)</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="HBase-使用经验法则"><a href="#HBase-使用经验法则" class="headerlink" title="HBase 使用经验法则"></a>HBase 使用经验法则</h1><p>官方给出了权威的使用法则：</p>
+<ol>
+<li>Region 大小控制 10-50G</li>
+<li>cell 大小不超过 10M（性能对应小于 100K 的值有优化），如果使用 mob（Medium sized Objects 一种特殊用法）则不超过 50M。</li>
+<li>1 张表有 1 到 3 个列族，不要设计太多。最好就 1 个，如果使用多个尽量保证不会同时读取多个列族。</li>
+<li>1 到 2 个列族的表格，设计 50-100 个 Region。</li>
+<li>列族名称要尽量短，不要去模仿 RDBMS（关系型数据库）具有准确的名称和描述。</li>
+<li>如果 RowKey 设计时间在最前面，会导致有大量的旧数据存储在不活跃的 Region中，使用的时候，仅仅会操作少数的活动 Region，此时建议增加更多的 Region 个数。</li>
+<li>如果只有一个列族用于写入数据，分配内存资源的时候可以做出调整，即写缓存不会占用太多的内存。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a> -->
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"><i class="fa fa-tag"></i>  大数据</a>
+              <!-- <a href="/tags/HBase/" rel="tag"># HBase</a> -->
+              <a href="/tags/HBase/" rel="tag"><i class="fa fa-tag"></i>  HBase</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/24/HBase%E5%AE%9E%E6%93%8D/" rel="prev" title="HBase实操">
+      <i class="fa fa-chevron-left"></i> HBase实操
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/02/28/HBase%E6%95%B4%E5%90%88Phoenix/" rel="next" title="HBase整合Phoenix">
+      HBase整合Phoenix <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Master%E6%9E%B6%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">Master架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Meta%E8%A1%A8%E6%A0%BC%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.1.</span> <span class="nav-text">Meta表格介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RegionServer%E6%9E%B6%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">RegionServer架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MemStore"><span class="nav-number">1.2.1.</span> <span class="nav-text">MemStore</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WAL"><span class="nav-number">1.2.2.</span> <span class="nav-text">WAL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BlockCache"><span class="nav-number">1.2.3.</span> <span class="nav-text">BlockCache</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E6%B5%81%E7%A8%8B"><span class="nav-number">1.3.</span> <span class="nav-text">写流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MemStore-Flush"><span class="nav-number">1.4.</span> <span class="nav-text">MemStore Flush</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BB%E6%B5%81%E7%A8%8B"><span class="nav-number">1.5.</span> <span class="nav-text">读流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HFile%E7%BB%93%E6%9E%84"><span class="nav-number">1.5.1.</span> <span class="nav-text">HFile结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BB%E6%B5%81%E7%A8%8B-1"><span class="nav-number">1.5.2.</span> <span class="nav-text">读流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%88%E5%B9%B6%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE%E4%BC%98%E5%8C%96"><span class="nav-number">1.5.3.</span> <span class="nav-text">合并读取数据优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#StoreFile-Compaction"><span class="nav-number">1.6.</span> <span class="nav-text">StoreFile Compaction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Region-Split"><span class="nav-number">1.7.</span> <span class="nav-text">Region Split</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%84%E5%88%86%E5%8C%BA%EF%BC%88%E8%87%AA%E5%AE%9A%E4%B9%89%E5%88%86%E5%8C%BA%EF%BC%89"><span class="nav-number">1.7.1.</span> <span class="nav-text">预分区（自定义分区）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%8B%86%E5%88%86"><span class="nav-number">1.7.2.</span> <span class="nav-text">系统拆分</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HBase%E4%BC%98%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text">HBase优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RowKey%E8%AE%BE%E8%AE%A1%E4%BC%98%E5%8C%96"><span class="nav-number">2.1.</span> <span class="nav-text">RowKey设计优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E9%A2%84%E5%88%86%E5%8C%BA%E4%BC%98%E5%8C%96"><span class="nav-number">2.2.</span> <span class="nav-text">添加预分区优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E4%BC%98%E5%8C%96"><span class="nav-number">2.3.</span> <span class="nav-text">参数优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Zookeeper-%E4%BC%9A%E8%AF%9D%E8%B6%85%E6%97%B6%E6%97%B6%E9%97%B4"><span class="nav-number">2.3.1.</span> <span class="nav-text">Zookeeper 会话超时时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE-RPC-%E7%9B%91%E5%90%AC%E6%95%B0%E9%87%8F"><span class="nav-number">2.3.2.</span> <span class="nav-text">设置 RPC 监听数量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E6%8E%A7%E5%88%B6-Major-Compaction"><span class="nav-number">2.3.3.</span> <span class="nav-text">手动控制 Major Compaction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96-HStore-%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F"><span class="nav-number">2.3.4.</span> <span class="nav-text">优化 HStore 文件大小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96-HBase-%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%BC%93%E5%AD%98"><span class="nav-number">2.3.5.</span> <span class="nav-text">优化 HBase 客户端缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E5%AE%9A-scan-next-%E6%89%AB%E6%8F%8F-HBase-%E6%89%80%E8%8E%B7%E5%8F%96%E7%9A%84%E8%A1%8C%E6%95%B0"><span class="nav-number">2.3.6.</span> <span class="nav-text">指定 scan.next 扫描 HBase 所获取的行数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BlockCache-%E5%8D%A0%E7%94%A8-RegionServer-%E5%A0%86%E5%86%85%E5%AD%98%E7%9A%84%E6%AF%94%E4%BE%8B"><span class="nav-number">2.3.7.</span> <span class="nav-text">BlockCache 占用 RegionServer 堆内存的比例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MemStore-%E5%8D%A0%E7%94%A8-RegionServer-%E5%A0%86%E5%86%85%E5%AD%98%E7%9A%84%E6%AF%94%E4%BE%8B"><span class="nav-number">2.3.8.</span> <span class="nav-text">MemStore 占用 RegionServer 堆内存的比例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM-%E8%B0%83%E4%BC%98"><span class="nav-number">2.4.</span> <span class="nav-text">JVM 调优</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E4%BD%BF%E7%94%A8-CMS-%E6%94%B6%E9%9B%86%E5%99%A8"><span class="nav-number">2.4.1.</span> <span class="nav-text">设置使用 CMS 收集器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%9D%E6%8C%81%E6%96%B0%E7%94%9F%E4%BB%A3%E5%B0%BD%E9%87%8F%E5%B0%8F%EF%BC%8C%E5%90%8C%E6%97%B6%E5%B0%BD%E6%97%A9%E5%BC%80%E5%90%AFGC"><span class="nav-number">2.4.2.</span> <span class="nav-text">保持新生代尽量小，同时尽早开启GC</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HBase-%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C%E6%B3%95%E5%88%99"><span class="nav-number">3.</span> <span class="nav-text">HBase 使用经验法则</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">117</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>

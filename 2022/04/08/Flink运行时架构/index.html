@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Flink运行时组件作业管理器（JobManager） 控制一个应用程序执行的主进程，也就是说，每个应用程序都会被一个不同的JobManager 所控制执行。  JobManager 会先接收到要执行的应用程序，这个应用程序会包括：作业图（JobGraph）、逻辑数据流图（logical dataflow graph）和打包了所有的类、库和其它资源的JAR包。  JobManager 会把JobG">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flink运行时架构">
+<meta property="og:url" content="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="Flink运行时组件作业管理器（JobManager） 控制一个应用程序执行的主进程，也就是说，每个应用程序都会被一个不同的JobManager 所控制执行。  JobManager 会先接收到要执行的应用程序，这个应用程序会包括：作业图（JobGraph）、逻辑数据流图（logical dataflow graph）和打包了所有的类、库和其它资源的JAR包。  JobManager 会把JobG">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230108223719006.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115170314557.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115210857012.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115211021376.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115211429146.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115213603733.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115214233131.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116122736986.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116164848641.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116171054322.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116170759873.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116170914958.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116194255123.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116195243234.png">
+<meta property="article:published_time" content="2022-04-08T12:03:21.000Z">
+<meta property="article:modified_time" content="2023-01-16T14:57:49.310Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="大数据">
+<meta property="article:tag" content="Flink">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230108223719006.png">
+
+<link rel="canonical" href="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Flink运行时架构 | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Flink运行时架构
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-08 20:03:21" itemprop="dateCreated datePublished" datetime="2022-04-08T20:03:21+08:00">2022-04-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-16 22:57:49" itemprop="dateModified" datetime="2023-01-16T22:57:49+08:00">2023-01-16</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Flink运行时组件"><a href="#Flink运行时组件" class="headerlink" title="Flink运行时组件"></a>Flink运行时组件</h1><h2 id="作业管理器（JobManager）"><a href="#作业管理器（JobManager）" class="headerlink" title="作业管理器（JobManager）"></a>作业管理器（JobManager）</h2><ul>
+<li><p>控制一个应用程序执行的主进程，也就是说，每个应用程序都会被一个不同的JobManager 所控制执行。</p>
+</li>
+<li><p>JobManager 会先接收到要执行的应用程序，这个应用程序会包括：作业图（JobGraph）、逻辑数据流图（logical dataflow graph）和打包了所有的类、库和其它资源的JAR包。</p>
+</li>
+<li><p>JobManager 会把JobGraph转换成一个物理层面的数据流图，这个图被叫做“执行图”（ExecutionGraph），包含了所有可以并发执行的任务。</p>
+</li>
+<li><p>JobManager 会向资源管理器（ResourceManager）请求执行任务必要的资源，也就是任务管理器（TaskManager）上的插槽（slot）。一旦它获取到了足够的资源，就会将执行图分发到真正运行它们的TaskManager上。而在运行过程中，JobManager会负责所有需要中央协调的操作，比如说检查点（checkpoints）的协调。</p>
+</li>
+</ul>
+<h2 id="任务管理器（TaskManager）"><a href="#任务管理器（TaskManager）" class="headerlink" title="任务管理器（TaskManager）"></a>任务管理器（TaskManager）</h2><ul>
+<li><p>Flink中的工作进程。通常在Flink中会有多个TaskManager运行，每一个TaskManager都包含了一定数量的插槽（slots）。插槽的数量限制了TaskManager能够执行的任务数量。</p>
+</li>
+<li><p>启动之后，TaskManager会向资源管理器注册它的插槽；收到资源管理器的指令后，TaskManager就会将一个或者多个插槽提供给JobManager调用。JobManager就可以向插槽分配任务（tasks）来执行了。</p>
+</li>
+<li><p>在执行过程中，一个TaskManager可以跟其它运行同一应用程序的TaskManager交换数据。</p>
+</li>
+</ul>
+<h2 id="资源管理器（ResourceManager）"><a href="#资源管理器（ResourceManager）" class="headerlink" title="资源管理器（ResourceManager）"></a>资源管理器（ResourceManager）</h2><ul>
+<li><p>主要负责管理任务管理器（TaskManager）的插槽（slot），TaskManger 插槽是Flink中定义的处理资源单元。</p>
+</li>
+<li><p>Flink为不同的环境和资源管理工具提供了不同资源管理器，比如YARN、Mesos、K8s，以及standalone部署。</p>
+</li>
+<li><p>当JobManager申请插槽资源时，ResourceManager会将有空闲插槽的TaskManager分配给JobManager。如果ResourceManager没有足够的插槽来满足JobManager的请求，它还可以向资源提供平台发起会话，以提供启动TaskManager进程的容器。</p>
+</li>
+</ul>
+<h2 id="分发器（Dispacher）"><a href="#分发器（Dispacher）" class="headerlink" title="分发器（Dispacher）"></a>分发器（Dispacher）</h2><ul>
+<li><p>可以跨作业运行，它为应用提交提供了REST接口。</p>
+</li>
+<li><p>当一个应用被提交执行时，分发器就会启动并将应用移交给一个JobManager。</p>
+</li>
+<li><p>Dispatcher也会启动一个Web UI，用来方便地展示和监控作业执行的信息。</p>
+</li>
+<li><p>Dispatcher在架构中可能并不是必需的，这取决于应用提交运行的方式。</p>
+</li>
+</ul>
+<h1 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h1><p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230108223719006.png" alt="image-20230108223719006"></p>
+<h1 id="作业提交流程"><a href="#作业提交流程" class="headerlink" title="作业提交流程"></a>作业提交流程</h1><p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115170314557.png" alt="image-20230115170314557"></p>
+<h2 id="Standalone模式作业提交流程"><a href="#Standalone模式作业提交流程" class="headerlink" title="Standalone模式作业提交流程"></a>Standalone模式作业提交流程</h2><p>会话模式</p>
+<p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115210857012.png" alt="image-20230115210857012"></p>
+<h2 id="YARN模式作业提交流程"><a href="#YARN模式作业提交流程" class="headerlink" title="YARN模式作业提交流程"></a>YARN模式作业提交流程</h2><p>会话模式</p>
+<p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115211021376.png" alt="image-20230115211021376"></p>
+<p>单作业模式</p>
+<p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115211429146.png" alt="image-20230115211429146"></p>
+<h1 id="重要概念"><a href="#重要概念" class="headerlink" title="重要概念"></a>重要概念</h1><h2 id="程序和数据流（DataFlow）"><a href="#程序和数据流（DataFlow）" class="headerlink" title="程序和数据流（DataFlow）"></a>程序和数据流（DataFlow）</h2><p>所有的Flink程序都是由三部分组成：Source、Transformation和Sink。</p>
+<p>Source负责读取数据源，Transformation利用各种算子进行加工处理，Sink负责输出。</p>
+<img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115213603733.png" alt="image-20230115213603733" style="zoom:67%;">
+
+<p>在运行时，Flink上运行的程序会被映射成“逻辑数据流”（dataflows），它包含了source、transformation、sink。</p>
+<p>每一个dataflow以一个或多个sources开始以一个或多个sink结束。dataflow类似于任意的有向无环图（DAG）。</p>
+<p>在大部分情况下，程序中转换运算（transformations）跟dataflow中的算子（operator）是一一对应的关系。</p>
+<img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115214233131.png" alt="image-20230115214233131" style="zoom:67%;">
+
+
+
+<h2 id="并行度（Parallelism）"><a href="#并行度（Parallelism）" class="headerlink" title="并行度（Parallelism）"></a>并行度（Parallelism）</h2><p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116122736986.png" alt="image-20230116122736986"></p>
+<p>每一个算子（operator）可以包含一个或多个子任务（operator subtask），这些子任务在不同的线程、不同的物理机或不同的容器中完全独立地执行。</p>
+<p>一个特定算子地子任务（subtask）的个数被称之为其并行度（parallelism）。</p>
+<p>代码中设置并行度有几种方式，一种是直接在算子上设置；一种是在StreamExecutionEnvironment上设置，这种设置是全局设置，但不推荐这种方法设置并行度。</p>
+<h2 id="数据传输模式"><a href="#数据传输模式" class="headerlink" title="数据传输模式"></a>数据传输模式</h2><ul>
+<li>一个程序中，不同的算子可能具有不同的并行度。</li>
+<li>算子之间传输数据的形式可以是one-to-one（forwarding）的模式，也可以是redistributing的模式，具体是哪一种，取决于算子的种类。</li>
+<li>One-to-one：stream维护着分区及元素的顺序（比如source和map之间）。这意味着map算子的子任务看到的元素的个数及顺序跟source算子的子任务生产的元素的个数、顺序相同。map、filter、flatMap等算子都是one-to-one的对应关系。</li>
+<li>Redistributing：stream的分区会发生改变。每一个算子的子任务依据所选择的transformation发送数据到不同的目标任务。例如，keyBy基于hashCode重分区、而broadcast和rebalance会随机重新分区，这些算子都会引起redistribute过程，而redistribute过程就类似于Spark中的shuffle过程。</li>
+</ul>
+<h2 id="算子链（Operator-Chains）"><a href="#算子链（Operator-Chains）" class="headerlink" title="算子链（Operator Chains）"></a>算子链（Operator Chains）</h2><p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116164848641.png" alt="image-20230116164848641"></p>
+<ul>
+<li>Flink采用了一种称为任务链的优化技术，可以在特定条件下减少本地通信的开销。为了满足任务链的要求，必须将两个或多个算子设为相同的并行度，并通过本地转发（local forward）的方式进行连接。</li>
+<li>相同并行度one-to-one操作，Flink这样相连的算子链接在一起形成一个task，原来的算子称为里面的subtask。</li>
+<li>并行度相同，并且是one-to-one操作，两个条件缺一不可。</li>
+</ul>
+<h2 id="执行图"><a href="#执行图" class="headerlink" title="执行图"></a>执行图</h2><ul>
+<li>Flink中的执行图可以分成四层：StreamGraph -&gt; JobGrapth -&gt; ExecutionGraph -&gt; 物理执行图</li>
+<li>StreamGraph：是根据用户通过Stream API编写的代码生成的最初的图。用来表示程序的拓扑结构。</li>
+<li>JobGraph：StreamGraph经过优化后生成了JobGraph，提交给JobManager的数据结构。主要的优化为，将多个符合条件的节点chain在一起作为一个节点。</li>
+<li>ExecutionGraph：JobManager根据JobGraph生成ExecutionGraph。ExecutionGraph是JobGraph的并行化版本，是调度层最核心的数据结构。</li>
+<li>物理执行图：JobManager根据ExecutionGraph对Job进行调度后，在各个TaskManager上部署Task后形成的“图”，并不是一个具体的数据结构。</li>
+</ul>
+<p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116171054322.png" alt="image-20230116171054322"></p>
+<p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116170759873.png" alt="image-20230116170759873"></p>
+<p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116170914958.png" alt="image-20230116170914958"></p>
+<h2 id="任务（Task）和任务槽（Task-Slots）"><a href="#任务（Task）和任务槽（Task-Slots）" class="headerlink" title="任务（Task）和任务槽（Task Slots）"></a>任务（Task）和任务槽（Task Slots）</h2><p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116194255123.png" alt="image-20230116194255123"></p>
+<p>Flink中每一个TaskManager都是一个JVM进程，它可能会在独立的线程上执行一个或多个子任务。</p>
+<p>为了控制一个TaskManager能接收多少个task，TaskManager通过task slot来进行控制（一个TaskManager至少有一个slot）</p>
+<h2 id="任务共享Slot"><a href="#任务共享Slot" class="headerlink" title="任务共享Slot"></a>任务共享Slot</h2><p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116195243234.png" alt="image-20230116195243234"></p>
+<p>默认情况下，Flink运行子任务共享slot。这样的结果是，一个slot可以保存作业的整个管道。</p>
+<p>当我们将资源密集型和非密集型的任务放到一个slot中，它们就可以自行分配资源占用的比例，从而保证最重的活平均分配给所有的TaskManager。</p>
+<h2 id="Slot和并行度"><a href="#Slot和并行度" class="headerlink" title="Slot和并行度"></a>Slot和并行度</h2><p><strong>Task Slot</strong></p>
+<ul>
+<li>静态概念，是指TaskManager具有的并发执行能力</li>
+<li>通过参数taskmanager.numberOfTaskSlots进行配置</li>
+</ul>
+<p><strong>并行度（parallelism）</strong></p>
+<ul>
+<li>动态概念，也就是TaskManager运行程序时实际使用的并发能力</li>
+<li>通过参数parallelism.default进行配置</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a> -->
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"><i class="fa fa-tag"></i>  大数据</a>
+              <!-- <a href="/tags/Flink/" rel="tag"># Flink</a> -->
+              <a href="/tags/Flink/" rel="tag"><i class="fa fa-tag"></i>  Flink</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/04/05/Flink%E9%83%A8%E7%BD%B2/" rel="prev" title="Flink部署">
+      <i class="fa fa-chevron-left"></i> Flink部署
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/04/11/Flink%E6%B5%81%E5%A4%84%E7%90%86API/" rel="next" title="Flink流处理API">
+      Flink流处理API <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E7%BB%84%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">Flink运行时组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%9C%E4%B8%9A%E7%AE%A1%E7%90%86%E5%99%A8%EF%BC%88JobManager%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">作业管理器（JobManager）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%BB%E5%8A%A1%E7%AE%A1%E7%90%86%E5%99%A8%EF%BC%88TaskManager%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">任务管理器（TaskManager）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8%EF%BC%88ResourceManager%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">资源管理器（ResourceManager）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%8F%91%E5%99%A8%EF%BC%88Dispacher%EF%BC%89"><span class="nav-number">1.4.</span> <span class="nav-text">分发器（Dispacher）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">系统架构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%9C%E4%B8%9A%E6%8F%90%E4%BA%A4%E6%B5%81%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">作业提交流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Standalone%E6%A8%A1%E5%BC%8F%E4%BD%9C%E4%B8%9A%E6%8F%90%E4%BA%A4%E6%B5%81%E7%A8%8B"><span class="nav-number">3.1.</span> <span class="nav-text">Standalone模式作业提交流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YARN%E6%A8%A1%E5%BC%8F%E4%BD%9C%E4%B8%9A%E6%8F%90%E4%BA%A4%E6%B5%81%E7%A8%8B"><span class="nav-number">3.2.</span> <span class="nav-text">YARN模式作业提交流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E6%A6%82%E5%BF%B5"><span class="nav-number">4.</span> <span class="nav-text">重要概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%95%B0%E6%8D%AE%E6%B5%81%EF%BC%88DataFlow%EF%BC%89"><span class="nav-number">4.1.</span> <span class="nav-text">程序和数据流（DataFlow）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E8%A1%8C%E5%BA%A6%EF%BC%88Parallelism%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">并行度（Parallelism）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93%E6%A8%A1%E5%BC%8F"><span class="nav-number">4.3.</span> <span class="nav-text">数据传输模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%97%E5%AD%90%E9%93%BE%EF%BC%88Operator-Chains%EF%BC%89"><span class="nav-number">4.4.</span> <span class="nav-text">算子链（Operator Chains）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E5%9B%BE"><span class="nav-number">4.5.</span> <span class="nav-text">执行图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%BB%E5%8A%A1%EF%BC%88Task%EF%BC%89%E5%92%8C%E4%BB%BB%E5%8A%A1%E6%A7%BD%EF%BC%88Task-Slots%EF%BC%89"><span class="nav-number">4.6.</span> <span class="nav-text">任务（Task）和任务槽（Task Slots）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%BB%E5%8A%A1%E5%85%B1%E4%BA%ABSlot"><span class="nav-number">4.7.</span> <span class="nav-text">任务共享Slot</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Slot%E5%92%8C%E5%B9%B6%E8%A1%8C%E5%BA%A6"><span class="nav-number">4.8.</span> <span class="nav-text">Slot和并行度</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">117</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>

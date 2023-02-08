@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="自定义Interceptor案例需求使用 Flume 采集服务器本地日志，需要按照日志类型的不同，将不同种类的日志发往不同的分析系统。 需求分析在实际的开发中，一台服务器产生的日志类型可能有很多种，不同类型的日志可能需要发送到不同的分析系统。此时会用到 Flume 拓扑结构中的 Multiplexing 结构，Multiplexing的原理是，根据 event 中 Header 的某个 key 的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flume自定义">
+<meta property="og:url" content="http://fhclk.github.io/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="自定义Interceptor案例需求使用 Flume 采集服务器本地日志，需要按照日志类型的不同，将不同种类的日志发往不同的分析系统。 需求分析在实际的开发中，一台服务器产生的日志类型可能有很多种，不同类型的日志可能需要发送到不同的分析系统。此时会用到 Flume 拓扑结构中的 Multiplexing 结构，Multiplexing的原理是，根据 event 中 Header 的某个 key 的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://fhclk.github.io/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/image-20230201111737582.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/image-20230201143007881.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/image-20230201145607180.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/image-20230201145638001.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/image-20230201153154556.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/image-20230201153432336.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/image-20230201155827344.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/image-20230201160729397.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/image-20230201162959657.png">
+<meta property="article:published_time" content="2021-09-22T12:22:08.000Z">
+<meta property="article:modified_time" content="2023-02-01T09:48:59.266Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="大数据">
+<meta property="article:tag" content="Flume">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/image-20230201111737582.png">
+
+<link rel="canonical" href="http://fhclk.github.io/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Flume自定义 | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Flume自定义
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-22 20:22:08" itemprop="dateCreated datePublished" datetime="2021-09-22T20:22:08+08:00">2021-09-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-01 17:48:59" itemprop="dateModified" datetime="2023-02-01T17:48:59+08:00">2023-02-01</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="自定义Interceptor"><a href="#自定义Interceptor" class="headerlink" title="自定义Interceptor"></a>自定义Interceptor</h1><h2 id="案例需求"><a href="#案例需求" class="headerlink" title="案例需求"></a>案例需求</h2><p>使用 Flume 采集服务器本地日志，需要按照日志类型的不同，将不同种类的日志发往不同的分析系统。</p>
+<h2 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h2><p>在实际的开发中，一台服务器产生的日志类型可能有很多种，不同类型的日志可能需要发送到不同的分析系统。此时会用到 Flume 拓扑结构中的 Multiplexing 结构，Multiplexing的原理是，根据 event 中 Header 的某个 key 的值，将不同的 event 发送到不同的 Channel中，所以我们需要自定义一个 Interceptor，为不同类型的 event 的 Header 中的 key 赋予不同的值。</p>
+<p>在该案例中，我们以端口数据模拟日志，以是否包含”flume”模拟不同类型的日志，我们需要自定义 interceptor 区分数据中是否包含”flume”，将其分别发往不同的分析系统（Channel）。</p>
+<p><img src="/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/image-20230201111737582.png" alt="image-20230201111737582"></p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><ol>
+<li><p>创建拦截器</p>
+<p>a. 创建maven项目flume</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.flume<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flume-ng-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.9.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>b. 创建类TypeInterceptor</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.flume.Context;</span><br><span class="line"><span class="keyword">import</span> org.apache.flume.Event;</span><br><span class="line"><span class="keyword">import</span> org.apache.flume.interceptor.Interceptor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TypeInterceptor</span> <span class="keyword">implements</span> <span class="title class_">Interceptor</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 声明一个存放事件的集合</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;Event&gt; addHeaderEvents;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initialize</span><span class="params">()</span> &#123;</span><br><span class="line">        addHeaderEvents = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 单个事件拦截</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Event <span class="title function_">intercept</span><span class="params">(Event event)</span> &#123;</span><br><span class="line">        <span class="comment">// 获取事件中的头信息</span></span><br><span class="line">        Map&lt;String, String&gt; headers = event.getHeaders();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取事件中的body</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">body</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(event.getBody());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 根据body中是否有flume来决定添加怎样的头信息</span></span><br><span class="line">        <span class="keyword">if</span> (body.contains(<span class="string">&quot;flume&quot;</span>)) &#123;</span><br><span class="line">            headers.put(<span class="string">&quot;type&quot;</span>, <span class="string">&quot;first&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            headers.put(<span class="string">&quot;type&quot;</span>, <span class="string">&quot;second&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> event;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 批量事件拦截器</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;Event&gt; <span class="title function_">intercept</span><span class="params">(List&lt;Event&gt; list)</span> &#123;</span><br><span class="line">        addHeaderEvents.clear();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (Event event : list) &#123;</span><br><span class="line">            addHeaderEvents.add(intercept(event));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> addHeaderEvents;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">close</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Builder</span> <span class="keyword">implements</span> <span class="title class_">Interceptor</span>.Builder &#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> Interceptor <span class="title function_">build</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">TypeInterceptor</span>();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">configure</span><span class="params">(Context context)</span> &#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>打包</p>
+<img src="/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/image-20230201143007881.png" alt="image-20230201143007881" style="zoom:67%;">
+
+<p>c. 将打包生成的flume-1.0-SNAPSHOT.jar上传至flume的lib目录下</p>
+</li>
+<li><p>编辑flume配置文件。</p>
+<p>a. 为 node1上的 Flume1 配置 1 个 netcat source， 1 个 sink group （ 2 个 avro sink），并配置相应的 ChannelSelector 和 interceptor。配置文件名为 flume1-interceptor.conf</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Name the components on this agent</span></span><br><span class="line"><span class="attr">a1.sources</span> = <span class="string">r1</span></span><br><span class="line"><span class="attr">a1.sinks</span> = <span class="string">k1 k2</span></span><br><span class="line"><span class="attr">a1.channels</span> = <span class="string">c1 c2</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Describe/configure the source</span></span><br><span class="line"><span class="attr">a1.sources.r1.type</span> = <span class="string">netcat</span></span><br><span class="line"><span class="attr">a1.sources.r1.bind</span> = <span class="string">localhost</span></span><br><span class="line"><span class="attr">a1.sources.r1.port</span> = <span class="string">44444</span></span><br><span class="line"><span class="attr">a1.sources.r1.interceptors</span> = <span class="string">i1</span></span><br><span class="line"><span class="attr">a1.sources.r1.interceptors.i1.type</span> = <span class="string">com.st.flume.interceptor.CustomInterceptor$Builder</span></span><br><span class="line"><span class="attr">a1.sources.r1.selector.type</span> = <span class="string">multiplexing</span></span><br><span class="line"><span class="attr">a1.sources.r1.selector.header</span> = <span class="string">type</span></span><br><span class="line"><span class="attr">a1.sources.r1.selector.mapping.first</span> = <span class="string">c1</span></span><br><span class="line"><span class="attr">a1.sources.r1.selector.mapping.second</span> = <span class="string">c2</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Describe the sink</span></span><br><span class="line"><span class="attr">a1.sinks.k1.type</span> = <span class="string">avro</span></span><br><span class="line"><span class="attr">a1.sinks.k1.hostname</span> = <span class="string">node2</span></span><br><span class="line"><span class="attr">a1.sinks.k1.port</span> = <span class="string">4141</span></span><br><span class="line"><span class="attr">a1.sinks.k2.type</span>=<span class="string">avro</span></span><br><span class="line"><span class="attr">a1.sinks.k2.hostname</span> = <span class="string">node3</span></span><br><span class="line"><span class="attr">a1.sinks.k2.port</span> = <span class="string">4242</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Use a channel which buffers events in memory</span></span><br><span class="line"><span class="attr">a1.channels.c1.type</span> = <span class="string">memory</span></span><br><span class="line"><span class="attr">a1.channels.c1.capacity</span> = <span class="string">1000</span></span><br><span class="line"><span class="attr">a1.channels.c1.transactionCapacity</span> = <span class="string">100</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Use a channel which buffers events in memory</span></span><br><span class="line"><span class="attr">a1.channels.c2.type</span> = <span class="string">memory</span></span><br><span class="line"><span class="attr">a1.channels.c2.capacity</span> = <span class="string">1000</span></span><br><span class="line"><span class="attr">a1.channels.c2.transactionCapacity</span> = <span class="string">100</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Bind the source and sink to the channel</span></span><br><span class="line"><span class="attr">a1.sources.r1.channels</span> = <span class="string">c1 c2</span></span><br><span class="line"><span class="attr">a1.sinks.k1.channel</span> = <span class="string">c1</span></span><br><span class="line"><span class="attr">a1.sinks.k2.channel</span> = <span class="string">c2</span></span><br></pre></td></tr></table></figure>
+
+<p>b. 为 node2上的 Flume2 配置一个 avro source 和一个 logger sink。 配置文件名flume2-interceptor.conf。</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">a1.sources</span> = <span class="string">r1</span></span><br><span class="line"><span class="attr">a1.sinks</span> = <span class="string">k1</span></span><br><span class="line"><span class="attr">a1.channels</span> = <span class="string">c1</span></span><br><span class="line"></span><br><span class="line"><span class="attr">a1.sources.r1.type</span> = <span class="string">avro</span></span><br><span class="line"><span class="attr">a1.sources.r1.bind</span> = <span class="string">node2</span></span><br><span class="line"><span class="attr">a1.sources.r1.port</span> = <span class="string">4141</span></span><br><span class="line"><span class="attr">a1.sinks.k1.type</span> = <span class="string">logger</span></span><br><span class="line"><span class="attr">a1.channels.c1.type</span> = <span class="string">memory</span></span><br><span class="line"><span class="attr">a1.channels.c1.capacity</span> = <span class="string">1000</span></span><br><span class="line"><span class="attr">a1.channels.c1.transactionCapacity</span> = <span class="string">100</span></span><br><span class="line"></span><br><span class="line"><span class="attr">a1.sinks.k1.channel</span> = <span class="string">c1</span></span><br><span class="line"><span class="attr">a1.sources.r1.channels</span> = <span class="string">c1</span></span><br></pre></td></tr></table></figure>
+
+<p>c. 为 ndoe3上的 Flume3 配置一个 avro source 和一个 logger sink。配置文件名flume3-interceptor.conf。  </p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">a1.sources</span> = <span class="string">r1</span></span><br><span class="line"><span class="attr">a1.sinks</span> = <span class="string">k1</span></span><br><span class="line"><span class="attr">a1.channels</span> = <span class="string">c1</span></span><br><span class="line"></span><br><span class="line"><span class="attr">a1.sources.r1.type</span> = <span class="string">avro</span></span><br><span class="line"><span class="attr">a1.sources.r1.bind</span> = <span class="string">node3</span></span><br><span class="line"><span class="attr">a1.sources.r1.port</span> = <span class="string">4242</span></span><br><span class="line"><span class="attr">a1.sinks.k1.type</span> = <span class="string">logger</span></span><br><span class="line"><span class="attr">a1.channels.c1.type</span> = <span class="string">memory</span></span><br><span class="line"><span class="attr">a1.channels.c1.capacity</span> = <span class="string">1000</span></span><br><span class="line"><span class="attr">a1.channels.c1.transactionCapacity</span> = <span class="string">100</span></span><br><span class="line"></span><br><span class="line"><span class="attr">a1.sinks.k1.channel</span> = <span class="string">c1</span></span><br><span class="line"><span class="attr">a1.sources.r1.channels</span> = <span class="string">c1</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+</li>
+<li><p>依次启动node2，node3，node1上的flume进程</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node2 flume]# bin/flume-ng agent --conf conf/ --name a1 --conf-file job/interceptor/flume2-interceptor.conf -Dflume.root.logger=INFO,console</span><br><span class="line">(base) [root@node3 flume]# bin/flume-ng agent --conf conf/ --name a1 --conf-file job/interceptor/flume3-interceptor.conf -Dflume.root.logger=INFO,console</span><br><span class="line">(base) [root@node1 flume]# bin/flume-ng agent --conf conf/ --name a1 --conf-file job/interceptor/flume1-interceptor.conf -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>使用netcat发送数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# nc localhost 44444</span><br><span class="line">hadoop</span><br><span class="line">flume</span><br><span class="line">spark</span><br><span class="line">flume1</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>观察node2和node3的打印</p>
+<p><img src="/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/image-20230201145607180.png" alt="image-20230201145607180"></p>
+<p><img src="/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/image-20230201145638001.png" alt="image-20230201145638001"></p>
+</li>
+</ol>
+<h1 id="自定义Source"><a href="#自定义Source" class="headerlink" title="自定义Source"></a>自定义Source</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Source 是负责接收数据到 Flume Agent 的组件。 Source 组件可以处理各种类型、各种格式的日志数据， 包括 avro、 thrift、 exec、 jms、 spooling directory、 netcat、 sequencegenerator、 syslog、 http、 legacy。官方提供的 source 类型已经很多，但是有时候并不能满足实际开发当中的需求，此时我们就需要根据实际需求自定义某些 source。  </p>
+<p>官方也提供了自定义 source 的接口：<br><a target="_blank" rel="noopener" href="https://flume.apache.org/FlumeDeveloperGuide.html#source">https://flume.apache.org/FlumeDeveloperGuide.html#source</a> 根据官方说明自定义MySource 需要继承 AbstractSource 类并实现 Configurable 和 PollableSource 接口。</p>
+<p>实现相应方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">getBackOffSleepIncrement()    <span class="comment">//backoff 步长  </span></span><br><span class="line">getMaxBackOffSleepInterval()   <span class="comment">//backoff 最长时间</span></span><br><span class="line">configure(Context context)   <span class="comment">//初始化 context（读取配置文件内容）</span></span><br><span class="line">process()   <span class="comment">//获取数据封装成 event 并写入 channel，这个方法将被循环调用。  </span></span><br></pre></td></tr></table></figure>
+
+<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>使用 flume 接收数据，并给每条数据添加前缀，输出到控制台。前缀可从 flume 配置文件中配置。  </p>
+<h2 id="需求分析-1"><a href="#需求分析-1" class="headerlink" title="需求分析"></a>需求分析</h2><p><img src="/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/image-20230201153154556.png" alt="image-20230201153154556"></p>
+<p><img src="/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/image-20230201153432336.png" alt="image-20230201153432336"></p>
+<h2 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h2><ol>
+<li><p>自定义source</p>
+<p>a. 创建类MySource  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.source;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.flume.Context;</span><br><span class="line"><span class="keyword">import</span> org.apache.flume.EventDeliveryException;</span><br><span class="line"><span class="keyword">import</span> org.apache.flume.PollableSource;</span><br><span class="line"><span class="keyword">import</span> org.apache.flume.conf.Configurable;</span><br><span class="line"><span class="keyword">import</span> org.apache.flume.event.SimpleEvent;</span><br><span class="line"><span class="keyword">import</span> org.apache.flume.source.AbstractSource;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MySource</span> <span class="keyword">extends</span> <span class="title class_">AbstractSource</span> <span class="keyword">implements</span> <span class="title class_">Configurable</span>, PollableSource &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 定义配置文件将来要读取的字段</span></span><br><span class="line">    <span class="keyword">private</span> Long delay;</span><br><span class="line">    <span class="keyword">private</span> String field;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Status <span class="title function_">process</span><span class="params">()</span> <span class="keyword">throws</span> EventDeliveryException &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//创建事件头信息</span></span><br><span class="line">            HashMap&lt;String, String&gt; headerMap = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">            <span class="comment">//创建事件</span></span><br><span class="line">            <span class="type">SimpleEvent</span> <span class="variable">event</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleEvent</span>();</span><br><span class="line">            <span class="comment">//循环封装事件</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">                <span class="comment">//给事件设置头信息</span></span><br><span class="line">                event.setHeaders(headerMap);</span><br><span class="line">                <span class="comment">//给事件设置内容</span></span><br><span class="line">                event.setBody((field + i).getBytes());</span><br><span class="line">                <span class="comment">//将事件写入channel</span></span><br><span class="line">                getChannelProcessor().processEvent(event);</span><br><span class="line">                Thread.sleep(delay);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span> Status.BACKOFF;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> Status.READY;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">long</span> <span class="title function_">getBackOffSleepIncrement</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">long</span> <span class="title function_">getMaxBackOffSleepInterval</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化配置信息</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">configure</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">        delay = context.getLong(<span class="string">&quot;delay&quot;</span>);</span><br><span class="line">        field = context.getString(<span class="string">&quot;field&quot;</span>, <span class="string">&quot;Hello!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b. 打包，并上传至flume的lib目录</p>
+</li>
+<li><p>编辑flume配置文件</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Name the components on this agent</span></span><br><span class="line"><span class="attr">a1.sources</span> = <span class="string">r1</span></span><br><span class="line"><span class="attr">a1.sinks</span> = <span class="string">k1</span></span><br><span class="line"><span class="attr">a1.channels</span> = <span class="string">c1</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Describe/configure the source</span></span><br><span class="line"><span class="attr">a1.sources.r1.type</span> = <span class="string">com.st.source.MySource</span></span><br><span class="line"><span class="attr">a1.sources.r1.delay</span> = <span class="string">1000</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Describe the sink</span></span><br><span class="line"><span class="attr">a1.sinks.k1.type</span> = <span class="string">logger</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Use a channel which buffers events in memory</span></span><br><span class="line"><span class="attr">a1.channels.c1.type</span> = <span class="string">memory</span></span><br><span class="line"><span class="attr">a1.channels.c1.capacity</span> = <span class="string">1000</span></span><br><span class="line"><span class="attr">a1.channels.c1.transactionCapacity</span> = <span class="string">100</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Bind the source and sink to the channel</span></span><br><span class="line"><span class="attr">a1.sources.r1.channels</span> = <span class="string">c1</span></span><br><span class="line"><span class="attr">a1.sinks.k1.channel</span> = <span class="string">c1</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>启动flume进程</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# bin/flume-ng agent --conf conf/ --name a1 --conf-file job/source/flume1-source.conf -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>查看结果</p>
+<p><img src="/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/image-20230201155827344.png" alt="image-20230201155827344"></p>
+</li>
+</ol>
+<h1 id="自定义Sink"><a href="#自定义Sink" class="headerlink" title="自定义Sink"></a>自定义Sink</h1><h2 id="介绍-1"><a href="#介绍-1" class="headerlink" title="介绍"></a>介绍</h2><p>Sink 不断地轮询 Channel 中的事件且批量地移除它们，并将这些事件批量写入到存储或索引系统、或者被发送到另一个 Flume Agent。</p>
+<p>Sink 是完全事务性的。在从 Channel 批量删除数据之前，每个 Sink 用 Channel 启动一个事务。批量事件一旦成功写出到存储系统或下一个 Flume Agent， Sink 就利用 Channel 提交事务。事务一旦被提交，该 Channel 从自己的内部缓冲区删除事件。  </p>
+<p>Sink 组件目的地包括 hdfs、 logger、 avro、 thrift、 ipc、 file、 null、 HBase、 solr、自定义。官方提供的 Sink 类型已经很多，但是有时候并不能满足实际开发当中的需求，此时我们就需要根据实际需求自定义某些 Sink。  </p>
+<p>  官方也提供了自定义 sink 的接口：<br><a target="_blank" rel="noopener" href="https://flume.apache.org/FlumeDeveloperGuide.html#sink">https://flume.apache.org/FlumeDeveloperGuide.html#sink</a> 根据官方说明自定义MySink 需要继承 AbstractSink 类并实现 Configurable 接口。  </p>
+<p>实现相应方法：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">configure(Context context)<span class="comment">//初始化 context（读取配置文件内容）</span></span><br><span class="line">process()<span class="comment">//从 Channel 读取获取数据（ event），这个方法将被循环调用。使用场景：读取 Channel 数据写入 MySQL 或者其他文件系统。</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="需求-1"><a href="#需求-1" class="headerlink" title="需求"></a>需求</h2><p>使用 flume 接收数据，并在 Sink 端给每条数据添加前缀和后缀，输出到控制台。前后缀可在 flume 任务配置文件中配置。  </p>
+<h2 id="需求分析-2"><a href="#需求分析-2" class="headerlink" title="需求分析"></a>需求分析</h2><p><img src="/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/image-20230201160729397.png" alt="image-20230201160729397"></p>
+<h2 id="实现-2"><a href="#实现-2" class="headerlink" title="实现"></a>实现</h2><ol>
+<li><p>自定义sink</p>
+<p>a. 创建类MySink  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.sink;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.flume.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.flume.conf.Configurable;</span><br><span class="line"><span class="keyword">import</span> org.apache.flume.sink.AbstractSink;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MySink</span> <span class="keyword">extends</span> <span class="title class_">AbstractSink</span> <span class="keyword">implements</span> <span class="title class_">Configurable</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建Logger对象</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">LOG</span> <span class="operator">=</span> LoggerFactory.getLogger(AbstractSink.class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String prefix;</span><br><span class="line">    <span class="keyword">private</span> String suffix;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Status <span class="title function_">process</span><span class="params">()</span> <span class="keyword">throws</span> EventDeliveryException &#123;</span><br><span class="line">        <span class="comment">// 声明返回值状态信息</span></span><br><span class="line">        Status status;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取当前Sink绑定的Channel</span></span><br><span class="line">        <span class="type">Channel</span> <span class="variable">ch</span> <span class="operator">=</span> getChannel();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取事务</span></span><br><span class="line">        <span class="type">Transaction</span> <span class="variable">txn</span> <span class="operator">=</span> ch.getTransaction();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 声明事件</span></span><br><span class="line">        Event event;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 开启事务</span></span><br><span class="line">        txn.begin();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 读取channel中的事件，直到读取到事件结束循环</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            event = ch.take();</span><br><span class="line">            <span class="keyword">if</span> (event != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//处理事件（打印）</span></span><br><span class="line">            LOG.info(prefix + <span class="keyword">new</span> <span class="title class_">String</span>(event.getBody()) + suffix);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 事务提交</span></span><br><span class="line">            txn.commit();</span><br><span class="line">            status = Status.READY;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="comment">//异常，事务回滚</span></span><br><span class="line">            txn.rollback();</span><br><span class="line">            status = Status.BACKOFF;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="comment">// 关闭事务</span></span><br><span class="line">            txn.close();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> status;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">configure</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">        <span class="comment">//读取配置文件内容，有默认值</span></span><br><span class="line">        prefix = context.getString(<span class="string">&quot;prefix&quot;</span>, <span class="string">&quot;hello:&quot;</span>);</span><br><span class="line">        <span class="comment">//读取配置文件内容，无默认值</span></span><br><span class="line">        suffix = context.getString(<span class="string">&quot;suffix&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b. 打包，并上传至flume的lib目录</p>
+</li>
+<li><p>编辑flume配置文件</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Name the components on this agent</span></span><br><span class="line"><span class="attr">a1.sources</span> = <span class="string">r1</span></span><br><span class="line"><span class="attr">a1.sinks</span> = <span class="string">k1</span></span><br><span class="line"><span class="attr">a1.channels</span> = <span class="string">c1</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Describe/configure the source</span></span><br><span class="line"><span class="attr">a1.sources.r1.type</span> = <span class="string">netcat</span></span><br><span class="line"><span class="attr">a1.sources.r1.bind</span> = <span class="string">localhost</span></span><br><span class="line"><span class="attr">a1.sources.r1.port</span> = <span class="string">44444</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Describe the sink</span></span><br><span class="line"><span class="attr">a1.sinks.k1.type</span> = <span class="string">com.st.sink.MySink</span></span><br><span class="line"><span class="attr">a1.sinks.k1.prefix</span> = <span class="string">Flume&gt;&gt;:</span></span><br><span class="line"><span class="attr">a1.sinks.k1.suffix</span> = <span class="string">:flume&lt;&lt;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Use a channel which buffers events in memory</span></span><br><span class="line"><span class="attr">a1.channels.c1.type</span> = <span class="string">memory</span></span><br><span class="line"><span class="attr">a1.channels.c1.capacity</span> = <span class="string">1000</span></span><br><span class="line"><span class="attr">a1.channels.c1.transactionCapacity</span> = <span class="string">100</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Bind the source and sink to the channel</span></span><br><span class="line"><span class="attr">a1.sources.r1.channels</span> = <span class="string">c1</span></span><br><span class="line"><span class="attr">a1.sinks.k1.channel</span> = <span class="string">c1</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>启动flume进程</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# bin/flume-ng agent --conf conf/ --name a1 --conf-file job/sink/flume1-sink.conf -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>使用netcat发送数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# nc localhost 44444</span><br><span class="line">had</span><br><span class="line"></span><br><span class="line">hard</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>查看结果</p>
+<p><img src="/2021/09/22/Flume%E8%87%AA%E5%AE%9A%E4%B9%89/image-20230201162959657.png" alt="image-20230201162959657"></p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a> -->
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"><i class="fa fa-tag"></i>  大数据</a>
+              <!-- <a href="/tags/Flume/" rel="tag"># Flume</a> -->
+              <a href="/tags/Flume/" rel="tag"><i class="fa fa-tag"></i>  Flume</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/20/Flume%E5%BC%80%E5%8F%91%E6%A1%88%E4%BE%8B/" rel="prev" title="Flume开发案例">
+      <i class="fa fa-chevron-left"></i> Flume开发案例
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/25/Flume%E7%9B%91%E6%8E%A7-Ganglia/" rel="next" title="Flume监控-Ganglia">
+      Flume监控-Ganglia <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89Interceptor"><span class="nav-number">1.</span> <span class="nav-text">自定义Interceptor</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%E9%9C%80%E6%B1%82"><span class="nav-number">1.1.</span> <span class="nav-text">案例需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90"><span class="nav-number">1.2.</span> <span class="nav-text">需求分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.3.</span> <span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89Source"><span class="nav-number">2.</span> <span class="nav-text">自定义Source</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9C%80%E6%B1%82"><span class="nav-number">2.2.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90-1"><span class="nav-number">2.3.</span> <span class="nav-text">需求分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0-1"><span class="nav-number">2.4.</span> <span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89Sink"><span class="nav-number">3.</span> <span class="nav-text">自定义Sink</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D-1"><span class="nav-number">3.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9C%80%E6%B1%82-1"><span class="nav-number">3.2.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90-2"><span class="nav-number">3.3.</span> <span class="nav-text">需求分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0-2"><span class="nav-number">3.4.</span> <span class="nav-text">实现</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">117</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>

@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Kafka Broker 工作流程Zookeeper 存储的 Kafka 信息 启动Zookeeper客户端 1(base) [root@node1 zookeeper-3.7.1]# .&#x2F;bin&#x2F;zkCli.sh     通过ls命令查看kafka相关信息 12[zk: localhost:2181(CONNECTED) 1] ls &#x2F;kafka[admin, brokers, cluster,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka Broker">
+<meta property="og:url" content="http://fhclk.github.io/2022/03/11/Kafka-Broker/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="Kafka Broker 工作流程Zookeeper 存储的 Kafka 信息 启动Zookeeper客户端 1(base) [root@node1 zookeeper-3.7.1]# .&#x2F;bin&#x2F;zkCli.sh     通过ls命令查看kafka相关信息 12[zk: localhost:2181(CONNECTED) 1] ls &#x2F;kafka[admin, brokers, cluster,">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://fhclk.github.io/2022/03/11/Kafka-Broker/image-20230128163441415.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/03/11/Kafka-Broker/image-20230128163849451.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/03/11/Kafka-Broker/image-20230128163849451.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/03/11/Kafka-Broker/image-20230129133820516.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/03/11/Kafka-Broker/image-20230129134734692.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/03/11/Kafka-Broker/image-20230129153950603.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/03/11/Kafka-Broker/image-20230129161142188.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/03/11/Kafka-Broker/image-20230129162439945.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/03/11/Kafka-Broker/image-20230129163213076.png">
+<meta property="article:published_time" content="2022-03-11T02:03:40.000Z">
+<meta property="article:modified_time" content="2023-01-29T08:36:26.313Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="大数据">
+<meta property="article:tag" content="Kafka">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/2022/03/11/Kafka-Broker/image-20230128163441415.png">
+
+<link rel="canonical" href="http://fhclk.github.io/2022/03/11/Kafka-Broker/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Kafka Broker | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/03/11/Kafka-Broker/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Kafka Broker
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-11 10:03:40" itemprop="dateCreated datePublished" datetime="2022-03-11T10:03:40+08:00">2022-03-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-29 16:36:26" itemprop="dateModified" datetime="2023-01-29T16:36:26+08:00">2023-01-29</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Kafka-Broker-工作流程"><a href="#Kafka-Broker-工作流程" class="headerlink" title="Kafka Broker 工作流程"></a>Kafka Broker 工作流程</h1><h2 id="Zookeeper-存储的-Kafka-信息"><a href="#Zookeeper-存储的-Kafka-信息" class="headerlink" title="Zookeeper 存储的 Kafka 信息"></a>Zookeeper 存储的 Kafka 信息</h2><ol>
+<li><p>启动Zookeeper客户端</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 zookeeper-3.7.1]# ./bin/zkCli.sh </span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>通过ls命令查看kafka相关信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 1] ls /kafka</span><br><span class="line">[admin, brokers, cluster, config, consumers, controller, controller_epoch, feature, isr_change_notification, latest_producer_id_block, log_dir_event_notification]</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><img src="/2022/03/11/Kafka-Broker/image-20230128163441415.png" alt="image-20230128163441415"></p>
+<h2 id="Kafka-Broker总体工作流程"><a href="#Kafka-Broker总体工作流程" class="headerlink" title="Kafka Broker总体工作流程"></a>Kafka Broker总体工作流程</h2><p><img src="/2022/03/11/Kafka-Broker/image-20230128163849451.png" alt="image-20230128163849451"></p>
+<h3 id="模拟-Kafka-上下线，Zookeeper-中数据变化"><a href="#模拟-Kafka-上下线，Zookeeper-中数据变化" class="headerlink" title="模拟 Kafka 上下线，Zookeeper 中数据变化"></a>模拟 Kafka 上下线，Zookeeper 中数据变化</h3><ol>
+<li><p>查看&#x2F;kafka&#x2F;brokers&#x2F;ids 路径上的节点。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 2] ls /kafka/brokers/ids</span><br><span class="line">[0, 1, 2]</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>查看&#x2F;kafka&#x2F;controller 路径上的数据。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 3] get /kafka/controller</span><br><span class="line">&#123;&quot;version&quot;:1,&quot;brokerid&quot;:0,&quot;timestamp&quot;:&quot;1674914573172&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>查看&#x2F;kafka&#x2F;brokers&#x2F;topics&#x2F;first&#x2F;partitions&#x2F;0&#x2F;state 路径上的数据。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 6] get /kafka/brokers/topics/first/partitions/0/state</span><br><span class="line">&#123;&quot;controller_epoch&quot;:8,&quot;leader&quot;:2,&quot;version&quot;:1,&quot;leader_epoch&quot;:6,&quot;isr&quot;:[2]&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>停止 node3上的 kafka。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node3 bin]# ./kafka-server-stop.sh </span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>再次查看&#x2F;kafka&#x2F;brokers&#x2F;ids 路径上的节点。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 7] ls /kafka/brokers/ids</span><br><span class="line">[0, 1]</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>再次查看&#x2F;kafka&#x2F;controller 路径上的数据。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 8] get /kafka/controller</span><br><span class="line">&#123;&quot;version&quot;:1,&quot;brokerid&quot;:0,&quot;timestamp&quot;:&quot;1674914573172&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>再次查看&#x2F;kafka&#x2F;brokers&#x2F;topics&#x2F;first&#x2F;partitions&#x2F;0&#x2F;state 路径上的数据。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 9] get /kafka/brokers/topics/first/partitions/0/state</span><br><span class="line">&#123;&quot;controller_epoch&quot;:8,&quot;leader&quot;:-1,&quot;version&quot;:1,&quot;leader_epoch&quot;:7,&quot;isr&quot;:[2]&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>启动 node3上的 kafka。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node3 kafka]# ./bin/kafka-server-start.sh -daemon ./config/server.properties </span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>再次观察1，2，3步骤中的内容。</p>
+</li>
+</ol>
+<h3 id="Broker重要参数"><a href="#Broker重要参数" class="headerlink" title="Broker重要参数"></a>Broker重要参数</h3><table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>replica.lag.time.max.ms</td>
+<td>ISR中，如果 Follower 长时间未向 Leader 发送通信请求或同步数据，则该 Follower 将被踢出 ISR。该时间阈值，默认 30s。</td>
+</tr>
+<tr>
+<td>auto.leader.rebalance.enable</td>
+<td>默认是 true。 自动 Leader Partition 平衡。</td>
+</tr>
+<tr>
+<td>leader.imbalance.per.broker.percentage</td>
+<td>默认是 10%。每个 broker 允许的不平衡的 leader的比率。如果每个 broker 超过了这个值，控制器会触发 leader 的平衡。</td>
+</tr>
+<tr>
+<td>leader.imbalance.check.interval.seconds</td>
+<td>默认值 300 秒。检查 leader 负载是否平衡的间隔时间。</td>
+</tr>
+<tr>
+<td>log.segment.bytes</td>
+<td>Kafka 中 log 日志是分成一块块存储的，此配置是指 log 日志划分 成块的大小，默认值 1G。</td>
+</tr>
+<tr>
+<td>log.index.interval.bytes</td>
+<td>默认 4kb，kafka 里面每当写入了 4kb 大小的日志（.log），然后就往 index 文件里面记录一个索引。</td>
+</tr>
+<tr>
+<td>log.retention.hours</td>
+<td>Kafka 中数据保存的时间，默认 7 天。</td>
+</tr>
+<tr>
+<td>log.retention.minutes</td>
+<td>Kafka 中数据保存的时间，分钟级别，默认关闭。</td>
+</tr>
+<tr>
+<td>log.retention.ms</td>
+<td>Kafka 中数据保存的时间，毫秒级别，默认关闭。</td>
+</tr>
+<tr>
+<td>log.retention.check.interval.ms</td>
+<td>检查数据是否保存超时的间隔，默认是 5 分钟。</td>
+</tr>
+<tr>
+<td>log.retention.bytes</td>
+<td>默认等于-1，表示无穷大。超过设置的所有日志总大小，删除最早的 segment。</td>
+</tr>
+<tr>
+<td>log.cleanup.policy</td>
+<td>默认是 delete，表示所有数据启用删除策略；如果设置值为 compact，表示所有数据启用压缩策略。</td>
+</tr>
+<tr>
+<td>num.io.threads</td>
+<td>默认是 8。负责写磁盘的线程数。整个参数值要占总核数的 50%。</td>
+</tr>
+<tr>
+<td>num.replica.fetchers</td>
+<td>副本拉取线程数，这个参数占总核数的 50%的 1&#x2F;3</td>
+</tr>
+<tr>
+<td>num.network.threads</td>
+<td>默认是 3。数据传输线程数，这个参数占总核数的50%的 2&#x2F;3 。</td>
+</tr>
+<tr>
+<td>log.flush.interval.messages</td>
+<td>强制页缓存刷写到磁盘的条数，默认是 long 的最大值，9223372036854775807。一般不建议修改，交给系统自己管理。</td>
+</tr>
+<tr>
+<td>log.flush.interval.ms</td>
+<td>每隔多久，刷数据到磁盘，默认是 null。一般不建议修改，交给系统自己管理。</td>
+</tr>
+</tbody></table>
+<h1 id="节点服役和退役"><a href="#节点服役和退役" class="headerlink" title="节点服役和退役"></a>节点服役和退役</h1><h2 id="服役新节点"><a href="#服役新节点" class="headerlink" title="服役新节点"></a>服役新节点</h2><h3 id="新节点准备"><a href="#新节点准备" class="headerlink" title="新节点准备"></a>新节点准备</h3><ol>
+<li><p>关闭node3节点，右键执行克隆操作，修改克隆好的node4的mac地址。</p>
+</li>
+<li><p>开启node4，并修改ip。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node4 ~]# vim /etc/sysconfig/network-scripts/ifcfg-ens33</span><br><span class="line">TYPE=&quot;Ethernet&quot;</span><br><span class="line">PROXY_METHOD=&quot;none&quot;</span><br><span class="line">BROWSER_ONLY=&quot;no&quot;</span><br><span class="line">BOOTPROTO=&quot;none&quot;</span><br><span class="line">DEFROUTE=&quot;yes&quot;</span><br><span class="line">IPV4_FAILURE_FATAL=&quot;no&quot;</span><br><span class="line">IPV6INIT=&quot;yes&quot;</span><br><span class="line">IPV6_AUTOCONF=&quot;yes&quot;</span><br><span class="line">IPV6_DEFROUTE=&quot;yes&quot;</span><br><span class="line">IPV6_FAILURE_FATAL=&quot;no&quot;</span><br><span class="line">IPV6_ADDR_GEN_MODE=&quot;stable-privacy&quot;</span><br><span class="line">NAME=&quot;ens33&quot;</span><br><span class="line">UUID=&quot;7815751b-505d-4ae2-b2d4-aa39591dc6aa&quot;</span><br><span class="line">DEVICE=&quot;ens33&quot;</span><br><span class="line">ONBOOT=&quot;yes&quot;</span><br><span class="line">IPADDR=&quot;192.168.88.154&quot;</span><br><span class="line">PREFIX=&quot;24&quot;</span><br><span class="line">GATEWAY=&quot;192.168.88.2&quot;</span><br><span class="line">DNS1=&quot;192.168.88.2&quot;</span><br><span class="line">DOMAIN=&quot;114.114.114.114&quot;</span><br><span class="line">IPV6_PRIVACY=&quot;no&quot;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>在node4上，修改主机名称为node4。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node4 ~]# vim /etc/hostname </span><br><span class="line">node4</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>重新启动node3、node4。</p>
+</li>
+<li><p>修改node4中 kafka 的 broker.id 为 3。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node4 ~]# vim /export/server/kafka/config/server.properties </span><br><span class="line">broker.id=3</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>删除node4中 kafka 下的 datas 和 logs。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node4 kafka]# rm -rf datas/* logs/*</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>启动 node1、node2、node3上的 kafka 集群。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# ./bin/zk.sh start</span><br><span class="line">(base) [root@node1 ~]# ./bin/kf.sh start</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>单独启动node4中的 kafka。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node4 kafka]# ./bin/kafka-server-start.sh -daemon ./config/server.properties </span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="执行负载均衡操作"><a href="#执行负载均衡操作" class="headerlink" title="执行负载均衡操作"></a>执行负载均衡操作</h3><ol>
+<li><p>创建一个要均衡的主题。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# vim topics-to-move.json</span><br><span class="line">&#123;</span><br><span class="line">    &quot;topics&quot;:[</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;topic&quot;:&quot;first&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    &quot;version&quot;:1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>生成一个负载均衡的计划。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# bin/kafka-reassign-partitions.sh --bootstrap-server node1:9092 --topics-to-move-json-file topics-to-move.json --broker-list &quot;0,1,2,3&quot; --generate</span><br><span class="line"></span><br><span class="line">Current partition replica assignment</span><br><span class="line">&#123;&quot;version&quot;:1,&quot;partitions&quot;:[&#123;&quot;topic&quot;:&quot;first&quot;,&quot;partition&quot;:0,&quot;replicas&quot;:[2],&quot;log_dirs&quot;:[&quot;any&quot;]&#125;,&#123;&quot;topic&quot;:&quot;first&quot;,&quot;partition&quot;:1,&quot;replicas&quot;:[0],&quot;log_dirs&quot;:[&quot;any&quot;]&#125;,&#123;&quot;topic&quot;:&quot;first&quot;,&quot;partition&quot;:2,&quot;replicas&quot;:[1],&quot;log_dirs&quot;:[&quot;any&quot;]&#125;]&#125;</span><br><span class="line"></span><br><span class="line">Proposed partition reassignment configuration</span><br><span class="line">&#123;&quot;version&quot;:1,&quot;partitions&quot;:[&#123;&quot;topic&quot;:&quot;first&quot;,&quot;partition&quot;:0,&quot;replicas&quot;:[3],&quot;log_dirs&quot;:[&quot;any&quot;]&#125;,&#123;&quot;topic&quot;:&quot;first&quot;,&quot;partition&quot;:1,&quot;replicas&quot;:[0],&quot;log_dirs&quot;:[&quot;any&quot;]&#125;,&#123;&quot;topic&quot;:&quot;first&quot;,&quot;partition&quot;:2,&quot;replicas&quot;:[1],&quot;log_dirs&quot;:[&quot;any&quot;]&#125;]&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>创建副本存储计划（所有副本存储在 broker0、broker1、broker2、broker3 中）。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# vim increase-replication-factor.json</span><br></pre></td></tr></table></figure>
+
+<p>内容</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span><span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;partitions&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;topic&quot;</span><span class="punctuation">:</span><span class="string">&quot;first&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;partition&quot;</span><span class="punctuation">:</span><span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;replicas&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">3</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">0</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;log_dirs&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="string">&quot;any&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="string">&quot;any&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="string">&quot;any&quot;</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;topic&quot;</span><span class="punctuation">:</span><span class="string">&quot;first&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;partition&quot;</span><span class="punctuation">:</span><span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;replicas&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="number">3</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">1</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;log_dirs&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="string">&quot;any&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="string">&quot;any&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="string">&quot;any&quot;</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;topic&quot;</span><span class="punctuation">:</span><span class="string">&quot;first&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;partition&quot;</span><span class="punctuation">:</span><span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;replicas&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">2</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;log_dirs&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="string">&quot;any&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="string">&quot;any&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="string">&quot;any&quot;</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>执行副本存储计划。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# bin/kafka-reassign-partitions.sh --bootstrap-server node1:9092 --reassignment-json-file increase-replication-factor.json --execute</span><br><span class="line"></span><br><span class="line">Current partition replica assignment</span><br><span class="line"></span><br><span class="line">&#123;&quot;version&quot;:1,&quot;partitions&quot;:[&#123;&quot;topic&quot;:&quot;first&quot;,&quot;partition&quot;:0,&quot;replicas&quot;:[2],&quot;log_dirs&quot;:[&quot;any&quot;]&#125;,&#123;&quot;topic&quot;:&quot;first&quot;,&quot;partition&quot;:1,&quot;replicas&quot;:[0],&quot;log_dirs&quot;:[&quot;any&quot;]&#125;,&#123;&quot;topic&quot;:&quot;first&quot;,&quot;partition&quot;:2,&quot;replicas&quot;:[1],&quot;log_dirs&quot;:[&quot;any&quot;]&#125;]&#125;</span><br><span class="line"></span><br><span class="line">Save this to use as the --reassignment-json-file option during rollback</span><br><span class="line">Successfully started partition reassignments for first-0,first-1,first-2</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>验证副本存储计划。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# bin/kafka-reassign-partitions.sh --bootstrap-server node1:9092 --reassignment-json-file increase-replication-factor.json --verify</span><br><span class="line"></span><br><span class="line">Status of partition reassignment:</span><br><span class="line">Reassignment of partition first-0 is still in progress.</span><br><span class="line">Reassignment of partition first-1 is still in progress.</span><br><span class="line">Reassignment of partition first-2 is completed.</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="退役旧节点"><a href="#退役旧节点" class="headerlink" title="退役旧节点"></a>退役旧节点</h2><h3 id="执行负载均衡操作-1"><a href="#执行负载均衡操作-1" class="headerlink" title="执行负载均衡操作"></a>执行负载均衡操作</h3><p>先按照退役一台节点，生成执行计划，然后按照服役时操作流程执行负载均衡。</p>
+<ol>
+<li><p>创建一个要均衡的主题。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# vim topics-to-move.json</span><br><span class="line">&#123;</span><br><span class="line">    &quot;topics&quot;:[</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;topic&quot;:&quot;first&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    &quot;version&quot;:1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>生成一个负载均衡的计划。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# bin/kafka-reassign-partitions.sh --bootstrap-server node1:9092 --topics-to-move-json-file topics-to-move.json --broker-list &quot;0,1,2&quot; --generate</span><br><span class="line"></span><br><span class="line">Current partition replica assignment</span><br><span class="line">&#123;&quot;version&quot;:1,&quot;partitions&quot;:[&#123;&quot;topic&quot;:&quot;first&quot;,&quot;partition&quot;:0,&quot;replicas&quot;:[2,3,0],&quot;log_dirs&quot;:[&quot;any&quot;,&quot;any&quot;,&quot;any&quot;]&#125;,&#123;&quot;topic&quot;:&quot;first&quot;,&quot;partition&quot;:1,&quot;replicas&quot;:[3,0,1],&quot;log_dirs&quot;:[&quot;any&quot;,&quot;any&quot;,&quot;any&quot;]&#125;,&#123;&quot;topic&quot;:&quot;first&quot;,&quot;partition&quot;:2,&quot;replicas&quot;:[0,1,2],&quot;log_dirs&quot;:[&quot;any&quot;,&quot;any&quot;,&quot;any&quot;]&#125;]&#125;</span><br><span class="line"></span><br><span class="line">Proposed partition reassignment configuration</span><br><span class="line">&#123;&quot;version&quot;:1,&quot;partitions&quot;:[&#123;&quot;topic&quot;:&quot;first&quot;,&quot;partition&quot;:0,&quot;replicas&quot;:[0,1,2],&quot;log_dirs&quot;:[&quot;any&quot;,&quot;any&quot;,&quot;any&quot;]&#125;,&#123;&quot;topic&quot;:&quot;first&quot;,&quot;partition&quot;:1,&quot;replicas&quot;:[1,2,0],&quot;log_dirs&quot;:[&quot;any&quot;,&quot;any&quot;,&quot;any&quot;]&#125;,&#123;&quot;topic&quot;:&quot;first&quot;,&quot;partition&quot;:2,&quot;replicas&quot;:[2,0,1],&quot;log_dirs&quot;:[&quot;any&quot;,&quot;any&quot;,&quot;any&quot;]&#125;]&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>创建副本存储计划（所有副本存储在 broker0、broker1、broker2、broker3 中）。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# vim increase-replication-factor.json</span><br></pre></td></tr></table></figure>
+
+<p>内容</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span><span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;partitions&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;topic&quot;</span><span class="punctuation">:</span><span class="string">&quot;first&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;partition&quot;</span><span class="punctuation">:</span><span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;replicas&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">3</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">0</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;log_dirs&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="string">&quot;any&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="string">&quot;any&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="string">&quot;any&quot;</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;topic&quot;</span><span class="punctuation">:</span><span class="string">&quot;first&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;partition&quot;</span><span class="punctuation">:</span><span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;replicas&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="number">3</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">1</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;log_dirs&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="string">&quot;any&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="string">&quot;any&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="string">&quot;any&quot;</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;topic&quot;</span><span class="punctuation">:</span><span class="string">&quot;first&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;partition&quot;</span><span class="punctuation">:</span><span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;replicas&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">2</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;log_dirs&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="string">&quot;any&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="string">&quot;any&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="string">&quot;any&quot;</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>执行副本存储计划。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# bin/kafka-reassign-partitions.sh --bootstrap-server node1:9092 --reassignment-json-file increase-replication-factor.json --execute</span><br><span class="line"></span><br><span class="line">Current partition replica assignment</span><br><span class="line"></span><br><span class="line">&#123;&quot;version&quot;:1,&quot;partitions&quot;:[&#123;&quot;topic&quot;:&quot;first&quot;,&quot;partition&quot;:0,&quot;replicas&quot;:[2],&quot;log_dirs&quot;:[&quot;any&quot;]&#125;,&#123;&quot;topic&quot;:&quot;first&quot;,&quot;partition&quot;:1,&quot;replicas&quot;:[0],&quot;log_dirs&quot;:[&quot;any&quot;]&#125;,&#123;&quot;topic&quot;:&quot;first&quot;,&quot;partition&quot;:2,&quot;replicas&quot;:[1],&quot;log_dirs&quot;:[&quot;any&quot;]&#125;]&#125;</span><br><span class="line"></span><br><span class="line">Save this to use as the --reassignment-json-file option during rollback</span><br><span class="line">Successfully started partition reassignments for first-0,first-1,first-2</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>验证副本存储计划。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# bin/kafka-reassign-partitions.sh --bootstrap-server node1:9092 --reassignment-json-file increase-replication-factor.json --verify</span><br><span class="line"></span><br><span class="line">Status of partition reassignment:</span><br><span class="line">Reassignment of partition first-0 is still in progress.</span><br><span class="line">Reassignment of partition first-1 is still in progress.</span><br><span class="line">Reassignment of partition first-2 is completed.</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="执行停止命令"><a href="#执行停止命令" class="headerlink" title="执行停止命令"></a>执行停止命令</h3><p>在 node4上执行停止命令即可。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node4 kafka]# ./bin/kafka-server-stop.sh </span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="Kafka副本"><a href="#Kafka副本" class="headerlink" title="Kafka副本"></a>Kafka副本</h1><h2 id="副本基本信息"><a href="#副本基本信息" class="headerlink" title="副本基本信息"></a>副本基本信息</h2><p>（1）Kafka 副本作用：提高数据可靠性。<br>（2）Kafka 默认副本 1 个，生产环境一般配置为 2 个，保证数据可靠性；太多副本会增加磁盘存储空间，增加网络上数据传输，降低效率。<br>（3）Kafka 中副本分为：Leader 和 Follower。Kafka 生产者只会把数据发往 Leader，然后 Follower 找 Leader 进行同步数据。<br>（4）Kafka 分区中的所有副本统称为 AR（Assigned Repllicas）。<br>    AR &#x3D; ISR + OSR<br>    ISR，表示和 Leader 保持同步的 Follower 集合。如果 Follower 长时间未向 Leader 发送通信请求或同步数据，则该 Follower 将被踢出 ISR。该时间阈值由 replica.lag.time.max.ms参数设定，默认 30s。Leader 发生故障之后，就会从 ISR 中选举新的 Leader。<br>    OSR，表示 Follower 与 Leader 副本同步时，延迟过多的副本。</p>
+<h2 id="Leader选举流程"><a href="#Leader选举流程" class="headerlink" title="Leader选举流程"></a>Leader选举流程</h2><p>Kafka 集群中有一个 broker 的 Controller 会被选举为 Controller Leader，负责管理集群broker 的上下线，所有 topic 的分区副本分配和 Leader 选举等工作。<br>Controller 的信息同步工作是依赖于 Zookeeper 的。</p>
+<p><img src="/2022/03/11/Kafka-Broker/image-20230128163849451.png" alt="image-20230128163849451"></p>
+<ol>
+<li><p>创建一个新的 topic，4 个分区，4 个副本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-topics.sh --bootstrap-server node1:9092 --create --topic second --partitions 4 --replication-factor 4</span><br><span class="line">Created topic second.</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>查看 Leader 分布情况</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-topics.sh --bootstrap-server node1:9092 --describe --topic second</span><br><span class="line">Topic: second   TopicId: xfv10IihSHeTUtAECrXYZA PartitionCount: 4       ReplicationFactor: 4    Configs: </span><br><span class="line">        Topic: second   Partition: 0    Leader: 3       Replicas: 3,1,0,2       Isr: 3,1,0,2</span><br><span class="line">        Topic: second   Partition: 1    Leader: 1       Replicas: 1,0,2,3       Isr: 1,0,2,3</span><br><span class="line">        Topic: second   Partition: 2    Leader: 0       Replicas: 0,2,3,1       Isr: 0,2,1,3</span><br><span class="line">        Topic: second   Partition: 3    Leader: 2       Replicas: 2,3,1,0       Isr: 2,1,0,3</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>停止掉node4的 kafka 进程，并查看 Leader 分区情况</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node4 kafka]# ./bin/kafka-server-stop.sh </span><br><span class="line">(base) [root@node1 kafka]# ./bin/kafka-topics.sh --bootstrap-server node1:9092 --describe --topic second</span><br><span class="line">Topic: second   TopicId: xfv10IihSHeTUtAECrXYZA PartitionCount: 4       ReplicationFactor: 4    Configs: </span><br><span class="line">        Topic: second   Partition: 0    Leader: 1       Replicas: 3,1,0,2       Isr: 1,0,2</span><br><span class="line">        Topic: second   Partition: 1    Leader: 1       Replicas: 1,0,2,3       Isr: 1,0,2</span><br><span class="line">        Topic: second   Partition: 2    Leader: 0       Replicas: 0,2,3,1       Isr: 0,2,1</span><br><span class="line">        Topic: second   Partition: 3    Leader: 2       Replicas: 2,3,1,0       Isr: 2,1,0</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>停止掉node3的 kafka 进程，并查看 Leader 分区情况</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node3 kafka]# ./bin/kafka-server-stop.sh </span><br><span class="line">(base) [root@node1 kafka]# ./bin/kafka-topics.sh --bootstrap-server node1:9092 --describe --topic second</span><br><span class="line">Topic: second   TopicId: xfv10IihSHeTUtAECrXYZA PartitionCount: 4       ReplicationFactor: 4    Configs: </span><br><span class="line">        Topic: second   Partition: 0    Leader: 1       Replicas: 3,1,0,2       Isr: 1,0</span><br><span class="line">        Topic: second   Partition: 1    Leader: 1       Replicas: 1,0,2,3       Isr: 1,0</span><br><span class="line">        Topic: second   Partition: 2    Leader: 0       Replicas: 0,2,3,1       Isr: 0,1</span><br><span class="line">        Topic: second   Partition: 3    Leader: 1       Replicas: 2,3,1,0       Isr: 1,0</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>启动node4的 kafka 进程，并查看 Leader 分区情况</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node4 kafka]# ./bin/kafka-server-start.sh -daemon ./config/server.properties </span><br><span class="line">(base) [root@node1 kafka]# ./bin/kafka-topics.sh --bootstrap-server node1:9092 --describe --topic second</span><br><span class="line">Topic: second   TopicId: xfv10IihSHeTUtAECrXYZA PartitionCount: 4       ReplicationFactor: 4    Configs: </span><br><span class="line">        Topic: second   Partition: 0    Leader: 1       Replicas: 3,1,0,2       Isr: 1,0,3</span><br><span class="line">        Topic: second   Partition: 1    Leader: 1       Replicas: 1,0,2,3       Isr: 1,0,3</span><br><span class="line">        Topic: second   Partition: 2    Leader: 0       Replicas: 0,2,3,1       Isr: 0,1,3</span><br><span class="line">        Topic: second   Partition: 3    Leader: 1       Replicas: 2,3,1,0       Isr: 1,0,3</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>启动node3的 kafka 进程，并查看 Leader 分区情况</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node3 kafka]# ./bin/kafka-server-start.sh -daemon ./config/server.properties </span><br><span class="line">(base) [root@node1 kafka]# ./bin/kafka-topics.sh --bootstrap-server node1:9092 --describe --topic second</span><br><span class="line">Topic: second   TopicId: xfv10IihSHeTUtAECrXYZA PartitionCount: 4       ReplicationFactor: 4    Configs: </span><br><span class="line">        Topic: second   Partition: 0    Leader: 3       Replicas: 3,1,0,2       Isr: 1,0,3,2</span><br><span class="line">        Topic: second   Partition: 1    Leader: 1       Replicas: 1,0,2,3       Isr: 1,0,3,2</span><br><span class="line">        Topic: second   Partition: 2    Leader: 0       Replicas: 0,2,3,1       Isr: 0,1,3,2</span><br><span class="line">        Topic: second   Partition: 3    Leader: 1       Replicas: 2,3,1,0       Isr: 1,0,3,2</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>停止掉node2的 kafka 进程，并查看 Leader 分区情况</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node2 kafka]# ./bin/kafka-server-stop.sh </span><br><span class="line">(base) [root@node1 kafka]# ./bin/kafka-topics.sh --bootstrap-server node1:9092 --describe --topic second</span><br><span class="line">Topic: second   TopicId: xfv10IihSHeTUtAECrXYZA PartitionCount: 4       ReplicationFactor: 4    Configs: </span><br><span class="line">        Topic: second   Partition: 0    Leader: 3       Replicas: 3,1,0,2       Isr: 0,3,2</span><br><span class="line">        Topic: second   Partition: 1    Leader: 0       Replicas: 1,0,2,3       Isr: 0,3,2</span><br><span class="line">        Topic: second   Partition: 2    Leader: 0       Replicas: 0,2,3,1       Isr: 0,3,2</span><br><span class="line">        Topic: second   Partition: 3    Leader: 2       Replicas: 2,3,1,0       Isr: 0,3,2</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Leader-和-Follower-故障处理细节"><a href="#Leader-和-Follower-故障处理细节" class="headerlink" title="Leader 和 Follower 故障处理细节"></a>Leader 和 Follower 故障处理细节</h2><h3 id="Follower故障处理细节"><a href="#Follower故障处理细节" class="headerlink" title="Follower故障处理细节"></a>Follower故障处理细节</h3><ol>
+<li>Follower发生故障后会被临时踢出ISR</li>
+<li>这个期间Leader和Follower继续接收数据</li>
+<li>待该Follower恢复后，Follower会读取本地磁盘记录的上次的HW，并将log文件高于HW的部分截取掉，从HW开始向Leader进行同步。</li>
+<li>等该Follower的LEO大于等于该Partition的HW，即Follower追上Leader之后，就可以重新加入ISR了。</li>
+</ol>
+<p><img src="/2022/03/11/Kafka-Broker/image-20230129133820516.png" alt="image-20230129133820516"></p>
+<h3 id="Leader故障处理细节"><a href="#Leader故障处理细节" class="headerlink" title="Leader故障处理细节"></a>Leader故障处理细节</h3><ol>
+<li>Leader发生故障之后，会从ISR中选出一个新的Leader</li>
+<li>为保证多个副本之间的数据一致性，其余的Follower会先将各自的log文件高于HW的部分截掉，然后从新的Leader同步数据。</li>
+</ol>
+<p>注意：这只能保证副本之间的数据一致性，并不能保证数据不丢失或者不重复。</p>
+<p><img src="/2022/03/11/Kafka-Broker/image-20230129134734692.png" alt="image-20230129134734692"></p>
+<h2 id="分区副本分配"><a href="#分区副本分配" class="headerlink" title="分区副本分配"></a>分区副本分配</h2><p>如果 kafka 服务器只有 4 个节点，那么设置 kafka 的分区数大于服务器台数，在 kafka底层如何分配存储副本呢？</p>
+<blockquote>
+<p>创建 16 分区，3 个副本</p>
+</blockquote>
+<ol>
+<li><p>创建一个新的 topic，名称为 third。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-topics.sh --bootstrap-server node1:9092 --create --partitions 16 --replication-factor 3 --topic third</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>查看分区和副本情况。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-topics.sh --bootstrap-server node1:9092 --describe --topic third</span><br><span class="line">Topic: third    TopicId: Nxbo8gxaSKaRSiYVrwChNA PartitionCount: 16      ReplicationFactor: 3    Configs: </span><br><span class="line">        Topic: third    Partition: 0    Leader: 0       Replicas: 0,2,3 Isr: 0,2,3</span><br><span class="line">        Topic: third    Partition: 1    Leader: 2       Replicas: 2,3,1 Isr: 2,3,1</span><br><span class="line">        Topic: third    Partition: 2    Leader: 3       Replicas: 3,1,0 Isr: 3,1,0</span><br><span class="line">        Topic: third    Partition: 3    Leader: 1       Replicas: 1,0,2 Isr: 1,0,2</span><br><span class="line">        Topic: third    Partition: 4    Leader: 0       Replicas: 0,3,1 Isr: 0,3,1</span><br><span class="line">        Topic: third    Partition: 5    Leader: 2       Replicas: 2,1,0 Isr: 2,1,0</span><br><span class="line">        Topic: third    Partition: 6    Leader: 3       Replicas: 3,0,2 Isr: 3,0,2</span><br><span class="line">        Topic: third    Partition: 7    Leader: 1       Replicas: 1,2,3 Isr: 1,2,3</span><br><span class="line">        Topic: third    Partition: 8    Leader: 0       Replicas: 0,1,2 Isr: 0,1,2</span><br><span class="line">        Topic: third    Partition: 9    Leader: 2       Replicas: 2,0,3 Isr: 2,0,3</span><br><span class="line">        Topic: third    Partition: 10   Leader: 3       Replicas: 3,2,1 Isr: 3,2,1</span><br><span class="line">        Topic: third    Partition: 11   Leader: 1       Replicas: 1,3,0 Isr: 1,3,0</span><br><span class="line">        Topic: third    Partition: 12   Leader: 0       Replicas: 0,2,3 Isr: 0,2,3</span><br><span class="line">        Topic: third    Partition: 13   Leader: 2       Replicas: 2,3,1 Isr: 2,3,1</span><br><span class="line">        Topic: third    Partition: 14   Leader: 3       Replicas: 3,1,0 Isr: 3,1,0</span><br><span class="line">        Topic: third    Partition: 15   Leader: 1       Replicas: 1,0,2 Isr: 1,0,2</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="经验"><a href="#经验" class="headerlink" title="经验"></a>经验</h2><h3 id="手动调整分区副本存储"><a href="#手动调整分区副本存储" class="headerlink" title="手动调整分区副本存储"></a>手动调整分区副本存储</h3><p>在生产环境中，每台服务器的配置和性能不一致，但是Kafka只会根据自己的代码规则创建对应的分区副本，就会导致个别服务器存储压力较大。所有需要手动调整分区副本的存储。</p>
+<p>需求：创建一个新的topic，4个分区，两个副本，名称为third。将 该topic的所有副本都存储到broker0和broker1两台服务器上。</p>
+<p>手动调整分区副本存储的步骤如下：</p>
+<ol>
+<li><p>创建一个新的 topic，名称为 third。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-topics.sh --bootstrap-server node1:9092 --create --partitions 4 --replication-factor 2 --topic third</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>查看分区副本存储情况。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-topics.sh --bootstrap-server node1:9092 --describe --topic third</span><br><span class="line">Topic: third    TopicId: wkYxVGxPTk6tyQ5ypm-yHg PartitionCount: 4       ReplicationFactor: 2    Configs: </span><br><span class="line">        Topic: third    Partition: 0    Leader: 3       Replicas: 3,1   Isr: 3,1</span><br><span class="line">        Topic: third    Partition: 1    Leader: 1       Replicas: 1,0   Isr: 1,0</span><br><span class="line">        Topic: third    Partition: 2    Leader: 0       Replicas: 0,2   Isr: 0,2</span><br><span class="line">        Topic: third    Partition: 3    Leader: 2       Replicas: 2,3   Isr: 2,3</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>创建副本存储计划（所有副本都指定存储在 broker0、broker1 中）。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# vim increase-replication-factor.json</span><br></pre></td></tr></table></figure>
+
+<p>内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span><span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;partitions&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;topic&quot;</span><span class="punctuation">:</span><span class="string">&quot;third&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;partition&quot;</span><span class="punctuation">:</span><span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;replicas&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">1</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;topic&quot;</span><span class="punctuation">:</span><span class="string">&quot;third&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;partition&quot;</span><span class="punctuation">:</span><span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;replicas&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">1</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;topic&quot;</span><span class="punctuation">:</span><span class="string">&quot;third&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;partition&quot;</span><span class="punctuation">:</span><span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;replicas&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">0</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;topic&quot;</span><span class="punctuation">:</span><span class="string">&quot;third&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;partition&quot;</span><span class="punctuation">:</span><span class="number">3</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;replicas&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">0</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>执行副本存储计划。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-reassign-partitions.sh --bootstrap-server node1:9092 --reassignment-json-file increase-replication-factor.json --execute</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>验证副本存储计划。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-reassign-partitions.sh --bootstrap-server node1:9092 --reassignment-json-file increase-replication-factor.json --verify</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>查看分区副本存储情况。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-topics.sh --bootstrap-server node1:9092 --describe --topic third</span><br><span class="line">Topic: third    TopicId: wkYxVGxPTk6tyQ5ypm-yHg PartitionCount: 4       ReplicationFactor: 2    Configs: </span><br><span class="line">        Topic: third    Partition: 0    Leader: 0       Replicas: 0,1   Isr: 1,0</span><br><span class="line">        Topic: third    Partition: 1    Leader: 1       Replicas: 0,1   Isr: 1,0</span><br><span class="line">        Topic: third    Partition: 2    Leader: 0       Replicas: 1,0   Isr: 0,1</span><br><span class="line">        Topic: third    Partition: 3    Leader: 1       Replicas: 1,0   Isr: 0,1</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="Leader-Partition自动平衡"><a href="#Leader-Partition自动平衡" class="headerlink" title="Leader Partition自动平衡"></a>Leader Partition自动平衡</h3><p>正常情况下，Kafka本身会自动把Leader Partition均匀分散在各个机器上，来保证每台机器的读写吞吐量都是均匀的。但是如果某些broker宕机，会导致Leader Partition过于集中在其他少部分几台broker上，这会导致少数几台broker的读写请求压力过高，其他宕机的broker重启之后都是follower partition，读写请求很低，造成集群负载不均衡。</p>
+<p>下面拿一个主题举例说明，假设集群只有一个主题如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Topic: second   TopicId: xfv10IihSHeTUtAECrXYZA PartitionCount: 4       ReplicationFactor: 4    Configs: </span><br><span class="line">        Topic: second   Partition: 0    Leader: 0       Replicas: 3,1,0,2       Isr: 3,1,0,2</span><br><span class="line">        Topic: second   Partition: 1    Leader: 1       Replicas: 1,0,2,3       Isr: 1,0,2,3</span><br><span class="line">        Topic: second   Partition: 2    Leader: 2       Replicas: 0,2,3,1       Isr: 0,2,1,3</span><br><span class="line">        Topic: second   Partition: 3    Leader: 3       Replicas: 2,3,1,0       Isr: 2,1,0,3</span><br></pre></td></tr></table></figure>
+
+<p>针对broker0节点，分区2的AR优先副本是0节点，但是0节点却不是Leader节点，所以不平衡数加1，AR副本总数是4。所以broker0节点不平衡率为1&#x2F;4&gt;10%，需要再平衡。</p>
+<p>broker2和broker3节点和broker0不平衡率一样，需要再平衡。Broker1的不平衡数为0，不需要再平衡。</p>
+<p>参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>auto.leader.rebalance.enable</td>
+<td>默认是 true。 自动 Leader Partition 平衡。生产环境中，leader 重选举的代价比较大，可能会带来性能影响，建议设置为 false 关闭。</td>
+</tr>
+<tr>
+<td>leader.imbalance.per.broker.percentage</td>
+<td>默认是 10%。每个 broker 允许的不平衡的 leader的比率。如果每个 broker 超过了这个值，控制器会触发 leader 的平衡。</td>
+</tr>
+<tr>
+<td>leader.imbalance.check.interval.seconds</td>
+<td>默认值 300 秒。检查 leader 负载是否平衡的间隔时间。</td>
+</tr>
+</tbody></table>
+<h3 id="增加副本因子"><a href="#增加副本因子" class="headerlink" title="增加副本因子"></a>增加副本因子</h3><p>在生产环境当中，由于某个主题的重要等级需要提升，我们考虑增加副本。副本数的增加需要先制定计划，然后根据计划执行。</p>
+<ol>
+<li><p>创建topic</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-topics.sh --bootstrap-server node1:9092 --create --partitions 3 --replication-factor 1 --topic four</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>手动增加副本存储</p>
+<p>（1）创建副本存储计划（所有副本都指定存储在 broker0、broker1、broker2 中）。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# vim increase-replication-factor.json</span><br></pre></td></tr></table></figure>
+
+<p>内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span><span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;partitions&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;topic&quot;</span><span class="punctuation">:</span><span class="string">&quot;four&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;partition&quot;</span><span class="punctuation">:</span><span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;replicas&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">2</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;topic&quot;</span><span class="punctuation">:</span><span class="string">&quot;four&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;partition&quot;</span><span class="punctuation">:</span><span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;replicas&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">2</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;topic&quot;</span><span class="punctuation">:</span><span class="string">&quot;four&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;partition&quot;</span><span class="punctuation">:</span><span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;replicas&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">2</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>（2）执行副本存储计划。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-reassign-partitions.sh --bootstrap-server node1:9092 --reassignment-json-file increase-replication-factor.json --execute</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h1 id="文件存储"><a href="#文件存储" class="headerlink" title="文件存储"></a>文件存储</h1><h2 id="文件存储机制"><a href="#文件存储机制" class="headerlink" title="文件存储机制"></a>文件存储机制</h2><h3 id="Topic-数据的存储机制"><a href="#Topic-数据的存储机制" class="headerlink" title="Topic 数据的存储机制"></a>Topic 数据的存储机制</h3><p>Topic是逻辑上的概念，而partition是物理上的概念，每个partition对应于一个log文件，该log文件中存储的就是Producer生产的数据。Producer生产的数据会被不断追加到该log文件末端，为防止log文件过大导致数据定位效率低下，Kafka采取了分片和索引机制，将每个partition分为多个segment。每个segment包括：“.index”文件、“.log”文件和.timeindex等文件。这些文件位于一个文件夹下，该文件夹的命名规则为：topic名称+分区序号，例如：first-0。</p>
+<p><img src="/2022/03/11/Kafka-Broker/image-20230129153950603.png" alt="image-20230129153950603"></p>
+<h3 id="Topic数据存储位置"><a href="#Topic数据存储位置" class="headerlink" title="Topic数据存储位置"></a>Topic数据存储位置</h3><ol>
+<li><p>启动生产者，并发送消息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-console-producer.sh --bootstrap-server node1:9092 --topic first</span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">hello world</span></span><br><span class="line"><span class="meta prompt_">&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>查看 node1（或者 node2、node3）的&#x2F;export&#x2F;server&#x2F;kafka&#x2F;datas&#x2F;first-1（first-0、first-2）路径上的文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 first-1]# ls</span><br><span class="line">00000000000000000000.index  </span><br><span class="line">00000000000000000000.log  </span><br><span class="line">00000000000000000000.timeindex  </span><br><span class="line">00000000000000000051.snapshot  </span><br><span class="line">leader-epoch-checkpoint  </span><br><span class="line">partition.metadata</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>直接查看 log 日志，发现是乱码。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 first-1]# cat ./00000000000000000000.log </span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>通过工具查看 index 和 log 信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 first-1]# kafka-run-class.sh kafka.tools.DumpLogSegments --files ./00000000000000000000.index </span><br><span class="line">Dumping ./00000000000000000000.index</span><br><span class="line">offset: 0 position: 0</span><br><span class="line">Mismatches in :/export/server/kafka/datas/first-1/./00000000000000000000.index</span><br><span class="line">  Index offset: 0, log offset: 2</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="Log文件和Index文件详解"><a href="#Log文件和Index文件详解" class="headerlink" title="Log文件和Index文件详解"></a>Log文件和Index文件详解</h3><p><img src="/2022/03/11/Kafka-Broker/image-20230129161142188.png" alt="image-20230129161142188"></p>
+<p>说明：日志存储参数配置</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>log.segment.bytes</td>
+<td>Kafka 中 log 日志是分成一块块存储的，此配置是指 log 日志划分成块的大小，默认值 1G。</td>
+</tr>
+<tr>
+<td>log.index.interval.bytes</td>
+<td>默认 4kb，kafka 里面每当写入了 4kb 大小的日志（.log），然后就往 index 文件里面记录一个索引。 稀疏索引。</td>
+</tr>
+</tbody></table>
+<h3 id="文件清理策略"><a href="#文件清理策略" class="headerlink" title="文件清理策略"></a>文件清理策略</h3><p>Kafka 中默认的日志保存时间为 7 天，可以通过调整如下参数修改保存时间。</p>
+<ul>
+<li><p>log.retention.hours，最低优先级小时，默认 7 天。</p>
+</li>
+<li><p>log.retention.minutes，分钟。</p>
+</li>
+<li><p>log.retention.ms，最高优先级毫秒。</p>
+</li>
+<li><p>log.retention.check.interval.ms，负责设置检查周期，默认 5 分钟。</p>
+</li>
+</ul>
+<p>那么日志一旦超过了设置的时间，怎么处理呢？<br>Kafka 中提供的日志清理策略有 delete 和 compact 两种。</p>
+<p><strong>delete</strong></p>
+<p>delete 日志删除：将过期数据删除</p>
+<ul>
+<li>log.cleanup.policy &#x3D; delete 所有数据启用删除策略</li>
+</ul>
+<p>（1）基于时间：默认打开。以 segment 中所有记录中的最大时间戳作为该文件时间戳。<br>（2）基于大小：默认关闭。超过设置的所有日志总大小，删除最早的 segment。log.retention.bytes，默认等于-1，表示无穷大。</p>
+<p><strong>compact</strong></p>
+<p>compact日志压缩：对于相同key的不同value值，只保留最后一个版本。</p>
+<ul>
+<li>log.cleanup.policy &#x3D; compact 所有数据启用压缩策略</li>
+</ul>
+<p><img src="/2022/03/11/Kafka-Broker/image-20230129162439945.png" alt="image-20230129162439945"></p>
+<p>压缩后的offset可能是不连续的，比如上图中没有6，当从这些offset消费消息时，将会拿到比这个offset大的offset对应的消息，实际上会拿到offset为7的消息，并从这个位置开始消费。<br>这种策略只适合特殊场景，比如消息的key是用户ID，value是用户的资料，通过这种压缩策略，整个消息集里就保存了所有用户最新的资料。</p>
+<h1 id="高效读写数据"><a href="#高效读写数据" class="headerlink" title="高效读写数据"></a>高效读写数据</h1><p>1）Kafka 本身是分布式集群，可以采用分区技术，并行度高<br>2）读数据采用稀疏索引，可以快速定位要消费的数据<br>3）顺序写磁盘<br>Kafka 的 producer 生产数据，要写入到 log 文件中，写的过程是一直追加到文件末端，为顺序写。官网有数据表明，同样的磁盘，顺序写能到 600M&#x2F;s，而随机写只有 100K&#x2F;s。这与磁盘的机械机构有关，顺序写之所以快，是因为其省去了大量磁头寻址的时间。<br>4）页缓存 + 零拷贝技术<br><strong>零拷贝</strong>：Kafka的数据加工处理操作交由Kafka生产者和Kafka消费者处理。Kafka Broker应用层不关心存储的数据，所以就不用走应用层，传输效率高。<br><strong>PageCache页缓存</strong>：Kafka重度依赖底层操作系统提供的PageCache功 能。当上层有写操作时，操作系统只是将数据写入PageCache。当读操作发生时，先从PageCache中查找，如果找不到，再去磁盘中读取。实际上PageCache是把尽可能多的空闲内存都当做了磁盘缓存来使用。</p>
+<p><img src="/2022/03/11/Kafka-Broker/image-20230129163213076.png" alt="image-20230129163213076"></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>log.flush.interval.messages</td>
+<td>强制页缓存刷写到磁盘的条数，默认是 long 的最大值，9223372036854775807。一般不建议修改，交给系统自己管理。</td>
+</tr>
+<tr>
+<td>log.flush.interval.ms</td>
+<td>每隔多久，刷数据到磁盘，默认是 null。一般不建议修改，交给系统自己管理。</td>
+</tr>
+</tbody></table>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a> -->
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"><i class="fa fa-tag"></i>  大数据</a>
+              <!-- <a href="/tags/Kafka/" rel="tag"># Kafka</a> -->
+              <a href="/tags/Kafka/" rel="tag"><i class="fa fa-tag"></i>  Kafka</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/10/Kafka%E7%94%9F%E4%BA%A7%E8%80%85/" rel="prev" title="Kafka生产者">
+      <i class="fa fa-chevron-left"></i> Kafka生产者
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/" rel="next" title="Kafka消费者">
+      Kafka消费者 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Kafka-Broker-%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">Kafka Broker 工作流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper-%E5%AD%98%E5%82%A8%E7%9A%84-Kafka-%E4%BF%A1%E6%81%AF"><span class="nav-number">1.1.</span> <span class="nav-text">Zookeeper 存储的 Kafka 信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-Broker%E6%80%BB%E4%BD%93%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">1.2.</span> <span class="nav-text">Kafka Broker总体工作流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E6%8B%9F-Kafka-%E4%B8%8A%E4%B8%8B%E7%BA%BF%EF%BC%8CZookeeper-%E4%B8%AD%E6%95%B0%E6%8D%AE%E5%8F%98%E5%8C%96"><span class="nav-number">1.2.1.</span> <span class="nav-text">模拟 Kafka 上下线，Zookeeper 中数据变化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Broker%E9%87%8D%E8%A6%81%E5%8F%82%E6%95%B0"><span class="nav-number">1.2.2.</span> <span class="nav-text">Broker重要参数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E6%9C%8D%E5%BD%B9%E5%92%8C%E9%80%80%E5%BD%B9"><span class="nav-number">2.</span> <span class="nav-text">节点服役和退役</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%BD%B9%E6%96%B0%E8%8A%82%E7%82%B9"><span class="nav-number">2.1.</span> <span class="nav-text">服役新节点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E8%8A%82%E7%82%B9%E5%87%86%E5%A4%87"><span class="nav-number">2.1.1.</span> <span class="nav-text">新节点准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%93%8D%E4%BD%9C"><span class="nav-number">2.1.2.</span> <span class="nav-text">执行负载均衡操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%80%E5%BD%B9%E6%97%A7%E8%8A%82%E7%82%B9"><span class="nav-number">2.2.</span> <span class="nav-text">退役旧节点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%93%8D%E4%BD%9C-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">执行负载均衡操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E5%81%9C%E6%AD%A2%E5%91%BD%E4%BB%A4"><span class="nav-number">2.2.2.</span> <span class="nav-text">执行停止命令</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Kafka%E5%89%AF%E6%9C%AC"><span class="nav-number">3.</span> <span class="nav-text">Kafka副本</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%AF%E6%9C%AC%E5%9F%BA%E6%9C%AC%E4%BF%A1%E6%81%AF"><span class="nav-number">3.1.</span> <span class="nav-text">副本基本信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Leader%E9%80%89%E4%B8%BE%E6%B5%81%E7%A8%8B"><span class="nav-number">3.2.</span> <span class="nav-text">Leader选举流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Leader-%E5%92%8C-Follower-%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86%E7%BB%86%E8%8A%82"><span class="nav-number">3.3.</span> <span class="nav-text">Leader 和 Follower 故障处理细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Follower%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86%E7%BB%86%E8%8A%82"><span class="nav-number">3.3.1.</span> <span class="nav-text">Follower故障处理细节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Leader%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86%E7%BB%86%E8%8A%82"><span class="nav-number">3.3.2.</span> <span class="nav-text">Leader故障处理细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E5%89%AF%E6%9C%AC%E5%88%86%E9%85%8D"><span class="nav-number">3.4.</span> <span class="nav-text">分区副本分配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%8F%E9%AA%8C"><span class="nav-number">3.5.</span> <span class="nav-text">经验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E8%B0%83%E6%95%B4%E5%88%86%E5%8C%BA%E5%89%AF%E6%9C%AC%E5%AD%98%E5%82%A8"><span class="nav-number">3.5.1.</span> <span class="nav-text">手动调整分区副本存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Leader-Partition%E8%87%AA%E5%8A%A8%E5%B9%B3%E8%A1%A1"><span class="nav-number">3.5.2.</span> <span class="nav-text">Leader Partition自动平衡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A2%9E%E5%8A%A0%E5%89%AF%E6%9C%AC%E5%9B%A0%E5%AD%90"><span class="nav-number">3.5.3.</span> <span class="nav-text">增加副本因子</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%AD%98%E5%82%A8"><span class="nav-number">4.</span> <span class="nav-text">文件存储</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%AD%98%E5%82%A8%E6%9C%BA%E5%88%B6"><span class="nav-number">4.1.</span> <span class="nav-text">文件存储机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Topic-%E6%95%B0%E6%8D%AE%E7%9A%84%E5%AD%98%E5%82%A8%E6%9C%BA%E5%88%B6"><span class="nav-number">4.1.1.</span> <span class="nav-text">Topic 数据的存储机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Topic%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E4%BD%8D%E7%BD%AE"><span class="nav-number">4.1.2.</span> <span class="nav-text">Topic数据存储位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Log%E6%96%87%E4%BB%B6%E5%92%8CIndex%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3"><span class="nav-number">4.1.3.</span> <span class="nav-text">Log文件和Index文件详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%B8%85%E7%90%86%E7%AD%96%E7%95%A5"><span class="nav-number">4.1.4.</span> <span class="nav-text">文件清理策略</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AB%98%E6%95%88%E8%AF%BB%E5%86%99%E6%95%B0%E6%8D%AE"><span class="nav-number">5.</span> <span class="nav-text">高效读写数据</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">117</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>
