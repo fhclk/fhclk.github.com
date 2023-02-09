@@ -151,6 +151,612 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/08/14/MySQL%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/08/14/MySQL%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">MySQL基础</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-08-14 14:45:49" itemprop="dateCreated datePublished" datetime="2020-08-14T14:45:49+08:00">2020-08-14</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="DDL"><a href="#DDL" class="headerlink" title="DDL"></a>DDL</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>DDL（Data Definition Language），数据定义语言。</p>
+<h2 id="数据库常用操作"><a href="#数据库常用操作" class="headerlink" title="数据库常用操作"></a>数据库常用操作</h2><h3 id="查看所有数据库"><a href="#查看所有数据库" class="headerlink" title="查看所有数据库"></a>查看所有数据库</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> databases;</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> database [if <span class="keyword">not</span> <span class="keyword">exists</span>] dbname [charset<span class="operator">=</span>utf8]</span><br></pre></td></tr></table></figure>
+
+<h3 id="切换数据库"><a href="#切换数据库" class="headerlink" title="切换数据库"></a>切换数据库</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use dbname;</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除数据库"><a href="#删除数据库" class="headerlink" title="删除数据库"></a>删除数据库</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">drop</span> database [if <span class="keyword">exists</span>] dbname;</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改数据库编码"><a href="#修改数据库编码" class="headerlink" title="修改数据库编码"></a>修改数据库编码</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> database dbname <span class="type">character</span> <span class="keyword">set</span> utf8;</span><br></pre></td></tr></table></figure>
+
+<h2 id="表结构常用操作"><a href="#表结构常用操作" class="headerlink" title="表结构常用操作"></a>表结构常用操作</h2><h3 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> [if <span class="keyword">not</span> <span class="keyword">exists</span>] tablename (</span><br><span class="line">	字段名 类型[(宽度)] [约束条件] [comment <span class="string">&#x27;字段说明&#x27;</span>],</span><br><span class="line">	字段名 类型[(宽度)] [约束条件] [comment <span class="string">&#x27;字段说明&#x27;</span>],</span><br><span class="line">	字段名 类型[(宽度)] [约束条件] [comment <span class="string">&#x27;字段说明&#x27;</span>]</span><br><span class="line">)[表的设置]</span><br></pre></td></tr></table></figure>
+
+<p>创建表是构建一张空表，指定这个表的名字，这个表有几列，每一列叫什么名字、存储的数据类型。</p>
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">use study;</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> if <span class="keyword">not</span> <span class="keyword">exists</span> student (</span><br><span class="line">	sid <span class="type">int</span>,</span><br><span class="line">	name <span class="type">varchar</span>(<span class="number">20</span>),</span><br><span class="line">	gender <span class="type">varchar</span>(<span class="number">20</span>),</span><br><span class="line">	age <span class="type">int</span>,</span><br><span class="line">	birth <span class="type">date</span>,</span><br><span class="line">	address <span class="type">varchar</span>(<span class="number">20</span>),</span><br><span class="line">	score <span class="keyword">double</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">show</span> tables;</span><br></pre></td></tr></table></figure>
+
+<h4 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h4><p>数据类型指在创建表时为表中字段指定的数据类型，只有数据符合类型的才能被存储。</p>
+<p>使用原则：够用就行，尽量使用取值范围小的，而不用大的，这样可以节约存储空间。</p>
+<h5 id="数值类型"><a href="#数值类型" class="headerlink" title="数值类型"></a>数值类型</h5><p><img src="/2020/08/14/MySQL%E5%9F%BA%E7%A1%80/image-20221214154826038.png" alt="image-20221214154826038"></p>
+<h5 id="日期类型"><a href="#日期类型" class="headerlink" title="日期类型"></a>日期类型</h5><p><img src="/2020/08/14/MySQL%E5%9F%BA%E7%A1%80/image-20221214154944747.png" alt="image-20221214154944747"></p>
+<h5 id="字符串类型"><a href="#字符串类型" class="headerlink" title="字符串类型"></a>字符串类型</h5><p><img src="/2020/08/14/MySQL%E5%9F%BA%E7%A1%80/image-20221214155053611.png" alt="image-20221214155053611"> </p>
+<h3 id="查看当前数据库所有表"><a href="#查看当前数据库所有表" class="headerlink" title="查看当前数据库所有表"></a>查看当前数据库所有表</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> tables;</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看指定表的创建语句"><a href="#查看指定表的创建语句" class="headerlink" title="查看指定表的创建语句"></a>查看指定表的创建语句</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> tablename;</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看表结构"><a href="#查看表结构" class="headerlink" title="查看表结构"></a>查看表结构</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">desc</span> tablename;</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除表"><a href="#删除表" class="headerlink" title="删除表"></a>删除表</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> tablename;</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改表结构格式"><a href="#修改表结构格式" class="headerlink" title="修改表结构格式"></a>修改表结构格式</h3><h4 id="添加列"><a href="#添加列" class="headerlink" title="添加列"></a>添加列</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> tablename <span class="keyword">add</span> 列名 类型（长度）[约束];</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> student <span class="keyword">add</span> `dept` <span class="type">varchar</span>(<span class="number">20</span>);</span><br><span class="line"><span class="keyword">desc</span> student;</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改列名和类型"><a href="#修改列名和类型" class="headerlink" title="修改列名和类型"></a>修改列名和类型</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> tablename change 旧列名 新列名 类型（长度） 约;</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> student change `dept` `department` <span class="type">varchar</span>(<span class="number">22</span>);</span><br><span class="line"><span class="keyword">desc</span> student;</span><br></pre></td></tr></table></figure>
+
+<h4 id="删除列"><a href="#删除列" class="headerlink" title="删除列"></a>删除列</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> tablename <span class="keyword">drop</span> 列名;</span><br></pre></td></tr></table></figure>
+
+<p>示例</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> student <span class="keyword">drop</span> department;</span><br><span class="line"><span class="keyword">desc</span> student;</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改表名"><a href="#修改表名" class="headerlink" title="修改表名"></a>修改表名</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rename <span class="keyword">table</span> tablename 表名 <span class="keyword">to</span> 新表名</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rename <span class="keyword">table</span> `student`  <span class="keyword">to</span> stu;</span><br><span class="line"><span class="keyword">show</span> tables;</span><br></pre></td></tr></table></figure>
+
+<h1 id="DML"><a href="#DML" class="headerlink" title="DML"></a>DML</h1><h2 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h2><p>DML（Data Manipulation Language），数据操作语言，用来对数据库中的表的数据记录进行更新。</p>
+<h2 id="增（insert）"><a href="#增（insert）" class="headerlink" title="增（insert）"></a>增（insert）</h2><p>语法格式</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> 表 (列名<span class="number">1</span>,列名<span class="number">2</span>,列名<span class="number">3.</span>..) <span class="keyword">values</span> (值<span class="number">1</span>,值<span class="number">2</span>,值<span class="number">3.</span>..)； #向表中插入某些</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> 表 <span class="keyword">values</span> (值<span class="number">1</span>,值<span class="number">2</span>,值<span class="number">3.</span>..);     #向表中插入所有列</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> student(sid, name, gender, age, score) <span class="keyword">VALUES</span>(<span class="number">101</span>, <span class="string">&#x27;张三&#x27;</span>, <span class="string">&#x27;男&#x27;</span>, <span class="number">15</span> ,<span class="number">89</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> student <span class="keyword">values</span>(<span class="number">102</span>, <span class="string">&#x27;王娟&#x27;</span>, <span class="string">&#x27;女&#x27;</span>, <span class="number">14</span>, <span class="string">&#x27;1998-12-12&#x27;</span>, <span class="string">&#x27;xxx&#x27;</span>, <span class="number">93</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="删（delete）"><a href="#删（delete）" class="headerlink" title="删（delete）"></a>删（delete）</h2><p>语法格式</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> 表名 [<span class="keyword">where</span> 条件];</span><br><span class="line"><span class="keyword">truncate</span> <span class="keyword">table</span>  表名 或者 <span class="keyword">truncate</span> 表名</span><br><span class="line"><span class="comment">-- 注意：delete和truncate原理不同，delete只删除内容，而truncate类似于drop table ，可以理解为是将整个表删除，然后再创建该表；</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">from</span> student <span class="keyword">where</span> sid<span class="operator">=</span><span class="number">102</span>;</span><br><span class="line"><span class="comment">-- 删除所有表数据</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> student;</span><br><span class="line"><span class="comment">-- 清空表数据</span></span><br><span class="line"><span class="keyword">truncate</span> <span class="keyword">table</span> student;</span><br><span class="line"><span class="keyword">truncate</span> student;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="改（update）"><a href="#改（update）" class="headerlink" title="改（update）"></a>改（update）</h2><p>语法格式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> 表名 <span class="keyword">set</span> 字段名<span class="operator">=</span>值,字段名<span class="operator">=</span>值...;</span><br><span class="line"><span class="keyword">update</span> 表名 <span class="keyword">set</span> 字段名<span class="operator">=</span>值,字段名<span class="operator">=</span>值... <span class="keyword">where</span> 条件;</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> student <span class="keyword">set</span> address<span class="operator">=</span><span class="string">&#x27;xxxx&#x27;</span> <span class="keyword">where</span> sid<span class="operator">=</span><span class="number">101</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="查（select）"><a href="#查（select）" class="headerlink" title="查（select）"></a>查（select）</h2><p>语法格式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span><span class="operator">|</span>列名 <span class="keyword">from</span> tablename;</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="MySQL约束"><a href="#MySQL约束" class="headerlink" title="MySQL约束"></a>MySQL约束</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>约束：constraint</p>
+<p>约束实际上就是表中数据的限制条件</p>
+<h2 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h2><p>表在设计的时候加入约束的目的就是为了保证表中的记录完整性和有效性，比如用户表有些列的值（手机号）不能为空，有些列的值（身份证号）不能重复。</p>
+<h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><ul>
+<li>主键约束(primary key) PK</li>
+<li>自增长约束(auto_increment)</li>
+<li>非空约束(not null)</li>
+<li>唯一性约束(unique)</li>
+<li>默认约束(default)</li>
+<li>零填充约束(zerofill)</li>
+<li>外键约束(foreign key) FK</li>
+</ul>
+<h2 id="主键约束"><a href="#主键约束" class="headerlink" title="主键约束"></a>主键约束</h2><h3 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3><p>MySQL主键约束是一个列或者多个列的组合，其值能唯一地标识表中的每一行,方便在RDBMS中尽快的找到某一行。</p>
+<p>主键约束相当于 唯一约束 + 非空约束 的组合，主键约束列不允许重复，也不允许出现空值。</p>
+<p>每个表最多只允许一个主键。</p>
+<p>主键约束的关键字是：primary key。</p>
+<p>当创建主键的约束时，系统默认会在所在的列和列组合上建立对应的唯一索引。</p>
+<h3 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h3><h4 id="添加单列主键"><a href="#添加单列主键" class="headerlink" title="添加单列主键"></a>添加单列主键</h4><p>创建单列主键有两种方式，一种是在定义字段的同时指定主键，一种是定义完字段之后指定主键</p>
+<p>方式1：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 在 create table 语句中，通过 PRIMARY KEY 关键字来指定主键。</span></span><br><span class="line"><span class="comment">--在定义字段的同时指定主键，语法格式如下：</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名(</span><br><span class="line">   ...</span><br><span class="line">   <span class="operator">&lt;</span>字段名<span class="operator">&gt;</span> <span class="operator">&lt;</span>数据类型<span class="operator">&gt;</span> <span class="keyword">primary</span> key </span><br><span class="line">   ...</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>方式2：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--在定义字段之后再指定主键，语法格式如下：</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名(</span><br><span class="line">   ...</span><br><span class="line">   [<span class="keyword">constraint</span> <span class="operator">&lt;</span>约束名<span class="operator">&gt;</span>] <span class="keyword">primary</span> key [字段名]</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>示例</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 方式1</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> emp1(</span><br><span class="line">    eid <span class="type">int</span> primay key,</span><br><span class="line">    name <span class="type">VARCHAR</span>(<span class="number">20</span>),</span><br><span class="line">    deptId <span class="type">int</span>,</span><br><span class="line">    salary <span class="keyword">double</span></span><br><span class="line">);</span><br><span class="line"><span class="comment">-- 方式2</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> emp2(</span><br><span class="line">    eid <span class="type">INT</span>,</span><br><span class="line">    name <span class="type">VARCHAR</span>(<span class="number">20</span>),</span><br><span class="line">    deptId <span class="type">INT</span>,</span><br><span class="line">    salary <span class="keyword">double</span>,</span><br><span class="line">    <span class="keyword">constraint</span>  pk1 <span class="keyword">primary</span> key(eid)</span><br><span class="line"> );</span><br></pre></td></tr></table></figure>
+
+<h4 id="添加多列主键（联合主键）"><a href="#添加多列主键（联合主键）" class="headerlink" title="添加多列主键（联合主键）"></a>添加多列主键（联合主键）</h4><p>所谓的联合主键，就是这个主键是由一张表中多个字段组成的。<br>注意：  </p>
+<ol>
+<li>当主键是由多个字段组成时，不能直接在字段名后面声明主键约束。  </li>
+<li>一张表只能有一个主键，联合主键也是一个主键</li>
+</ol>
+<p>语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名(</span><br><span class="line">   ...</span><br><span class="line">   <span class="keyword">primary</span> key （字段<span class="number">1</span>，字段<span class="number">2</span>，…,字段n)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> emp3( </span><br><span class="line">  name <span class="type">varchar</span>(<span class="number">20</span>), </span><br><span class="line">  deptId <span class="type">int</span>, </span><br><span class="line">  salary <span class="keyword">double</span>, </span><br><span class="line">  <span class="keyword">primary</span> key(name,deptId) </span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h4 id="通过修改表结构添加主键"><a href="#通过修改表结构添加主键" class="headerlink" title="通过修改表结构添加主键"></a>通过修改表结构添加主键</h4><p>主键约束不仅可以在创建表的同时创建，也可以在修改表时添加。</p>
+<p>语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名(</span><br><span class="line">   ...</span><br><span class="line">);</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> <span class="operator">&lt;</span>表名<span class="operator">&gt;</span> <span class="keyword">add</span> <span class="keyword">primary</span> key（字段列表);</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 添加单列主键</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> emp4(</span><br><span class="line">  eid <span class="type">int</span>, </span><br><span class="line">  name <span class="type">varchar</span>(<span class="number">20</span>), </span><br><span class="line">  deptId <span class="type">int</span>, </span><br><span class="line">  salary <span class="keyword">double</span>, </span><br><span class="line">);</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> emp4 <span class="keyword">add</span> <span class="keyword">primary</span> key(eid);</span><br></pre></td></tr></table></figure>
+
+<h4 id="删除主键"><a href="#删除主键" class="headerlink" title="删除主键"></a>删除主键</h4><p>一个表中不需要主键约束时，就需要从表中将其删除。删除主键约束的方法要比创建主键约束容易的多。</p>
+<p>语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> tablename <span class="keyword">drop</span> <span class="keyword">primary</span> key;</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 删除单列主键 </span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> emp1 <span class="keyword">drop</span> <span class="keyword">primary</span> key;</span><br><span class="line"> </span><br><span class="line"><span class="comment">-- 删除联合主键 </span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> emp5 <span class="keyword">drop</span> <span class="keyword">primary</span> key;</span><br></pre></td></tr></table></figure>
+
+<h2 id="自增长约束"><a href="#自增长约束" class="headerlink" title="自增长约束"></a>自增长约束</h2><h3 id="概念-2"><a href="#概念-2" class="headerlink" title="概念"></a>概念</h3><p>在 MySQL 中，当主键定义为自增长后，这个主键的值就不再需要用户输入数据了，而由数据库系统根据定义自动赋值。每增加一条记录，主键会自动以相同的步长进行增长。通过给字段添加 auto_increment 属性来实现主键自增长。</p>
+<h3 id="操作-1"><a href="#操作-1" class="headerlink" title="操作"></a>操作</h3><h4 id="添加约束"><a href="#添加约束" class="headerlink" title="添加约束"></a>添加约束</h4><p>语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">字段名 数据类型 auto_increment</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="keyword">user</span>( </span><br><span class="line">  id <span class="type">int</span> <span class="keyword">primary</span> key auto_increment, </span><br><span class="line">  name <span class="type">varchar</span>(<span class="number">20</span>) </span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>特点：</p>
+<ul>
+<li>默认情况下，auto_increment的初始值是 1，每新增一条记录，字段值自动加 1。</li>
+<li>一个表中只能有一个字段使用 auto_increment约束，且该字段必须有唯一索引，以避免序号重复（即为主键或主键的一部分）。</li>
+<li>auto_increment约束的字段必须具备 NOT NULL 属性。</li>
+<li>auto_increment约束的字段只能是整数类型（TINYINT、SMALLINT、INT、BIGINT 等。</li>
+<li>auto_increment约束字段的最大值受该字段的数据类型约束，如果达到上限，</li>
+<li>auto_increment就会失效。</li>
+</ul>
+<h4 id="指定自增字段初始值"><a href="#指定自增字段初始值" class="headerlink" title="指定自增字段初始值"></a>指定自增字段初始值</h4><p>如果第一条记录设置了该字段的初始值，那么新增加的记录就从这个初始值开始自增。例如，如果表中插入的第一条记录的 id 值设置为 5，那么再插入记录时，id 值就会从 5 开始往上增加。</p>
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 方式1，创建表时指定</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> t_user2 ( </span><br><span class="line">  id <span class="type">int</span> <span class="keyword">primary</span> key auto_increment, </span><br><span class="line">  name <span class="type">varchar</span>(<span class="number">20</span>)</span><br><span class="line">)auto_increment<span class="operator">=</span><span class="number">100</span>;</span><br><span class="line"><span class="comment">-- 方式2，创建表之后指定</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> t_user3 ( </span><br><span class="line">  id <span class="type">int</span> <span class="keyword">primary</span> key auto_increment, </span><br><span class="line">  name <span class="type">varchar</span>(<span class="number">20</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t_user2 auto_increment<span class="operator">=</span><span class="number">100</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="delete和truncate在删除后自增列的变化"><a href="#delete和truncate在删除后自增列的变化" class="headerlink" title="delete和truncate在删除后自增列的变化"></a>delete和truncate在删除后自增列的变化</h4><ul>
+<li>delete数据之后自动增长从断点开始</li>
+<li>truncate数据之后自动增长从默认起始值开始</li>
+</ul>
+<h2 id="非空约束"><a href="#非空约束" class="headerlink" title="非空约束"></a>非空约束</h2><h3 id="概念-3"><a href="#概念-3" class="headerlink" title="概念"></a>概念</h3><p>MySQL 非空约束（not null）指字段的值不能为空。对于使用了非空约束的字段，如果用户在添加数据时没有指定值，数据库系统就会报错。</p>
+<h3 id="操作-2"><a href="#操作-2" class="headerlink" title="操作"></a>操作</h3><h4 id="添加非空约束"><a href="#添加非空约束" class="headerlink" title="添加非空约束"></a>添加非空约束</h4><p>语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">方式<span class="number">1</span>：<span class="operator">&lt;</span>字段名<span class="operator">&gt;</span><span class="operator">&lt;</span>数据类型<span class="operator">&gt;</span> <span class="keyword">not</span> <span class="keyword">null</span>;</span><br><span class="line">方式<span class="number">2</span>：<span class="keyword">alter</span> <span class="keyword">table</span> 表名 modify 字段 类型 <span class="keyword">not</span> <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 方式1，创建表时指定</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> t_user6 ( </span><br><span class="line">  id <span class="type">int</span> , </span><br><span class="line">  name <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="keyword">null</span>, </span><br><span class="line">  address <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="keyword">null</span> </span><br><span class="line">);</span><br><span class="line"><span class="comment">-- 方式2</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> t_user7 ( </span><br><span class="line">  id <span class="type">int</span> , </span><br><span class="line">  name <span class="type">varchar</span>(<span class="number">20</span>) , <span class="comment">-- 指定非空约束 </span></span><br><span class="line">  address <span class="type">varchar</span>(<span class="number">20</span>) <span class="comment">-- 指定非空约束 </span></span><br><span class="line">); </span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t_user7 modify name <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="keyword">null</span>; </span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t_user7 modify address <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="删除非空约束"><a href="#删除非空约束" class="headerlink" title="删除非空约束"></a>删除非空约束</h4><p>语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 modify 字段 类型</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t_user7 modify name <span class="type">varchar</span>(<span class="number">20</span>) ; </span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t_user7 modify address <span class="type">varchar</span>(<span class="number">20</span>) ;</span><br></pre></td></tr></table></figure>
+
+<h2 id="唯一约束"><a href="#唯一约束" class="headerlink" title="唯一约束"></a>唯一约束</h2><h3 id="概念-4"><a href="#概念-4" class="headerlink" title="概念"></a>概念</h3><p>唯一约束（Unique Key）是指所有记录中字段的值不能重复出现。例如，为 id 字段加上唯一性约束后，每条记录的 id 值都是唯一的，不能出现重复的情况。</p>
+<h3 id="操作-3"><a href="#操作-3" class="headerlink" title="操作"></a>操作</h3><h4 id="添加约束-1"><a href="#添加约束-1" class="headerlink" title="添加约束"></a>添加约束</h4><p>语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">方式<span class="number">1</span>：<span class="operator">&lt;</span>字段名<span class="operator">&gt;</span> <span class="operator">&lt;</span>数据类型<span class="operator">&gt;</span> <span class="keyword">unique</span></span><br><span class="line">方式<span class="number">2</span>： <span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">add</span> <span class="keyword">constraint</span> 约束名 <span class="keyword">unique</span>(列);</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 方式1，创建表时指定</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> t_user8 ( </span><br><span class="line"> id <span class="type">int</span> , </span><br><span class="line"> name <span class="type">varchar</span>(<span class="number">20</span>) , </span><br><span class="line"> phone_number <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">unique</span> <span class="comment">-- 指定唯一约束 </span></span><br><span class="line">);</span><br><span class="line"><span class="comment">-- 方式2</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> t_user9 ( </span><br><span class="line">  id <span class="type">int</span> , </span><br><span class="line">  name <span class="type">varchar</span>(<span class="number">20</span>) , </span><br><span class="line">  phone_number <span class="type">varchar</span>(<span class="number">20</span>) <span class="comment">-- 指定唯一约束 </span></span><br><span class="line">); </span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t_user9 <span class="keyword">add</span> <span class="keyword">constraint</span> unique_ph <span class="keyword">unique</span>(phone_number);</span><br></pre></td></tr></table></figure>
+
+<h4 id="删除唯一约束"><a href="#删除唯一约束" class="headerlink" title="删除唯一约束"></a>删除唯一约束</h4><p>语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> <span class="operator">&lt;</span>表名<span class="operator">&gt;</span> <span class="keyword">drop</span> index <span class="operator">&lt;</span>唯一约束名<span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t_user9 <span class="keyword">drop</span> index unique_ph;</span><br></pre></td></tr></table></figure>
+
+<h2 id="默认约束"><a href="#默认约束" class="headerlink" title="默认约束"></a>默认约束</h2><h3 id="概念-5"><a href="#概念-5" class="headerlink" title="概念"></a>概念</h3><p>MySQL 默认值约束用来指定某列的默认值。</p>
+<h3 id="操作-4"><a href="#操作-4" class="headerlink" title="操作"></a>操作</h3><h4 id="添加默认约束"><a href="#添加默认约束" class="headerlink" title="添加默认约束"></a>添加默认约束</h4><p>语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">方式<span class="number">1</span>： <span class="operator">&lt;</span>字段名<span class="operator">&gt;</span> <span class="operator">&lt;</span>数据类型<span class="operator">&gt;</span> <span class="keyword">default</span> <span class="operator">&lt;</span>默认值<span class="operator">&gt;</span>;</span><br><span class="line">方式<span class="number">2</span>: <span class="keyword">alter</span> <span class="keyword">table</span> 表名 modify 列名 类型 <span class="keyword">default</span> 默认值;</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 方式1</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> t_user10 ( </span><br><span class="line">  id <span class="type">int</span> , </span><br><span class="line">  name <span class="type">varchar</span>(<span class="number">20</span>) , </span><br><span class="line">  address <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">default</span> ‘北京’ <span class="comment">-- 指定默认约束 </span></span><br><span class="line">);</span><br><span class="line"><span class="comment">-- 方式2</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> t_user11 ( </span><br><span class="line">  id <span class="type">int</span> , </span><br><span class="line">  name <span class="type">varchar</span>(<span class="number">20</span>) , </span><br><span class="line">  address <span class="type">varchar</span>(<span class="number">20</span>)  </span><br><span class="line">);</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t_user11 modify address <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">default</span>  ‘北京’;</span><br></pre></td></tr></table></figure>
+
+<h4 id="删除默认约束"><a href="#删除默认约束" class="headerlink" title="删除默认约束"></a>删除默认约束</h4><p>语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> <span class="operator">&lt;</span>表名<span class="operator">&gt;</span> modify <span class="keyword">column</span> <span class="operator">&lt;</span>字段名<span class="operator">&gt;</span> <span class="operator">&lt;</span>类型<span class="operator">&gt;</span> <span class="keyword">default</span> <span class="keyword">null</span>; </span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t_user11 modify <span class="keyword">column</span> address <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">default</span> <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="零填充约束（zerofill）"><a href="#零填充约束（zerofill）" class="headerlink" title="零填充约束（zerofill）"></a>零填充约束（zerofill）</h2><h3 id="概念-6"><a href="#概念-6" class="headerlink" title="概念"></a>概念</h3><p>1、插入数据时，当该字段的值的长度小于定义的长度时，会在该值的前面补上相应的0<br>2、zerofill默认为int(10)<br>3、当使用zerofill 时，默认会自动加unsigned（无符号）属性，使用unsigned属性后，数值范围是原值的2倍，例如，有符号为-128<del>+127，无符号为0</del>256。</p>
+<h3 id="操作-5"><a href="#操作-5" class="headerlink" title="操作"></a>操作</h3><h4 id="添加约束-2"><a href="#添加约束-2" class="headerlink" title="添加约束"></a>添加约束</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> t_user12 ( </span><br><span class="line">  id <span class="type">int</span> zerofill , <span class="comment">-- 零填充约束</span></span><br><span class="line">  name <span class="type">varchar</span>(<span class="number">20</span>)   </span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h4 id="删除约束"><a href="#删除约束" class="headerlink" title="删除约束"></a>删除约束</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t_user12 modify id <span class="type">int</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="DQL-基本查询"><a href="#DQL-基本查询" class="headerlink" title="DQL-基本查询"></a>DQL-基本查询</h1><h2 id="语法格式"><a href="#语法格式" class="headerlink" title="语法格式"></a>语法格式</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> </span><br><span class="line">  [<span class="keyword">all</span><span class="operator">|</span><span class="keyword">distinct</span>]</span><br><span class="line">  <span class="operator">&lt;</span>目标列的表达式<span class="number">1</span><span class="operator">&gt;</span> [别名],</span><br><span class="line">  <span class="operator">&lt;</span>目标列的表达式<span class="number">2</span><span class="operator">&gt;</span> [别名]...</span><br><span class="line"><span class="keyword">from</span> <span class="operator">&lt;</span>表名或视图名<span class="operator">&gt;</span> [别名],<span class="operator">&lt;</span>表名或视图名<span class="operator">&gt;</span> [别名]...</span><br><span class="line">[<span class="keyword">where</span><span class="operator">&lt;</span>条件表达式<span class="operator">&gt;</span>]</span><br><span class="line">[<span class="keyword">group</span> <span class="keyword">by</span> <span class="operator">&lt;</span>列名<span class="operator">&gt;</span> </span><br><span class="line">[<span class="keyword">having</span> <span class="operator">&lt;</span>条件表达式<span class="operator">&gt;</span>]]</span><br><span class="line">[<span class="keyword">order</span> <span class="keyword">by</span> <span class="operator">&lt;</span>列名<span class="operator">&gt;</span> [<span class="keyword">asc</span><span class="operator">|</span><span class="keyword">desc</span>]]</span><br><span class="line">[limit <span class="operator">&lt;</span>数字或者列表<span class="operator">&gt;</span>];</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> product;</span><br><span class="line"><span class="keyword">SELECT</span> pname, price <span class="keyword">from</span> product;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> product <span class="keyword">as</span> p;</span><br><span class="line"><span class="keyword">select</span> pname <span class="keyword">as</span> pn <span class="keyword">from</span> product;</span><br><span class="line"><span class="comment">-- 去除重复</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">distinct</span> price <span class="keyword">from</span> product;</span><br><span class="line"><span class="comment">-- 表达式</span></span><br><span class="line"><span class="keyword">select</span> pname, price<span class="operator">+</span><span class="number">10</span> <span class="keyword">from</span> product;</span><br></pre></td></tr></table></figure>
+
+<h2 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h2><h3 id="算术运算符"><a href="#算术运算符" class="headerlink" title="算术运算符"></a>算术运算符</h3><table>
+<thead>
+<tr>
+<th>算术运算符</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>+</td>
+<td>加</td>
+</tr>
+<tr>
+<td>-</td>
+<td>减</td>
+</tr>
+<tr>
+<td>*</td>
+<td>乘</td>
+</tr>
+<tr>
+<td>&#x2F; 或 DIV</td>
+<td>除</td>
+</tr>
+<tr>
+<td>% 或 MOD</td>
+<td>求余运算，返回余数</td>
+</tr>
+</tbody></table>
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="number">6</span><span class="operator">+</span><span class="number">4</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">6</span><span class="operator">/</span><span class="number">4</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">6</span> <span class="operator">*</span> <span class="number">4</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">6</span> <span class="operator">%</span> <span class="number">4</span>;</span><br><span class="line"><span class="keyword">select</span> pname,price <span class="operator">+</span> <span class="number">10</span> <span class="keyword">as</span> new_price <span class="keyword">from</span> product;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="比较运算符"><a href="#比较运算符" class="headerlink" title="比较运算符"></a>比较运算符</h3><table>
+<thead>
+<tr>
+<th>比较运算符</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&#x3D;</td>
+<td>等于</td>
+</tr>
+<tr>
+<td>&lt;  和  &lt;&#x3D;</td>
+<td>小于，小于等于</td>
+</tr>
+<tr>
+<td>&gt;  和  &gt;&#x3D;</td>
+<td>大于，大于等于</td>
+</tr>
+<tr>
+<td>&lt;&#x3D;&#x3D;&gt;</td>
+<td>安全的等于，两个操作码均为NULL时，其所得值为1；而当一个操作码为NULL时，其所得值为0</td>
+</tr>
+<tr>
+<td>&lt;&gt; 或 !&#x3D;</td>
+<td>不等于</td>
+</tr>
+<tr>
+<td>IS NULL 或 ISNULL</td>
+<td>判断一个值是否为NULL</td>
+</tr>
+<tr>
+<td>IS NOT NULL</td>
+<td>判断一个值是否不为NULL</td>
+</tr>
+<tr>
+<td>LEAST</td>
+<td>当两个或多个值时返回最小值</td>
+</tr>
+<tr>
+<td>GREATEST</td>
+<td>当两个或多个值时返回最大值</td>
+</tr>
+<tr>
+<td>BETWEEN AND</td>
+<td>判断一个值是否落在两个值之间</td>
+</tr>
+<tr>
+<td>IN</td>
+<td>判断一个值是IN列表中的任意一个值</td>
+</tr>
+<tr>
+<td>NOT IN</td>
+<td>判断一个值不是IN列表中的任意一个值</td>
+</tr>
+<tr>
+<td>LIKE</td>
+<td>通配符匹配</td>
+</tr>
+<tr>
+<td>REGEXP</td>
+<td>正则表达式匹配</td>
+</tr>
+</tbody></table>
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> product <span class="keyword">where</span> pname <span class="operator">=</span> <span class="string">&#x27;格力空调&#x27;</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> product <span class="keyword">where</span> price <span class="operator">=</span> <span class="number">800</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> product <span class="keyword">where</span> price <span class="operator">&lt;&gt;</span> <span class="number">800</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> product <span class="keyword">where</span> price <span class="operator">!=</span> <span class="number">800</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> product <span class="keyword">where</span> <span class="keyword">not</span>(price <span class="operator">=</span> <span class="number">800</span>);</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> product <span class="keyword">where</span> price <span class="keyword">BETWEEN</span> <span class="number">200</span> <span class="keyword">AND</span> <span class="number">600</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">from</span> product <span class="keyword">WHERE</span> price <span class="operator">&gt;=</span> <span class="number">200</span> <span class="keyword">and</span> price <span class="operator">&lt;=</span><span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">from</span> product <span class="keyword">where</span> price <span class="operator">=</span> <span class="number">200</span> <span class="keyword">or</span> price <span class="operator">=</span> <span class="number">800</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> product <span class="keyword">where</span> price <span class="keyword">in</span> (<span class="number">200</span>, <span class="number">800</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">from</span> product <span class="keyword">where</span> pname <span class="keyword">like</span> <span class="string">&#x27;%海%&#x27;</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> product <span class="keyword">WHERE</span> category_id <span class="keyword">is</span> <span class="keyword">NULL</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">from</span> product <span class="keyword">WHERE</span> category_id <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">NULL</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> LEAST(<span class="number">1</span>,<span class="number">5</span>, <span class="number">0</span>); <span class="comment">-- 0</span></span><br><span class="line"><span class="keyword">SELECT</span> GREATEST(<span class="number">8</span>,<span class="number">10</span>,<span class="number">9</span>);  <span class="comment">-- 10</span></span><br><span class="line"><span class="keyword">SELECT</span> LEAST(<span class="number">1</span>,<span class="number">5</span>, <span class="keyword">null</span>); <span class="comment">-- null</span></span><br><span class="line"><span class="keyword">SELECT</span> GREATEST(<span class="keyword">null</span>,<span class="number">10</span>,<span class="number">9</span>); <span class="comment">-- null</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h3><table>
+<thead>
+<tr>
+<th>逻辑运算符</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NOT 或者 !</td>
+<td>逻辑非</td>
+</tr>
+<tr>
+<td>AND 或者 &amp;&amp;</td>
+<td>逻辑与</td>
+</tr>
+<tr>
+<td>OR 或者 ||</td>
+<td>逻辑或</td>
+</tr>
+<tr>
+<td>XOR</td>
+<td>逻辑异或</td>
+</tr>
+</tbody></table>
+<h3 id="位运算符"><a href="#位运算符" class="headerlink" title="位运算符"></a>位运算符</h3><table>
+<thead>
+<tr>
+<th>位运算符</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>|</td>
+<td>按位或</td>
+</tr>
+<tr>
+<td>&amp;</td>
+<td>按位与</td>
+</tr>
+<tr>
+<td>^</td>
+<td>按位异或</td>
+</tr>
+<tr>
+<td>&lt;&lt;</td>
+<td>按位左移</td>
+</tr>
+<tr>
+<td>&gt;&gt;</td>
+<td>按位右移</td>
+</tr>
+<tr>
+<td>~</td>
+<td>按位取反，反转所有bit</td>
+</tr>
+</tbody></table>
+<p>位运算符是在二进制数上进行计算的运算符。位运算会先将操作数变成二进制数，进行位运算。然后再将计算结果从二进制数变回十进制数。</p>
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="number">3</span><span class="operator">&amp;</span><span class="number">5</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">3</span><span class="operator">|</span><span class="number">5</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="number">3</span><span class="operator">^</span><span class="number">5</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">3</span><span class="operator">&lt;&lt;</span><span class="number">1</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">3</span><span class="operator">&gt;&gt;</span><span class="number">1</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">~</span><span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="排序查询"><a href="#排序查询" class="headerlink" title="排序查询"></a>排序查询</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> </span><br><span class="line"> 字段名<span class="number">1</span>，字段名<span class="number">2</span>，……</span><br><span class="line"><span class="keyword">from</span> 表名</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> 字段名<span class="number">1</span> [<span class="keyword">asc</span><span class="operator">|</span><span class="keyword">desc</span>]，字段名<span class="number">2</span>[<span class="keyword">asc</span><span class="operator">|</span><span class="keyword">desc</span>]……</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>asc代表升序，desc代表降序，如果不写默认升序</li>
+<li>order by用于子句中可以支持单个字段，多个字段，表达式，函数，别名</li>
+<li>order by子句，放在查询语句的最后面。LIMIT子句除外</li>
+</ol>
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> product <span class="keyword">ORDER</span> <span class="keyword">BY</span> price <span class="keyword">desc</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> product <span class="keyword">ORDER</span> <span class="keyword">BY</span> price <span class="keyword">asc</span>, category_id <span class="keyword">desc</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="聚合查询"><a href="#聚合查询" class="headerlink" title="聚合查询"></a>聚合查询</h2><p><img src="/2020/08/14/MySQL%E5%9F%BA%E7%A1%80/image-20221219141727278.png" alt="image-20221219141727278"></p>
+<ol>
+<li>count函数对null值的处理如果count函数的参数为星号（*），则统计所有记录的个数。而如果参数为某字段，不统计含null值的记录个数。</li>
+<li>sum和avg函数对null值的处理这两个函数忽略null值的存在，就好象该条记录不存在一样。</li>
+<li>max和min函数对null值的处理 max和min两个函数同样忽略null值的存在。</li>
+</ol>
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> product;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> product <span class="keyword">where</span> price <span class="operator">&gt;</span> <span class="number">400</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">sum</span>(price) <span class="keyword">from</span> product <span class="keyword">where</span> category_id <span class="operator">=</span> <span class="string">&#x27;c001&#x27;</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">max</span>(price) <span class="keyword">from</span> product;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">min</span>(price) <span class="keyword">from</span> product;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">avg</span>(price) <span class="keyword">from</span> product;</span><br></pre></td></tr></table></figure>
+
+<h2 id="分组查询-group-by"><a href="#分组查询-group-by" class="headerlink" title="分组查询 - group by"></a>分组查询 - group by</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> 字段<span class="number">1</span>,字段<span class="number">2</span>… <span class="keyword">from</span> 表名 <span class="keyword">group</span> <span class="keyword">by</span> 分组字段 <span class="keyword">having</span> 分组条件;</span><br></pre></td></tr></table></figure>
+
+<p>如果要进行分组的话，则SELECT子句之后，只能出现分组的字段和统计函数，其他的字段不能出现。</p>
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> category_id, <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> product <span class="keyword">where</span> category_id <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">NULL</span> <span class="keyword">GROUP</span> <span class="keyword">BY</span> category_id;</span><br></pre></td></tr></table></figure>
+
+<h3 id="分组之后的条件筛选-having"><a href="#分组之后的条件筛选-having" class="headerlink" title="分组之后的条件筛选-having"></a>分组之后的条件筛选-having</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> 字段<span class="number">1</span>,字段<span class="number">2</span>… <span class="keyword">from</span> 表名 <span class="keyword">group</span> <span class="keyword">by</span> 分组字段 <span class="keyword">having</span> 分组条件;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>分组之后对统计结果进行筛选的话必须使用having，不能使用where</li>
+<li>where子句用来筛选 FROM 子句中指定的操作所产生的行</li>
+<li>group  by  子句用来分组 WHERE 子句的输出。 </li>
+<li>having 子句用来从分组的结果中筛选行</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> category_id, <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> product <span class="keyword">where</span> category_id <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">NULL</span> <span class="keyword">GROUP</span> <span class="keyword">BY</span> category_id <span class="keyword">HAVING</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="operator">&gt;</span> <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="分页查询-limit"><a href="#分页查询-limit" class="headerlink" title="分页查询 - limit"></a>分页查询 - limit</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 方式1-显示前n条</span></span><br><span class="line"><span class="keyword">select</span> 字段<span class="number">1</span>，字段<span class="number">2.</span>.. <span class="keyword">from</span> 表明 limit n</span><br><span class="line"><span class="comment">-- 方式2-分页显示</span></span><br><span class="line"><span class="keyword">select</span> 字段<span class="number">1</span>，字段<span class="number">2.</span>.. <span class="keyword">from</span> 表明 limit m,n</span><br><span class="line">m: 整数，表示从第几条索引开始，计算方式 （当前页<span class="number">-1</span>）<span class="operator">*</span>每页显示条数</span><br><span class="line">n: 整数，表示查询多少条数据</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">from</span> product limit <span class="number">5</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> product limit <span class="number">1</span>, <span class="number">5</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> product limit <span class="number">3</span>, <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="INSERT-INTO-SELECT语句"><a href="#INSERT-INTO-SELECT语句" class="headerlink" title="INSERT INTO SELECT语句"></a>INSERT INTO SELECT语句</h2><p>将一张表的数据导入到另一张表中，可以使用INSERT INTO SELECT语句 。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Table2(field1,field2,…) <span class="keyword">select</span> value1,value2,… <span class="keyword">from</span> Table1 或者：</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Table2 <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> Table1</span><br><span class="line"><span class="comment">-- 目标表Table2必须存在</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="SELECT-INTO-FROM语句"><a href="#SELECT-INTO-FROM语句" class="headerlink" title="SELECT INTO FROM语句"></a>SELECT INTO FROM语句</h2><p>将一张表的数据导入到另一张表中，有两种选择 SELECT INTO 和 INSERT INTO SELECT 。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> vale1, value2 <span class="keyword">into</span> Table2 <span class="keyword">from</span> Table1</span><br><span class="line"><span class="comment">-- 要求目标表Table2不存在，因为在插入时会自动创建表Table2，并将Table1中指定字段数据复制到Table2中。</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="多表操作"><a href="#多表操作" class="headerlink" title="多表操作"></a>多表操作</h1><h2 id="多表关系"><a href="#多表关系" class="headerlink" title="多表关系"></a>多表关系</h2><p>MySQL多表之间的关系可以概括为：一对一、一对多&#x2F;多对一关系，多对多。</p>
+<h2 id="外键约束"><a href="#外键约束" class="headerlink" title="外键约束"></a>外键约束</h2><p>MySQL 外键约束（FOREIGN KEY）是表的一个特殊字段，经常与主键约束一起使用。对于两个具有关联关系的表而言，相关联字段中主键所在的表就是主表（父表），外键所在的表就是从表（子表）。外键用来建立主表与从表的关联关系，为两个表的数据建立连接，约束两个表中数据的一致性和完整性。</p>
+<p><strong>特点</strong></p>
+<p>定义一个外键时，需要遵守下列规则：</p>
+<ul>
+<li>主表必须已经存在于数据库中，或者是当前正在创建的表。   </li>
+<li>必须为主表定义主键。    </li>
+<li>主键不能包含空值，但允许在外键中出现空值。也就是说，只要外键的每个非空值出现在指定的主键中，这 个外键的内容就是正确的。  </li>
+<li>在主表的表名后面指定列名或列名的组合。这个列或列的组合必须是主表的主键或候选键。  </li>
+<li>外键中列的数目必须和主表的主键中列的数目相同。   </li>
+<li>外键中列的数据类型必须和主表主键中对应列的数据类型相同。</li>
+</ul>
+<h3 id="创建外键约束"><a href="#创建外键约束" class="headerlink" title="创建外键约束"></a>创建外键约束</h3><h4 id="方式1-在创建表时设置外键约束"><a href="#方式1-在创建表时设置外键约束" class="headerlink" title="方式1-在创建表时设置外键约束"></a>方式1-在创建表时设置外键约束</h4><p>在 create table 语句中，通过 foreign key 关键字来指定外键，具体的语法格式如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">constraint</span> <span class="operator">&lt;</span>外键名<span class="operator">&gt;</span>] <span class="keyword">foreign</span> key 字段名 [，字段名<span class="number">2</span>，…] <span class="keyword">references</span> <span class="operator">&lt;</span>主表名<span class="operator">&gt;</span> 主键列<span class="number">1</span> [，主键列<span class="number">2</span>，…]</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> if <span class="keyword">not</span> <span class="keyword">EXISTS</span> dept (</span><br><span class="line">	deptno <span class="type">VARCHAR</span>(<span class="number">20</span>) <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">	name <span class="type">VARCHAR</span>(<span class="number">20</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">table</span> if <span class="keyword">not</span> <span class="keyword">EXISTS</span> emp (</span><br><span class="line">	eid <span class="type">VARCHAR</span>(<span class="number">20</span>) <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">	name <span class="type">VARCHAR</span>(<span class="number">20</span>),</span><br><span class="line">	age <span class="type">int</span>,</span><br><span class="line">	dept_id <span class="type">VARCHAR</span>(<span class="number">20</span>),</span><br><span class="line">	<span class="keyword">CONSTRAINT</span> emp_fk <span class="keyword">foreign</span> key (dept_id) <span class="keyword">REFERENCES</span> dept(deptno)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h4 id="方式2-在创建表时设置外键约束"><a href="#方式2-在创建表时设置外键约束" class="headerlink" title="方式2-在创建表时设置外键约束"></a>方式2-在创建表时设置外键约束</h4><p>外键约束也可以在修改表时添加，但是添加外键约束的前提是：从表中外键列中的数据必须与主表中主键列中的数据一致或者是没有数据。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> <span class="operator">&lt;</span>数据表名<span class="operator">&gt;</span> <span class="keyword">add</span> <span class="keyword">constraint</span> <span class="operator">&lt;</span>外键名<span class="operator">&gt;</span> <span class="keyword">foreign</span> key(<span class="operator">&lt;</span>列名<span class="operator">&gt;</span>) <span class="keyword">references</span> </span><br><span class="line"><span class="operator">&lt;</span>主表名<span class="operator">&gt;</span> (<span class="operator">&lt;</span>列名<span class="operator">&gt;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> if <span class="keyword">not</span> <span class="keyword">exists</span> dept2(</span><br><span class="line">  deptno <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">primary</span> key ,  <span class="comment">-- 部门号</span></span><br><span class="line">  name <span class="type">varchar</span>(<span class="number">20</span>) <span class="comment">-- 部门名字</span></span><br><span class="line">);</span><br><span class="line"><span class="comment">-- 创建员工表</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> if <span class="keyword">not</span> <span class="keyword">exists</span> emp2(</span><br><span class="line">  eid <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">primary</span> key , <span class="comment">-- 员工编号</span></span><br><span class="line">  ename <span class="type">varchar</span>(<span class="number">20</span>), <span class="comment">-- 员工名字</span></span><br><span class="line">  age <span class="type">int</span>,  <span class="comment">-- 员工年龄</span></span><br><span class="line">  dept_id <span class="type">varchar</span>(<span class="number">20</span>)  <span class="comment">-- 员工所属部门</span></span><br><span class="line"> </span><br><span class="line">);</span><br><span class="line"><span class="comment">-- 创建外键约束</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> emp2 <span class="keyword">add</span> <span class="keyword">constraint</span> dept_id_fk <span class="keyword">foreign</span> key(dept_id) <span class="keyword">references</span> dept2 (deptno);</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="在外键约束下的数据操作"><a href="#在外键约束下的数据操作" class="headerlink" title="在外键约束下的数据操作"></a>在外键约束下的数据操作</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 注意必须先给主表添加数据</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="string">&#x27;1001&#x27;</span>,<span class="string">&#x27;研发部&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="string">&#x27;1002&#x27;</span>,<span class="string">&#x27;销售部&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="string">&#x27;1003&#x27;</span>,<span class="string">&#x27;财务部&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span>(<span class="string">&#x27;1004&#x27;</span>,<span class="string">&#x27;人事部&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 注意给从表添加数据时，外键列的值不能随便写，必须依赖主表的主键列</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span>(<span class="string">&#x27;1&#x27;</span>,<span class="string">&#x27;乔峰&#x27;</span>,<span class="number">20</span>, <span class="string">&#x27;1001&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span>(<span class="string">&#x27;2&#x27;</span>,<span class="string">&#x27;段誉&#x27;</span>,<span class="number">21</span>, <span class="string">&#x27;1001&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span>(<span class="string">&#x27;3&#x27;</span>,<span class="string">&#x27;虚竹&#x27;</span>,<span class="number">23</span>, <span class="string">&#x27;1001&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span>(<span class="string">&#x27;4&#x27;</span>,<span class="string">&#x27;阿紫&#x27;</span>,<span class="number">18</span>, <span class="string">&#x27;1002&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span>(<span class="string">&#x27;5&#x27;</span>,<span class="string">&#x27;扫地僧&#x27;</span>,<span class="number">35</span>, <span class="string">&#x27;1002&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span>(<span class="string">&#x27;6&#x27;</span>,<span class="string">&#x27;李秋水&#x27;</span>,<span class="number">33</span>, <span class="string">&#x27;1003&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span>(<span class="string">&#x27;7&#x27;</span>,<span class="string">&#x27;鸠摩智&#x27;</span>,<span class="number">50</span>, <span class="string">&#x27;1003&#x27;</span>); </span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span>(<span class="string">&#x27;8&#x27;</span>,<span class="string">&#x27;天山童姥&#x27;</span>,<span class="number">60</span>, <span class="string">&#x27;1005&#x27;</span>); <span class="comment">-- 不能插入</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">   注意：</span></span><br><span class="line"><span class="comment">       1：主表的数据被从表依赖时，不能删除，否则可以删除</span></span><br><span class="line"><span class="comment">       2: 从表的数据可以随便删除</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">from</span> dept <span class="keyword">where</span> deptno <span class="operator">=</span> <span class="string">&#x27;1001&#x27;</span> <span class="comment">-- 不能删除</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">from</span> dept <span class="keyword">where</span> deptno <span class="operator">=</span> <span class="string">&#x27;1004&#x27;</span> <span class="comment">-- 可以删除</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="删除外键约束"><a href="#删除外键约束" class="headerlink" title="删除外键约束"></a>删除外键约束</h3><p>当一个表中不需要外键约束时，就需要从表中将其删除。外键一旦删除，就会解除主表和从表间的关联关系</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> <span class="operator">&lt;</span>表名<span class="operator">&gt;</span> <span class="keyword">drop</span> <span class="keyword">foreign</span> key <span class="operator">&lt;</span>外键约束名<span class="operator">&gt;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> emp2 <span class="keyword">drop</span> <span class="keyword">foreign</span> key dept_id_fk;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="多表联合查询"><a href="#多表联合查询" class="headerlink" title="多表联合查询"></a>多表联合查询</h2><p>多表查询就是同时查询两个或两个以上的表，因为有的时候用户在查看数据的时候,需要显示的数据来自多张表。</p>
+<p>多表查询有以下分类：</p>
+<h3 id="交叉连接查询-产生笛卡尔积"><a href="#交叉连接查询-产生笛卡尔积" class="headerlink" title="交叉连接查询 [产生笛卡尔积]"></a>交叉连接查询 [产生笛卡尔积]</h3><p>语法：select * from A,B;  </p>
+<ul>
+<li>交叉连接查询返回被连接的两个表所有数据行的笛卡尔积</li>
+<li>笛卡尔积可以理解为一张表的每一行去和另外一张表的任意一行进行匹配</li>
+<li>假如A表有m行数据，B表有n行数据，则返回m*n行数据</li>
+<li>笛卡尔积会产生很多冗余的数据，后期的其他查询可以在该集合的基础上进行条件筛选</li>
+</ul>
+<h3 id="内连接查询-使用的关键字-inner-join-–-inner可以省略"><a href="#内连接查询-使用的关键字-inner-join-–-inner可以省略" class="headerlink" title="内连接查询(使用的关键字 inner join  – inner可以省略)"></a>内连接查询(使用的关键字 inner join  – inner可以省略)</h3><p>内连接查询求多张表的交集</p>
+<p>隐式内连接（SQL92标准）：select * from A,B where 条件;   </p>
+<p> 显示内连接（SQL99标准）：select * from A inner join B on 条件;</p>
+<h3 id="外连接查询-使用的关键字-outer-join-–-outer可以省略"><a href="#外连接查询-使用的关键字-outer-join-–-outer可以省略" class="headerlink" title="外连接查询(使用的关键字 outer join – outer可以省略)"></a>外连接查询(使用的关键字 outer join – outer可以省略)</h3><ul>
+<li>左外连接：left outer join</li>
+</ul>
+<p>​		select * from A left outer join B on 条件;        </p>
+<ul>
+<li>右外连接：right outer join</li>
+</ul>
+<p>​		select * from A right outer join B on 条件;        </p>
+<ul>
+<li>满外连接: full outer join</li>
+</ul>
+<p>​		select * from A full outer join B on 条件;</p>
+<p>注意：oracle里面有full join,可是在mysql对full join支持的不好。我们可以使用union来达到目的。</p>
+<p><img src="/2020/08/14/MySQL%E5%9F%BA%E7%A1%80/image-20221219152410367.png" alt="image-20221219152410367"></p>
+<h3 id="子查询"><a href="#子查询" class="headerlink" title="子查询"></a>子查询</h3><p>select的嵌套。</p>
+<p>子查询就是指的在一个完整的查询语句之中，嵌套若干个不同功能的小查询，从而一起完成复杂查询的一种编写形式，通俗一点就是包含select嵌套的查询。</p>
+<p>子查询可以返回的数据类型一共分为四种：</p>
+<ol>
+<li>单行单列：返回的是一个具体列的内容，可以理解为一个单值数据；</li>
+<li>单行多列：返回一行数据中多个列的内容；多行单列：返回多行记录之中同一列的内容，相当于给出了一个操作范围；</li>
+<li>多行多列：查询返回的结果是一张临时表</li>
+</ol>
+<p>在子查询中，有一些常用的逻辑关键字，这些关键字可以给我们提供更丰富的查询功能，主要关键字如下:</p>
+<ol>
+<li>ALL关键字</li>
+<li>ANY关键字</li>
+<li>SOME关键字</li>
+<li>IN关键字</li>
+<li>EXISTS关键字</li>
+</ol>
+<h4 id="ALL关键字"><a href="#ALL关键字" class="headerlink" title="ALL关键字"></a>ALL关键字</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> ... <span class="keyword">from</span> ... <span class="keyword">where</span> c <span class="operator">&gt;</span> <span class="keyword">all</span>(查询语句)</span><br><span class="line"><span class="comment">--等价于：</span></span><br><span class="line"><span class="keyword">select</span> ...<span class="keyword">from</span> ... <span class="keyword">where</span> c <span class="operator">&gt;</span> result1 <span class="keyword">and</span> c <span class="operator">&gt;</span> result2 <span class="keyword">and</span> c <span class="operator">&gt;</span> result3</span><br></pre></td></tr></table></figure>
+
+<p><strong>特点</strong></p>
+<ul>
+<li>ALL: 与子查询返回的所有值比较为true 则返回true</li>
+<li>ALL可以与&#x3D;、&gt;、&gt;&#x3D;、&lt;、&lt;&#x3D;、&lt;&gt;结合是来使用，分别表示等于、大于、大于等于、小于、小于等于、不等于其中的其中的所有数据。</li>
+<li>ALL表示指定列中的值必须要大于子查询集的每一个值，即必须要大于子查询集的最大值；如果是小于号即小于子查询集的最小值。同理可以推出其它的比较运算符的情况。</li>
+</ul>
+<h4 id="ANY和SOME关键字"><a href="#ANY和SOME关键字" class="headerlink" title="ANY和SOME关键字"></a>ANY和SOME关键字</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> ... <span class="keyword">from</span> ... <span class="keyword">where</span> c <span class="operator">&gt;</span> <span class="keyword">any</span>(查询语句)</span><br><span class="line"><span class="comment">--等价于：</span></span><br><span class="line"><span class="keyword">select</span> ... <span class="keyword">from</span> ... <span class="keyword">where</span> c <span class="operator">&gt;</span> result1 <span class="keyword">or</span> c <span class="operator">&gt;</span> result2 <span class="keyword">or</span> c <span class="operator">&gt;</span> result3</span><br></pre></td></tr></table></figure>
+
+<p><strong>特点</strong></p>
+<ul>
+<li>ANY:与子查询返回的任何值比较为true 则返回true</li>
+<li>ANY可以与&#x3D;、&gt;、&gt;&#x3D;、&lt;、&lt;&#x3D;、&lt;&gt;结合是来使用，分别表示等于、大于、大于等于、小于、小于等于、不等于其中的其中的任何一个数据。</li>
+<li>表示制定列中的值要大于子查询中的任意一个值，即必须要大于子查询集中的最小值。同理可以推出其它的比较运算符的情况。</li>
+<li>SOME和ANY的作用一样，SOME可以理解为ANY的别名</li>
+</ul>
+<h4 id="IN关键字"><a href="#IN关键字" class="headerlink" title="IN关键字"></a>IN关键字</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> ... <span class="keyword">from</span> ... <span class="keyword">where</span> c <span class="keyword">in</span>(查询语句)</span><br><span class="line"><span class="comment">-- 等价于</span></span><br><span class="line"><span class="keyword">select</span> ...<span class="keyword">from</span> ... <span class="keyword">where</span> c <span class="operator">=</span> result1 <span class="keyword">or</span> c <span class="operator">=</span> result2 <span class="keyword">or</span> c <span class="operator">=</span> result3</span><br></pre></td></tr></table></figure>
+
+<p><strong>特点</strong></p>
+<ul>
+<li>IN关键字，用于判断某个记录的值，是否在指定的集合中</li>
+<li>在IN关键字前边加上not可以将条件反过来</li>
+</ul>
+<h4 id="EXISTS关键字"><a href="#EXISTS关键字" class="headerlink" title="EXISTS关键字"></a>EXISTS关键字</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> ... <span class="keyword">from</span> ... <span class="keyword">where</span> <span class="keyword">exists</span>(查询语句)</span><br></pre></td></tr></table></figure>
+
+<p><strong>特点</strong></p>
+<ul>
+<li>该子查询如果“有数据结果”(至少返回一行数据)， 则该EXISTS() 的结果为“true”，外层查询执行</li>
+<li>该子查询如果“没有数据结果”（没有任何数据返回），则该EXISTS()的结果为“false”，外层查询不执行</li>
+<li>EXISTS后面的子查询不返回任何实际数据，只返回真或假，当返回真时 where条件成立</li>
+<li>注意，EXISTS关键字，比IN关键字的运算效率高，因此，在实际开发中，特别是大数据量时，推荐使用EXISTS关键字</li>
+</ul>
+<h3 id="表自关联："><a href="#表自关联：" class="headerlink" title="表自关联："></a>表自关联：</h3><p>将一张表当成多张表来用</p>
+<p>MySQL有时在信息查询时需要进行对表自身进行关联查询，即一张表自己和自己关联，一张表当成多张表来用。注意自关联时表必须给表起别名。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> 字段列表 <span class="keyword">from</span> 表<span class="number">1</span> a , 表<span class="number">1</span> b <span class="keyword">where</span> 条件;</span><br><span class="line">或者 </span><br><span class="line"><span class="keyword">select</span> 字段列表 <span class="keyword">from</span> 表<span class="number">1</span> a [<span class="keyword">left</span>] <span class="keyword">join</span> 表<span class="number">1</span> b <span class="keyword">on</span> 条件;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/05/15/Vue%E5%9F%BA%E7%A1%803/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -177,13 +783,6 @@
 
               <time title="创建时间：2020-05-15 21:53:03" itemprop="dateCreated datePublished" datetime="2020-05-15T21:53:03+08:00">2020-05-15</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-12-20 18:05:49" itemprop="dateModified" datetime="2022-12-20T18:05:49+08:00">2022-12-20</time>
-              </span>
 
           
 
@@ -256,13 +855,6 @@
 
               <time title="创建时间：2020-05-14 15:19:19" itemprop="dateCreated datePublished" datetime="2020-05-14T15:19:19+08:00">2020-05-14</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-12-08 10:20:34" itemprop="dateModified" datetime="2022-12-08T10:20:34+08:00">2022-12-08</time>
-              </span>
 
           
 
@@ -421,13 +1013,6 @@
 
               <time title="创建时间：2020-01-12 10:09:47" itemprop="dateCreated datePublished" datetime="2020-01-12T10:09:47+08:00">2020-01-12</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-12-12 10:37:39" itemprop="dateModified" datetime="2022-12-12T10:37:39+08:00">2022-12-12</time>
-              </span>
 
           
 
@@ -532,13 +1117,6 @@
 
               <time title="创建时间：2019-12-03 08:35:12" itemprop="dateCreated datePublished" datetime="2019-12-03T08:35:12+08:00">2019-12-03</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-12-13 17:31:22" itemprop="dateModified" datetime="2019-12-13T17:31:22+08:00">2019-12-13</time>
-              </span>
 
           
 
@@ -744,13 +1322,6 @@
 
               <time title="创建时间：2019-12-02 15:03:45" itemprop="dateCreated datePublished" datetime="2019-12-02T15:03:45+08:00">2019-12-02</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-12-12 15:30:36" itemprop="dateModified" datetime="2019-12-12T15:30:36+08:00">2019-12-12</time>
-              </span>
 
           
 
@@ -830,13 +1401,6 @@
 
               <time title="创建时间：2019-11-30 11:28:00" itemprop="dateCreated datePublished" datetime="2019-11-30T11:28:00+08:00">2019-11-30</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-01-30 11:34:51" itemprop="dateModified" datetime="2023-01-30T11:34:51+08:00">2023-01-30</time>
-              </span>
 
           
 
@@ -910,13 +1474,6 @@
 
               <time title="创建时间：2019-10-16 15:05:01" itemprop="dateCreated datePublished" datetime="2019-10-16T15:05:01+08:00">2019-10-16</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-03-16 14:38:25" itemprop="dateModified" datetime="2021-03-16T14:38:25+08:00">2021-03-16</time>
-              </span>
 
           
 
@@ -1018,13 +1575,6 @@
 
               <time title="创建时间：2019-05-23 14:55:48" itemprop="dateCreated datePublished" datetime="2019-05-23T14:55:48+08:00">2019-05-23</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-06-10 16:43:28" itemprop="dateModified" datetime="2019-06-10T16:43:28+08:00">2019-06-10</time>
-              </span>
 
           
 
@@ -1096,13 +1646,6 @@
 
               <time title="创建时间：2019-05-01 16:49:27" itemprop="dateCreated datePublished" datetime="2019-05-01T16:49:27+08:00">2019-05-01</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-10-22 16:56:26" itemprop="dateModified" datetime="2019-10-22T16:56:26+08:00">2019-10-22</time>
-              </span>
 
           
 
@@ -1116,107 +1659,6 @@
 
       
           <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>webpack是一个JavaScript应用程序的静态模块打包器，当webpack处理应用程序时，它会递归构建一个依赖关系图，其中包含应用程序需要的每个模块，然后将所有这些模块打包成一个或多个bundle</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/04/23/JavaScript%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%861/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/04/23/JavaScript%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%861/" class="post-title-link" itemprop="url">JavaScript工作原理1</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-04-23 13:50:06" itemprop="dateCreated datePublished" datetime="2019-04-23T13:50:06+08:00">2019-04-23</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-04-29 15:49:36" itemprop="dateModified" datetime="2019-04-29T15:49:36+08:00">2019-04-29</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="引擎，运行时和调用堆栈的概述"><a href="#引擎，运行时和调用堆栈的概述" class="headerlink" title="引擎，运行时和调用堆栈的概述"></a>引擎，运行时和调用堆栈的概述</h2><h4 id="JavaScript引擎"><a href="#JavaScript引擎" class="headerlink" title="JavaScript引擎"></a>JavaScript引擎</h4><p>JavaScript引擎的一个流行示例是Google的V8引擎，在Chrome和Node.js中使用V8引擎。<br>V8引擎由两个主要的部件组成：     </p>
-<ul>
-<li>Memory Heap（内存堆） -   内存分配地址的地方</li>
-<li>Call Stack （调用堆栈）  -  代码执行的地方</li>
-</ul>
-<h4 id="Runtime-运行时"><a href="#Runtime-运行时" class="headerlink" title="Runtime(运行时)"></a>Runtime(运行时)</h4><p><img src="/2019/04/23/JavaScript%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%861/runtime.png"></p>
-<h4 id="调用栈"><a href="#调用栈" class="headerlink" title="调用栈"></a>调用栈</h4><p>JavaScript是一种单线程编程语言，它只有一个调用堆栈。因此，它一次只能做一件事。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">function multiply(x, y) &#123;</span><br><span class="line">	return x * y;</span><br><span class="line">&#125;</span><br><span class="line">function printSquare(x) &#123;</span><br><span class="line">	var s = multiply(x, x);</span><br><span class="line">	console.log(s);</span><br><span class="line">&#125;</span><br><span class="line">printSquare(5);</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2019/04/23/JavaScript%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%861/callStackExample.png"></p>
-<h2 id="深入V8引擎"><a href="#深入V8引擎" class="headerlink" title="深入V8引擎"></a>深入V8引擎</h2><p>JavaScript引擎是执行JavaScript代码的程序和解释器。JavaScript引擎可以实现为标准解释器，或者以某种形式将JavaScript编译为字节码的即时编译器。<br>V8最初被设计用来提高web浏览器中JavaScript执行的性能。为了获得速度，V8 将 JavaScript 代码转换成更高效的机器码，而不是使用解释器。它通过实现 JIT (Just-In-Time) 编译器将 JavaScript 代码编译为执行时的机器码，就像许多现代 JavaScript 引擎(如SpiderMonkey或Rhino (Mozilla)) 所做的那样。这里的主要区别是 V8 不生成字节码或任何中间代码。<br>在V8的5.9版本出来之前，V8引擎使用了两个编译器：    </p>
-<ul>
-<li>full-codegen 一个简单和非常快的编译器，产生简单和相对较慢的机器码。</li>
-<li>Crankshaft 一种更复杂（Just-in-Time）的优化编译器，生成高度优化的代码。</li>
-</ul>
-<p>V8引擎也在内部使用多个线程：</p>
-<ul>
-<li>主线程执行你所期望的操作：获取代码、编译代码并执行它</li>
-<li>还有一个单独的线程用于编译，因此主线程可以在前者优化代码的同时继续执行</li>
-<li>一个Profiler线程，它会告诉运行时我们花了很多时间，让Crankshaft可以优化它们</li>
-<li>一些线程处理垃圾收集器</li>
-</ul>
-<p>当第一次执行 JavaScript 代码时，V8 利用 full-codegen 编译器，直接将解析的 JavaScript 翻译成机器代码而不进行任何转换。这使得它可以非常快速地开始执行机器代码。请注意，V8 不使用中间字节码，从而不需要解释器。</p>
-<p>当代码已经运行一段时间后，分析线程已经收集了足够的数据来判断应该优化哪个方法。</p>
-<p>接下来，Crankshaft  从另一个线程开始优化。它将 JavaScript 抽象语法树转换为被称为 Hydrogen 的高级静态单分配（SSA）表示，并尝试优化 Hydrogen 图，大多数优化都是在这个级别完成的。</p>
-<h3 id="优化代码"><a href="#优化代码" class="headerlink" title="优化代码"></a>优化代码</h3><h4 id="内联优化"><a href="#内联优化" class="headerlink" title="内联优化"></a>内联优化</h4><p>第一个优化是提前内联尽可能多的代码。内联是用被调用函数的主体替换调用点（调用函数的代码行）的过程。</p>
-<p><img src="/2019/04/23/JavaScript%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%861/inlineOptimize.png"></p>
-<h4 id="隐藏类"><a href="#隐藏类" class="headerlink" title="隐藏类"></a>隐藏类</h4><h4 id="内联缓存"><a href="#内联缓存" class="headerlink" title="内联缓存"></a>内联缓存</h4><h4 id="编译成机器语言"><a href="#编译成机器语言" class="headerlink" title="编译成机器语言"></a>编译成机器语言</h4><h4 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h4><h4 id="点火和涡轮风扇"><a href="#点火和涡轮风扇" class="headerlink" title="点火和涡轮风扇"></a>点火和涡轮风扇</h4><h4 id="如何写出优化的JavaScript"><a href="#如何写出优化的JavaScript" class="headerlink" title="如何写出优化的JavaScript"></a>如何写出优化的JavaScript</h4><ol>
-<li>对象属性的顺序：永远用相同的顺序为您的对象属性实例化，这样隐藏类和随后的优化代码才能共享。    </li>
-<li>动态属性：在对象实例化后为其新增属性会导致隐藏类变化，从而会减慢为旧隐藏类所优化的方法的执行。所以，尽量在构造函数中分配对象的所有属性。</li>
-<li>方法：重复执行相同方法的代码会比不同的方法只执行一次的代码运行的更快（由于内联缓存）。</li>
-<li>数组：避免使用keys不是递增数字的稀疏数组（sparse arrays）。并不为每个元素分配内存的稀疏数组实质上是一个hash表。这种数组中的元素比通常数组的元素会花销更大才能获取到。此外，避免使用预申请的大型数组。最好随着需要慢慢增加数组的大小。最后，不要删除数组中的元素，因这会使得keys变得稀疏。</li>
-<li>标记值（Tagged values）: V8用32个比特来表示对象和数字。它使用1个比特来区分是一个对象（flag &#x3D; 1）还是一个整型（flag &#x3D; 0）（被称为SMI或SMall Integer，小整型，因其只有31比特来表示值）。然后，如果一个数值大于31比特，V8就会给这个数字进行装箱操作（boxing），将其变成double型，并创建一个新的对象将这个double型数字放入其中。所以，为了避免代价很高的boxing操作，尽量使用31比特的有符号数。</li>
-</ol>
 
       
     </div>
@@ -1306,7 +1748,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">117</span>
+          <span class="site-state-item-count">118</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
