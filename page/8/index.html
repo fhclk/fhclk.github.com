@@ -151,6 +151,224 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/10/08/MySQL%E4%BC%98%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/08/MySQL%E4%BC%98%E5%8C%96/" class="post-title-link" itemprop="url">MySQL优化</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-08 19:44:29" itemprop="dateCreated datePublished" datetime="2020-10-08T19:44:29+08:00">2020-10-08</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>在应用的的开发过程中，由于初期数据量小，开发人员写 SQL 语句时更重视功能上的实现，但是当应用系统正式上线后，随着生产数据量的急剧增长，很多 SQL 语句开始逐渐显露出性能问题，对生产的影响也越来越大，此时这些有问题的 SQL 语句就成为整个系统性能的瓶颈，因此我们必须要对它们进行优化。</p>
+<p>MySQL的优化方式有很多，大致我们可以从以下几点来优化MySQL:</p>
+<ul>
+<li>从设计上优化</li>
+<li>从查询上优化</li>
+<li>从索引上优化</li>
+<li>从存储上优化</li>
+</ul>
+<h1 id="查看SQL执行频率"><a href="#查看SQL执行频率" class="headerlink" title="查看SQL执行频率"></a>查看SQL执行频率</h1><p>MySQL 客户端连接成功后，通过 show [session|global] status 命令可以查看服务器状态信息。通过查看状态信息可以查看对当前数据库的主要操作类型。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 下面的命令显示了当前 session 中所有统计参数的值</span></span><br><span class="line"><span class="keyword">show</span> session status <span class="keyword">like</span> <span class="string">&#x27;Com_______&#x27;</span>;  <span class="comment">-- 查看当前会话统计结果</span></span><br><span class="line"><span class="keyword">show</span> <span class="keyword">global</span>  status  <span class="keyword">like</span> <span class="string">&#x27;Com_______&#x27;</span>;  <span class="comment">-- 查看自数据库上次启动至今统计结果</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">show</span> status <span class="keyword">like</span> <span class="string">&#x27;Innodb_rows_%’;       -- 查看针对Innodb引擎的统计结果</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/08/MySQL%E4%BC%98%E5%8C%96/image-20221221105122225.png" alt="image-20221221105122225"></p>
+<h1 id="定位低效率执行SQL"><a href="#定位低效率执行SQL" class="headerlink" title="定位低效率执行SQL"></a>定位低效率执行SQL</h1><p>可以通过以下两种方式定位执行效率较低的 SQL 语句。 </p>
+<ul>
+<li>慢查询日志 : 通过慢查询日志定位那些执行效率较低的 SQL 语句。</li>
+<li>show processlist：该命令查看当前MySQL在进行的线程，包括线程的状态、是否锁表等，可以实时地查看 SQL 的执行情况，同时对一些锁表操作进行优化。</li>
+</ul>
+<h2 id="慢查询日志"><a href="#慢查询日志" class="headerlink" title="慢查询日志"></a>慢查询日志</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查看慢日志配置信息 </span></span><br><span class="line"><span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;%slow_query_log%’; </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-- 开启慢日志查询 </span></span><br><span class="line"><span class="string">set global slow_query_log=1; </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-- 查看慢日志记录SQL的最低阈值时间 </span></span><br><span class="line"><span class="string">show variables like &#x27;</span>long_query_time<span class="operator">%</span>’; </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 修改慢日志记录SQL的最低阈值时间 </span></span><br><span class="line"><span class="keyword">set</span> <span class="keyword">global</span> long_query_time<span class="operator">=</span><span class="number">4</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="show-processlist"><a href="#show-processlist" class="headerlink" title="show processlist"></a>show processlist</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> processlist;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/08/MySQL%E4%BC%98%E5%8C%96/image-20221221105416239.png" alt="image-20221221105416239"></p>
+<p>1） id列，用户登录mysql时，系统分配的”connection_id”，可以使用函数connection_id()查看。</p>
+<p>2） user列，显示当前用户。如果不是root，这个命令就只显示用户权限范围的sql语句。</p>
+<p>3） host列，显示这个语句是从哪个ip的哪个端口上发的，可以用来跟踪出现问题语句的用户。</p>
+<p>4） db列，显示这个进程目前连接的是哪个数据库。</p>
+<p>5） command列，显示当前连接的执行的命令，一般取值为休眠（sleep），查询（query），连接（connect）等。</p>
+<p>6） time列，显示这个状态持续的时间，单位是秒。</p>
+<p>7） state列，显示使用当前连接的sql语句的状态，很重要的列。state描述的是语句执行中的某一个状态。一个sql语句，以查询为例，可能需要经过copying to tmp table、sorting result、sending data等状态才可以完成。</p>
+<p>8） info列，显示这个sql语句，是判断问题语句的一个重要依据</p>
+<h1 id="explain分析执行计划"><a href="#explain分析执行计划" class="headerlink" title="explain分析执行计划"></a>explain分析执行计划</h1><p>通过以上步骤查询到效率低的 SQL 语句后，可以通过 EXPLAIN命令获取 MySQL如何执行 SELECT 语句的信息，包括在 SELECT 语句执行过程中表如何连接和连接的顺序。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> emp <span class="keyword">where</span> emp_id <span class="operator">=</span> <span class="number">1</span>; <span class="comment">-- 结果1</span></span><br><span class="line">explain <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">from</span> emp <span class="keyword">where</span> emp_name <span class="operator">=</span> <span class="string">&#x27;刘小贝&#x27;</span>; <span class="comment">-- 结果2</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/08/MySQL%E4%BC%98%E5%8C%96/image-20221221110108704.png" alt="image-20221221110108704"></p>
+<p><img src="/2020/10/08/MySQL%E4%BC%98%E5%8C%96/image-20221221110145031.png" alt="image-20221221110145031"></p>
+<p>字段说明</p>
+<p><img src="/2020/10/08/MySQL%E4%BC%98%E5%8C%96/image-20221221110220388.png" alt="image-20221221110220388"></p>
+<p><strong>id字段</strong></p>
+<p>id 字段是 select查询的序列号，是一组数字，表示的是查询中执行select子句或者是操作表的顺序。id 情况有三种:</p>
+<p>1、id 相同表示加载表的顺序是从上到下。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">user</span> u, user_role ur, role r <span class="keyword">where</span> u.uid <span class="operator">=</span> ur.uid <span class="keyword">and</span> ur.rid <span class="operator">=</span> r.rid ;</span><br></pre></td></tr></table></figure>
+
+<p>2、 id 不同id值越大，优先级越高，越先被执行。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> role <span class="keyword">where</span> rid <span class="operator">=</span> (<span class="keyword">select</span> rid <span class="keyword">from</span> user_role <span class="keyword">where</span> uid <span class="operator">=</span> (<span class="keyword">select</span> uid <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> uname <span class="operator">=</span> <span class="string">&#x27;张飞&#x27;</span>))</span><br></pre></td></tr></table></figure>
+
+<p>3、 id 有相同，也有不同，同时存在。id相同的可以认为是一组，从上往下顺序执行；在所有的组中，id的值越大，优先级越高，越先执行。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> role r , (<span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> user_role ur <span class="keyword">where</span> ur.uid <span class="operator">=</span> (<span class="keyword">select</span> uid <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> uname <span class="operator">=</span> <span class="string">&#x27;张飞&#x27;</span>)) t <span class="keyword">where</span> r.rid <span class="operator">=</span> t.rid ; </span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>select_type</strong></p>
+<p>表示 SELECT 的类型，常见的取值，如下表所示：</p>
+<p><img src="/2020/10/08/MySQL%E4%BC%98%E5%8C%96/image-20221221110624083.png" alt="image-20221221110624083"></p>
+<p><strong>type</strong></p>
+<p>type 显示的是访问类型，是较为重要的一个指标，可取值为： </p>
+<p><img src="/2020/10/08/MySQL%E4%BC%98%E5%8C%96/image-20221221110655053.png" alt="image-20221221110655053"></p>
+<p>结果值从最好到最坏以此是：system &gt; const &gt; eq_ref &gt; ref &gt; range &gt; index &gt; ALL</p>
+<p><strong>table</strong></p>
+<p>显示这一步所访问数据库中表名称有时不是真实的表名字，可能是简称</p>
+<p><strong>rows</strong></p>
+<p>扫描行的数量。</p>
+<p><strong>key</strong></p>
+<p>possible_keys : 显示可能应用在这张表的索引， 一个或多个。</p>
+<p> key ： 实际使用的索引， 如果为NULL， 则没有使用索引。</p>
+<p>key_len : 表示索引中使用的字节数， 该值为索引字段最大可能长度，并非实际使用长度，在不损失精确性的前提下， 长度越短越好 。</p>
+<p><img src="/2020/10/08/MySQL%E4%BC%98%E5%8C%96/image-20221221110849142.png" alt="image-20221221110849142"></p>
+<p><strong>extra</strong></p>
+<p>其他的额外的执行计划信息，在该列展示 。</p>
+<p><img src="/2020/10/08/MySQL%E4%BC%98%E5%8C%96/image-20221221110919605.png" alt="image-20221221110919605"></p>
+<h1 id="show-profile分析SQL"><a href="#show-profile分析SQL" class="headerlink" title="show profile分析SQL"></a>show profile分析SQL</h1><p>Mysql从5.0.37版本开始增加了对 show profiles 和 show profile 语句的支持。show profiles 能够在做SQL优化时帮助我们了解时间都耗费到哪里去了。</p>
+<p>通过 have_profiling 参数，能够看到当前MySQL是否支持profile：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> @<span class="variable">@have</span>_profiling; </span><br><span class="line"><span class="keyword">set</span> profiling<span class="operator">=</span><span class="number">1</span>; <span class="comment">-- 开启profiling 开关；</span></span><br></pre></td></tr></table></figure>
+
+<p>通过profile，我们能够更清楚地了解SQL执行的过程。</p>
+<p>首先，我们可以执行一系列的操作</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> databases;</span><br><span class="line">use mydb_optimize;</span><br><span class="line"><span class="keyword">show</span> tables;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> id <span class="operator">&lt;</span> <span class="number">2</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> <span class="keyword">user</span>;</span><br></pre></td></tr></table></figure>
+
+<p>执行完上述命令之后，再执行show profiles 指令， 来查看SQL语句执行的耗时：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> profiles;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/08/MySQL%E4%BC%98%E5%8C%96/image-20221221111204157.png" alt="image-20221221111204157"></p>
+<p>通过show  profile for  query  query_id 语句可以查看到该SQL执行过程中每个线程的状态和消耗的时间：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> profile <span class="keyword">for</span> query <span class="number">8</span>;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/08/MySQL%E4%BC%98%E5%8C%96/image-20221221111245177.png" alt="image-20221221111245177"></p>
+<p>在获取到最消耗时间的线程状态后，MySQL支持进一步选择all、cpu、block io 、context switch、page faults等明细类型类查看MySQL在使用什么资源上耗费了过高的时间。例如，选择查看CPU的耗费时间  ：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> profile cpu <span class="keyword">for</span> query <span class="number">133</span>;  </span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/08/MySQL%E4%BC%98%E5%8C%96/image-20221221111321464.png" alt="image-20221221111321464"></p>
+<p>在获取到最消耗时间的线程状态后，MySQL支持进一步选择all、cpu、block io 、context switch、page faults等明细类型类查看MySQL在使用什么资源上耗费了过高的时间。例如，选择查看CPU的耗费时间  ：</p>
+<p><img src="/2020/10/08/MySQL%E4%BC%98%E5%8C%96/image-20221221111341664.png" alt="image-20221221111341664"></p>
+<h1 id="trace分析优化器执行计划"><a href="#trace分析优化器执行计划" class="headerlink" title="trace分析优化器执行计划"></a>trace分析优化器执行计划</h1><p>MySQL5.6提供了对SQL的跟踪trace, 通过trace文件能够进一步了解为什么优化器选择A计划, 而不是选择B计划.</p>
+<p><img src="/2020/10/08/MySQL%E4%BC%98%E5%8C%96/image-20221221111418518.png" alt="image-20221221111418518"></p>
+<p>打开trace ， 设置格式为 JSON，并设置trace最大能够使用的内存大小，避免解析过程中因为默认内存过小而不能够完整展示。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> optimizer_trace<span class="operator">=</span>&quot;enabled=on&quot;,end_markers_in_json<span class="operator">=</span><span class="keyword">on</span>; </span><br><span class="line"><span class="keyword">set</span> optimizer_trace_max_mem_size<span class="operator">=</span><span class="number">1000000</span>;</span><br></pre></td></tr></table></figure>
+
+<p>执行SQL语句 ：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> uid <span class="operator">&lt;</span> <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
+<p>最后， 检查information_schema.optimizer_trace就可以知道MySQL是如何执行SQL的 ：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> information_schema.optimizer_trace\G;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/08/MySQL%E4%BC%98%E5%8C%96/image-20221221111539114.png" alt="image-20221221111539114"></p>
+<h1 id="使用索引优化"><a href="#使用索引优化" class="headerlink" title="使用索引优化"></a>使用索引优化</h1><p>索引是数据库优化最常用也是最重要的手段之一, 通过索引通常可以帮助用户解决大多数的MySQL的性能优化问题。</p>
+<p>示例（准备数据）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> `tb_seller` (</span><br><span class="line">    `sellerid` <span class="type">varchar</span> (<span class="number">100</span>),</span><br><span class="line">    `name` <span class="type">varchar</span> (<span class="number">100</span>),</span><br><span class="line">    `nickname` <span class="type">varchar</span> (<span class="number">50</span>),</span><br><span class="line">    `password` <span class="type">varchar</span> (<span class="number">60</span>),</span><br><span class="line">    `status` <span class="type">varchar</span> (<span class="number">1</span>),</span><br><span class="line">    `address` <span class="type">varchar</span> (<span class="number">100</span>),</span><br><span class="line">    `createtime` datetime,</span><br><span class="line">    <span class="keyword">primary</span> key(`sellerid`)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="keyword">values</span>(<span class="string">&#x27;alibaba&#x27;</span>,<span class="string">&#x27;阿里巴巴&#x27;</span>,<span class="string">&#x27;阿里小店&#x27;</span>,<span class="string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="string">&#x27;1&#x27;</span>,<span class="string">&#x27;北京市&#x27;</span>,<span class="string">&#x27;2088-01-01 12:00:00&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="keyword">values</span>(<span class="string">&#x27;baidu&#x27;</span>,<span class="string">&#x27;百度科技有限公司&#x27;</span>,<span class="string">&#x27;百度小店&#x27;</span>,<span class="string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="string">&#x27;1&#x27;</span>,<span class="string">&#x27;北京市&#x27;</span>,<span class="string">&#x27;2088-01-01 12:00:00&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="keyword">values</span>(<span class="string">&#x27;huawei&#x27;</span>,<span class="string">&#x27;华为科技有限公司&#x27;</span>,<span class="string">&#x27;华为小店&#x27;</span>,<span class="string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="string">&#x27;0&#x27;</span>,<span class="string">&#x27;北京市&#x27;</span>,<span class="string">&#x27;2088-01-01 12:00:00&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="keyword">values</span>(<span class="string">&#x27;itcast&#x27;</span>,<span class="string">&#x27;传智播客教育科技有限公司&#x27;</span>,<span class="string">&#x27;传智播客&#x27;</span>,<span class="string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="string">&#x27;1&#x27;</span>,<span class="string">&#x27;北京市&#x27;</span>,<span class="string">&#x27;2088-01-01 12:00:00&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="keyword">values</span>(<span class="string">&#x27;itheima&#x27;</span>,<span class="string">&#x27;黑马程序员&#x27;</span>,<span class="string">&#x27;黑马程序员&#x27;</span>,<span class="string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="string">&#x27;0&#x27;</span>,<span class="string">&#x27;北京市&#x27;</span>,<span class="string">&#x27;2088-01-01 12:00:00&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="keyword">values</span>(<span class="string">&#x27;luoji&#x27;</span>,<span class="string">&#x27;罗技科技有限公司&#x27;</span>,<span class="string">&#x27;罗技小店&#x27;</span>,<span class="string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="string">&#x27;1&#x27;</span>,<span class="string">&#x27;北京市&#x27;</span>,<span class="string">&#x27;2088-01-01 12:00:00&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="keyword">values</span>(<span class="string">&#x27;oppo&#x27;</span>,<span class="string">&#x27;OPPO科技有限公司&#x27;</span>,<span class="string">&#x27;OPPO官方旗舰店&#x27;</span>,<span class="string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="string">&#x27;0&#x27;</span>,<span class="string">&#x27;北京市&#x27;</span>,<span class="string">&#x27;2088-01-01 12:00:00&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="keyword">values</span>(<span class="string">&#x27;ourpalm&#x27;</span>,<span class="string">&#x27;掌趣科技股份有限公司&#x27;</span>,<span class="string">&#x27;掌趣小店&#x27;</span>,<span class="string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="string">&#x27;1&#x27;</span>,<span class="string">&#x27;北京市&#x27;</span>,<span class="string">&#x27;2088-01-01 12:00:00&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="keyword">values</span>(<span class="string">&#x27;qiandu&#x27;</span>,<span class="string">&#x27;千度科技&#x27;</span>,<span class="string">&#x27;千度小店&#x27;</span>,<span class="string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="string">&#x27;2&#x27;</span>,<span class="string">&#x27;北京市&#x27;</span>,<span class="string">&#x27;2088-01-01 12:00:00&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="keyword">values</span>(<span class="string">&#x27;sina&#x27;</span>,<span class="string">&#x27;新浪科技有限公司&#x27;</span>,<span class="string">&#x27;新浪官方旗舰店&#x27;</span>,<span class="string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="string">&#x27;1&#x27;</span>,<span class="string">&#x27;北京市&#x27;</span>,<span class="string">&#x27;2088-01-01 12:00:00&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="keyword">values</span>(<span class="string">&#x27;xiaomi&#x27;</span>,<span class="string">&#x27;小米科技&#x27;</span>,<span class="string">&#x27;小米官方旗舰店&#x27;</span>,<span class="string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="string">&#x27;1&#x27;</span>,<span class="string">&#x27;西安市&#x27;</span>,<span class="string">&#x27;2088-01-01 12:00:00&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="keyword">values</span>(<span class="string">&#x27;yijia&#x27;</span>,<span class="string">&#x27;宜家家居&#x27;</span>,<span class="string">&#x27;宜家家居旗舰店&#x27;</span>,<span class="string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="string">&#x27;1&#x27;</span>,<span class="string">&#x27;北京市&#x27;</span>,<span class="string">&#x27;2088-01-01 12:00:00&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建组合索引 </span></span><br><span class="line"><span class="keyword">create</span> index idx_seller_name_sta_addr <span class="keyword">on</span> tb_seller(name,status,address);</span><br></pre></td></tr></table></figure>
+
+<p>避免索引失效应用-全值匹配。该情况下，索引生效，执行效率高。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;小米科技&#x27;</span> <span class="keyword">and</span> status<span class="operator">=</span><span class="string">&#x27;1&#x27;</span> <span class="keyword">and</span> address<span class="operator">=</span><span class="string">&#x27;北京市&#x27;</span>;</span><br><span class="line"><span class="comment">-- 最左前缀法则</span></span><br><span class="line"> <span class="comment">-- 如果索引了多列，要遵守最左前缀法则。指的是查询从索引的最左前列开始，并且不跳过索引中的列。</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;小米科技&#x27;</span>; <span class="comment">-- 403</span></span><br><span class="line"> </span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;小米科技&#x27;</span> <span class="keyword">and</span> status<span class="operator">=</span><span class="string">&#x27;1&#x27;</span>; <span class="comment">-- 410</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span>  status<span class="operator">=</span><span class="string">&#x27;1&#x27;</span> <span class="keyword">and</span> name<span class="operator">=</span><span class="string">&#x27;小米科技&#x27;</span>; <span class="comment">-- 410</span></span><br><span class="line"><span class="comment">-- 违法最左前缀法则 ， 索引失效：</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> status<span class="operator">=</span><span class="string">&#x27;1&#x27;</span>; <span class="comment">-- nulll</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">-- 如果符合最左法则，但是出现跳跃某一列，只有最左列索引生效：</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;小米科技&#x27;</span>  <span class="keyword">and</span> address<span class="operator">=</span><span class="string">&#x27;北京市&#x27;</span>; <span class="comment">-- 403</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 范围查询右边的列，不能使用索引 。 </span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;小米科技&#x27;</span> <span class="keyword">and</span> status <span class="operator">&gt;</span><span class="string">&#x27;1&#x27;</span> <span class="keyword">and</span> address<span class="operator">=</span><span class="string">&#x27;北京市’; </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-- 不要在索引列上进行运算操作， 索引将失效。 </span></span><br><span class="line"><span class="string">explain select * from tb_seller where substring(name,3,2)=&#x27;</span>科技’ </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 字符串不加单引号，造成索引失效。 </span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;小米科技&#x27;</span> <span class="keyword">and</span> status <span class="operator">=</span> <span class="number">1</span> ;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 1、范围查询右边的列，不能使用索引 。</span></span><br><span class="line"><span class="comment">-- 根据前面的两个字段name ， status 查询是走索引的， 但是最后一个条件address 没有用到索引。</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;小米科技&#x27;</span> <span class="keyword">and</span> status <span class="operator">&gt;</span><span class="string">&#x27;1&#x27;</span> <span class="keyword">and</span> address<span class="operator">=</span><span class="string">&#x27;北京市&#x27;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">-- 2、不要在索引列上进行运算操作， 索引将失效。</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> <span class="built_in">substring</span>(name,<span class="number">3</span>,<span class="number">2</span>)<span class="operator">=</span><span class="string">&#x27;科技&#x27;</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">-- 3、字符串不加单引号，造成索引失效。 </span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;小米科技&#x27;</span> <span class="keyword">and</span> status <span class="operator">=</span> <span class="number">1</span> ;</span><br><span class="line"> </span><br><span class="line"><span class="comment">-- 4、尽量使用覆盖索引，避免select *</span></span><br><span class="line"><span class="comment">-- 需要从原表及磁盘上读取数据</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;小米科技&#x27;</span>  <span class="keyword">and</span> address<span class="operator">=</span><span class="string">&#x27;北京市&#x27;</span>;  <span class="comment">-- 效率低</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">-- 从索引树中就可以查询到所有数据</span></span><br><span class="line">explain <span class="keyword">select</span> name <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;小米科技&#x27;</span>  <span class="keyword">and</span> address<span class="operator">=</span><span class="string">&#x27;北京市&#x27;</span>;  <span class="comment">-- 效率高</span></span><br><span class="line">explain <span class="keyword">select</span> name,status,address <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;小米科技&#x27;</span>  <span class="keyword">and</span> address<span class="operator">=</span><span class="string">&#x27;北京市&#x27;</span>;  <span class="comment">-- 效率高</span></span><br><span class="line"><span class="comment">-- 如果查询列，超出索引列，也会降低性能。</span></span><br><span class="line">explain <span class="keyword">select</span> name,status,address,password <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;小米科技&#x27;</span>  <span class="keyword">and</span> address<span class="operator">=</span><span class="string">&#x27;北京市&#x27;</span>;  <span class="comment">-- 效率低</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 尽量使用覆盖索引，避免select *</span></span><br><span class="line"><span class="comment">-- 需要从原表及磁盘上读取数据</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;小米科技&#x27;</span>  <span class="keyword">and</span> address<span class="operator">=</span><span class="string">&#x27;北京市&#x27;</span>;  <span class="comment">-- 效率低</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">-- 从索引树中就可以查询到所有数据</span></span><br><span class="line">explain <span class="keyword">select</span> name <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;小米科技&#x27;</span>  <span class="keyword">and</span> address<span class="operator">=</span><span class="string">&#x27;北京市&#x27;</span>;  <span class="comment">-- 效率高</span></span><br><span class="line">explain <span class="keyword">select</span> name,status,address <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;小米科技&#x27;</span>  <span class="keyword">and</span> address<span class="operator">=</span><span class="string">&#x27;北京市&#x27;</span>;  <span class="comment">-- 效率高</span></span><br><span class="line"><span class="comment">-- 如果查询列，超出索引列，也会降低性能。</span></span><br><span class="line">explain <span class="keyword">select</span> name,status,address,password <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;小米科技&#x27;</span>  <span class="keyword">and</span> address<span class="operator">=</span><span class="string">&#x27;北京市&#x27;</span>;  <span class="comment">-- 效率低</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 用or分割开的条件， 那么涉及的索引都不会被用到。</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;黑马程序员&#x27;</span> <span class="keyword">or</span> createtime <span class="operator">=</span> <span class="string">&#x27;2088-01-01 12:00:00&#x27;</span>; </span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;黑马程序员&#x27;</span> <span class="keyword">or</span> address <span class="operator">=</span> <span class="string">&#x27;西安市&#x27;</span>;  </span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;黑马程序员&#x27;</span> <span class="keyword">or</span> status <span class="operator">=</span> <span class="string">&#x27;1&#x27;</span>;   </span><br><span class="line"> </span><br><span class="line"><span class="comment">-- 以%开头的Like模糊查询，索引失效。</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name <span class="keyword">like</span> <span class="string">&#x27;科技%&#x27;</span>; <span class="comment">-- 用索引</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name <span class="keyword">like</span> <span class="string">&#x27;%科技&#x27;</span>; <span class="comment">-- 不用索引</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name <span class="keyword">like</span> <span class="string">&#x27;%科技%&#x27;</span>;<span class="comment">-- 不用索引</span></span><br><span class="line"><span class="comment">-- 弥补不足,不用*，使用索引列</span></span><br><span class="line">explain <span class="keyword">select</span> name <span class="keyword">from</span> tb_seller <span class="keyword">where</span> name <span class="keyword">like</span> <span class="string">&#x27;%科技%&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">--  1、如果MySQL评估使用索引比全表更慢，则不使用索引。</span></span><br><span class="line">  <span class="comment">-- 这种情况是由数据本身的特点来决定的</span></span><br><span class="line"><span class="keyword">create</span> index index_address <span class="keyword">on</span> tb_seller(address);</span><br><span class="line"> </span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> address <span class="operator">=</span> <span class="string">&#x27;北京市&#x27;</span>; <span class="comment">-- 没有使用索引</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> address <span class="operator">=</span> <span class="string">&#x27;西安市&#x27;</span>; <span class="comment">-- 没有使用索引</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment">--  2、is  NULL ， is NOT NULL  有时有效，有时索引失效。</span></span><br><span class="line"><span class="keyword">create</span> index index_address <span class="keyword">on</span> tb_seller(nickname);</span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> nickname <span class="keyword">is</span> <span class="keyword">NULL</span>;  <span class="comment">-- 索引有效</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tb_seller <span class="keyword">where</span> nickname <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">NULL</span>; <span class="comment">-- 无效</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="SQL优化"><a href="#SQL优化" class="headerlink" title="SQL优化"></a>SQL优化</h1><h2 id="大批量插入数据"><a href="#大批量插入数据" class="headerlink" title="大批量插入数据"></a>大批量插入数据</h2><p>当使用load 命令导入数据的时候，适当的设置可以提高导入的效率。对于 InnoDB 类型的表，有以下几种方式可以提高导入的效率：</p>
+<p>1） 主键顺序插入</p>
+<p>因为InnoDB类型的表是按照主键的顺序保存的，所以将导入的数据按照主键的顺序排列，可以有效的提高导入数据的效率。如果InnoDB表没有主键，那么系统会自动默认创建一个内部列作为主键，所以如果可以给表创建一个主键，将可以利用这点，来提高导入数据的效率。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 1、首先，检查一个全局系统变量 &#x27;local_infile&#x27; 的状态， 如果得到如下显示 Value=OFF，则说明这是不可用的</span></span><br><span class="line"><span class="keyword">show</span> <span class="keyword">global</span> variables <span class="keyword">like</span> <span class="string">&#x27;local_infile&#x27;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">-- 2、修改local_infile值为on，开启local_infile</span></span><br><span class="line"><span class="keyword">set</span> <span class="keyword">global</span> local_infile<span class="operator">=</span><span class="number">1</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">-- 3、加载数据 </span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">脚本文件介绍 :</span></span><br><span class="line"><span class="comment">    sql1.log  ----&gt; 主键有序</span></span><br><span class="line"><span class="comment">    sql2.log  ----&gt; 主键无序</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">load data <span class="keyword">local</span> infile <span class="string">&#x27;D:\\sql_data\\sql1.log&#x27;</span> <span class="keyword">into</span> <span class="keyword">table</span> tb_user fields terminated <span class="keyword">by</span> <span class="string">&#x27;,&#x27;</span> lines terminated <span class="keyword">by</span> <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p> 2 )、关闭唯一性校验</p>
+<p>在导入数据前执行 SET UNIQUE_CHECKS&#x3D;0，关闭唯一性校验，在导入结束后执行SET UNIQUE_CHECKS&#x3D;1，恢复唯一性校验，可以提高导入的效率。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 关闭唯一性校验</span></span><br><span class="line"><span class="keyword">SET</span> UNIQUE_CHECKS<span class="operator">=</span><span class="number">0</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">truncate</span> <span class="keyword">table</span> tb_user;</span><br><span class="line">load data <span class="keyword">local</span> infile <span class="string">&#x27;D:\\sql_data\\sql1.log&#x27;</span> <span class="keyword">into</span> <span class="keyword">table</span> tb_user fields terminated <span class="keyword">by</span> <span class="string">&#x27;,&#x27;</span> lines terminated <span class="keyword">by</span> <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">SET</span> UNIQUE_CHECKS<span class="operator">=</span><span class="number">1</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="优化insert语句"><a href="#优化insert语句" class="headerlink" title="优化insert语句"></a>优化insert语句</h2><p>当进行数据的insert操作的时候，可以考虑采用以下几种优化方案:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 如果需要同时对一张表插入很多行数据时，应该尽量使用多个值表的insert语句，这种方式将大大的缩减客户端与数据库之间的连接、关闭等消耗。使得效率比分开执行的单个insert语句快。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 原始方式为：</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tb_test <span class="keyword">values</span>(<span class="number">1</span>,<span class="string">&#x27;Tom&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tb_test <span class="keyword">values</span>(<span class="number">2</span>,<span class="string">&#x27;Cat&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tb_test <span class="keyword">values</span>(<span class="number">3</span>,<span class="string">&#x27;Jerry&#x27;</span>);</span><br><span class="line"><span class="comment">-- 优化后的方案为 ： </span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tb_test <span class="keyword">values</span>(<span class="number">1</span>,<span class="string">&#x27;Tom&#x27;</span>),(<span class="number">2</span>,<span class="string">&#x27;Cat&#x27;</span>)，(<span class="number">3</span>,<span class="string">&#x27;Jerry&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 在事务中进行数据插入。</span></span><br><span class="line"><span class="keyword">begin</span>;</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tb_test <span class="keyword">values</span>(<span class="number">1</span>,<span class="string">&#x27;Tom&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tb_test <span class="keyword">values</span>(<span class="number">2</span>,<span class="string">&#x27;Cat&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tb_test <span class="keyword">values</span>(<span class="number">3</span>,<span class="string">&#x27;Jerry&#x27;</span>);</span><br><span class="line"><span class="keyword">commit</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 数据有序插入</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tb_test <span class="keyword">values</span>(<span class="number">4</span>,<span class="string">&#x27;Tim&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tb_test <span class="keyword">values</span>(<span class="number">1</span>,<span class="string">&#x27;Tom&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tb_test <span class="keyword">values</span>(<span class="number">3</span>,<span class="string">&#x27;Jerry&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tb_test <span class="keyword">values</span>(<span class="number">5</span>,<span class="string">&#x27;Rose&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tb_test <span class="keyword">values</span>(<span class="number">2</span>,<span class="string">&#x27;Cat&#x27;</span>);</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment">-- 优化后</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tb_test <span class="keyword">values</span>(<span class="number">1</span>,<span class="string">&#x27;Tom&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tb_test <span class="keyword">values</span>(<span class="number">2</span>,<span class="string">&#x27;Cat&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tb_test <span class="keyword">values</span>(<span class="number">3</span>,<span class="string">&#x27;Jerry&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tb_test <span class="keyword">values</span>(<span class="number">4</span>,<span class="string">&#x27;Tim&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tb_test <span class="keyword">values</span>(<span class="number">5</span>,<span class="string">&#x27;Rose&#x27;</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="优化order-by语句"><a href="#优化order-by语句" class="headerlink" title="优化order by语句"></a>优化order by语句</h2><p>环境准备</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `emp` (</span><br><span class="line">  `id` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  `name` <span class="type">varchar</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `age` <span class="type">int</span>(<span class="number">3</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `salary` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`)</span><br><span class="line">);</span><br><span class="line"> </span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="keyword">values</span>(<span class="string">&#x27;1&#x27;</span>,<span class="string">&#x27;Tom&#x27;</span>,<span class="string">&#x27;25&#x27;</span>,<span class="string">&#x27;2300&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="keyword">values</span>(<span class="string">&#x27;2&#x27;</span>,<span class="string">&#x27;Jerry&#x27;</span>,<span class="string">&#x27;30&#x27;</span>,<span class="string">&#x27;3500&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="keyword">values</span>(<span class="string">&#x27;3&#x27;</span>,<span class="string">&#x27;Luci&#x27;</span>,<span class="string">&#x27;25&#x27;</span>,<span class="string">&#x27;2800&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="keyword">values</span>(<span class="string">&#x27;4&#x27;</span>,<span class="string">&#x27;Jay&#x27;</span>,<span class="string">&#x27;36&#x27;</span>,<span class="string">&#x27;3500&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="keyword">values</span>(<span class="string">&#x27;5&#x27;</span>,<span class="string">&#x27;Tom2&#x27;</span>,<span class="string">&#x27;21&#x27;</span>,<span class="string">&#x27;2200&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="keyword">values</span>(<span class="string">&#x27;6&#x27;</span>,<span class="string">&#x27;Jerry2&#x27;</span>,<span class="string">&#x27;31&#x27;</span>,<span class="string">&#x27;3300&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="keyword">values</span>(<span class="string">&#x27;7&#x27;</span>,<span class="string">&#x27;Luci2&#x27;</span>,<span class="string">&#x27;26&#x27;</span>,<span class="string">&#x27;2700&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="keyword">values</span>(<span class="string">&#x27;8&#x27;</span>,<span class="string">&#x27;Jay2&#x27;</span>,<span class="string">&#x27;33&#x27;</span>,<span class="string">&#x27;3500&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="keyword">values</span>(<span class="string">&#x27;9&#x27;</span>,<span class="string">&#x27;Tom3&#x27;</span>,<span class="string">&#x27;23&#x27;</span>,<span class="string">&#x27;2400&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="keyword">values</span>(<span class="string">&#x27;10&#x27;</span>,<span class="string">&#x27;Jerry3&#x27;</span>,<span class="string">&#x27;32&#x27;</span>,<span class="string">&#x27;3100&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="keyword">values</span>(<span class="string">&#x27;11&#x27;</span>,<span class="string">&#x27;Luci3&#x27;</span>,<span class="string">&#x27;26&#x27;</span>,<span class="string">&#x27;2900&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="keyword">values</span>(<span class="string">&#x27;12&#x27;</span>,<span class="string">&#x27;Jay3&#x27;</span>,<span class="string">&#x27;37&#x27;</span>,<span class="string">&#x27;4500&#x27;</span>);</span><br><span class="line"> </span><br><span class="line"><span class="keyword">create</span> index idx_emp_age_salary <span class="keyword">on</span> emp(age,salary);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="两种排序方式"><a href="#两种排序方式" class="headerlink" title="两种排序方式"></a>两种排序方式</h3><p>第一种是通过对返回数据进行排序，也就是通常说的 filesort 排序，所有不是通过索引直接返回排序结果的排序都叫 FileSort 排序。</p>
+<p>第二种通过有序索引顺序扫描直接返回有序数据，这种情况即为 using index，不需要额外排序，操作效率高。</p>
+<h3 id="Filesort-的优化"><a href="#Filesort-的优化" class="headerlink" title="Filesort 的优化"></a>Filesort 的优化</h3><p>通过创建合适的索引，能够减少 Filesort 的出现，但是在某些情况下，条件限制不能让Filesort消失，那就需要加快 Filesort的排序操作。对于Filesort ， MySQL 有两种排序算法：</p>
+<p>1） 两次扫描算法 ：MySQL4.1 之前，使用该方式排序。首先根据条件取出排序字段和行指针信息，然后在排序区 sort buffer 中排序，如果sort buffer不够，则在临时表 temporary table 中存储排序结果。完成排序之后，再根据行指针回表读取记录，该操作可能会导致大量随机I&#x2F;O操作。</p>
+<p>2）一次扫描算法：一次性取出满足条件的所有字段，然后在排序区 sort  buffer 中排序后直接输出结果集。排序时内存开销较大，但是排序效率比两次扫描算法要高。</p>
+<p>MySQL 通过比较系统变量 max_length_for_sort_data 的大小和Query语句取出的字段总大小， 来判定是否那种排序算法，如果max_length_for_sort_data 更大，那么使用第二种优化之后的算法；否则使用第一种。</p>
+<p>可以适当提高 sort_buffer_size  和 max_length_for_sort_data  系统变量，来增大排序区的大小，提高排序的效率。</p>
+<h2 id="优化group-by"><a href="#优化group-by" class="headerlink" title="优化group by"></a>优化group by</h2><p>于GROUP BY 实际上也同样会进行排序操作，而且与ORDER BY 相比，GROUP BY 主要只是多了排序之后的分组操作。当然，如果在分组的时候还使用了其他的一些聚合函数，那么还需要一些聚合函数的计算。所以，在GROUP BY 的实现过程中，与 ORDER BY 一样也可以利用到索引。</p>
+<p>如果查询包含 group by 但是用户想要避免排序结果的消耗， 则可以执行order by null 禁止排序。如下 ：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">drop</span> index idx_emp_age_salary <span class="keyword">on</span> emp; </span><br><span class="line"></span><br><span class="line">explain <span class="keyword">select</span> age,<span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> emp <span class="keyword">group</span> <span class="keyword">by</span> age;</span><br><span class="line"></span><br><span class="line">explain <span class="keyword">select</span> age,<span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> emp <span class="keyword">group</span> <span class="keyword">by</span> age <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">create</span> index idx_emp_age_salary <span class="keyword">on</span> emp(age,salary)；</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="优化子查询"><a href="#优化子查询" class="headerlink" title="优化子查询"></a>优化子查询</h2><p>使用子查询可以一次性的完成很多逻辑上需要多个步骤才能完成的SQL操作，同时也可以避免事务或者表锁死，并且写起来也很容易。但是，有些情况下，子查询是可以被更高效的连接（JOIN）替代。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> uid <span class="keyword">in</span> (<span class="keyword">select</span> uid <span class="keyword">from</span> user_role ); </span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/08/MySQL%E4%BC%98%E5%8C%96/image-20221221113230126.png" alt="image-20221221113230126"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">user</span> u , user_role ur <span class="keyword">where</span> u.uid <span class="operator">=</span> ur.uid; </span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/08/MySQL%E4%BC%98%E5%8C%96/image-20221221113427679.png" alt="image-20221221113427679"></p>
+<p>system&gt;const&gt;eq_ref&gt;ref&gt;range&gt;index&gt;ALL</p>
+<p>连接(Join)查询之所以更有效率一些 ，是因为MySQL不需要在内存中创建临时表来完成这个逻辑上需要两个步骤的查询工作。</p>
+<h2 id="优化limit查询"><a href="#优化limit查询" class="headerlink" title="优化limit查询"></a>优化limit查询</h2><p>一般分页查询时，通过创建覆盖索引能够比较好地提高性能。一个常见又非常头疼的问题就是 limit 900000,10  ，此时需要MySQL排序前900010 记录，仅仅返回900000 - 900010 的记录，其他记录丢弃，查询排序的代价非常大 。</p>
+<p>优化思路一</p>
+<p>在索引上完成排序分页操作，最后根据主键关联回原表查询所需要的其他列内容。</p>
+<p>优化思路二</p>
+<p>该方案适用于主键自增的表，可以把Limit 查询转换成某个位置的查询 。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/10/06/MySQL%E6%97%A5%E5%BF%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1349,541 +1567,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/08/24/MySQL%E5%87%BD%E6%95%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/08/24/MySQL%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">MySQL的函数</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-08-24 10:05:29" itemprop="dateCreated datePublished" datetime="2020-08-24T10:05:29+08:00">2020-08-24</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="聚合函数"><a href="#聚合函数" class="headerlink" title="聚合函数"></a>聚合函数</h1><h2 id="count、sum、min、max、avg"><a href="#count、sum、min、max、avg" class="headerlink" title="count、sum、min、max、avg"></a>count、sum、min、max、avg</h2><p>见《MySQL基础》</p>
-<h2 id="group-concat"><a href="#group-concat" class="headerlink" title="group_concat"></a>group_concat</h2><p>该函数实现行的合并。它首先根据group by指定列进行分组，并且用分隔符分隔，将同一个分组中的值连接起来，返回一个字符串结果。</p>
-<p>格式：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">group_concat([<span class="keyword">distinct</span>] 字段名 [<span class="keyword">order</span> <span class="keyword">by</span> 排序字段 <span class="keyword">asc</span><span class="operator">/</span><span class="keyword">desc</span>] [separator <span class="string">&#x27;分隔符&#x27;</span>])</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>使用distinct可以排除重复值；　　</li>
-<li>如果需要对结果中的值进行排序，可以使用order by子句；　　</li>
-<li>separator是一个字符串值，默认为逗号。</li>
-</ol>
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> database test4;</span><br><span class="line"></span><br><span class="line">use test4;</span><br><span class="line"></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> emp (</span><br><span class="line">	emp_id <span class="type">int</span> <span class="keyword">primary</span> key auto_increment comment &quot;编号&quot;,</span><br><span class="line">	emp_name <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="keyword">null</span> <span class="keyword">default</span> <span class="string">&#x27;&#x27;</span> comment &quot;姓名&quot;,</span><br><span class="line">	salary <span class="type">DECIMAL</span>(<span class="number">10</span>,<span class="number">2</span>) <span class="keyword">not</span> <span class="keyword">null</span> <span class="keyword">default</span> <span class="number">0</span> COMMENT <span class="string">&#x27;工资&#x27;</span>,</span><br><span class="line">	department <span class="type">char</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="keyword">null</span> <span class="keyword">default</span> <span class="string">&#x27;&#x27;</span> comment <span class="string">&#x27;部门&#x27;</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">into</span> emp(emp_name, salary, department) <span class="keyword">values</span> (<span class="string">&#x27;张晶晶&#x27;</span>,<span class="number">5000</span>,<span class="string">&#x27;财务部&#x27;</span>),(<span class="string">&#x27;王飞飞&#x27;</span>,<span class="number">5800</span>,<span class="string">&#x27;财务部&#x27;</span>),(<span class="string">&#x27;赵刚&#x27;</span>,<span class="number">6200</span>,<span class="string">&#x27;财务部&#x27;</span>),(<span class="string">&#x27;刘小贝&#x27;</span>,<span class="number">5700</span>,<span class="string">&#x27;人事部&#x27;</span>),</span><br><span class="line">(<span class="string">&#x27;王大鹏&#x27;</span>,<span class="number">6700</span>,<span class="string">&#x27;人事部&#x27;</span>),(<span class="string">&#x27;张小斐&#x27;</span>,<span class="number">5200</span>,<span class="string">&#x27;人事部&#x27;</span>),(<span class="string">&#x27;刘云云&#x27;</span>,<span class="number">7500</span>,<span class="string">&#x27;销售部&#x27;</span>),(<span class="string">&#x27;刘云鹏&#x27;</span>,<span class="number">7200</span>,<span class="string">&#x27;销售部&#x27;</span>),</span><br><span class="line">(<span class="string">&#x27;刘云鹏&#x27;</span>,<span class="number">7800</span>,<span class="string">&#x27;销售部&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 将所有姓名合并成一行</span></span><br><span class="line"><span class="keyword">SELECT</span> GROUP_CONCAT(emp_name) <span class="keyword">from</span> emp;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 指定分隔符合并</span></span><br><span class="line"><span class="keyword">SELECT</span> department, GROUP_CONCAT(emp_name separator <span class="string">&#x27;;&#x27;</span>) <span class="keyword">from</span> emp <span class="keyword">GROUP</span> <span class="keyword">BY</span> department;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 指定排序方式和分隔符</span></span><br><span class="line"><span class="keyword">select</span> department, GROUP_CONCAT(emp_name <span class="keyword">ORDER</span> <span class="keyword">BY</span> salary <span class="keyword">desc</span> separator <span class="string">&#x27;;&#x27;</span>) <span class="keyword">from</span> emp <span class="keyword">GROUP</span> <span class="keyword">BY</span> department;</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="数学函数"><a href="#数学函数" class="headerlink" title="数学函数"></a>数学函数</h1><table>
-<thead>
-<tr>
-<th><strong>函数名</strong></th>
-<th><strong>描述</strong></th>
-<th><strong>实例</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>ABS(x)</strong></td>
-<td>返回 x 的绝对值</td>
-<td>返回 -1 的绝对值：SELECT ABS(-1) – 返回1</td>
-</tr>
-<tr>
-<td><strong>CEIL(x)</strong></td>
-<td>返回大于或等于 x 的最小整数</td>
-<td>SELECT CEIL(1.5) – 返回2</td>
-</tr>
-<tr>
-<td><strong>FLOOR(x)</strong></td>
-<td>返回小于或等于 x 的最大整数</td>
-<td>小于或等于 1.5 的整数：SELECT FLOOR(1.5) – 返回1</td>
-</tr>
-<tr>
-<td><strong>GREATEST(expr1, expr2, expr3, …)</strong></td>
-<td>返回列表中的最大值</td>
-<td>返回以下数字列表中的最大值：SELECT GREATEST(3, 12, 34, 8, 25); – 34返回以下字符串列表中的最大值：SELECT GREATEST(“Google”, “Runoob”, “Apple”);  – Runoob</td>
-</tr>
-<tr>
-<td><strong>LEAST(expr1, expr2, expr3, …)</strong></td>
-<td>返回列表中的最小值</td>
-<td>返回以下数字列表中的最小值：SELECT LEAST(3, 12, 34, 8, 25); – 3返回以下字符串列表中的最小值：SELECT LEAST(“Google”, “Runoob”, “Apple”);  – Apple</td>
-</tr>
-<tr>
-<td><strong>MAX(expression)</strong></td>
-<td>返回字段 expression 中的最大值</td>
-<td>返回数据表 Products 中字段 Price 的最大值：SELECT MAX(Price) AS LargestPrice FROM Products;</td>
-</tr>
-<tr>
-<td><strong>MIN(expression)</strong></td>
-<td>返回字段 expression 中的最小值</td>
-<td>返回数据表 Products 中字段 Price 的最小值：SELECT MIN(Price) AS MinPrice FROM Products;</td>
-</tr>
-<tr>
-<td><strong>MOD(x,y)</strong></td>
-<td>返回 x 除以 y 以后的余数</td>
-<td>5 除于 2 的余数：SELECT MOD(5,2) – 1</td>
-</tr>
-<tr>
-<td><strong>PI()</strong></td>
-<td>返回圆周率(3.141593）</td>
-<td>SELECT PI() –3.141593</td>
-</tr>
-<tr>
-<td><strong>POW(x,y)</strong></td>
-<td>返回 x 的 y 次方</td>
-<td>2 的 3 次方：SELECT POW(2,3) – 8</td>
-</tr>
-<tr>
-<td><strong>RAND()</strong></td>
-<td>返回 0 到 1 的随机数</td>
-<td>SELECT RAND() –0.93099315644334</td>
-</tr>
-<tr>
-<td><strong>ROUND(x)</strong></td>
-<td>返回离 x 最近的整数（遵循四舍五入）</td>
-<td>SELECT ROUND(1.23456) –1</td>
-</tr>
-<tr>
-<td><strong>ROUND(x,y)</strong></td>
-<td>返回指定位数的小数（遵循四舍五入）</td>
-<td>SELECT ROUND(1.23456,3) –1.235</td>
-</tr>
-<tr>
-<td><strong>TRUNCATE(x,y)</strong></td>
-<td>返回数值 x 保留到小数点后 y 位的值（与 ROUND 最大的区别是不会进行四舍五入）</td>
-<td>SELECT TRUNCATE(1.23456,3) – 1.234</td>
-</tr>
-</tbody></table>
-<h1 id="字符串函数"><a href="#字符串函数" class="headerlink" title="字符串函数"></a>字符串函数</h1><table>
-<thead>
-<tr>
-<th><strong>函数</strong></th>
-<th><strong>描述</strong></th>
-<th><strong>实例</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>CHAR_LENGTH(s)</strong></td>
-<td>返回字符串 s 的字符数</td>
-<td>返回字符串 RUNOOB 的字符数SELECT CHAR_LENGTH(“RUNOOB”) AS LengthOfString;</td>
-</tr>
-<tr>
-<td><strong>CHARACTER_LENGTH(s)</strong></td>
-<td>返回字符串 s 的字符数</td>
-<td>返回字符串 RUNOOB 的字符数SELECT CHARACTER_LENGTH(“RUNOOB”) AS LengthOfString;</td>
-</tr>
-<tr>
-<td><strong>CONCAT(s1,s2…sn)</strong></td>
-<td>字符串 s1,s2 等多个字符串合并为一个字符串</td>
-<td>合并多个字符串SELECT CONCAT(“SQL “, “Runoob “, “Gooogle “, “Facebook”) AS ConcatenatedString;</td>
-</tr>
-<tr>
-<td><strong>CONCAT_WS(x, s1,s2…sn)</strong></td>
-<td>同 CONCAT(s1,s2,…) 函数，但是每个字符串之间要加上 x，x 可以是分隔符</td>
-<td>合并多个字符串，并添加分隔符：SELECT CONCAT_WS(“-“, “SQL”, “Tutorial”, “is”, “fun!”)AS ConcatenatedString;</td>
-</tr>
-<tr>
-<td><strong>FIELD(s,s1,s2…)</strong></td>
-<td>返回第一个字符串 s 在字符串列表(s1,s2…)中的位置</td>
-<td>返回字符串 c 在列表值中的位置：SELECT FIELD(“c”, “a”, “b”, “c”, “d”, “e”);</td>
-</tr>
-<tr>
-<td><strong>LTRIM(s)</strong></td>
-<td>去掉字符串 s 开始处的空格</td>
-<td>去掉字符串 RUNOOB开始处的空格：SELECT LTRIM(“  RUNOOB”) AS LeftTrimmedString;– RUNOOB</td>
-</tr>
-<tr>
-<td><strong>MID(s,n,len)</strong></td>
-<td>从字符串 s 的 n 位置截取长度为 len 的子字符串，同 SUBSTRING(s,n,len)</td>
-<td>从字符串 RUNOOB 中的第 2 个位置截取 3个 字符：SELECT MID(“RUNOOB”, 2, 3) AS ExtractString; – UNO</td>
-</tr>
-<tr>
-<td><strong>POSITION(s1 IN s)</strong></td>
-<td>从字符串 s 中获取 s1 的开始位置</td>
-<td>返回字符串 abc 中 b 的位置：SELECT POSITION(‘b’ in ‘abc’) – 2</td>
-</tr>
-<tr>
-<td><strong>REPLACE(s,s1,s2)</strong></td>
-<td>将字符串 s2 替代字符串 s 中的字符串 s1</td>
-<td>将字符串 abc 中的字符 a 替换为字符 x：SELECT REPLACE(‘abc’,’a’,’x’) –xbc</td>
-</tr>
-<tr>
-<td><strong>REVERSE(s)</strong></td>
-<td>将字符串s的顺序反过来</td>
-<td>将字符串 abc 的顺序反过来：SELECT REVERSE(‘abc’) – cba</td>
-</tr>
-</tbody></table>
-<h1 id="日期函数"><a href="#日期函数" class="headerlink" title="日期函数"></a>日期函数</h1><table>
-<thead>
-<tr>
-<th><strong>函数名</strong></th>
-<th><strong>描述</strong></th>
-<th><strong>实例</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>UNIX_TIMESTAMP()</strong></td>
-<td>返回从1970-01-01 00:00:00到当前毫秒值</td>
-<td>select UNIX_TIMESTAMP() -&gt; 1632729059</td>
-</tr>
-<tr>
-<td><strong>UNIX_TIMESTAMP(DATE_STRING)</strong></td>
-<td>将制定日期转为毫秒值时间戳</td>
-<td>SELECT UNIX_TIMESTAMP(‘2011-12-07 13:01:03’);</td>
-</tr>
-<tr>
-<td><strong>FROM_UNIXTIME(BIGINT UNIXTIME[, STRING FORMAT])</strong></td>
-<td>将毫秒值时间戳转为指定格式日期</td>
-<td>SELECT FROM_UNIXTIME(1598079966,’%Y-%m-%d %H:%i:%s’); (1598079966,’%Y-%m-%d %H:%i:%s’); -&gt; 2020-08-22 15-06-06</td>
-</tr>
-<tr>
-<td><strong>CURDATE()</strong></td>
-<td>返回当前日期</td>
-<td>SELECT CURDATE();-&gt; 2018-09-19</td>
-</tr>
-<tr>
-<td><strong>CURRENT_DATE()</strong></td>
-<td>返回当前日期</td>
-<td>SELECT CURRENT_DATE();-&gt; 2018-09-19</td>
-</tr>
-<tr>
-<td><strong>CURRENT_TIME</strong></td>
-<td>返回当前时间</td>
-<td>SELECT CURRENT_TIME();-&gt; 19:59:02</td>
-</tr>
-<tr>
-<td><strong>CURTIME()</strong></td>
-<td>返回当前时间</td>
-<td>SELECT CURTIME();-&gt; 19:59:02</td>
-</tr>
-<tr>
-<td><strong>CURRENT_TIMESTAMP()</strong></td>
-<td>返回当前日期和时间</td>
-<td>SELECT CURRENT_TIMESTAMP()-&gt; 2018-09-19 20:57:43</td>
-</tr>
-<tr>
-<td><strong>DATE()</strong></td>
-<td>从日期或日期时间表达式中提取日期值</td>
-<td>SELECT DATE(“2017-06-15”);  -&gt; 2017-06-15</td>
-</tr>
-<tr>
-<td><strong>DATEDIFF(d1,d2)</strong></td>
-<td>计算日期 d1-&gt;d2 之间相隔的天数</td>
-<td>SELECT DATEDIFF(‘2001-01-01’,’2001-02-02’)-&gt; -32</td>
-</tr>
-<tr>
-<td><strong>TIMEDIFF(time1, time2)</strong></td>
-<td>计算时间差值</td>
-<td>SELECT TIMEDIFF(“13:10:11”, “13:10:10”);-&gt; 00:00:01</td>
-</tr>
-<tr>
-<td><strong>DATE_FORMAT(d,f)</strong></td>
-<td>按表达式 f的要求显示日期 d</td>
-<td>SELECT DATE_FORMAT(‘2011-11-11 11:11:11’,’%Y-%m-%d %r’)-&gt; 2011-11-11 11:11:11 AM</td>
-</tr>
-<tr>
-<td><strong>STR_TO_DATE(string, format_mask)</strong></td>
-<td>将字符串转变为日期</td>
-<td>SELECT STR_TO_DATE(“August 10 2017”, “%M %d %Y”);-&gt; 2017-08-10</td>
-</tr>
-<tr>
-<td><strong>DATE_SUB(date,INTERVAL expr type)</strong></td>
-<td>函数从日期减去指定的时间间隔。</td>
-<td>Orders 表中 OrderDate 字段减去 2 天：SELECT OrderId,DATE_SUB(OrderDate,INTERVAL 2 DAY) AS OrderPayDateFROM Orders</td>
-</tr>
-<tr>
-<td><strong>ADDDATE&#x2F;DATE_ADD(d，INTERVAL expr type)</strong></td>
-<td>计算起始日期 d 加上一个时间段后的日期，type 值可以是：MICROSECOND \ SECOND \ MINUTE \ HOUR \ DAY \ WEEK \ MONTH \ QUARTER \ YEAR \ DAY_MINUTE \ DAY_HOUR \ YEAR_MONTH</td>
-<td>SELECT DATE_ADD(“2017-06-15”, INTERVAL 10 DAY);  -&gt; 2017-06-25 SELECT DATE_ADD(“2017-06-15 09:34:21”, INTERVAL 15 MINUTE);-&gt; 2017-06-15 09:49:21 SELECT DATE_ADD(“2017-06-15 09:34:21”, INTERVAL -3 HOUR);-&gt;2017-06-15 06:34:21 SELECT DATE_ADD(“2017-06-15 09:34:21”, INTERVAL -3 HOUR);-&gt;2017-04-15</td>
-</tr>
-<tr>
-<td><strong>DATE_ADD(d，INTERVAL expr type)</strong></td>
-<td>计算起始日期 d 加上一个时间段后的日期，type 值可以是：SECOND_MICROSECOND  &#x2F; MINUTE_MICROSECOND  &#x2F; MINUTE_SECOND  &#x2F; HOUR_MICROSECOND  &#x2F; HOUR_SECOND  &#x2F; HOUR_MINUTE  &#x2F; DAY_MICROSECOND  &#x2F; DAY_SECOND  &#x2F; DAY_MINUTE  &#x2F; DAY_HOUR  &#x2F; YEAR_MONTH</td>
-<td>SELECT DATE_ADD(“2017-06-15”, INTERVAL 10 DAY);  -&gt; 2017-06-25 SELECT DATE_ADD(“2017-06-15 09:34:21”, INTERVAL 15 MINUTE);-&gt; 2017-06-15 09:49:21 SELECT DATE_ADD(“2017-06-15 09:34:21”, INTERVAL -3 HOUR);-&gt;2017-06-15 06:34:21 SELECT DATE_ADD(“2017-06-15 09:34:21”, INTERVAL -3 HOUR);-&gt;2017-04-15</td>
-</tr>
-<tr>
-<td><strong>EXTRACT(type FROM d)</strong></td>
-<td>从日期 d 中获取指定的值，type 指定返回的值。type可取值为：MICROSECOND  &#x2F;  SECOND  &#x2F;  MINUTE  &#x2F;  HOUR  &#x2F;  …..</td>
-<td>SELECT EXTRACT(MINUTE FROM ‘2011-11-11 11:11:11’); -&gt; 11</td>
-</tr>
-<tr>
-<td><strong>LAST_DAY(d)</strong></td>
-<td>返回给给定日期的那一月份的最后一天</td>
-<td>SELECT LAST_DAY(“2017-06-20”);-&gt; 2017-06-30</td>
-</tr>
-<tr>
-<td><strong>MAKEDATE(year, day-of-year)</strong></td>
-<td>基于给定参数年份 year 和所在年中的天数序号 day-of-year 返回一个日期</td>
-<td>SELECT MAKEDATE(2017, 3);-&gt; 2017-01-03</td>
-</tr>
-<tr>
-<td><strong>YEAR(d)</strong></td>
-<td>返回年份</td>
-<td>SELECT YEAR(“2017-06-15”);-&gt; 2017</td>
-</tr>
-<tr>
-<td><strong>MONTH(d)</strong></td>
-<td>返回日期d中的月份值，1 到 12</td>
-<td>SELECT MONTH(‘2011-11-11 11:11:11’)-&gt;11</td>
-</tr>
-<tr>
-<td><strong>DAY(d)</strong></td>
-<td>返回日期值 d 的日期部分</td>
-<td>SELECT DAY(“2017-06-15”); -&gt; 15</td>
-</tr>
-<tr>
-<td><strong>HOUR(t)</strong></td>
-<td>返回 t 中的小时值</td>
-<td>SELECT HOUR(‘1:2:3’)-&gt; 1</td>
-</tr>
-<tr>
-<td><strong>MINUTE(t)</strong></td>
-<td>返回 t 中的分钟值</td>
-<td>SELECT MINUTE(‘1:2:3’)-&gt; 2</td>
-</tr>
-<tr>
-<td><strong>SECOND(t)</strong></td>
-<td>返回 t 中的秒钟值</td>
-<td>SELECT SECOND(‘1:2:3’)-&gt; 3</td>
-</tr>
-<tr>
-<td><strong>QUARTER(d)</strong></td>
-<td>返回日期d是第几季节，返回 1 到 4</td>
-<td>SELECT QUARTER(‘2011-11-11 11:11:11’)-&gt; 4</td>
-</tr>
-<tr>
-<td><strong>MONTHNAME(d)</strong></td>
-<td>返回日期当中的月份名称，如 November</td>
-<td>SELECT MONTHNAME(‘2011-11-11 11:11:11’)-&gt; November</td>
-</tr>
-<tr>
-<td><strong>MONTH(d)</strong></td>
-<td>返回日期d中的月份值，1 到 12</td>
-<td>SELECT MONTH(‘2011-11-11 11:11:11’)-&gt;11</td>
-</tr>
-<tr>
-<td><strong>DAYNAME(d)</strong></td>
-<td>返回日期 d 是星期几，如 Monday,Tuesday</td>
-<td>SELECT DAYNAME(‘2011-11-11 11:11:11’)-&gt;Friday</td>
-</tr>
-<tr>
-<td><strong>DAYOFMONTH(d)</strong></td>
-<td>计算日期 d 是本月的第几天</td>
-<td>SELECT DAYOFMONTH(‘2011-11-11 11:11:11’)-&gt;11</td>
-</tr>
-<tr>
-<td><strong>DAYOFWEEK(d)</strong></td>
-<td>日期 d 今天是星期几，1 星期日，2 星期一，以此类推</td>
-<td>SELECT DAYOFWEEK(‘2011-11-11 11:11:11’)-&gt;6</td>
-</tr>
-<tr>
-<td><strong>DAYOFYEAR(d)</strong></td>
-<td>计算日期 d 是本年的第几天</td>
-<td>SELECT DAYOFYEAR(‘2011-11-11 11:11:11’)-&gt;315</td>
-</tr>
-<tr>
-<td><strong>WEEK(d)</strong></td>
-<td>计算日期 d 是本年的第几个星期，范围是 0 到 53</td>
-<td>SELECT WEEK(‘2011-11-11 11:11:11’)-&gt; 45</td>
-</tr>
-<tr>
-<td><strong>WEEKDAY(d)</strong></td>
-<td>日期 d 是星期几，0 表示星期一，1 表示星期二</td>
-<td>SELECT WEEKDAY(“2017-06-15”);-&gt; 3</td>
-</tr>
-<tr>
-<td><strong>WEEKOFYEAR(d)</strong></td>
-<td>计算日期 d 是本年的第几个星期，范围是 0 到 53</td>
-<td>SELECT WEEKOFYEAR(‘2011-11-11 11:11:11’)-&gt; 45</td>
-</tr>
-<tr>
-<td><strong>YEARWEEK(date, mode)</strong></td>
-<td>返回年份及第几周（0到53），mode 中 0 表示周天，1表示周一，以此类推</td>
-<td>SELECT YEARWEEK(“2017-06-15”);-&gt; 201724</td>
-</tr>
-<tr>
-<td><strong>NOW()</strong></td>
-<td>返回当前日期和时间</td>
-<td>SELECT NOW()-&gt; 2018-09-19 20:57:43</td>
-</tr>
-</tbody></table>
-<h1 id="控制流函数"><a href="#控制流函数" class="headerlink" title="控制流函数"></a>控制流函数</h1><h2 id="if逻辑判断"><a href="#if逻辑判断" class="headerlink" title="if逻辑判断"></a>if逻辑判断</h2><table>
-<thead>
-<tr>
-<th><strong>格式</strong></th>
-<th><strong>解释</strong></th>
-<th><strong>案例</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>IF(expr,v1,v2)</strong></td>
-<td>如果表达式 expr 成立，返回结果 v1；否则，返回结果 v2。</td>
-<td>SELECT IF(1 &gt; 0,’正确’,’错误’)  -&gt;正确</td>
-</tr>
-<tr>
-<td><strong>IFNULL(v1,v2)</strong></td>
-<td>如果 v1 的值不为 NULL，则返回 v1，否则返回 v2。</td>
-<td>SELECT IFNULL(null,’Hello Word’)-&gt;Hello Word</td>
-</tr>
-<tr>
-<td><strong>ISNULL(expression)</strong></td>
-<td>判断表达式是否为 NULL</td>
-<td>SELECT ISNULL(NULL);-&gt;1</td>
-</tr>
-<tr>
-<td><strong>NULLIF(expr1, expr2)</strong></td>
-<td>比较两个字符串，如果字符串 expr1 与 expr2 相等 返回 NULL，否则返回 expr1</td>
-<td>SELECT NULLIF(25, 25);-&gt;</td>
-</tr>
-</tbody></table>
-<h2 id="case-when语句"><a href="#case-when语句" class="headerlink" title="case when语句"></a>case when语句</h2><p>格式：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CASE</span> expression</span><br><span class="line">    <span class="keyword">WHEN</span> condition1 <span class="keyword">THEN</span> result1</span><br><span class="line">    <span class="keyword">WHEN</span> condition2 <span class="keyword">THEN</span> result2</span><br><span class="line">   	...</span><br><span class="line">    <span class="keyword">WHEN</span> conditionN <span class="keyword">THEN</span> resultN</span><br><span class="line">    <span class="keyword">ELSE</span> <span class="keyword">result</span></span><br><span class="line"><span class="keyword">END</span></span><br></pre></td></tr></table></figure>
-
-<p>CASE 表示函数开始，END 表示函数结束。如果 condition1 成立，则返回 result1, 如果 condition2 成立，则返回 result2，当全部不成立则返回 result，而当有一个成立之后，后面的就不执行了。</p>
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 方式1</span></span><br><span class="line"><span class="keyword">select</span> </span><br><span class="line"><span class="operator">*</span>,</span><br><span class="line"><span class="keyword">case</span> </span><br><span class="line">	<span class="keyword">when</span> payType<span class="operator">=</span><span class="number">1</span> <span class="keyword">then</span> <span class="string">&#x27;微信支付&#x27;</span></span><br><span class="line">	<span class="keyword">when</span> payType<span class="operator">=</span><span class="number">2</span> <span class="keyword">then</span> <span class="string">&#x27;支付宝支付&#x27;</span></span><br><span class="line">	<span class="keyword">when</span> payType<span class="operator">=</span><span class="number">3</span> <span class="keyword">then</span> <span class="string">&#x27;银行卡支付&#x27;</span></span><br><span class="line">	<span class="keyword">else</span> <span class="string">&#x27;其他&#x27;</span></span><br><span class="line"><span class="keyword">end</span> <span class="keyword">as</span> payTypeStr</span><br><span class="line"><span class="keyword">from</span> orders;</span><br><span class="line"><span class="comment">-- 方式2</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line"><span class="operator">*</span>,</span><br><span class="line"><span class="keyword">case</span> payType</span><br><span class="line">	<span class="keyword">when</span> <span class="number">1</span> <span class="keyword">then</span> <span class="string">&#x27;微信支付&#x27;</span></span><br><span class="line">	<span class="keyword">when</span> <span class="number">2</span> <span class="keyword">then</span> <span class="string">&#x27;支付宝支付&#x27;</span></span><br><span class="line">	<span class="keyword">when</span> <span class="number">3</span> <span class="keyword">then</span> <span class="string">&#x27;银行卡支付&#x27;</span></span><br><span class="line">	<span class="keyword">else</span> <span class="string">&#x27;其他&#x27;</span></span><br><span class="line"><span class="keyword">end</span> <span class="keyword">as</span> payTypeStr</span><br><span class="line"><span class="keyword">from</span> orders;</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="窗口函数"><a href="#窗口函数" class="headerlink" title="窗口函数"></a>窗口函数</h1><p>MySQL 8.0 新增窗口函数，窗口函数又被称为开窗函数，与Oracle 窗口函数类似，属于MySQL的一大特点。</p>
-<p>非聚合窗口函数是相对于聚函数来说的。聚合函数是对一组数据计算后返回单个值（即分组），非聚合函数一次只会处理一行数据。窗口聚合函数在行记录上计算某个字段的结果时，可将窗口范围内的数据输入到聚合函数中，并不改变行数。</p>
-<p>语法结构：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">window_function ( expr ) <span class="keyword">OVER</span> ( </span><br><span class="line">  <span class="keyword">PARTITION</span> <span class="keyword">BY</span> ... </span><br><span class="line">  <span class="keyword">ORDER</span> <span class="keyword">BY</span> ... </span><br><span class="line">  frame_clause </span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-<p>其中，window_function 是窗口函数的名称；expr 是参数，有些函数不需要参数；OVER子句包含三个选项：</p>
-<ul>
-<li><p>分区（PARTITION BY）</p>
-<p>PARTITION BY选项用于将数据行拆分成多个分区（组），它的作用类似于GROUP BY分组。如果省略了 PARTITION BY，所有的数据作为一个组进行计算</p>
-</li>
-<li><p>排序（ORDER BY）</p>
-<p>OVER 子句中的ORDER BY选项用于指定分区内的排序方式，与 ORDER BY 子句的作用类似以</p>
-</li>
-<li><p>及窗口大小（frame_clause）</p>
-<p>frame_clause选项用于在当前分区内指定一个计算窗口，也就是一个与当前行相关的数据子集。</p>
-</li>
-</ul>
-<p>分类：</p>
-<p><img src="/2020/08/24/MySQL%E5%87%BD%E6%95%B0/image-20221220110918460.png" alt="image-20221220110918460"></p>
-<p>另外还有开窗聚合函数: SUM,AVG,MIN,MAX</p>
-<h2 id="序号函数"><a href="#序号函数" class="headerlink" title="序号函数"></a>序号函数</h2><p>序号函数有三个：ROW_NUMBER()、RANK()、DENSE_RANK()，可以用来实现分组排序，并添加序号。</p>
-<p>格式：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">row_number</span>()<span class="operator">|</span><span class="built_in">rank</span>()<span class="operator">|</span><span class="built_in">dense_rank</span>() <span class="keyword">over</span> ( </span><br><span class="line">  <span class="keyword">partition</span> <span class="keyword">by</span> ... </span><br><span class="line">  <span class="keyword">order</span> <span class="keyword">by</span> ... </span><br><span class="line">) </span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> employee( </span><br><span class="line">   dname <span class="type">varchar</span>(<span class="number">20</span>), <span class="comment">-- 部门名 </span></span><br><span class="line">   eid <span class="type">varchar</span>(<span class="number">20</span>), </span><br><span class="line">   ename <span class="type">varchar</span>(<span class="number">20</span>), </span><br><span class="line">   hiredate <span class="type">date</span>, <span class="comment">-- 入职日期 </span></span><br><span class="line">   salary <span class="keyword">double</span> <span class="comment">-- 薪资</span></span><br><span class="line">); </span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> employee <span class="keyword">values</span>(<span class="string">&#x27;研发部&#x27;</span>,<span class="string">&#x27;1001&#x27;</span>,<span class="string">&#x27;刘备&#x27;</span>,<span class="string">&#x27;2021-11-01&#x27;</span>,<span class="number">3000</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> employee <span class="keyword">values</span>(<span class="string">&#x27;研发部&#x27;</span>,<span class="string">&#x27;1002&#x27;</span>,<span class="string">&#x27;关羽&#x27;</span>,<span class="string">&#x27;2021-11-02&#x27;</span>,<span class="number">5000</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> employee <span class="keyword">values</span>(<span class="string">&#x27;研发部&#x27;</span>,<span class="string">&#x27;1003&#x27;</span>,<span class="string">&#x27;张飞&#x27;</span>,<span class="string">&#x27;2021-11-03&#x27;</span>,<span class="number">7000</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> employee <span class="keyword">values</span>(<span class="string">&#x27;研发部&#x27;</span>,<span class="string">&#x27;1004&#x27;</span>,<span class="string">&#x27;赵云&#x27;</span>,<span class="string">&#x27;2021-11-04&#x27;</span>,<span class="number">7000</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> employee <span class="keyword">values</span>(<span class="string">&#x27;研发部&#x27;</span>,<span class="string">&#x27;1005&#x27;</span>,<span class="string">&#x27;马超&#x27;</span>,<span class="string">&#x27;2021-11-05&#x27;</span>,<span class="number">4000</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> employee <span class="keyword">values</span>(<span class="string">&#x27;研发部&#x27;</span>,<span class="string">&#x27;1006&#x27;</span>,<span class="string">&#x27;黄忠&#x27;</span>,<span class="string">&#x27;2021-11-06&#x27;</span>,<span class="number">4000</span>);</span><br><span class="line"> </span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> employee <span class="keyword">values</span>(<span class="string">&#x27;销售部&#x27;</span>,<span class="string">&#x27;1007&#x27;</span>,<span class="string">&#x27;曹操&#x27;</span>,<span class="string">&#x27;2021-11-01&#x27;</span>,<span class="number">2000</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> employee <span class="keyword">values</span>(<span class="string">&#x27;销售部&#x27;</span>,<span class="string">&#x27;1008&#x27;</span>,<span class="string">&#x27;许褚&#x27;</span>,<span class="string">&#x27;2021-11-02&#x27;</span>,<span class="number">3000</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> employee <span class="keyword">values</span>(<span class="string">&#x27;销售部&#x27;</span>,<span class="string">&#x27;1009&#x27;</span>,<span class="string">&#x27;典韦&#x27;</span>,<span class="string">&#x27;2021-11-03&#x27;</span>,<span class="number">5000</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> employee <span class="keyword">values</span>(<span class="string">&#x27;销售部&#x27;</span>,<span class="string">&#x27;1010&#x27;</span>,<span class="string">&#x27;张辽&#x27;</span>,<span class="string">&#x27;2021-11-04&#x27;</span>,<span class="number">6000</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> employee <span class="keyword">values</span>(<span class="string">&#x27;销售部&#x27;</span>,<span class="string">&#x27;1011&#x27;</span>,<span class="string">&#x27;徐晃&#x27;</span>,<span class="string">&#x27;2021-11-05&#x27;</span>,<span class="number">9000</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> employee <span class="keyword">values</span>(<span class="string">&#x27;销售部&#x27;</span>,<span class="string">&#x27;1012&#x27;</span>,<span class="string">&#x27;曹洪&#x27;</span>,<span class="string">&#x27;2021-11-06&#x27;</span>,<span class="number">6000</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 对每个部门的员工按照薪资排序，并给出排名</span></span><br><span class="line"><span class="keyword">select</span> </span><br><span class="line">dname,</span><br><span class="line">ename,</span><br><span class="line">salary,</span><br><span class="line"><span class="built_in">row_number</span>() <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> dname <span class="keyword">ORDER</span> <span class="keyword">BY</span> salary <span class="keyword">desc</span>) <span class="keyword">as</span> rn</span><br><span class="line"><span class="keyword">from</span> employee;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 对每个部门的员工按照薪资排序，并给出排名 rank</span></span><br><span class="line"><span class="keyword">select</span> </span><br><span class="line">dname,</span><br><span class="line">ename,</span><br><span class="line">salary,</span><br><span class="line"><span class="built_in">rank</span>() <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dname <span class="keyword">order</span> <span class="keyword">by</span> salary <span class="keyword">desc</span>) <span class="keyword">as</span> rn </span><br><span class="line"><span class="keyword">from</span> employee;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 对每个部门的员工按照薪资排序，并给出排名 dense-rank</span></span><br><span class="line"><span class="keyword">select</span> </span><br><span class="line">dname,</span><br><span class="line">ename,</span><br><span class="line">salary,</span><br><span class="line"><span class="built_in">dense_rank</span>() <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dname <span class="keyword">order</span> <span class="keyword">by</span> salary <span class="keyword">desc</span>) <span class="keyword">as</span> rn </span><br><span class="line"><span class="keyword">from</span> employee;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 求出每个部门薪资排在前三名的员工- 分组求TOPN</span></span><br><span class="line"><span class="keyword">select</span> </span><br><span class="line"><span class="operator">*</span> </span><br><span class="line"><span class="keyword">from</span> </span><br><span class="line">(</span><br><span class="line">    <span class="keyword">select</span> </span><br><span class="line">     dname,</span><br><span class="line">     ename,</span><br><span class="line">     salary,</span><br><span class="line">     <span class="built_in">dense_rank</span>() <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dname <span class="keyword">order</span> <span class="keyword">by</span> salary <span class="keyword">desc</span>)  <span class="keyword">as</span> rn</span><br><span class="line">    <span class="keyword">from</span> employee</span><br><span class="line">)t</span><br><span class="line"><span class="keyword">where</span> t.rn <span class="operator">&lt;=</span> <span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 对所有员工进行全局排序（不分组）</span></span><br><span class="line"><span class="comment">-- 不加partition by表示全局排序</span></span><br><span class="line"><span class="keyword">select</span> </span><br><span class="line">     dname,</span><br><span class="line">     ename,</span><br><span class="line">     salary,</span><br><span class="line">     <span class="built_in">dense_rank</span>() <span class="keyword">over</span>( <span class="keyword">order</span> <span class="keyword">by</span> salary <span class="keyword">desc</span>)  <span class="keyword">as</span> rn</span><br><span class="line"><span class="keyword">from</span> employee;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="开窗聚合函数-SUM-AVG-MIN-MAX"><a href="#开窗聚合函数-SUM-AVG-MIN-MAX" class="headerlink" title="开窗聚合函数- SUM,AVG,MIN,MAX"></a>开窗聚合函数- SUM,AVG,MIN,MAX</h2><p>在窗口中每条记录动态地应用聚合函数（SUM()、AVG()、MAX()、MIN()、COUNT()），可以动态计算在指定的窗口内的各种聚合函数值。</p>
-<p>示例:</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span>  </span><br><span class="line"> dname,</span><br><span class="line"> ename,</span><br><span class="line"> salary,</span><br><span class="line"> <span class="built_in">sum</span>(salary) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dname <span class="keyword">order</span> <span class="keyword">by</span> hiredate) <span class="keyword">as</span> pv1 </span><br><span class="line"><span class="keyword">from</span> employee;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">select</span> cookieid,createtime,pv,</span><br><span class="line"><span class="built_in">sum</span>(pv) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> cookieid) <span class="keyword">as</span> pv3</span><br><span class="line"><span class="keyword">from</span> itcast_t1;  <span class="comment">-- 如果没有order  by排序语句  默认把分组内的所有数据进行sum操作</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span>  </span><br><span class="line"> dname,</span><br><span class="line"> ename,</span><br><span class="line"> salary,</span><br><span class="line"> <span class="built_in">sum</span>(salary) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dname <span class="keyword">order</span> <span class="keyword">by</span> hiredate  <span class="keyword">rows</span> <span class="keyword">between</span> unbounded preceding <span class="keyword">and</span> <span class="keyword">current</span> <span class="type">row</span>) <span class="keyword">as</span> c1 </span><br><span class="line"><span class="keyword">from</span> employee;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">select</span>  </span><br><span class="line"> dname,</span><br><span class="line"> ename,</span><br><span class="line"> salary,</span><br><span class="line"> <span class="built_in">sum</span>(salary) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dname <span class="keyword">order</span> <span class="keyword">by</span> hiredate   <span class="keyword">rows</span> <span class="keyword">between</span> <span class="number">3</span> preceding <span class="keyword">and</span> <span class="keyword">current</span> <span class="type">row</span>) <span class="keyword">as</span> c1 </span><br><span class="line"><span class="keyword">from</span> employee;</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span>  </span><br><span class="line"> dname,</span><br><span class="line"> ename,</span><br><span class="line"> salary,</span><br><span class="line"> <span class="built_in">sum</span>(salary) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dname <span class="keyword">order</span> <span class="keyword">by</span> hiredate   <span class="keyword">rows</span> <span class="keyword">between</span> <span class="number">3</span> preceding <span class="keyword">and</span> <span class="number">1</span> following) <span class="keyword">as</span> c1 </span><br><span class="line"><span class="keyword">from</span> employee;</span><br><span class="line"><span class="keyword">select</span>  </span><br><span class="line"> dname,</span><br><span class="line"> ename,</span><br><span class="line"> salary,</span><br><span class="line"> <span class="built_in">sum</span>(salary) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dname <span class="keyword">order</span> <span class="keyword">by</span> hiredate   <span class="keyword">rows</span> <span class="keyword">between</span> <span class="keyword">current</span> <span class="type">row</span> <span class="keyword">and</span> unbounded following) <span class="keyword">as</span> c1 </span><br><span class="line"><span class="keyword">from</span> employee;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="分布函数-CUME-DIST和PERCENT-RANK"><a href="#分布函数-CUME-DIST和PERCENT-RANK" class="headerlink" title="分布函数- CUME_DIST和PERCENT_RANK"></a>分布函数- CUME_DIST和PERCENT_RANK</h2><h3 id="CUME-DIST"><a href="#CUME-DIST" class="headerlink" title="CUME_DIST"></a>CUME_DIST</h3><ul>
-<li>用途：分组内小于、等于当前rank值的行数 &#x2F; 分组内总行数 </li>
-<li>应用场景：查询小于等于当前薪资（salary）的比例</li>
-</ul>
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span>  </span><br><span class="line"> dname,</span><br><span class="line"> ename,</span><br><span class="line"> salary,</span><br><span class="line"> <span class="built_in">cume_dist</span>() <span class="keyword">over</span>(<span class="keyword">order</span> <span class="keyword">by</span> salary) <span class="keyword">as</span> rn1, <span class="comment">-- 没有partition语句 所有的数据位于一组</span></span><br><span class="line"> <span class="built_in">cume_dist</span>() <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dept <span class="keyword">order</span> <span class="keyword">by</span> salary) <span class="keyword">as</span> rn2 </span><br><span class="line"><span class="keyword">from</span> employee;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">rn1: 没有partition,所有数据均为1组，总行数为12，</span></span><br><span class="line"><span class="comment">     第一行：小于等于3000的行数为3，因此，3/12=0.25</span></span><br><span class="line"><span class="comment">     第二行：小于等于4000的行数为5，因此，5/12=0.4166666666666667</span></span><br><span class="line"><span class="comment">rn2: 按照部门分组，dname=&#x27;研发部&#x27;的行数为6,</span></span><br><span class="line"><span class="comment">     第一行：研发部小于等于3000的行数为1，因此，1/6=0.16666666666666666</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="PERCENT-RANK"><a href="#PERCENT-RANK" class="headerlink" title="PERCENT_RANK"></a>PERCENT_RANK</h3><ul>
-<li>用途：每行按照公式(rank-1) &#x2F; (rows-1)进行计算。其中，rank为RANK()函数产生的序号，rows为当前窗口的记录总行数</li>
-<li>应用场景：不常用</li>
-</ul>
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> </span><br><span class="line"> dname,</span><br><span class="line"> ename,</span><br><span class="line"> salary,</span><br><span class="line"> <span class="built_in">rank</span>() <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dname <span class="keyword">order</span> <span class="keyword">by</span> salary <span class="keyword">desc</span> ) <span class="keyword">as</span> rn,</span><br><span class="line"> <span class="built_in">percent_rank</span>() <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dname <span class="keyword">order</span> <span class="keyword">by</span> salary <span class="keyword">desc</span> ) <span class="keyword">as</span> rn2</span><br><span class="line"><span class="keyword">from</span> employee;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> rn2:</span></span><br><span class="line"><span class="comment">  第一行: (1 - 1) / (6 - 1) = 0</span></span><br><span class="line"><span class="comment">  第二行: (1 - 1) / (6 - 1) = 0</span></span><br><span class="line"><span class="comment">  第三行: (3 - 1) / (6 - 1) = 0.4</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="前后函数-LAG和LEAD"><a href="#前后函数-LAG和LEAD" class="headerlink" title="前后函数-LAG和LEAD"></a>前后函数-LAG和LEAD</h2><ul>
-<li>用途：返回位于当前行的前n行（LAG(expr,n)）或后n行（LEAD(expr,n)）的expr的值</li>
-<li>应用场景：查询前1名同学的成绩和当前同学成绩的差值</li>
-</ul>
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- lag的用法</span></span><br><span class="line"><span class="keyword">select</span> </span><br><span class="line"> dname,</span><br><span class="line"> ename,</span><br><span class="line"> hiredate,</span><br><span class="line"> salary,</span><br><span class="line"> <span class="built_in">lag</span>(hiredate,<span class="number">1</span>,<span class="string">&#x27;2000-01-01&#x27;</span>) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dname <span class="keyword">order</span> <span class="keyword">by</span> hiredate) <span class="keyword">as</span> last_1_time,</span><br><span class="line"> <span class="built_in">lag</span>(hiredate,<span class="number">2</span>) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dname <span class="keyword">order</span> <span class="keyword">by</span> hiredate) <span class="keyword">as</span> last_2_time </span><br><span class="line"><span class="keyword">from</span> employee;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">last_1_time: 指定了往上第1行的值，default为&#x27;2000-01-01&#x27;  </span></span><br><span class="line"><span class="comment">                         第一行，往上1行为null,因此取默认值 &#x27;2000-01-01&#x27;</span></span><br><span class="line"><span class="comment">                         第二行，往上1行值为第一行值，2021-11-01 </span></span><br><span class="line"><span class="comment">                         第三行，往上1行值为第二行值，2021-11-02 </span></span><br><span class="line"><span class="comment">last_2_time: 指定了往上第2行的值，为指定默认值</span></span><br><span class="line"><span class="comment">                         第一行，往上2行为null</span></span><br><span class="line"><span class="comment">                         第二行，往上2行为null</span></span><br><span class="line"><span class="comment">                         第四行，往上2行为第二行值，2021-11-01 </span></span><br><span class="line"><span class="comment">                         第七行，往上2行为第五行值，2021-11-02 </span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- lead的用法</span></span><br><span class="line"><span class="keyword">select</span> </span><br><span class="line"> dname,</span><br><span class="line"> ename,</span><br><span class="line"> hiredate,</span><br><span class="line"> salary,</span><br><span class="line"> <span class="built_in">lead</span>(hiredate,<span class="number">1</span>,<span class="string">&#x27;2000-01-01&#x27;</span>) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dname <span class="keyword">order</span> <span class="keyword">by</span> hiredate) <span class="keyword">as</span> last_1_time,</span><br><span class="line"> <span class="built_in">lead</span>(hiredate,<span class="number">2</span>) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dname <span class="keyword">order</span> <span class="keyword">by</span> hiredate) <span class="keyword">as</span> last_2_time </span><br><span class="line"><span class="keyword">from</span> employee;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="头尾函数-FIRST-VALUE和LAST-VALUE"><a href="#头尾函数-FIRST-VALUE和LAST-VALUE" class="headerlink" title="头尾函数-FIRST_VALUE和LAST_VALUE"></a>头尾函数-FIRST_VALUE和LAST_VALUE</h2><ul>
-<li>用途：返回第一个（FIRST_VALUE(expr)）或最后一个（LAST_VALUE(expr)）expr的值</li>
-<li>应用场景：截止到当前，按照日期排序查询第1个入职和最后1个入职员工的薪资</li>
-</ul>
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 注意,  如果不指定ORDER BY，则进行排序混乱，会出现错误的结果</span></span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">  dname,</span><br><span class="line">  ename,</span><br><span class="line">  hiredate,</span><br><span class="line">  salary,</span><br><span class="line">  <span class="built_in">first_value</span>(salary) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dname <span class="keyword">order</span> <span class="keyword">by</span> hiredate) <span class="keyword">as</span> <span class="keyword">first</span>,</span><br><span class="line">  <span class="built_in">last_value</span>(salary) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dname <span class="keyword">order</span> <span class="keyword">by</span>  hiredate) <span class="keyword">as</span> <span class="keyword">last</span> </span><br><span class="line"><span class="keyword">from</span>  employee;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="其他函数-NTH-VALUE-expr-n-、NTILE-n"><a href="#其他函数-NTH-VALUE-expr-n-、NTILE-n" class="headerlink" title="其他函数-NTH_VALUE(expr, n)、NTILE(n)"></a>其他函数-NTH_VALUE(expr, n)、NTILE(n)</h2><h3 id="NTH-VALUE-expr-n"><a href="#NTH-VALUE-expr-n" class="headerlink" title="NTH_VALUE(expr,n)"></a>NTH_VALUE(expr,n)</h3><ul>
-<li>用途：返回窗口中第n个expr的值。expr可以是表达式，也可以是列名</li>
-<li>应用场景：截止到当前薪资，显示每个员工的薪资中排名第2或者第3的薪资</li>
-</ul>
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查询每个部门截止目前薪资排在第二和第三的员工信息</span></span><br><span class="line"><span class="keyword">select</span> </span><br><span class="line">  dname,</span><br><span class="line">  ename,</span><br><span class="line">  hiredate,</span><br><span class="line">  salary,</span><br><span class="line">  <span class="built_in">nth_value</span>(salary,<span class="number">2</span>) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dname <span class="keyword">order</span> <span class="keyword">by</span> hiredate) <span class="keyword">as</span> second_score,</span><br><span class="line">  <span class="built_in">nth_value</span>(salary,<span class="number">3</span>) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dname <span class="keyword">order</span> <span class="keyword">by</span> hiredate) <span class="keyword">as</span> third_score</span><br><span class="line"><span class="keyword">from</span> employee</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="NTILE"><a href="#NTILE" class="headerlink" title="NTILE"></a>NTILE</h3><ul>
-<li>用途：将分区中的有序数据分为n个等级，记录等级数</li>
-<li>应用场景：将每个部门员工按照入职日期分成3组</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 根据入职日期将每个部门的员工分成3组</span></span><br><span class="line"><span class="keyword">select</span> </span><br><span class="line">  dname,</span><br><span class="line">  ename,</span><br><span class="line">  hiredate,</span><br><span class="line">  salary,</span><br><span class="line"><span class="built_in">ntile</span>(<span class="number">3</span>) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> dname <span class="keyword">order</span> <span class="keyword">by</span>  hiredate  ) <span class="keyword">as</span> rn </span><br><span class="line"><span class="keyword">from</span> employee;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 取出每个部门的第一组员工</span></span><br><span class="line"><span class="keyword">select</span></span><br><span class="line"><span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">(</span><br><span class="line">    <span class="keyword">SELECT</span> </span><br><span class="line">        dname,</span><br><span class="line">        ename,</span><br><span class="line">        hiredate,</span><br><span class="line">        salary,</span><br><span class="line">    <span class="built_in">NTILE</span>(<span class="number">3</span>) <span class="keyword">OVER</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> dname <span class="keyword">ORDER</span> <span class="keyword">BY</span>  hiredate  ) <span class="keyword">AS</span> rn </span><br><span class="line">    <span class="keyword">FROM</span> employee</span><br><span class="line">)t</span><br><span class="line"><span class="keyword">where</span> t.rn <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1951,7 +1638,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">118</span>
+          <span class="site-state-item-count">124</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
