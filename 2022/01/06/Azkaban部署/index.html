@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="集群模式安装上传tar包 将 azkaban-db-3.84.4.tar.gz， azkaban-exec-server-3.84.4.tar.gz， azkaban-webserver-3.84.4.tar.gz 上传到 node1的&#x2F;export&#x2F;software 路径 。  新建&#x2F;export&#x2F;server&#x2F;azkaban 目录，并将所有 t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Azkaban部署">
+<meta property="og:url" content="http://fhclk.github.io/2022/01/06/Azkaban%E9%83%A8%E7%BD%B2/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="集群模式安装上传tar包 将 azkaban-db-3.84.4.tar.gz， azkaban-exec-server-3.84.4.tar.gz， azkaban-webserver-3.84.4.tar.gz 上传到 node1的&#x2F;export&#x2F;software 路径 。  新建&#x2F;export&#x2F;server&#x2F;azkaban 目录，并将所有 t">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://fhclk.github.io/2022/01/06/Azkaban%E9%83%A8%E7%BD%B2/image-20230225235650708.png">
+<meta property="article:published_time" content="2022-01-06T13:12:43.000Z">
+<meta property="article:modified_time" content="2023-02-25T15:57:05.983Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="大数据">
+<meta property="article:tag" content="Azkaban">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/2022/01/06/Azkaban%E9%83%A8%E7%BD%B2/image-20230225235650708.png">
+
+<link rel="canonical" href="http://fhclk.github.io/2022/01/06/Azkaban%E9%83%A8%E7%BD%B2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Azkaban部署 | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/01/06/Azkaban%E9%83%A8%E7%BD%B2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Azkaban部署
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-06 21:12:43" itemprop="dateCreated datePublished" datetime="2022-01-06T21:12:43+08:00">2022-01-06</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="集群模式安装"><a href="#集群模式安装" class="headerlink" title="集群模式安装"></a>集群模式安装</h1><h2 id="上传tar包"><a href="#上传tar包" class="headerlink" title="上传tar包"></a>上传tar包</h2><ol>
+<li><p>将 azkaban-db-3.84.4.tar.gz， azkaban-exec-server-3.84.4.tar.gz， azkaban-webserver-3.84.4.tar.gz 上传到 node1的&#x2F;export&#x2F;software 路径 。</p>
+</li>
+<li><p>新建&#x2F;export&#x2F;server&#x2F;azkaban 目录，并将所有 tar 包解压到这个目录下。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 server]# mkdir azkaban</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>解压 azkaban-db-3.84.4.tar.gz、 azkaban-exec-server-3.84.4.tar.gz 和 azkabanweb-server-3.84.4.tar.gz到&#x2F;export&#x2F;server&#x2F;azkaban 目录下。  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 azkaban]# tar -zxvf azkaban-db-3.84.4.tar.gz -C ../../server/azkaban/</span><br><span class="line">(base) [root@node1 azkaban]# tar -zxvf azkaban-exec-server-3.84.4.tar.gz -C ../../server/azkaban/</span><br><span class="line">(base) [root@node1 azkaban]# tar -zxvf azkaban-web-server-3.84.4.tar.gz -C ../../server/azkaban/</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>进入到&#x2F;export&#x2F;server&#x2F;azkaban 目录，依次修改名称。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 azkaban]# mv azkaban-db-3.84.4 azkaban-db</span><br><span class="line">(base) [root@node1 azkaban]# mv azkaban-exec-server-3.84.4 azkaban-exec</span><br><span class="line">(base) [root@node1 azkaban]# mv azkaban-web-server-3.84.4 azkaban-web</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="配置MySql"><a href="#配置MySql" class="headerlink" title="配置MySql"></a>配置MySql</h2><ol>
+<li><p>登录MySql</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# mysql -u root -p</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>创建数据库azkaban</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">create database azkaban;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>创建 Azkaban 用户，任何主机都可以访问 Azkaban，密码是 000000  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">CREATE USER <span class="string">&#x27;azkaban&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED BY <span class="string">&#x27;000000&#x27;</span>;</span></span><br></pre></td></tr></table></figure>
+
+<p>赋予 Azkaban 用户增删改查权限  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">GRANT SELECT,INSERT,UPDATE,DELETE ON azkaban.* to <span class="string">&#x27;azkaban&#x27;</span>@<span class="string">&#x27;%&#x27;</span> WITH GRANT OPTION;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>创建 Azkaban 表，完成后退出 MySQL;</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">use azkaban;</span></span><br><span class="line">Database changed</span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash"><span class="built_in">source</span> /export/server/azkaban/azkaban-db/create-all-sql-3.84.4.sql</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>更改 MySQL 包大小；防止 Azkaban 连接 MySQL 阻塞  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# vim /etc/my.cnf</span><br></pre></td></tr></table></figure>
+
+<p>在[mysqld]下面加一行 max_allowed_packet&#x3D;1024M  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">max_allowed_packet=1024M</span><br></pre></td></tr></table></figure>
+
+<p>重启 MySQL  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# systemctl restart mysqld</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="配置Executor-Server"><a href="#配置Executor-Server" class="headerlink" title="配置Executor Server"></a>配置Executor Server</h2><p>Azkaban Executor Server 处理工作流和作业的实际执行。  </p>
+<ol>
+<li><p>编辑 azkaban.properties  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# vim /export/server/azkaban/azkaban-exec/conf/azkaban.properties</span><br></pre></td></tr></table></figure>
+
+<p>修改如下的属性</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#...</span><br><span class="line">default.timezone.id=Asia/Shanghai</span><br><span class="line">#...</span><br><span class="line">azkaban.webserver.url=http://node1:8081</span><br><span class="line">executor.port=12321</span><br><span class="line">#...</span><br><span class="line">database.type=mysql</span><br><span class="line">mysql.port=3306</span><br><span class="line">mysql.host=node1</span><br><span class="line">mysql.database=azkaban</span><br><span class="line">mysql.user=azkaban</span><br><span class="line">mysql.password=000000</span><br><span class="line">mysql.numconnections=100</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>同步 azkaban-exec 到所有节点  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node2 ~]# mkdir /export/server/azkaban</span><br><span class="line">(base) [root@node3 ~]# mkdir /export/server/azkaban</span><br><span class="line">(base) [root@node1 ~]# cd /export/server/azkaban/</span><br><span class="line">(base) [root@node1 azkaban]# scp -r azkaban-exec/ root@node2:$PWD</span><br><span class="line">(base) [root@node1 azkaban]# scp -r azkaban-exec/ root@node3:$PWD</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>必须进入到&#x2F;export&#x2F;server&#x2F;azkaban&#x2F;azkaban-exec 路径，分别在三台机器上， 启动 executor server</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 azkaban-exec]# ./bin/start-exec.sh </span><br><span class="line">(base) [root@node2 azkaban-exec]# ./bin/start-exec.sh </span><br><span class="line">(base) [root@node3 azkaban-exec]# ./bin/start-exec.sh </span><br></pre></td></tr></table></figure>
+
+<p>注意： 如果在&#x2F;opt&#x2F;module&#x2F;azkaban&#x2F;azkaban-exec 目录下出现 executor.port 文件，说明启动成功  </p>
+</li>
+<li><p>下面激活 executor，需要  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 azkaban-exec]# curl -G &quot;node1:12321/executor?action=activate&quot; &amp;&amp; echo</span><br><span class="line">(base) [root@node2 azkaban-exec]# curl -G &quot;node2:12321/executor?action=activate&quot; &amp;&amp; echo</span><br><span class="line">(base) [root@node3 azkaban-exec]# curl -G &quot;node3:12321/executor?action=activate&quot; &amp;&amp; echo</span><br></pre></td></tr></table></figure>
+
+<p>如果三台机器都出现如下提示，则表示激活成功  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;status&quot;:&quot;success&quot;&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="配置Web-Server"><a href="#配置Web-Server" class="headerlink" title="配置Web Server"></a>配置Web Server</h2><p>Azkaban Web Server 处理项目管理，身份验证，计划和执行触发  </p>
+<ol>
+<li><p>编辑 azkaban.properties  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# vim /export/server/azkaban/azkaban-web/conf/azkaban.properties </span><br></pre></td></tr></table></figure>
+
+<p>修改如下属性  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">default.timezone.id=Asia/Shanghai</span><br><span class="line">...</span><br><span class="line">database.type=mysql</span><br><span class="line">mysql.port=3306</span><br><span class="line">mysql.host=hadoop102</span><br><span class="line">mysql.database=azkaban</span><br><span class="line">mysql.user=azkaban</span><br><span class="line">mysql.password=000000</span><br><span class="line">mysql.numconnections=100</span><br><span class="line">...</span><br><span class="line">azkaban.executorselector.filters=StaticRemainingFlowSize,CpuStatus</span><br></pre></td></tr></table></figure>
+
+<p>说明：<br>#StaticRemainingFlowSize：正在排队的任务数；<br>#CpuStatus： CPU 占用情况<br>#MinimumFreeMemory：内存占用情况。 测试环境， 必须将 MinimumFreeMemory 删除掉， 否则它会认为集群资源不够，不执行。</p>
+</li>
+<li><p>修改 azkaban-users.xml 文件，添加 st用户  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# vim /export/server/azkaban/azkaban-web/conf/azkaban-users.xml </span><br><span class="line">&lt;azkaban-users&gt;</span><br><span class="line">  &lt;user groups=&quot;azkaban&quot; password=&quot;azkaban&quot; roles=&quot;admin&quot; username=&quot;azkaban&quot;/&gt;</span><br><span class="line">  &lt;user password=&quot;metrics&quot; roles=&quot;metrics&quot; username=&quot;metrics&quot;/&gt;</span><br><span class="line">  &lt;user password=&quot;123456&quot; roles=&quot;admin&quot; username=&quot;st/&gt;</span><br><span class="line"></span><br><span class="line">  &lt;role name=&quot;admin&quot; permissions=&quot;ADMIN&quot;/&gt;</span><br><span class="line">  &lt;role name=&quot;metrics&quot; permissions=&quot;METRICS&quot;/&gt;</span><br><span class="line">&lt;/azkaban-users&gt;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>必须进入到 node1的&#x2F;export&#x2F;server&#x2F;azkaban&#x2F;azkaban-web 路径， 启动 web server  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# cd /export/server/azkaban/azkaban-web/</span><br><span class="line">(base) [root@node1 azkaban-web]# ./bin/start-web.sh </span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>访问 <a href="http://node1:8081,并用">http://node1:8081,并用</a> st 用户登陆  </p>
+<p><img src="/2022/01/06/Azkaban%E9%83%A8%E7%BD%B2/image-20230225235650708.png" alt="image-20230225235650708"></p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a> -->
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"><i class="fa fa-tag"></i>  大数据</a>
+              <!-- <a href="/tags/Azkaban/" rel="tag"># Azkaban</a> -->
+              <a href="/tags/Azkaban/" rel="tag"><i class="fa fa-tag"></i>  Azkaban</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/05/Azkaban%E4%BB%8B%E7%BB%8D/" rel="prev" title="Azkaban介绍">
+      <i class="fa fa-chevron-left"></i> Azkaban介绍
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/01/09/Azkaban%E6%A1%88%E4%BE%8B/" rel="next" title="Azkaban案例">
+      Azkaban案例 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">集群模式安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8A%E4%BC%A0tar%E5%8C%85"><span class="nav-number">1.1.</span> <span class="nav-text">上传tar包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEMySql"><span class="nav-number">1.2.</span> <span class="nav-text">配置MySql</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEExecutor-Server"><span class="nav-number">1.3.</span> <span class="nav-text">配置Executor Server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEWeb-Server"><span class="nav-number">1.4.</span> <span class="nav-text">配置Web Server</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">131</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>
