@@ -151,6 +151,388 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/12/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%97%B4%E9%80%9A%E8%BF%87%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%92%8C%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6%E5%BC%82%E6%AD%A5%E8%A7%A3%E8%80%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/12/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%97%B4%E9%80%9A%E8%BF%87%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%92%8C%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6%E5%BC%82%E6%AD%A5%E8%A7%A3%E8%80%A6/" class="post-title-link" itemprop="url">微服务间通过消息队列和事件机制异步解耦</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-12-12 21:10:09" itemprop="dateCreated datePublished" datetime="2022-12-12T21:10:09+08:00">2022-12-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>微服务和微服务间横向集成，即横向东西流量，尽量不要去调同步的web service的服务接口，更适合的方式是通过消息中间件去解耦，把同步请求调用变成走消息中间件，通过消息异步调用，从而到达解耦的目的。<br>传统在使用消息中间件时，更过的是应用消息中间件做销峰处理、消息发布订阅等。<br>在微服务中，应用消息队列、EDA事件机制，很重要的点是对各个微服务横向之间进行彻底的解耦。<br><strong>举例</strong><br>一个采购的微服务，一个库存的微服务。</p>
+<ol>
+<li>原来的实现方式<br>一个订单形成后，通过调用一个实时的API接口，把采购订单同步到库存中心里去。</li>
+<li>微服务架构方式<br>采用微服务架构方式的两个变化：<br>一是采购订单不需要同步到库存中心，库存中心需要的时候实时查询采购订单。<br>二是采购中心首先将采购订单发布到消息中间件和消息队列里面，然后库存中心去订阅消息队列的消息，然后通过异步的方式来获取采购订单，这样才能够彻底的实现采购微服务和库存微服务之间的解耦。</li>
+</ol>
+<p>在应用采用微服务架构后，消息机制、事件驱动架构应用的边界往往就是微服务的边界。微服务和微服务之间的横向的调用，要减少实时的接口调用，更多的是利用消息中间件，通过消息机制去做异步的解耦，在微服务应用内部，可以更多的用同步的接口进行同步服务调用，同时在微服务内部，更容易地通过数据库来解决分布式事务的问题。在微服务和微服务之间，仍然会出现分布式事务的问题，通过消息中间件，这类分布式事务问题比较容易采用我们经常说到的Base事务最终一致性的方式来解决。</p>
+<p>微服务的拆分不要拆分的太细，拆分的太细，即使使用了消息机制、消息队列，整个异步的集成仍然会相当的复杂。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/11/02/%E4%BC%81%E4%B8%9A%E6%9E%B6%E6%9E%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91-%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E8%A7%84%E5%88%92%E7%9A%84%E6%BC%94%E8%BF%9B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/11/02/%E4%BC%81%E4%B8%9A%E6%9E%B6%E6%9E%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91-%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E8%A7%84%E5%88%92%E7%9A%84%E6%BC%94%E8%BF%9B/" class="post-title-link" itemprop="url">企业架构底层逻辑-技术架构规划的演进</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-11-02 23:04:42" itemprop="dateCreated datePublished" datetime="2022-11-02T23:04:42+08:00">2022-11-02</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>注：“人月聊IT”的学习笔记</p>
+<p><img src="/2022/11/02/%E4%BC%81%E4%B8%9A%E6%9E%B6%E6%9E%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91-%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E8%A7%84%E5%88%92%E7%9A%84%E6%BC%94%E8%BF%9B/image-20230305231841752.png" alt="image-20230305231841752"></p>
+<h1 id="传统企业信息化IT建设"><a href="#传统企业信息化IT建设" class="headerlink" title="传统企业信息化IT建设"></a>传统企业信息化IT建设</h1><p>也称之为烟囱式的建设模式。在这种建设模式下面，底层统一了IaaS虚拟化资源池，但是上面应用的建设任然是竖井式的一个烟囱一个烟囱的建，每个应用底层有一个小的技术平台，上面分了很多个功能模块，但是这些功能模块是紧耦合在一起的，应用和应用之间往往是通过SOA集成平台，或者是通过ESB总线去实现数据的集成，接口的交互；所以说在最早的企业架构规划的技术架构规划的时候，我们更多的是做的IaaS虚拟化资源池的，它整体的IT物理部署架构的规划，在这个部署架构规划里，我们就会去考虑整个数据库的集群，应用中间件集群，负载均衡，上层核心网交换机等内容，当然对于物理部署架构任然可以细化去考虑它的逻辑架构，物理部署架构更多的只关心你的存储；但是到了IT逻辑规划，往往就会去关心数据库服务器有几台，消息服务器有几台，缓存服务器有几台，上层的APP应用集群有几台，这些就会形成一个类似于功能架构图一样的一个IT逻辑架构规划视图。当然还有一块内容就是狭义的技术架构规划，即在整个应用开发的过程中，对于存储和持久化层，对于应用逻辑层，对于前端展示层，应该用到哪些技术，这些技术体系形成一张完整的分层的技术架构图，这个也可以把它纳入到企业架构规划的技术架构规划里面。比如在数据库持久层，会用到结构化数据库，非结构化数据库，Redis缓存，ActiveMQ消息中间件，应用层用到SpringCloud微服务开发框架，用到API网关，在前端会用到VUE、js；这些东西就会形成一个完整的支撑企业应用开发的一个技术架构体系图，它可以作为技术架构规划的一个部分。</p>
+<p>随着SOA、云原生云计算技术的发展，可以看到企业整体的应用建设是逐渐打破烟囱式的建设的模式，逐渐的从传统的单体架构转到微服务架构，对于云计算这一块也是逐渐的从只管IaaS虚拟化资源池，提升到更多的去管共性化的平台层能力，即平台加应用的构建模式。</p>
+<h1 id="平台加应用构建模式"><a href="#平台加应用构建模式" class="headerlink" title="平台加应用构建模式"></a>平台加应用构建模式</h1><p>平台就是PaaS技术平台，在这个平台里面，传统的单体应用里面，小的技术平台逐渐就没有了，这些共性的技术能力，全部构建到统一的技术平台里面，这个技术平台任然可以按照软件开发生命周期，分为开发平台，执行平台，运维监控平台，比如微服务开发框架、低代码开发可以纳入到开发平台，基于Kubernetes容器云资源调度平台，消息安全日志缓存，各种共性的技术服务能力，可以纳入到执行平台里面；而对于需要去覆盖从资源到服务，从服务到应用的整个大的监控平台，包括实施微服务以后的整个微服务管控治理，统一纳入到整体的治理管控平台里面。</p>
+<p>一个底层的共性平台形成后，上层的应用开发就只需去开发一个个业务实现的微服务模块。上层的微服务开发怎样跟底层的平台更好的去集成和协同，怎样去实现微服务，从需求设计开发测试部署交付，整个链条的自动化高度的敏捷和流水线作业，在这个过程中，就会去引入一个覆盖整个微服务端到端开发和交付，实现了持续集成和持续部署能力的一个DevOps平台，当前在去做云原生平台整体规划的时候，也会把DevOps支撑平台纳入到整个平台中的规划体系里面，这样就形成一个完完整整的平台层的架构规划。</p>
+<p>随着整个微服务云原生技术的发展和传统IT架构的转型，我们再去给企业做整体的信息化规划，企业架构规划的时候，特别是对于技术架构层面，一定要意识到，它已经不是单纯的去做IaaS基础设施部署架构的规划，而是一定要去做云原生技术中台规划，把云原生技术中台规划做好，才能够真正的实现平台加应用这种快速的构建模式，当然随着整个企业的发展，从IaaS层技术规划转到了PaaS层的规划；如果要去做互联网SaaS对外的应用，还会从PaaS规划转到SaaS平台的规划，大家感觉SaaS层好像是应用层的规划，其实不是，所有的SaaS应用它任然会需要一个SaaS平台，比如多租户怎么设计、多中心怎么设计，这些都是属于SaaS平台层的规划的内容，这些任然应该纳入到整个技术架构规划体系里面，只有这样才能够完整的形成一个完整的技术架构规划的底层逻辑。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/10/31/%E4%BC%81%E4%B8%9A%E6%9E%B6%E6%9E%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91-%E6%95%B0%E6%8D%AE%E6%9E%B6%E6%9E%84%E7%9A%84%E6%89%BF%E4%B8%8A%E5%90%AF%E4%B8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/31/%E4%BC%81%E4%B8%9A%E6%9E%B6%E6%9E%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91-%E6%95%B0%E6%8D%AE%E6%9E%B6%E6%9E%84%E7%9A%84%E6%89%BF%E4%B8%8A%E5%90%AF%E4%B8%8B/" class="post-title-link" itemprop="url">企业架构底层逻辑-数据架构的承上启下</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-31 23:24:42" itemprop="dateCreated datePublished" datetime="2022-10-31T23:24:42+08:00">2022-10-31</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>注：“人月聊IT”的学习笔记</p>
+<p><img src="/2022/10/31/%E4%BC%81%E4%B8%9A%E6%9E%B6%E6%9E%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91-%E6%95%B0%E6%8D%AE%E6%9E%B6%E6%9E%84%E7%9A%84%E6%89%BF%E4%B8%8A%E5%90%AF%E4%B8%8B/image-20230304233103976.png" alt="image-20230304233103976"></p>
+<p>数据架构完全衔接了业务架构和IT架构，它是两者之间的一个关键的衔接点。</p>
+<p>对于数据架构里面的数据主题域的分析，数据的业务对象，业务对象的数据和分析，是业务建模阶段要做的事情。</p>
+<p><strong>数据架构的两条主线</strong></p>
+<ul>
+<li>第一条主线</li>
+</ul>
+<p>数据架构里面的数据的逻辑模型、数据的物理模型和数据库设计这些内容自然而然过渡到了IT应用架构规划设计。</p>
+<p>数据架构包含数据主题域分析、数据概念模型分析、数据逻辑模型分析和数据物理模型分析。</p>
+<p>主题域可以理解成业务价值链的业务域。</p>
+<p>概念模型类似于传统IT软件开发里面的业务对象建模。类似于ER的实体关系图。在概念模型阶段，只要识别出核心业务对象和业务对象之间的关系就足够了。</p>
+<p>逻辑模型就需要拆分到具体的数据表的粒度。</p>
+<p>物理模型需要去对每一个数据库表、每一个字段、字段的类型，字段的约束进行详细的设计。</p>
+<ul>
+<li>第二条主线</li>
+</ul>
+<p>主数据的规划和建设</p>
+<p>通过流程分析、通过CRUD的举证分析，去看每一个数据对象和业务功能之间的耦合关系，耦合关系梳理完后，再结合应用架构，梳理哪些数据对应到哪个系统。通过CRUD分析，做主数据的识别，然后做主数据的分析和主数据的建模，</p>
+<p><strong>OLTP过渡到OLAP</strong></p>
+<p>传统的BI的架构、数据中台架构。</p>
+<p>去看相应的业务系统数据、主数据，如何采集和集成数据，形成统一的ODS库，在ODS库建成后，怎样结合数据的建模形成上层的数据仓库</p>
+<p><strong>业务对象和数据对象的区别和联系</strong></p>
+<ol>
+<li><p>关注者不同</p>
+<p>业务对象的关注者一般是指业务人员，往往对应到相应的业务单据。</p>
+<p>数据对象的关注者是IT人员和技术人员，往往会对应到数据库和数据库表。</p>
+</li>
+<li><p>对象本身的转换、映射和颗粒度不同</p>
+<p>业务对象对应到ER图，对应到概念模型。</p>
+<p>数据对象对应逻辑模型和物理模型。</p>
+<p>业务对象只会关心一个粗粒度的大的业务领域的概念。比如采购订单。而数据对象会关注到更细粒度的详细的，对应到数据库表的一些子对象，比如采购订单头、采购订单行、采购订单的分配行等信息。</p>
+<p>业务对象往往是业务术语在谈这个对象，比如在说一个库存管理系统中一个月末的记账统计表。对应到数据对象就变成了库存事务处理表。</p>
+<p>有些数据对象只存在于技术，不存在于业务，如系统配置表等</p>
+</li>
+<li><p>抽象和实现上的差异</p>
+<p>从业务对象转换到数据对象时，要更多的考虑IT和技术上面的一个实现，在考虑这个实现的过程中，从技术建模的角度往往就会进行相应的一个抽象。比如，在谈业务对象的时候，在业务人员看框架协议和采购订单是独立的两个业务对象，但在实现的时候，往往对应着同一个数据对象，不管是框架协议还是采购订单，都是存储在采购订单头这个表里面的，到了数据对象这一层，进行了相应的抽象，转成了一个统一的一个对象。</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/10/30/%E4%BC%81%E4%B8%9A%E6%9E%B6%E6%9E%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91-%E4%BB%8E%E4%B8%9A%E5%8A%A1%E6%9E%B6%E6%9E%84%E5%88%B0%E5%BA%94%E7%94%A8%E5%BD%A2%E6%88%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/30/%E4%BC%81%E4%B8%9A%E6%9E%B6%E6%9E%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91-%E4%BB%8E%E4%B8%9A%E5%8A%A1%E6%9E%B6%E6%9E%84%E5%88%B0%E5%BA%94%E7%94%A8%E5%BD%A2%E6%88%90/" class="post-title-link" itemprop="url">企业架构底层逻辑-从业务架构到应用架构形成"</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-30 22:14:08" itemprop="dateCreated datePublished" datetime="2022-10-30T22:14:08+08:00">2022-10-30</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>注：“人月聊IT”的学习笔记</p>
+<h1 id="应用架构"><a href="#应用架构" class="headerlink" title="应用架构"></a>应用架构</h1><p><img src="/2022/10/30/%E4%BC%81%E4%B8%9A%E6%9E%B6%E6%9E%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91-%E4%BB%8E%E4%B8%9A%E5%8A%A1%E6%9E%B6%E6%9E%84%E5%88%B0%E5%BA%94%E7%94%A8%E5%BD%A2%E6%88%90/image-20230301230942388.png" alt="image-20230301230942388"></p>
+<p>通常可以看到业务架构和应用架构有很多相似的地方，如上所示，应用架构种红色部分是对比业务架构多出来的部分。</p>
+<p>比如在应用架构的整体架构图中，会有底层的Iaas的整个云数据中心资源池的规划，IaaS上面的PaaS技术平台的规划（如4A平台，流程平台，集成平台，大数据平台），这些往往跟业务完全不相关，但是在应用架构规划的时候需要我们去梳理。同时在应用架构规划里面往往还会增加上层的应用门户的内容或者是BI决策层的一些内容。</p>
+<h1 id="业务架构和应用架构的区别"><a href="#业务架构和应用架构的区别" class="headerlink" title="业务架构和应用架构的区别"></a>业务架构和应用架构的区别</h1><p>区别1：</p>
+<p>业务架构映射到应用架构时，颗粒度有可能是不一样的。</p>
+<p>区别2：</p>
+<p>业务架构中的某个模块，可能包含应用架构中的多个模块，如上图中，业务架构中的财务系统，包含了应用架构中ERP中的财务系统和ERP延申出来的财务系统。</p>
+<p>应用架构本身包括了应用功能架构和应用集成架构</p>
+<h1 id="应用集成架构"><a href="#应用集成架构" class="headerlink" title="应用集成架构"></a>应用集成架构</h1><p>在上图示例中，经过场景梳理能力，基于能力梳理流程，基于流程的梳理，形成了业务架构和核心的业务功能模块业务组件后，就要考虑端到端的一个流程，在各个大的业务组件是怎样协同和交互。在交互流程中，需要梳理A组件和B组件，B组件和C组件的交互，把所有跨组件交互的接口梳理出来，再结合整个应用架构，把交互接口通过梳理形成一个完整的集成架构图，集成架构图中所有的应用架构之间的横线，每一个横线都是一个独立的接口，</p>
+<h1 id="中台架构"><a href="#中台架构" class="headerlink" title="中台架构"></a>中台架构</h1><p>中台架构图（图右上角）</p>
+<p>在中台架构中，上层实际上是经过梳理分析的业务场景和业务流程，中间是需要提供的能力，</p>
+<h1 id="服务架构"><a href="#服务架构" class="headerlink" title="服务架构"></a>服务架构</h1><p>在服务架构中，不关心任何一个功能操作的实现，而是关心每一个业务域应该提供哪些细粒度API接口能力，这样形成一个完整的服务目录库。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在企业架构的规划，应用架构的梳理过程中，除了常说的应用功能架构、集成架构外，我们会更加强调服务架构的规划，更加强调把相应的服务接口梳理出来以后，怎样通过这些接口服务，去组合和组装上层应用场景和业务流程。这个跟SOA面向服务架构规划思想是完全吻合的。</p>
+<blockquote>
+<p>SOA架构思想不过时，传统的ESB架构总线过时</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/10/28/%E4%BC%81%E4%B8%9A%E6%9E%B6%E6%9E%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91-%E4%BB%8E%E4%B8%9A%E5%8A%A1%E6%88%98%E7%95%A5%E5%88%B0%E4%B8%9A%E5%8A%A1%E6%9E%B6%E6%9E%84%E5%BD%A2%E6%88%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/28/%E4%BC%81%E4%B8%9A%E6%9E%B6%E6%9E%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91-%E4%BB%8E%E4%B8%9A%E5%8A%A1%E6%88%98%E7%95%A5%E5%88%B0%E4%B8%9A%E5%8A%A1%E6%9E%B6%E6%9E%84%E5%BD%A2%E6%88%90/" class="post-title-link" itemprop="url">企业架构底层逻辑-从业务战略到业务架构形成</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-28 23:34:42" itemprop="dateCreated datePublished" datetime="2022-10-28T23:34:42+08:00">2022-10-28</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>注：“人月聊IT”的学习笔记</p>
+<p><strong>怎样去形成一个业务架构</strong></p>
+<ol>
+<li>从企业的整个业务战略和业务目标出发。从企业的整个业务战略和业务目标制定后，往往会出现核心的业务价值，即基于企业核心的商业模式和运营模式。分析业务价值时需要使用价值链分析模型。需要考虑去实现核心的业务价值时，一些关键的业务域究竟应该提供什么样的业务能力，业务能力可以理解为对外暴露的API接口服务能力。如果你对相应的垂直行业的业务熟悉，可以通过组织相应的人员开会，进行相应的头脑风暴，得出需要准备什么样的业务能力。</li>
+<li>通过上一步可能得出粗略的业务能力地图，通过业务能力地图可以看到每一个业务应该对外暴露什么样的一些业务能力的API接口，企业的业务价值应该通过各个域什么样的业务能力来支撑。但是每个业务域里面它仍然是一个黑盒。</li>
+<li>细分到每个业务域，每个业务域内部是有很多各业务功能模块，这些业务功能模块本身就会实现相应的能力，这些业务能力不涉及到对外部进行能力的开放和接口。在业务域内，还需要根上游和下游的业务组件打交道，应该分析出功能模块朝上暴露的该有的开放的业务能力，暴露的业务能力可能是业务域种某个功能提供的，也可能是业务域里面多个业务功能组合后提供的。业务域应该具有哪些业务功能，要回到传统的业务流程梳理分析这个维度，需要分析各业务域里面具体有哪些业务流程，对业务流程做二级分析、三级分析，包括到最细节的四级的EPC的流程分析，分析到每一个业务流程的业务活动、业务功能和业务操作步骤等。把业务流程分析完后，每个业务功能点的输入和输出，就可能是这个业务操作形成的单据或数据。当有了业务功能和业务数据后，进行CRUD的矩阵分析，把业务功能列出来，并把业务数据分析出来，分析完成后，要考虑哪些功能应该聚合在一起，达到高内聚低耦合的目的，把拆散到最细粒度的业务功能进行聚合，把这些业务功能聚合完成后，形成业务模块。</li>
+<li>有了业务流程地图后，进行流程分析和业务功能聚合，形成业务架构里面的业务功能图，业务功能图可以从2级、3级、4级展开，形成一个完整的业务架构的业务功能模型图</li>
+</ol>
+<p><img src="/2022/10/28/%E4%BC%81%E4%B8%9A%E6%9E%B6%E6%9E%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91-%E4%BB%8E%E4%B8%9A%E5%8A%A1%E6%88%98%E7%95%A5%E5%88%B0%E4%B8%9A%E5%8A%A1%E6%9E%B6%E6%9E%84%E5%BD%A2%E6%88%90/image-20230301235203243.png" alt="image-20230301235203243"></p>
+<blockquote>
+<p> 业务架构形成过程种和传统的业务流程管理流程梳理分析方法之间有哪些关系</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/10/09/%E9%80%BB%E8%BE%91%E6%80%9D%E7%BB%B4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -222,6 +604,140 @@
 <p>答案是后者。思维具有局限性。</p>
 <p>康德《纯粹理性批判》</p>
 <h1 id="抓住事情的主要矛盾"><a href="#抓住事情的主要矛盾" class="headerlink" title="抓住事情的主要矛盾"></a>抓住事情的主要矛盾</h1><p>抓住事情地主要矛盾，解决它。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/09/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%92%8C%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/09/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%92%8C%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/" class="post-title-link" itemprop="url">微服务基本概念和核心思想</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-09-12 18:18:59" itemprop="dateCreated datePublished" datetime="2022-09-12T18:18:59+08:00">2022-09-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><p>把传统地单体架构的业务系统，打散为更细粒度的单位，每一个单位都是可以独立的进行需求设计开发测试部署和交付的，每个单位都能够做到独立的自治。这个打散的单位就是微服务，同时拆分出来的每个单位之间，只能通过轻量的rest API接口进行协同或者交互。</p>
+<h1 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h1><p>微服务的核心：大拆小，拆小的每个组件都能够做到独立自治。</p>
+<h1 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h1><p>一个简单的采购系统。</p>
+<p><img src="/2022/09/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%92%8C%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/microservice1.png" alt="架构"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/08/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%AD%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8%E3%80%81%E6%95%8F%E6%8D%B7%E5%92%8C%E5%A4%8D%E6%9D%82%E5%BA%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%AD%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8%E3%80%81%E6%95%8F%E6%8D%B7%E5%92%8C%E5%A4%8D%E6%9D%82%E5%BA%A6/" class="post-title-link" itemprop="url">微服务中的高可用、敏捷和复杂度</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-08-12 19:37:02" itemprop="dateCreated datePublished" datetime="2022-08-12T19:37:02+08:00">2022-08-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="高可用"><a href="#高可用" class="headerlink" title="高可用"></a>高可用</h1><p>微服务是通过对传统的单体应用进行拆分，来实现整个应用它本身的弹性和可扩展能力，但是当对单体应用进行了拆分，对数据库进行了水平和垂直拆分后，一定会引入分布式的问题，基于CAP原理在引入分布式以后，对于整个应用架构底层技术架构，它本身的高可用和高一致性，往往没办法做到同时满足，要么是CP优先，要么是AP优先，两者中只能选一个，因此，在解决一个新问题时，引入新的技术新的架构去解决一个问题的复杂度时，往往会带来其他新的复杂性。</p>
+<h1 id="敏捷"><a href="#敏捷" class="headerlink" title="敏捷"></a>敏捷</h1><p>错误观念：</p>
+<blockquote>
+<p>应用微服务架构后，整个应用的开发会更加高效更加敏捷。</p>
+</blockquote>
+<p>但是实际中敏捷开发和微服务没有任何关系。</p>
+<p>引入微服务架构后，对原来的单体应用做了拆分，做了前后端分离，整个微服务开发团队，前端和后端人和人之间的沟通和协调会跟多，对整个敏捷开发、敏捷管理的要求更高。</p>
+<h1 id="复杂度"><a href="#复杂度" class="headerlink" title="复杂度"></a>复杂度</h1><p>微服务架构的引入会增加系统的复杂度。</p>
+<p>引入微服务后，微服务与微服务之间有集成点，前端和后端之间也有集成点，还和企业原有技术如Paas平台，底层的消息安全缓存等各种技术服务能力之间有集成点。</p>
+<p>在有大量接口集成和交付的情况下面，整个微服务应用的开发和交付的复杂度呈现指数级的增长。如果一个团队微服务治理的能力没有跟上，盲目的实施微服务，或者把单体应用拆分成微服务时拆分的太细，往往带来后续的微服务的开发集成、微服务管控、微服务运维一些灾难性的问题。</p>
 
       
     </div>
@@ -363,763 +879,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/04/13/Flink%E6%97%B6%E9%97%B4%E5%92%8C%E7%AA%97%E5%8F%A3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/13/Flink%E6%97%B6%E9%97%B4%E5%92%8C%E7%AA%97%E5%8F%A3/" class="post-title-link" itemprop="url">Flink时间和窗口</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-13 20:32:51" itemprop="dateCreated datePublished" datetime="2022-04-13T20:32:51+08:00">2022-04-13</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="时间定义"><a href="#时间定义" class="headerlink" title="时间定义"></a>时间定义</h1><h2 id="Flink中的时间定义"><a href="#Flink中的时间定义" class="headerlink" title="Flink中的时间定义"></a>Flink中的时间定义</h2><p><img src="/2022/04/13/Flink%E6%97%B6%E9%97%B4%E5%92%8C%E7%AA%97%E5%8F%A3/image-20230118152647872.png" alt="image-20230118152647872"></p>
-<h2 id="哪种时间定义更重要"><a href="#哪种时间定义更重要" class="headerlink" title="哪种时间定义更重要"></a>哪种时间定义更重要</h2><h1 id><a href="#" class="headerlink" title></a></h1>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/04/11/Flink%E6%B5%81%E5%A4%84%E7%90%86API/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/11/Flink%E6%B5%81%E5%A4%84%E7%90%86API/" class="post-title-link" itemprop="url">Flink流处理API</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-11 21:01:03" itemprop="dateCreated datePublished" datetime="2022-04-11T21:01:03+08:00">2022-04-11</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/" class="post-title-link" itemprop="url">Flink运行时架构</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-08 20:03:21" itemprop="dateCreated datePublished" datetime="2022-04-08T20:03:21+08:00">2022-04-08</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Flink运行时组件"><a href="#Flink运行时组件" class="headerlink" title="Flink运行时组件"></a>Flink运行时组件</h1><h2 id="作业管理器（JobManager）"><a href="#作业管理器（JobManager）" class="headerlink" title="作业管理器（JobManager）"></a>作业管理器（JobManager）</h2><ul>
-<li><p>控制一个应用程序执行的主进程，也就是说，每个应用程序都会被一个不同的JobManager 所控制执行。</p>
-</li>
-<li><p>JobManager 会先接收到要执行的应用程序，这个应用程序会包括：作业图（JobGraph）、逻辑数据流图（logical dataflow graph）和打包了所有的类、库和其它资源的JAR包。</p>
-</li>
-<li><p>JobManager 会把JobGraph转换成一个物理层面的数据流图，这个图被叫做“执行图”（ExecutionGraph），包含了所有可以并发执行的任务。</p>
-</li>
-<li><p>JobManager 会向资源管理器（ResourceManager）请求执行任务必要的资源，也就是任务管理器（TaskManager）上的插槽（slot）。一旦它获取到了足够的资源，就会将执行图分发到真正运行它们的TaskManager上。而在运行过程中，JobManager会负责所有需要中央协调的操作，比如说检查点（checkpoints）的协调。</p>
-</li>
-</ul>
-<h2 id="任务管理器（TaskManager）"><a href="#任务管理器（TaskManager）" class="headerlink" title="任务管理器（TaskManager）"></a>任务管理器（TaskManager）</h2><ul>
-<li><p>Flink中的工作进程。通常在Flink中会有多个TaskManager运行，每一个TaskManager都包含了一定数量的插槽（slots）。插槽的数量限制了TaskManager能够执行的任务数量。</p>
-</li>
-<li><p>启动之后，TaskManager会向资源管理器注册它的插槽；收到资源管理器的指令后，TaskManager就会将一个或者多个插槽提供给JobManager调用。JobManager就可以向插槽分配任务（tasks）来执行了。</p>
-</li>
-<li><p>在执行过程中，一个TaskManager可以跟其它运行同一应用程序的TaskManager交换数据。</p>
-</li>
-</ul>
-<h2 id="资源管理器（ResourceManager）"><a href="#资源管理器（ResourceManager）" class="headerlink" title="资源管理器（ResourceManager）"></a>资源管理器（ResourceManager）</h2><ul>
-<li><p>主要负责管理任务管理器（TaskManager）的插槽（slot），TaskManger 插槽是Flink中定义的处理资源单元。</p>
-</li>
-<li><p>Flink为不同的环境和资源管理工具提供了不同资源管理器，比如YARN、Mesos、K8s，以及standalone部署。</p>
-</li>
-<li><p>当JobManager申请插槽资源时，ResourceManager会将有空闲插槽的TaskManager分配给JobManager。如果ResourceManager没有足够的插槽来满足JobManager的请求，它还可以向资源提供平台发起会话，以提供启动TaskManager进程的容器。</p>
-</li>
-</ul>
-<h2 id="分发器（Dispacher）"><a href="#分发器（Dispacher）" class="headerlink" title="分发器（Dispacher）"></a>分发器（Dispacher）</h2><ul>
-<li><p>可以跨作业运行，它为应用提交提供了REST接口。</p>
-</li>
-<li><p>当一个应用被提交执行时，分发器就会启动并将应用移交给一个JobManager。</p>
-</li>
-<li><p>Dispatcher也会启动一个Web UI，用来方便地展示和监控作业执行的信息。</p>
-</li>
-<li><p>Dispatcher在架构中可能并不是必需的，这取决于应用提交运行的方式。</p>
-</li>
-</ul>
-<h1 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h1><p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230108223719006.png" alt="image-20230108223719006"></p>
-<h1 id="作业提交流程"><a href="#作业提交流程" class="headerlink" title="作业提交流程"></a>作业提交流程</h1><p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115170314557.png" alt="image-20230115170314557"></p>
-<h2 id="Standalone模式作业提交流程"><a href="#Standalone模式作业提交流程" class="headerlink" title="Standalone模式作业提交流程"></a>Standalone模式作业提交流程</h2><p>会话模式</p>
-<p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115210857012.png" alt="image-20230115210857012"></p>
-<h2 id="YARN模式作业提交流程"><a href="#YARN模式作业提交流程" class="headerlink" title="YARN模式作业提交流程"></a>YARN模式作业提交流程</h2><p>会话模式</p>
-<p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115211021376.png" alt="image-20230115211021376"></p>
-<p>单作业模式</p>
-<p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115211429146.png" alt="image-20230115211429146"></p>
-<h1 id="重要概念"><a href="#重要概念" class="headerlink" title="重要概念"></a>重要概念</h1><h2 id="程序和数据流（DataFlow）"><a href="#程序和数据流（DataFlow）" class="headerlink" title="程序和数据流（DataFlow）"></a>程序和数据流（DataFlow）</h2><p>所有的Flink程序都是由三部分组成：Source、Transformation和Sink。</p>
-<p>Source负责读取数据源，Transformation利用各种算子进行加工处理，Sink负责输出。</p>
-<img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115213603733.png" alt="image-20230115213603733" style="zoom:67%;">
-
-<p>在运行时，Flink上运行的程序会被映射成“逻辑数据流”（dataflows），它包含了source、transformation、sink。</p>
-<p>每一个dataflow以一个或多个sources开始以一个或多个sink结束。dataflow类似于任意的有向无环图（DAG）。</p>
-<p>在大部分情况下，程序中转换运算（transformations）跟dataflow中的算子（operator）是一一对应的关系。</p>
-<img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115214233131.png" alt="image-20230115214233131" style="zoom:67%;">
-
-
-
-<h2 id="并行度（Parallelism）"><a href="#并行度（Parallelism）" class="headerlink" title="并行度（Parallelism）"></a>并行度（Parallelism）</h2><p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116122736986.png" alt="image-20230116122736986"></p>
-<p>每一个算子（operator）可以包含一个或多个子任务（operator subtask），这些子任务在不同的线程、不同的物理机或不同的容器中完全独立地执行。</p>
-<p>一个特定算子地子任务（subtask）的个数被称之为其并行度（parallelism）。</p>
-<p>代码中设置并行度有几种方式，一种是直接在算子上设置；一种是在StreamExecutionEnvironment上设置，这种设置是全局设置，但不推荐这种方法设置并行度。</p>
-<h2 id="数据传输模式"><a href="#数据传输模式" class="headerlink" title="数据传输模式"></a>数据传输模式</h2><ul>
-<li>一个程序中，不同的算子可能具有不同的并行度。</li>
-<li>算子之间传输数据的形式可以是one-to-one（forwarding）的模式，也可以是redistributing的模式，具体是哪一种，取决于算子的种类。</li>
-<li>One-to-one：stream维护着分区及元素的顺序（比如source和map之间）。这意味着map算子的子任务看到的元素的个数及顺序跟source算子的子任务生产的元素的个数、顺序相同。map、filter、flatMap等算子都是one-to-one的对应关系。</li>
-<li>Redistributing：stream的分区会发生改变。每一个算子的子任务依据所选择的transformation发送数据到不同的目标任务。例如，keyBy基于hashCode重分区、而broadcast和rebalance会随机重新分区，这些算子都会引起redistribute过程，而redistribute过程就类似于Spark中的shuffle过程。</li>
-</ul>
-<h2 id="算子链（Operator-Chains）"><a href="#算子链（Operator-Chains）" class="headerlink" title="算子链（Operator Chains）"></a>算子链（Operator Chains）</h2><p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116164848641.png" alt="image-20230116164848641"></p>
-<ul>
-<li>Flink采用了一种称为任务链的优化技术，可以在特定条件下减少本地通信的开销。为了满足任务链的要求，必须将两个或多个算子设为相同的并行度，并通过本地转发（local forward）的方式进行连接。</li>
-<li>相同并行度one-to-one操作，Flink这样相连的算子链接在一起形成一个task，原来的算子称为里面的subtask。</li>
-<li>并行度相同，并且是one-to-one操作，两个条件缺一不可。</li>
-</ul>
-<h2 id="执行图"><a href="#执行图" class="headerlink" title="执行图"></a>执行图</h2><ul>
-<li>Flink中的执行图可以分成四层：StreamGraph -&gt; JobGrapth -&gt; ExecutionGraph -&gt; 物理执行图</li>
-<li>StreamGraph：是根据用户通过Stream API编写的代码生成的最初的图。用来表示程序的拓扑结构。</li>
-<li>JobGraph：StreamGraph经过优化后生成了JobGraph，提交给JobManager的数据结构。主要的优化为，将多个符合条件的节点chain在一起作为一个节点。</li>
-<li>ExecutionGraph：JobManager根据JobGraph生成ExecutionGraph。ExecutionGraph是JobGraph的并行化版本，是调度层最核心的数据结构。</li>
-<li>物理执行图：JobManager根据ExecutionGraph对Job进行调度后，在各个TaskManager上部署Task后形成的“图”，并不是一个具体的数据结构。</li>
-</ul>
-<p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116171054322.png" alt="image-20230116171054322"></p>
-<p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116170759873.png" alt="image-20230116170759873"></p>
-<p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116170914958.png" alt="image-20230116170914958"></p>
-<h2 id="任务（Task）和任务槽（Task-Slots）"><a href="#任务（Task）和任务槽（Task-Slots）" class="headerlink" title="任务（Task）和任务槽（Task Slots）"></a>任务（Task）和任务槽（Task Slots）</h2><p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116194255123.png" alt="image-20230116194255123"></p>
-<p>Flink中每一个TaskManager都是一个JVM进程，它可能会在独立的线程上执行一个或多个子任务。</p>
-<p>为了控制一个TaskManager能接收多少个task，TaskManager通过task slot来进行控制（一个TaskManager至少有一个slot）</p>
-<h2 id="任务共享Slot"><a href="#任务共享Slot" class="headerlink" title="任务共享Slot"></a>任务共享Slot</h2><p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116195243234.png" alt="image-20230116195243234"></p>
-<p>默认情况下，Flink运行子任务共享slot。这样的结果是，一个slot可以保存作业的整个管道。</p>
-<p>当我们将资源密集型和非密集型的任务放到一个slot中，它们就可以自行分配资源占用的比例，从而保证最重的活平均分配给所有的TaskManager。</p>
-<h2 id="Slot和并行度"><a href="#Slot和并行度" class="headerlink" title="Slot和并行度"></a>Slot和并行度</h2><p><strong>Task Slot</strong></p>
-<ul>
-<li>静态概念，是指TaskManager具有的并发执行能力</li>
-<li>通过参数taskmanager.numberOfTaskSlots进行配置</li>
-</ul>
-<p><strong>并行度（parallelism）</strong></p>
-<ul>
-<li>动态概念，也就是TaskManager运行程序时实际使用的并发能力</li>
-<li>通过参数parallelism.default进行配置</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/04/05/Flink%E9%83%A8%E7%BD%B2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/05/Flink%E9%83%A8%E7%BD%B2/" class="post-title-link" itemprop="url">Flink部署</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-05 20:11:23" itemprop="dateCreated datePublished" datetime="2022-04-05T20:11:23+08:00">2022-04-05</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="本地模式"><a href="#本地模式" class="headerlink" title="本地模式"></a>本地模式</h1><h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>地址：<a target="_blank" rel="noopener" href="https://archive.apache.org/dist/flink/flink-1.14.4/">https://archive.apache.org/dist/flink/flink-1.14.4/</a></p>
-<p>上传至服务器并解压</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 software]# tar -zxvf flink-1.14.4-bin-scala_2.12.tgz </span><br><span class="line">(base) [root@node1 software]# mv flink-1.14.4 ../server/</span><br></pre></td></tr></table></figure>
-
-<h2 id="启动集群"><a href="#启动集群" class="headerlink" title="启动集群"></a>启动集群</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/start-cluster.sh </span><br><span class="line">Starting cluster.</span><br><span class="line">Starting standalonesession daemon on host node1.st.cn.</span><br><span class="line">Starting taskexecutor daemon on host node1.st.cn.</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="提交作业（Job）"><a href="#提交作业（Job）" class="headerlink" title="提交作业（Job）"></a>提交作业（Job）</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/flink run examples/streaming/WordCount.jar </span><br><span class="line">Executing WordCount example with default input data set.</span><br><span class="line">Use --input to specify file input.</span><br><span class="line">Printing result to stdout. Use --output to specify output path.</span><br><span class="line">Job has been submitted with JobID a07000e74ea02367d29e972662fd9914</span><br><span class="line">Program execution finished</span><br><span class="line">Job with JobID a07000e74ea02367d29e972662fd9914 has finished.</span><br><span class="line">Job Runtime: 1390 ms</span><br><span class="line"></span><br><span class="line">(base) [root@node1 flink-1.14.4]# tail log/flink-*-taskexecutor-*.out</span><br><span class="line">(nymph,1)</span><br><span class="line">(in,3)</span><br><span class="line">(thy,1)</span><br><span class="line">(orisons,1)</span><br><span class="line">(be,4)</span><br><span class="line">(all,2)</span><br><span class="line">(my,1)</span><br><span class="line">(sins,1)</span><br><span class="line">(remember,1)</span><br><span class="line">(d,4)</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="停止集群"><a href="#停止集群" class="headerlink" title="停止集群"></a>停止集群</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/stop-cluster.sh </span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="集群部署"><a href="#集群部署" class="headerlink" title="集群部署"></a>集群部署</h1><h2 id="规划"><a href="#规划" class="headerlink" title="规划"></a>规划</h2><p>node1节点 -  JobManager</p>
-<p>node2节点  -  TaskManager</p>
-<p>node3节点  -  TaskManager</p>
-<h2 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h2><ol>
-<li><p>修改conf下的flink-conf.yaml文件。修改jobmanager.rpc.address为node1</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">jobmanager.rpc.address:</span> <span class="string">node1</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>修改workers文件，添加node2和node3节点</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim conf/workers</span><br><span class="line">node2</span><br><span class="line">node3</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>将flink拷贝到node2和node3节点上</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 server]# scp -r flink-1.14.4 root@node2:/export/server/</span><br><span class="line">(base) [root@node1 server]# scp -r flink-1.14.4 root@node3:/export/server/</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>启动集群</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/start-cluster.sh</span><br><span class="line">(base) [root@node1 flink-1.14.4]# jps</span><br><span class="line">4080 StandaloneSessionClusterEntrypoint</span><br><span class="line">4165 Jps</span><br></pre></td></tr></table></figure>
-
-<p>分别在node2和node3上使用jps查看进程。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node2 ~]# jps</span><br><span class="line">2441 Jps</span><br><span class="line">2317 TaskManagerRunner</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>web查看 <a target="_blank" rel="noopener" href="http://node1:8081/">http://node1:8081/</a></p>
-<p><img src="/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230109222916850.png" alt="image-20230109222916850"></p>
-</li>
-<li><p>关闭集群</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/stop-cluster.sh </span><br></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="提交Job"><a href="#提交Job" class="headerlink" title="提交Job"></a>提交Job</h2><h3 id="Flink-web上提交"><a href="#Flink-web上提交" class="headerlink" title="Flink web上提交"></a>Flink web上提交</h3><h3 id="命令行提交"><a href="#命令行提交" class="headerlink" title="命令行提交"></a>命令行提交</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/flink run -m node1:8081 -c com.st.wc.StreamWordCount -p 2 ~/data/FlinkStudy-1.0-SNAPSHOT.jar</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">打印出jobId</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="命令行取消"><a href="#命令行取消" class="headerlink" title="命令行取消"></a>命令行取消</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/flink cancel jobId</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="部署模式"><a href="#部署模式" class="headerlink" title="部署模式"></a>部署模式</h1><h2 id="会话模式（Session-Mode）"><a href="#会话模式（Session-Mode）" class="headerlink" title="会话模式（Session Mode）"></a>会话模式（Session Mode）</h2><p>会话模式最符合常规思维。需要先启动一个集群，保持一个会话，在这个会话中通过客户端提交作业。集群启动时所有资源已经确定，所以所有提交的作业会竞争集群中的资源。</p>
-<p>会话模式适合单个规模小、执行时间短的大量作业。</p>
-<h2 id="单作业模式（Per-Job-Mode）"><a href="#单作业模式（Per-Job-Mode）" class="headerlink" title="单作业模式（Per-Job Mode）"></a>单作业模式（Per-Job Mode）</h2><p>会话模式因为资源共享会导致很多问题，所以为了更好的隔离资源，可以考虑为每个提交的作业启动一个集群，这就是所谓的单作业模式。</p>
-<p>一个集群对应一个作业。由客户端运行应用程序，然后启动集群，作业被提交各JobManager，进而分发给TaskManager执行。作业完成后，集群就会关闭，释放资源。</p>
-<p>这些特性使得单作业模式在生产环境中更加稳定，所以是实际应用的首选模式。</p>
-<p>Flink本身无法直接这样运行，一般需要借助资源管理框架来启动集群，如YARN、Kubernetes。</p>
-<h2 id="应用模式（Application-Mode）"><a href="#应用模式（Application-Mode）" class="headerlink" title="应用模式（Application Mode）"></a>应用模式（Application Mode）</h2><p>会话模式和单作业模式中，应用代码都是在客户端上执行，然后由客户端提交给JobManager的。但是这种方式客户端需要占用大量网络带宽，去下载依赖和把二进制数据发送给JobManager。</p>
-<p>解决方法是，不用客户端，直接把应用提交到JobManager上运行。而这意味着需要为每一个提交的应用单独启动一个JobManager，即创建一个集群。这个JobManager只为执行这一个应用存在，执行结束后JobManager就关闭了，这就是所谓的应用模式。</p>
-<p>应用模式下，直接由JobManager执行应用程序，即使这个应用包含了多个作业，也只创建一个一个集群。</p>
-<h1 id="独立模式（Standalone）"><a href="#独立模式（Standalone）" class="headerlink" title="独立模式（Standalone）"></a>独立模式（Standalone）</h1><p>独立运行，不依赖任何资源管理平台。</p>
-<h1 id="YARN模式"><a href="#YARN模式" class="headerlink" title="YARN模式"></a>YARN模式</h1><p>Flink1.8之前需要与Hadoop的版本匹配，具体内容参考Flink官网。</p>
-<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><h3 id="配置HADOOP-CLASSPATH环境变量"><a href="#配置HADOOP-CLASSPATH环境变量" class="headerlink" title="配置HADOOP_CLASSPATH环境变量"></a>配置HADOOP_CLASSPATH环境变量</h3><p>编辑&#x2F;etc&#x2F;profile文件，添加</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export HADOOP_CLASSPATH=`hadoop classpath`</span><br></pre></td></tr></table></figure>
-
-<p>刷新环境变量。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
-
-<h3 id="修改yarn-site-xml"><a href="#修改yarn-site-xml" class="headerlink" title="修改yarn-site.xml"></a>修改yarn-site.xml</h3><p>修改&#x2F;export&#x2F;server&#x2F;hadoop-3.3.0&#x2F;etc&#x2F;hadoop&#x2F;yarn-site.xml文件</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 关闭yarn内存检查 --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 是否启动一个线程检查每个任务正使用的虚拟内存量，如果任务超出分配值，则直接将其杀掉，默认为 true --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 因为对于 flink 使用 yarn 模式下，很容易内存超标，这个时候 yarn 会自动杀掉 job，因此需要关掉--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.pmem-check-enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">value</span>&gt;</span>false<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.vmem-check-enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">value</span>&gt;</span>false<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="启用集群"><a href="#启用集群" class="headerlink" title="启用集群"></a>启用集群</h2><p>Flink提供了两种在YARN上运行的模式，分别为Session-Cluster和Per-Job-Cluster模式。</p>
-<h3 id="Session-Cluster模式"><a href="#Session-Cluster模式" class="headerlink" title="Session-Cluster模式"></a>Session-Cluster模式</h3><p>Session-Cluster 模式需要先启动集群，然后再提交作业，接着会向 yarn 申请一块空间后，资源永远保持不变。如果资源满了，下一个作业就无法提交，只能等到yarn 中的其中一个作业执行完成后，释放了资源，下个作业才会正常提交。所有作业共享 Dispatcher 和 ResourceManager；共享资源；适合规模小执行时间短的作业。</p>
-<p>在 yarn 中初始化一个 flink 集群，开辟指定的资源，以后提交任务都向这里提交。这个 flink 集群会常驻在 yarn 集群中，除非手工停止。</p>
-<p><img src="/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230112210400794.png" alt="image-20230112210400794"></p>
-<h4 id="启用"><a href="#启用" class="headerlink" title="启用"></a>启用</h4><ol>
-<li><p>启动Hadoop集群</p>
-<p><code>start-all.sh</code></p>
-</li>
-<li><p>启动yarn-session</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/yarn-session.sh -n 2 -s 2 -jm 1024 -nm test -d</span><br></pre></td></tr></table></figure>
-
-<p>其中：</p>
-<p>-n(–container)：TaskManager 的数量。</p>
-<p>-s(–slots)： 每个 TaskManager 的 slot 数量，默认一个 slot 一个 core，默认每个</p>
-<p>taskmanager 的 slot 的个数为 1，有时可以多一些 taskmanager，做冗余。</p>
-<p>-jm：JobManager 的内存（单位 MB)。</p>
-<p>-tm：每个 taskmanager 的内存（单位 MB)。</p>
-<p>-nm：yarn 的 appName(现在 yarn 的 ui 上的名字)。</p>
-<p>-d：后台执行。</p>
-<p><img src="/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230112213516777.png" alt="image-20230112213516777"></p>
-</li>
-<li><p>执行任务</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/flink run -c com.st.wc.StreamWordCount ~/data/flinkStudy-1.0-SNAPSHOT.jar  --host localhost -port 7777</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>到yarn控制台查看任务状态</p>
-<p><img src="/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230112213240807.png" alt="image-20230112213240807"></p>
-</li>
-<li><p>取消yarn-session</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# yarn application --kill application_1673529466861_0001</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="Per-Job-Cluster"><a href="#Per-Job-Cluster" class="headerlink" title="Per Job Cluster"></a>Per Job Cluster</h3><p>一个 Job 会对应一个集群，每提交一个作业会根据自身的情况，都会单独向 yarn申请资源，直到作业执行完成，一个作业的失败与否并不会影响下一个作业的正常提交和运行。独享 Dispatcher 和 ResourceManager，按需接受资源申请；适合规模大长时间运行的作业。</p>
-<p>每次提交都会创建一个新的 flink 集群，任务之间互相独立，互不影响，方便管理。任务执行完成之后创建的集群也会消失。</p>
-<p><img src="/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230112213800713.png" alt="image-20230112213800713"></p>
-<h4 id="启用-1"><a href="#启用-1" class="headerlink" title="启用"></a>启用</h4><ol>
-<li><p>启动Hadoop集群</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start-all.sh</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>不启动yarn-session，直接运行job</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/flink run -d -t yarn-per-job -c com.st.wc.StreamWordCount ~/data/flinkStudy-1.0-SNAPSHOT.jar --host localhost -port 7777</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">早期另一种写法</span></span><br><span class="line">(base) [root@node1 flink-1.14.4]# ./bin/flink run -m yarn-cluster -c com.st.wc.StreamWordCount ~/data/flinkStudy-1.0-SNAPSHOT.jar --host localhost -port 7777</span><br></pre></td></tr></table></figure></li>
-</ol>
-<p>​		<img src="/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230112214233687.png" alt="image-20230112214233687"></p>
-<ol start="3">
-<li>到yarn控制台查看任务状态</li>
-</ol>
-<p><img src="/2022/04/05/Flink%E9%83%A8%E7%BD%B2/image-20230112214257160.png" alt="image-20230112214257160"></p>
-<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><p>idea maven打包， 插件maven-assembly-plugin</p>
-<p>在pom.xml添加插件</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">           <span class="comment">&lt;!-- 该插件用于将Scala代码编译成class文件 --&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.alchim31.maven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>scala-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.4.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                       <span class="comment">&lt;!-- 声明绑定到maven的compile阶段 --&gt;</span></span><br><span class="line">                       <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                           <span class="tag">&lt;<span class="name">goal</span>&gt;</span>compile<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-assembly-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.3.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;<span class="name">descriptorRefs</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;<span class="name">descriptorRef</span>&gt;</span>jar-with-dependencies<span class="tag">&lt;/<span class="name">descriptorRef</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;/<span class="name">descriptorRefs</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;<span class="name">id</span>&gt;</span>make-assembly<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                           <span class="tag">&lt;<span class="name">goal</span>&gt;</span>single<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/04/04/Flink%E4%B8%8A%E6%89%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/04/Flink%E4%B8%8A%E6%89%8B/" class="post-title-link" itemprop="url">Flink上手</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-04 20:02:34" itemprop="dateCreated datePublished" datetime="2022-04-04T20:02:34+08:00">2022-04-04</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h1><p>idea创建maven项目FlinkStudy</p>
-<p>pom.xml</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.st<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flinkStudy<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>8<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">flink.versin</span>&gt;</span>1.13.0<span class="tag">&lt;/<span class="name">flink.versin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">scala.binary.version</span>&gt;</span>2.12<span class="tag">&lt;/<span class="name">scala.binary.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">slf4j.version</span>&gt;</span>1.7.30<span class="tag">&lt;/<span class="name">slf4j.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.flink<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flink-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;flink.versin&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.flink<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flink-streaming-java_$&#123;scala.binary.version&#125;<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;flink.versin&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.flink<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flink-clients_$&#123;scala.binary.version&#125;<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;flink.versin&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>slf4j-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;slf4j.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>slf4j-log4j12<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;slf4j.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.logging.log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-to-slf4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.14.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>在目录<code>src/main/resources</code>下添加文件：log4j.properties</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">log4j.rootLogger</span>=<span class="string">error, stdout</span></span><br><span class="line"><span class="attr">log4j.appender.stdout</span>=<span class="string">org.apache.log4j.ConsoleAppender</span></span><br><span class="line"><span class="attr">log4j.appender.stdout.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="attr">log4j.appender.stdout.layout.ConversionPattern</span>=<span class="string">%-4r [%t] %-5p %c %x - %m%n</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="批处理示例"><a href="#批处理示例" class="headerlink" title="批处理示例"></a>批处理示例</h1><p>准备数据</p>
-<p>在项目根目录下创建文件夹input，创建文件words.txt</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hello world</span><br><span class="line">hello hadoop</span><br><span class="line">hello flink</span><br><span class="line">hello java</span><br></pre></td></tr></table></figure>
-
-
-
-<p>代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.wc;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.common.typeinfo.Types;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.java.ExecutionEnvironment;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.java.operators.AggregateOperator;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.java.operators.DataSource;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.java.operators.FlatMapOperator;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.java.operators.UnsortedGrouping;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.java.tuple.Tuple2;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.util.Collector;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BatchWordCount</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 1. 创建执行环境</span></span><br><span class="line">        <span class="type">ExecutionEnvironment</span> <span class="variable">env</span> <span class="operator">=</span> ExecutionEnvironment.getExecutionEnvironment();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 从文件中读取数据</span></span><br><span class="line">        DataSource&lt;String&gt; lineDataSource = env.readTextFile(<span class="string">&quot;input/words.txt&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 对每行数据进行分组，转换成二元组</span></span><br><span class="line">        FlatMapOperator&lt;String, Tuple2&lt;String, Long&gt;&gt; wordAndOneTuple = lineDataSource.flatMap((String line, Collector&lt; Tuple2&lt;String, Long&gt; &gt; out) -&gt; &#123;</span><br><span class="line">            <span class="comment">// 将一行文本进行分词</span></span><br><span class="line">            String[] words = line.split(<span class="string">&quot; &quot;</span>);</span><br><span class="line">            <span class="comment">// 将每个单词转换成二元组</span></span><br><span class="line">            <span class="keyword">for</span> (String word: words) &#123;</span><br><span class="line">                out.collect(Tuple2.of(word, <span class="number">1L</span>));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).returns(Types.TUPLE(Types.STRING, Types.LONG));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4. 按照word进行分组</span></span><br><span class="line">        UnsortedGrouping&lt;Tuple2&lt;String, Long&gt;&gt; wordAndOneGroup = wordAndOneTuple.groupBy(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 5. 分组内进行聚合统计</span></span><br><span class="line">        AggregateOperator&lt;Tuple2&lt;String, Long&gt;&gt; sum = wordAndOneGroup.sum(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 6. 打印结果</span></span><br><span class="line">        sum.print();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>输出：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(hadoop,1)</span><br><span class="line">(flink,1)</span><br><span class="line">(world,1)</span><br><span class="line">(hello,4)</span><br><span class="line">(java,1)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>从Flink1.12开始，官方不再推荐使用DataSet API的方式，更推荐使用批流一体DataStream API方式。</p>
-<h1 id="流处理示例"><a href="#流处理示例" class="headerlink" title="流处理示例"></a>流处理示例</h1><p>代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.wc;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.common.typeinfo.Types;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.java.tuple.Tuple;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.java.tuple.Tuple2;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.datastream.DataStreamSource;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.datastream.KeyedStream;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.util.Collector;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BoundedStreamWordCount</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 1. 创建流式执行环境</span></span><br><span class="line">        <span class="type">StreamExecutionEnvironment</span> <span class="variable">env</span> <span class="operator">=</span> StreamExecutionEnvironment.getExecutionEnvironment();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 读取文件</span></span><br><span class="line">        DataStreamSource&lt;String&gt; lineDataStreamSource = env.readTextFile(<span class="string">&quot;input/words.txt&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 转换计算</span></span><br><span class="line">        SingleOutputStreamOperator&lt;Tuple2&lt;String, Long&gt;&gt; wordAndOneTuple = lineDataStreamSource.flatMap((String line, Collector&lt;Tuple2&lt;String, Long&gt;&gt; out) -&gt; &#123;</span><br><span class="line">            String[] words = line.split(<span class="string">&quot; &quot;</span>);</span><br><span class="line">            <span class="keyword">for</span> (String word : words) &#123;</span><br><span class="line">                out.collect(Tuple2.of(word, <span class="number">1l</span>));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).returns(Types.TUPLE(Types.STRING, Types.LONG));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4. 分组</span></span><br><span class="line">        KeyedStream&lt;Tuple2&lt;String, Long&gt;, String&gt; wordAndOneKeyedStream = wordAndOneTuple.keyBy(data -&gt; data.f0);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 5. 求和</span></span><br><span class="line">        SingleOutputStreamOperator&lt;Tuple2&lt;String, Long&gt;&gt; sum = wordAndOneKeyedStream.sum(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 6. 打印</span></span><br><span class="line">        sum.print();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 7. 启动执行难</span></span><br><span class="line">        env.execute();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>输出：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">3&gt; (java,1)</span><br><span class="line">13&gt; (flink,1)</span><br><span class="line">9&gt; (world,1)</span><br><span class="line">5&gt; (hello,1)</span><br><span class="line">5&gt; (hello,2)</span><br><span class="line">5&gt; (hello,3)</span><br><span class="line">5&gt; (hello,4)</span><br><span class="line">15&gt; (hadoop,1)</span><br></pre></td></tr></table></figure>
-
-<h1 id="模拟数据流示例"><a href="#模拟数据流示例" class="headerlink" title="模拟数据流示例"></a>模拟数据流示例</h1><p>在服务器上按照NetCat工具</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# yum install -y nc</span><br></pre></td></tr></table></figure>
-
-<p>启用NetCat</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# nc -lk 7777</span><br></pre></td></tr></table></figure>
-
-<p>代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.wc;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.common.typeinfo.Types;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.java.tuple.Tuple2;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.datastream.DataStreamSource;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.datastream.KeyedStream;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.util.Collector;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StreamWordCount</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 1. 创建执行环境</span></span><br><span class="line">        <span class="type">StreamExecutionEnvironment</span> <span class="variable">env</span> <span class="operator">=</span> StreamExecutionEnvironment.getExecutionEnvironment();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 读取文本流</span></span><br><span class="line">        DataStreamSource&lt;String&gt; lineDataStream = env.socketTextStream(<span class="string">&quot;node1&quot;</span>, <span class="number">7777</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 转换计算</span></span><br><span class="line">        SingleOutputStreamOperator&lt;Tuple2&lt;String, Long&gt;&gt; wordAndOneTuple = lineDataStream.flatMap((String line, Collector&lt;Tuple2&lt;String, Long&gt;&gt; out) -&gt; &#123;</span><br><span class="line">            String[] words = line.split(<span class="string">&quot; &quot;</span>);</span><br><span class="line">            <span class="keyword">for</span> (String word : words) &#123;</span><br><span class="line">                out.collect(Tuple2.of(word, <span class="number">1l</span>));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).returns(Types.TUPLE(Types.STRING, Types.LONG));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4. 分组</span></span><br><span class="line">        KeyedStream&lt;Tuple2&lt;String, Long&gt;, String&gt; wordAndOneKeyedStream = wordAndOneTuple.keyBy(data -&gt; data.f0);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 5. 求和</span></span><br><span class="line">        SingleOutputStreamOperator&lt;Tuple2&lt;String, Long&gt;&gt; sum = wordAndOneKeyedStream.sum(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 6. 打印</span></span><br><span class="line">        sum.print();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 7. 启动执行难</span></span><br><span class="line">        env.execute();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在linux上输入数据流，观察idea日志输出</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# nc -lk 7777</span><br><span class="line">hello world</span><br><span class="line">hello hadoop</span><br><span class="line">hello Spark</span><br><span class="line">Hello Flink</span><br></pre></td></tr></table></figure>
-
-<p>idea输出：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&quot;C:\Program Files\Java\jdk1.8.0_152\bin\java.exe&quot; &quot;-javaagent:E:\Program Files\IntelliJ IDEA ...</span><br><span class="line">...</span><br><span class="line">com.st.wc.StreamWordCount</span><br><span class="line">9&gt; (world,1)</span><br><span class="line">5&gt; (hello,1)</span><br><span class="line">15&gt; (hadoop,1)</span><br><span class="line">5&gt; (hello,2)</span><br><span class="line">16&gt; (Spark,1)</span><br><span class="line">5&gt; (hello,3)</span><br><span class="line">2&gt; (Hello,1)</span><br><span class="line">16&gt; (Flink,1)</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/04/01/Flink%E5%9F%BA%E7%A1%80/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">Flink基础</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-01 16:32:57" itemprop="dateCreated datePublished" datetime="2022-04-01T16:32:57+08:00">2022-04-01</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Apache Flink是一个框架和分布式处理引擎，用于对无界和有界数据流进行状态计算。Flink 被设计在所有常见的集群环境中运行，以内存执行速度和任意规模来执行计算。</p>
-<h2 id="Flink框架处理流程"><a href="#Flink框架处理流程" class="headerlink" title="Flink框架处理流程"></a>Flink框架处理流程</h2><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105113544522.png" alt="image-20230105113544522" style="zoom:80%;">
-
-<h2 id="Flink的应用场景"><a href="#Flink的应用场景" class="headerlink" title="Flink的应用场景"></a>Flink的应用场景</h2><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105114103338.png" alt="image-20230105114103338" style="zoom:80%;">
-
-
-
-<h2 id="Flink的优势"><a href="#Flink的优势" class="headerlink" title="Flink的优势"></a>Flink的优势</h2><ul>
-<li>低延迟</li>
-<li>高吞吐</li>
-<li>结果的准确性和良好的容错性</li>
-</ul>
-<h2 id="数据处理框架的演变"><a href="#数据处理框架的演变" class="headerlink" title="数据处理框架的演变"></a>数据处理框架的演变</h2><h3 id="传统数据处理框架"><a href="#传统数据处理框架" class="headerlink" title="传统数据处理框架"></a>传统数据处理框架</h3><h4 id="事务处理"><a href="#事务处理" class="headerlink" title="事务处理"></a>事务处理</h4><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105115937806.png" alt="image-20230105115937806" style="zoom: 80%;">
-
-<h4 id="分析处理"><a href="#分析处理" class="headerlink" title="分析处理"></a>分析处理</h4><p>将数据从业务数据库复制到数仓，再进行分析和查询。</p>
-<img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105130252994.png" alt="image-20230105130252994" style="zoom:80%;">
-
-
-
-<h3 id="有状态的流式处理"><a href="#有状态的流式处理" class="headerlink" title="有状态的流式处理"></a>有状态的流式处理</h3><p><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105130357991.png" alt="image-20230105130357991"></p>
-<p>将业务数据通过管道的方式传输到应用逻辑处理程序中，应用逻辑存储到内存中（本地状态），定时的将处理完的数据存储到持久化存储中。</p>
-<p>存在的问题，在集群中，各个节点进行应用逻辑处理时都存储在各自的内存中，处理完成后再进行集合，容易出现乱序的问题，因为各节点处理速度是不确定的。</p>
-<h3 id="lambda架构"><a href="#lambda架构" class="headerlink" title="lambda架构"></a>lambda架构</h3><p>用两套系统，同时保证低延迟和结果准确。</p>
-<p><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105131612625.png" alt="image-20230105131612625"></p>
-<p>批处理，处理速度慢，但能够保证数据的准确。实时层，处理速度快，不能保证数据的准确。最后进行数据合并，保证最终数据的准确。</p>
-<p>缺点：需要同时维护两套系统，开发维护难度大。</p>
-<h3 id="新一代流处理器-Flink"><a href="#新一代流处理器-Flink" class="headerlink" title="新一代流处理器 - Flink"></a>新一代流处理器 - Flink</h3><p>核心特点</p>
-<ul>
-<li>高吞吐、低延迟</li>
-<li>结果的准确性</li>
-<li>精确一次（exactly - once）的状态一致性保证</li>
-<li>可以与众多常用存储系统连接</li>
-<li>高可用，支持动态扩展</li>
-</ul>
-<h2 id="流处理的应用场景"><a href="#流处理的应用场景" class="headerlink" title="流处理的应用场景"></a>流处理的应用场景</h2><h3 id="事件驱动型"><a href="#事件驱动型" class="headerlink" title="事件驱动型"></a>事件驱动型</h3><p>事件驱动型应用是一类具有状态的应用，它从一个或多个事件流提取数据，并根据到来的事件触发计算、状态更新或其他外部动作。比较典型的就是以 kafka 为代表的消息队列几乎都是事件驱动型应用。</p>
-<p><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105132421767.png" alt="image-20230105132421767"></p>
-<h3 id="数据分析型"><a href="#数据分析型" class="headerlink" title="数据分析型"></a>数据分析型</h3><h4 id="批处理"><a href="#批处理" class="headerlink" title="批处理"></a>批处理</h4><p>批处理的特点是有界、持久、大量，非常适合需要访问全套记录才能完成的计算工作，一般用于离线统计。</p>
-<h4 id="流处理"><a href="#流处理" class="headerlink" title="流处理"></a>流处理</h4><p>流处理的特点是无界、实时, 无需针对整个数据集执行操作，而是对通过系统传输的每个数据项执行操作，一般用于实时统计。</p>
-<p>在 spark 的世界观中，一切都是由批次组成的，离线数据是一个大批次，而实时数据是由一个一个无限的小批次组成的。</p>
-<p>而在 flink 的世界观中，一切都是由流组成的，离线数据是有界限的流，实时数据是一个没有界限的流，这就是所谓的有界流和无界流。</p>
-<h4 id="无界数据流"><a href="#无界数据流" class="headerlink" title="无界数据流"></a>无界数据流</h4><p>无界数据流有一个开始但是没有结束，它们不会在生成时终止并提供数据，必须连续处理无界流，也就是说必须在获取后立即处理 event。对于无界数据流我们无法等待所有数据都到达，因为输入是无界的，并且在任何时间点都不会完成。处理无界数据通常要求以特定顺序（例如事件发生的顺序）获取 event，以便能够推断结果完整性。</p>
-<h4 id="有界数据流"><a href="#有界数据流" class="headerlink" title="有界数据流"></a>有界数据流</h4><p>有界数据流有明确定义的开始和结束，可以在执行任何计算之前通过获取所有数据来处理有界流，处理有界流不需要有序获取，因为可以始终对有界数据集进行排序，有界流的处理也称为批处理。</p>
-<p><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105132445886.png" alt="image-20230105132445886"></p>
-<h3 id="数据管道型"><a href="#数据管道型" class="headerlink" title="数据管道型"></a>数据管道型</h3><p><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105150744099.png" alt="image-20230105150744099"></p>
-<h3 id="Flink分层API"><a href="#Flink分层API" class="headerlink" title="Flink分层API"></a>Flink分层API</h3><ul>
-<li>越顶层越抽象，表达含义越简明，使用越方便</li>
-<li>越底层越具体，表达能力越丰富，使用越灵活</li>
-</ul>
-<img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105151207986.png" alt="image-20230105151207986" style="zoom:80%;">
-
-<p>最底层级的抽象仅仅提供了有状态流，它将通过过程函数（Process Function）被嵌入到 DataStream API 中。底层过程函数（Process Function） 与 DataStream API相集成，使其可以对某些特定的操作进行底层的抽象，它允许用户可以自由地处理来自一个或多个数据流的事件，并使用一致的容错的状态。除此之外，用户可以注册事件时间并处理时间回调，从而使程序可以处理复杂的计算。</p>
-<p>实际上，大多数应用并不需要上述的底层抽象，而是针对核心 API（Core APIs）进行编程，比如 DataStream API（有界或无界流数据）以及 DataSet API（有界数据集）。这些 API 为数据处理提供了通用的构建模块，比如由用户定义的多种形式的转换（transformations），连接（joins），聚合（aggregations），窗口操作（windows）等等。DataSet API 为有界数据集提供了额外的支持，例如循环与迭代。这些 API处理的数据类型以类（classes）的形式由各自的编程语言所表示。</p>
-<p>Table API 是以表为中心的声明式编程，其中表可能会动态变化（在表达流数据时）。Table API 遵循（扩展的）关系模型：表有二维数据结构（schema）（类似于关系数据库中的表），同时 API 提供可比较的操作，例如 select、project、join、group-by、aggregate 等。Table API 程序声明式地定义了什么逻辑操作应该执行，而不是准确地确定这些操作代码的看上去如何。</p>
-<p>尽管 Table API 可以通过多种类型的用户自定义函数（UDF）进行扩展，其仍不如核心 API 更具表达能力，但是使用起来却更加简洁（代码量更少）。除此之外，Table API 程序在执行之前会经过内置优化器进行优化。</p>
-<p>你可以在表与 DataStream&#x2F;DataSet 之间无缝切换，以允许程序将 Table API 与DataStream 以及 DataSet 混合使用。</p>
-<p>Flink 提 供 的 最高 层 级 的 抽 象 是 SQL 。 这 一 层抽 象 在 语 法 与 表 达能 力 上 与Table API 类似，但是是以 SQL 查询表达式的形式表现程序。SQL 抽象与 Table API交互密切，同时 SQL 查询可以直接在 Table API 定义的表上执行。</p>
-<p>目前 Flink 作为批处理还不是主流，不如 Spark 成熟，所以 DataSet 使用的并不是很多。Flink Table API 和 Flink SQL 也并不完善，大多都由各大厂商自己定制。所以我们主要学习 DataStream API 的使用。实际上 Flink 作为最接近 Google DataFlow模型的实现，是流批统一的观点，所以基本上使用 DataStream 就可以了。</p>
-<h3 id="Flink和Spark的区别"><a href="#Flink和Spark的区别" class="headerlink" title="Flink和Spark的区别"></a>Flink和Spark的区别</h3><h4 id="数据处理架构"><a href="#数据处理架构" class="headerlink" title="数据处理架构"></a>数据处理架构</h4><h5 id="Spark"><a href="#Spark" class="headerlink" title="Spark"></a>Spark</h5><p><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105152919040.png" alt="image-20230105152919040"></p>
-<p>原则上是批处理，只是拆分成很小的批次。</p>
-<h5 id="Flink"><a href="#Flink" class="headerlink" title="Flink"></a>Flink</h5><p><img src="/2022/04/01/Flink%E5%9F%BA%E7%A1%80/image-20230105153036876.png" alt="image-20230105153036876"></p>
-<h4 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h4><h5 id="Spark-1"><a href="#Spark-1" class="headerlink" title="Spark"></a>Spark</h5><p>Spark采用RDD模型，Spark streaming的DStream实际上就是一组小批数据RDD的集合</p>
-<h5 id="Flink-1"><a href="#Flink-1" class="headerlink" title="Flink"></a>Flink</h5><p>Flink基本数据模型是数据流，以及事件（Event）序列</p>
-<h4 id="运行时架构"><a href="#运行时架构" class="headerlink" title="运行时架构"></a>运行时架构</h4><h5 id="Spark-2"><a href="#Spark-2" class="headerlink" title="Spark"></a>Spark</h5><p>Spark是批计算，将DAG划分为不同的stage，一个完成后才可以计算下一个。</p>
-<h5 id="Flink-2"><a href="#Flink-2" class="headerlink" title="Flink"></a>Flink</h5><p>Flink是标准的流式执行模式，一个事件在一个节点处理完后可以直接发往下一个节点进行处理。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/03/22/Kafka%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/22/Kafka%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="post-title-link" itemprop="url">Kafka源码解析</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-22 21:03:38" itemprop="dateCreated datePublished" datetime="2022-03-22T21:03:38+08:00">2022-03-22</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h1><h1 id="生产者源码"><a href="#生产者源码" class="headerlink" title="生产者源码"></a>生产者源码</h1><h1 id="消费者源码"><a href="#消费者源码" class="headerlink" title="消费者源码"></a>消费者源码</h1><h1 id="服务器源码"><a href="#服务器源码" class="headerlink" title="服务器源码"></a>服务器源码</h1>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1191,14 +950,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">131</span>
+          <span class="site-state-item-count">140</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-count">28</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

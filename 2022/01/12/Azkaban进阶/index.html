@@ -29,12 +29,18 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://fhclk.github.io/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230227233252168.png">
 <meta property="og:image" content="http://fhclk.github.io/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230227233228872.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230228210029040.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230228210157551.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230228210241189.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230228210331444.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230228210359458.png">
+<meta property="og:image" content="http://fhclk.github.io/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230228210435344.png">
 <meta property="og:image" content="http://fhclk.github.io/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230227233001173.png">
 <meta property="article:published_time" content="2022-01-12T14:02:03.000Z">
-<meta property="article:modified_time" content="2023-02-27T15:33:09.917Z">
+<meta property="article:modified_time" content="2023-02-28T13:04:59.929Z">
 <meta property="article:author" content="fhclk">
-<meta property="article:tag" content="大数据">
 <meta property="article:tag" content="Azkaban">
+<meta property="article:tag" content="大数据">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://fhclk.github.io/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230227233252168.png">
 
@@ -232,9 +238,9 @@
 </ol>
 <h1 id="条件工作流案例"><a href="#条件工作流案例" class="headerlink" title="条件工作流案例"></a>条件工作流案例</h1><p>条件工作流功能允许用户自定义执行条件来决定是否运行某些Job。条件可以由当前Job的父 Job 输出的运行时参数构成，也可以使用预定义宏。在这些条件下，用户可以在确定 Job执行逻辑时获得更大的灵活性，例如，只要父 Job 之一成功，就可以运行当前 Job。</p>
 <h2 id="运行时参数案例"><a href="#运行时参数案例" class="headerlink" title="运行时参数案例"></a>运行时参数案例</h2><ol>
-<li><p>基本原理<br>  （1）父 Job 将参数写入 JOB_OUTPUT_PROP_FILE 环境变量所指向的文件<br>  （2）子 Job 使用 ${jobName:param}来获取父 Job 输出的参数并定义执行条件</p>
+<li><p>基本原理<br> （1）父 Job 将参数写入 JOB_OUTPUT_PROP_FILE 环境变量所指向的文件<br> （2）子 Job 使用 ${jobName:param}来获取父 Job 输出的参数并定义执行条件</p>
 </li>
-<li><p>支持的条件运算符：<br>  （1）&#x3D;&#x3D; 等于<br>  （2）!&#x3D; 不等于<br>  （3）&gt; 大于<br>  （4）&gt;&#x3D; 大于等于<br>  （5）&lt; 小于<br>  （6）&lt;&#x3D; 小于等于<br>  （7）&amp;&amp; 与<br>  （8）|| 或<br>  （9）! 非</p>
+<li><p>支持的条件运算符：<br> （1）&#x3D;&#x3D; 等于<br> （2）!&#x3D; 不等于<br> （3）&gt; 大于<br> （4）&gt;&#x3D; 大于等于<br> （5）&lt; 小于<br> （6）&lt;&#x3D; 小于等于<br> （7）&amp;&amp; 与<br> （8）|| 或<br> （9）! 非</p>
 </li>
 <li><p>案例：</p>
 </li>
@@ -262,7 +268,20 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">nodes:</span><br><span class="line">- name: JobA</span><br><span class="line"> type: command</span><br><span class="line"> config:</span><br><span class="line"> command: sh JobA.sh</span><br><span class="line">- name: JobB</span><br><span class="line"> type: command</span><br><span class="line"> config:</span><br><span class="line"> command: sh JobB.sh</span><br><span class="line">- name: JobC</span><br><span class="line"> type: command</span><br><span class="line"> dependsOn:</span><br><span class="line"> - JobA</span><br><span class="line"> - JobB</span><br><span class="line"> config:</span><br><span class="line"> command: sh JobC.sh</span><br><span class="line"> condition: one_success</span><br></pre></td></tr></table></figure>
 <p>（4）JobA.sh、JobC.sh、macro.flow、azkaban.project 文件，打包成 macro.zip。<br>注意：没有 JobB.sh。<br>（5）创建 macro 项目&#x3D;》上传 macro.zip 文件&#x3D;》执行作业&#x3D;》观察结果</p>
 <p><img src="/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230227233228872.png" alt="image-20230227233228872"></p>
-<h1 id="定时执行案例"><a href="#定时执行案例" class="headerlink" title="定时执行案例"></a>定时执行案例</h1><h1 id="邮件报警案例"><a href="#邮件报警案例" class="headerlink" title="邮件报警案例"></a>邮件报警案例</h1><h1 id="电话报警案例"><a href="#电话报警案例" class="headerlink" title="电话报警案例"></a>电话报警案例</h1><h1 id="Azkaban-多-Executor-模式注意事项"><a href="#Azkaban-多-Executor-模式注意事项" class="headerlink" title="Azkaban 多 Executor 模式注意事项"></a>Azkaban 多 Executor 模式注意事项</h1><p>Azkaban 多 Executor 模式是指，在集群中多个节点部署 Executor。在这种模式下，<br>Azkaban web Server 会根据策略，选取其中一个 Executor 去执行任务。<br>为确保所选的 Executor 能够准确的执行任务，我们须在以下两种方案任选其一，推荐使<br>用方案二。<br>方案一：指定特定的 Executor（node1）去执行任务。<br>1）在 MySQL 中 azkaban 数据库 executors 表中，查询 node1 上的 Executor 的 id。</p>
+<h1 id="定时执行案例"><a href="#定时执行案例" class="headerlink" title="定时执行案例"></a>定时执行案例</h1><p>需求：JobA 每间隔 1 分钟执行一次；</p>
+<p>具体步骤：</p>
+<p>1）Azkaban 可以定时执行工作流。在执行工作流时候，选择左下角 Schedule</p>
+<p><img src="/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230228210029040.png" alt="image-20230228210029040"></p>
+<p>2）右上角注意时区是上海，然后在左面填写具体执行事件，填写的方法和 crontab 配置定时任务规则一致。</p>
+<p><img src="/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230228210157551.png" alt="image-20230228210157551"></p>
+<p><img src="/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230228210241189.png" alt="image-20230228210241189"></p>
+<p>3）观察结果</p>
+<p><img src="/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230228210331444.png" alt="image-20230228210331444"></p>
+<p><img src="/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230228210359458.png" alt="image-20230228210359458"></p>
+<p>4）删除定时调度</p>
+<p>点击 remove Schedule 即可删除当前任务的调度规则。</p>
+<p><img src="/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230228210435344.png" alt="image-20230228210435344"></p>
+<h1 id="Azkaban-多-Executor-模式注意事项"><a href="#Azkaban-多-Executor-模式注意事项" class="headerlink" title="Azkaban 多 Executor 模式注意事项"></a>Azkaban 多 Executor 模式注意事项</h1><p>Azkaban 多 Executor 模式是指，在集群中多个节点部署 Executor。在这种模式下，<br>Azkaban web Server 会根据策略，选取其中一个 Executor 去执行任务。<br>为确保所选的 Executor 能够准确的执行任务，我们须在以下两种方案任选其一，推荐使<br>用方案二。<br>方案一：指定特定的 Executor（node1）去执行任务。<br>1）在 MySQL 中 azkaban 数据库 executors 表中，查询 node1 上的 Executor 的 id。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; use azkaban;</span><br><span class="line">Reading table information for completion of table and column names</span><br><span class="line">You can turn off this feature to get a quicker startup with -A</span><br><span class="line">Database changed</span><br><span class="line">mysql&gt; select * from executors;</span><br><span class="line">+----+-----------+-------+--------+</span><br><span class="line">| id | host | port | active |</span><br><span class="line">+----+-----------+-------+--------+</span><br><span class="line">| 1 | node1 | 12321 | 1 |</span><br><span class="line">| 2 | node2 | 12321 | 1 |</span><br><span class="line">| 3 | node3 | 12321 | 1 |</span><br><span class="line">+----+-----------+-------+--------+</span><br><span class="line">3 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
 <p>2）在执行工作流程时加入 useExecutor 属性，如下</p>
 <p><img src="/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230227233001173.png" alt="image-20230227233001173"></p>
@@ -276,10 +295,10 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <!-- <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a> -->
-              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"><i class="fa fa-tag"></i>  大数据</a>
               <!-- <a href="/tags/Azkaban/" rel="tag"># Azkaban</a> -->
               <a href="/tags/Azkaban/" rel="tag"><i class="fa fa-tag"></i>  Azkaban</a>
+              <!-- <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a> -->
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"><i class="fa fa-tag"></i>  大数据</a>
           </div>
 
         
@@ -362,7 +381,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JavaProcess-%E4%BD%9C%E4%B8%9A%E7%B1%BB%E5%9E%8B%E6%A1%88%E4%BE%8B"><span class="nav-number">1.</span> <span class="nav-text">JavaProcess 作业类型案例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%A1%88%E4%BE%8B"><span class="nav-number">2.</span> <span class="nav-text">条件工作流案例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E5%8F%82%E6%95%B0%E6%A1%88%E4%BE%8B"><span class="nav-number">2.1.</span> <span class="nav-text">运行时参数案例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%84%E5%AE%9A%E4%B9%89%E5%AE%8F%E6%A1%88%E4%BE%8B"><span class="nav-number">2.2.</span> <span class="nav-text">预定义宏案例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E6%97%B6%E6%89%A7%E8%A1%8C%E6%A1%88%E4%BE%8B"><span class="nav-number">3.</span> <span class="nav-text">定时执行案例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%82%AE%E4%BB%B6%E6%8A%A5%E8%AD%A6%E6%A1%88%E4%BE%8B"><span class="nav-number">4.</span> <span class="nav-text">邮件报警案例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%B5%E8%AF%9D%E6%8A%A5%E8%AD%A6%E6%A1%88%E4%BE%8B"><span class="nav-number">5.</span> <span class="nav-text">电话报警案例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Azkaban-%E5%A4%9A-Executor-%E6%A8%A1%E5%BC%8F%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">6.</span> <span class="nav-text">Azkaban 多 Executor 模式注意事项</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JavaProcess-%E4%BD%9C%E4%B8%9A%E7%B1%BB%E5%9E%8B%E6%A1%88%E4%BE%8B"><span class="nav-number">1.</span> <span class="nav-text">JavaProcess 作业类型案例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%A1%88%E4%BE%8B"><span class="nav-number">2.</span> <span class="nav-text">条件工作流案例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E5%8F%82%E6%95%B0%E6%A1%88%E4%BE%8B"><span class="nav-number">2.1.</span> <span class="nav-text">运行时参数案例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%84%E5%AE%9A%E4%B9%89%E5%AE%8F%E6%A1%88%E4%BE%8B"><span class="nav-number">2.2.</span> <span class="nav-text">预定义宏案例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E6%97%B6%E6%89%A7%E8%A1%8C%E6%A1%88%E4%BE%8B"><span class="nav-number">3.</span> <span class="nav-text">定时执行案例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Azkaban-%E5%A4%9A-Executor-%E6%A8%A1%E5%BC%8F%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">4.</span> <span class="nav-text">Azkaban 多 Executor 模式注意事项</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -378,14 +397,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">131</span>
+          <span class="site-state-item-count">140</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-count">28</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
