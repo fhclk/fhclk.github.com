@@ -151,6 +151,316 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/03/24/SOA%E6%9E%B6%E6%9E%84%E6%80%9D%E6%83%B3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/24/SOA%E6%9E%B6%E6%9E%84%E6%80%9D%E6%83%B3/" class="post-title-link" itemprop="url">SOA架构思想</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-24 23:24:42" itemprop="dateCreated datePublished" datetime="2022-03-24T23:24:42+08:00">2022-03-24</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>SOA（service oriented architecture）面向服务的架构</p>
+<p>SOA是伴随着单体式的建设系统的方式产生的。在微服务之前都是单体应用，它们是竖井式的一个一个的竖井垂直建立起来的，业务系统越建越多，业务系统之间的集成和协同问题就越发昆明，在这个原因下，出现了SOA的架构思想。</p>
+<h1 id="架构思想"><a href="#架构思想" class="headerlink" title="架构思想"></a>架构思想</h1><p>对于SOA有一个标准的定义，SOA架构思想是要去找到当前系统中可以复用的服务能力，这个服务能力本身也具备粗粒度、无状态一些关键的服务特征，在找到了这些可复用的能力以后，我们可以基于这些接口服务来灵活的组装和编排上层的业务应用和业务流程，这个就是SOA最核心的架构思想。</p>
+<p>简单理解：</p>
+<ol>
+<li>要找到可重用的服务。</li>
+<li>灵活的组合和编排服务来满足业务流程。</li>
+</ol>
+<p>在找到可重用的服务后，需要对这些服务进行统一的管控治理，而着一些能力往往就是涉及到我们常说的ESB的企业服务总线，在往上面走，这些服务要去组合和编排，去满足业务流程，这个往往会涉及到BPM业务流程管理和BPEL流程编排着一些关键内容。所以会看到SOA的架构思想往往跟实现的一些技术和产品有一个对应。</p>
+<p>举例：</p>
+<p>一个公司要去拓展自媒体业务，新建一个自媒体团队，进行分析，发现自媒体业务流程，包括前期文案的编写，视频录制，美工裁剪，最后的运营和宣传。把自媒体业务分解后，可以将原有的团队人员来做具体的工作，如产品做前期文案编写，ui做视频裁剪，市场做营运和宣传，在原有的产品和技术团队找到对应的人做不同的事，这样就最大化的复用了企业已有的资源和能力，而不是将所有的东西都从头重新去完完全全独立的去建设一套，这个就是SOA架构思想。</p>
+<p>SOA架构思想并不过时，SOA里面强调的可复用、解耦、灵活的组装编排，在很多场景都会出现和应用到。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/03/22/Kafka%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/22/Kafka%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="post-title-link" itemprop="url">Kafka源码解析</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-22 21:03:38" itemprop="dateCreated datePublished" datetime="2022-03-22T21:03:38+08:00">2022-03-22</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h1><h1 id="生产者源码"><a href="#生产者源码" class="headerlink" title="生产者源码"></a>生产者源码</h1><h1 id="消费者源码"><a href="#消费者源码" class="headerlink" title="消费者源码"></a>消费者源码</h1><h1 id="服务器源码"><a href="#服务器源码" class="headerlink" title="服务器源码"></a>服务器源码</h1>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/03/20/Kafka%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/20/Kafka%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98/" class="post-title-link" itemprop="url">Kafka生产调优</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-20 20:32:22" itemprop="dateCreated datePublished" datetime="2022-03-20T20:32:22+08:00">2022-03-20</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="硬件配置选择"><a href="#硬件配置选择" class="headerlink" title="硬件配置选择"></a>硬件配置选择</h1><h1 id="Kafka生产者"><a href="#Kafka生产者" class="headerlink" title="Kafka生产者"></a>Kafka生产者</h1><h1 id="Kafka-Broker"><a href="#Kafka-Broker" class="headerlink" title="Kafka Broker"></a>Kafka Broker</h1><h1 id="Kafka消费者"><a href="#Kafka消费者" class="headerlink" title="Kafka消费者"></a>Kafka消费者</h1><h1 id="总体"><a href="#总体" class="headerlink" title="总体"></a>总体</h1>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/" class="post-title-link" itemprop="url">Kafka外部系统集成</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-18 21:02:14" itemprop="dateCreated datePublished" datetime="2022-03-18T21:02:14+08:00">2022-03-18</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="集成Flume"><a href="#集成Flume" class="headerlink" title="集成Flume"></a>集成Flume</h1><p><img src="/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/image-20230202132247145.png" alt="image-20230202132247145"></p>
+<h2 id="Flume生产者"><a href="#Flume生产者" class="headerlink" title="Flume生产者"></a>Flume生产者</h2><p><img src="/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/image-20230202132414125.png" alt="image-20230202132414125"></p>
+<ol>
+<li><p>启动kafka集群</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# ./bin/zk.sh start</span><br><span class="line">(base) [root@node1 ~]# ./bin/kf.sh start</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>启动kafka消费者</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-console-consumer.sh --bootstrap-server node1:9092 --topic first</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>配置flume</p>
+<p>文件名file_to_kafka.conf</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1 组件定义</span></span><br><span class="line"><span class="attr">a1.sources</span> = <span class="string">r1</span></span><br><span class="line"><span class="attr">a1.sinks</span> = <span class="string">k1</span></span><br><span class="line"><span class="attr">a1.channels</span> = <span class="string">c1</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 2 配置 source</span></span><br><span class="line"><span class="attr">a1.sources.r1.type</span> = <span class="string">TAILDIR</span></span><br><span class="line"><span class="attr">a1.sources.r1.filegroups</span> = <span class="string">f1</span></span><br><span class="line"><span class="attr">a1.sources.r1.filegroups.f1</span> = <span class="string">/root/data/applog/app.*</span></span><br><span class="line"><span class="attr">a1.sources.r1.positionFile</span> = <span class="string">/root/data/flume/taildir_position.json</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 3 配置 channel</span></span><br><span class="line"><span class="attr">a1.channels.c1.type</span> = <span class="string">memory</span></span><br><span class="line"><span class="attr">a1.channels.c1.capacity</span> = <span class="string">1000</span></span><br><span class="line"><span class="attr">a1.channels.c1.transactionCapacity</span> = <span class="string">100</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 4 配置 sink</span></span><br><span class="line"><span class="attr">a1.sinks.k1.type</span> = <span class="string">org.apache.flume.sink.kafka.KafkaSink</span></span><br><span class="line"><span class="attr">a1.sinks.k1.kafka.bootstrap.servers</span> = <span class="string">node1:9092,node2:9092,node3:9092</span></span><br><span class="line"><span class="attr">a1.sinks.k1.kafka.topic</span> = <span class="string">first</span></span><br><span class="line"><span class="attr">a1.sinks.k1.kafka.flumeBatchSize</span> = <span class="string">20</span></span><br><span class="line"><span class="attr">a1.sinks.k1.kafka.producer.acks</span> = <span class="string">1</span></span><br><span class="line"><span class="attr">a1.sinks.k1.kafka.producer.linger.ms</span> = <span class="string">1</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 5 拼接组件</span></span><br><span class="line"><span class="attr">a1.sources.r1.channels</span> = <span class="string">c1</span></span><br><span class="line"><span class="attr">a1.sinks.k1.channel</span> = <span class="string">c1</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>启动flume</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# bin/flume-ng agent -c conf/ -n a1 -f job/file_to_kafka.conf -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>向&#x2F;root&#x2F;data&#x2F;app.log 里追加数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# echo hello &gt;&gt; /root/data/applog/app.log</span><br><span class="line">(base) [root@node1 ~]# echo hello flume &gt;&gt; /root/data/applog/app.log</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>查看 kafka 消费者消费情况</p>
+<p><img src="/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/image-20230202160913784.png" alt="image-20230202160913784"></p>
+</li>
+</ol>
+<h2 id="Flume消费者"><a href="#Flume消费者" class="headerlink" title="Flume消费者"></a>Flume消费者</h2><p><img src="/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/image-20230202161059358.png" alt="image-20230202161059358"></p>
+<ol>
+<li><p>配置flume</p>
+<p>文件名：kafka_to_file.conf</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1 组件定义</span></span><br><span class="line"><span class="attr">a1.sources</span> = <span class="string">r1</span></span><br><span class="line"><span class="attr">a1.sinks</span> = <span class="string">k1</span></span><br><span class="line"><span class="attr">a1.channels</span> = <span class="string">c1</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 2 配置 source</span></span><br><span class="line"><span class="attr">a1.sources.r1.type</span> = <span class="string">org.apache.flume.source.kafka.KafkaSource</span></span><br><span class="line"><span class="attr">a1.sources.r1.batchSize</span> = <span class="string">50</span></span><br><span class="line"><span class="attr">a1.sources.r1.batchDurationMillis</span> = <span class="string">200</span></span><br><span class="line"><span class="attr">a1.sources.r1.kafka.bootstrap.servers</span> = <span class="string">node1:9092</span></span><br><span class="line"><span class="attr">a1.sources.r1.kafka.topics</span> = <span class="string">first</span></span><br><span class="line"><span class="attr">a1.sources.r1.kafka.consumer.group.id</span> = <span class="string">custom.g.id</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 3 配置 channel</span></span><br><span class="line"><span class="attr">a1.channels.c1.type</span> = <span class="string">memory</span></span><br><span class="line"><span class="attr">a1.channels.c1.capacity</span> = <span class="string">1000</span></span><br><span class="line"><span class="attr">a1.channels.c1.transactionCapacity</span> = <span class="string">100</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 4 配置 sink</span></span><br><span class="line"><span class="attr">a1.sinks.k1.type</span> = <span class="string">logger</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>启动flume</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# bin/flume-ng agent -c conf/ -n a1 -f job/kafka_to_file.conf -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>启动kafka生产者</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-console-producer.sh --bootstrap-server node1:9092 --topic first</span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">hello flume</span></span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">hello hadoop</span></span><br><span class="line"><span class="meta prompt_">&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>观察控制台输出</p>
+<p><img src="/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/image-20230202163426516.png" alt="image-20230202163426516"></p>
+</li>
+</ol>
+<h1 id="集成Flink"><a href="#集成Flink" class="headerlink" title="集成Flink"></a>集成Flink</h1><p><img src="/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/image-20230130220442486.png" alt="image-20230130220442486"></p>
+<h1 id="集成SpringBoot"><a href="#集成SpringBoot" class="headerlink" title="集成SpringBoot"></a>集成SpringBoot</h1><p><img src="/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/image-20230130220559057.png" alt="image-20230130220559057"></p>
+<h1 id="集成Spark"><a href="#集成Spark" class="headerlink" title="集成Spark"></a>集成Spark</h1><p><img src="/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/image-20230130220639873.png" alt="image-20230130220639873"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/03/17/Kafka-Kraft%E6%A8%A1%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1862,483 +2172,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/03/08/Kafka%E5%9F%BA%E7%A1%80/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/08/Kafka%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">Kafka基础</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-08 21:12:41" itemprop="dateCreated datePublished" datetime="2022-03-08T21:12:41+08:00">2022-03-08</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p><strong>Kafka传统定义：</strong>Kafka是一个分布式的基于发布&#x2F;订阅模式的消息队列（MessageQueue），主要应用于大数据实时处理领域。</p>
-<p><strong>Kafka最新定义 ：</strong> Kafka是 一个开源的分布式事件流平台 （Event StreamingPlatform），被数千家公司用于高性能数据管道、流分析、数据集成和关键任务应用。</p>
-<p><strong>发布&#x2F;订阅</strong>：消息的发布者不会将消息直接发送给特定的订阅者，而是将发布的消息分为不同的类别，订阅者只接收感兴趣的消息。</p>
-<h2 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h2><p>目前企业中比较常见的消息队列产品主要有 Kafka、ActiveMQ 、RabbitMQ 、RocketMQ 等。</p>
-<p>在大数据场景主要采用 Kafka 作为消息队列。在 Java 开发中主要采用 ActiveMQ、RabbitMQ、RocketMQ。</p>
-<h3 id="传统消息队列的应用场景"><a href="#传统消息队列的应用场景" class="headerlink" title="传统消息队列的应用场景"></a>传统消息队列的应用场景</h3><p>主要应用场景包括：缓存&#x2F;消峰、解耦和异步通信</p>
-<h4 id="缓存-x2F-消峰"><a href="#缓存-x2F-消峰" class="headerlink" title="缓存&#x2F;消峰"></a>缓存&#x2F;消峰</h4><p>有助于控制和优化数据流经过系统的速度，解决生产消息和消费消息的处理速度不一致的情况。</p>
-<p><img src="/2022/03/08/Kafka%E5%9F%BA%E7%A1%80/image-20230126154744548.png" alt="image-20230126154744548"></p>
-<p>在双十一活动中，大量用户同时购买同一商品，参与用户数超过了系统处理能力，如不进行流量削峰，极易造成系统崩溃的场景。同时使用消息队列缓存，可以避免卖超的场景。</p>
-<h4 id="解耦"><a href="#解耦" class="headerlink" title="解耦"></a>解耦</h4><p>允许你独立的扩展或修改两边的处理过程，只要确保它们遵守同样的接口约束。</p>
-<p><img src="/2022/03/08/Kafka%E5%9F%BA%E7%A1%80/image-20230126154744549.png" alt="image-20230126154744548"></p>
-<h4 id="异步通信"><a href="#异步通信" class="headerlink" title="异步通信"></a>异步通信</h4><p>允许用户把一个消息放入队列，但并不立即处理它，然后在需要的时候再去处理它们。</p>
-<p><strong>同步处理</strong></p>
-<p><img src="/2022/03/08/Kafka%E5%9F%BA%E7%A1%80/image-20230126154744550.png" alt="image-20230126154744550"></p>
-<p><strong>异步处理</strong></p>
-<p><img src="/2022/03/08/Kafka%E5%9F%BA%E7%A1%80/image-20230126154744551.png" alt="image-20230126154744551"></p>
-<h3 id="消息队列的两种模式"><a href="#消息队列的两种模式" class="headerlink" title="消息队列的两种模式"></a>消息队列的两种模式</h3><h4 id="点对点"><a href="#点对点" class="headerlink" title="点对点"></a>点对点</h4><p>消费者主动拉取数据，消息收到后清除消息</p>
-<p><img src="/2022/03/08/Kafka%E5%9F%BA%E7%A1%80/image-20230126154744552.png" alt="image-20230126154744552"></p>
-<h4 id="发布订阅模式"><a href="#发布订阅模式" class="headerlink" title="发布订阅模式"></a>发布订阅模式</h4><ul>
-<li><p>可以有多个topic主题（浏览、点赞、收藏、评论等）</p>
-</li>
-<li><p>消费者消费数据之后，不删除数据</p>
-</li>
-<li><p>每个消费者相互独立，都可以消费到数据</p>
-</li>
-</ul>
-<p><img src="/2022/03/08/Kafka%E5%9F%BA%E7%A1%80/image-20230126154744553.png" alt="image-20230126154744553"></p>
-<h2 id="Kafka基础架构"><a href="#Kafka基础架构" class="headerlink" title="Kafka基础架构"></a>Kafka基础架构</h2><ol>
-<li>为方便扩展，并提高吞吐量，一个topic分为多个partition。</li>
-<li>配合分区的设计，提出消费者组的概念，组内每个消费者并行消费。</li>
-<li>为提高可用性，为每个partition增加若干副本，类似NameNode HA。</li>
-<li>ZK中记录谁是leader，Kafka2.8.0以后也可以配置不采用ZK。</li>
-</ol>
-<p><img src="/2022/03/08/Kafka%E5%9F%BA%E7%A1%80/image-20230126154744554.png" alt="image-20230126154744554"></p>
-<p>（1）Producer：消息生产者，就是向 Kafka broker 发消息的客户端。<br>（2）Consumer：消息消费者，向 Kafka broker 取消息的客户端。<br>（3）Consumer Group（CG）：消费者组，由多个 consumer 组成。消费者组内每个消费者负责消费不同分区的数据，一个分区只能由一个组内消费者消费；消费者组之间互不影响。所有的消费者都属于某个消费者组，即消费者组是逻辑上的一个订阅者。<br>（4）Broker：一台 Kafka 服务器就是一个 broker。一个集群由多个 broker 组成。一个broker 可以容纳多个 topic。<br>（5）Topic：可以理解为一个队列，生产者和消费者面向的都是一个 topic。<br>（6）Partition：为了实现扩展性，一个非常大的 topic 可以分布到多个 broker（即服务器）上，一个 topic 可以分为多个 partition，每个 partition 是一个有序的队列。<br>（7）Replica：副本。一个 topic 的每个分区都有若干个副本，一个 Leader 和若干个Follower。<br>（8）Leader：每个分区多个副本的“主”，生产者发送数据的对象，以及消费者消费数据的对象都是 Leader。<br>（9）Follower：每个分区多个副本中的“从”，实时从 Leader 中同步数据，保持和Leader 数据的同步。Leader 发生故障时，某个 Follower 会成为新的 Leader。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/03/01/HBase%E9%9B%86%E6%88%90Hive/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/01/HBase%E9%9B%86%E6%88%90Hive/" class="post-title-link" itemprop="url">HBase集成Hive</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-01 20:26:45" itemprop="dateCreated datePublished" datetime="2022-03-01T20:26:45+08:00">2022-03-01</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h1><p>如果大量的数据已经存放在 HBase 上面，需要对已经存在的数据进行数据分析处理，那么 Phoenix 并不适合做特别复杂的 SQL 处理，此时可以使用 hive 映射 HBase 的表格，之后写 HQL 进行分析处理。</p>
-<h1 id="HBase-与-Hive-集成"><a href="#HBase-与-Hive-集成" class="headerlink" title="HBase 与 Hive 集成"></a>HBase 与 Hive 集成</h1><p>在 hive-site.xml 中添加 zookeeper 的属性，如下：</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&lt;property&gt;</span></span><br><span class="line"> 	<span class="attr">&lt;name&gt;hive.zookeeper.quorum&lt;/name&gt;</span></span><br><span class="line"> 	<span class="attr">&lt;value&gt;node1,node2,node3&lt;/value&gt;</span></span><br><span class="line"><span class="attr">&lt;/property&gt;</span></span><br><span class="line"><span class="attr">&lt;property&gt;</span></span><br><span class="line"> 	<span class="attr">&lt;name&gt;hive.zookeeper.client.port&lt;/name&gt;</span></span><br><span class="line"> 	<span class="attr">&lt;value&gt;2181&lt;/value&gt;</span></span><br><span class="line"><span class="attr">&lt;/property&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/02/28/HBase%E6%95%B4%E5%90%88Phoenix/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/28/HBase%E6%95%B4%E5%90%88Phoenix/" class="post-title-link" itemprop="url">HBase整合Phoenix</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-02-28 21:01:09" itemprop="dateCreated datePublished" datetime="2022-02-28T21:01:09+08:00">2022-02-28</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Phoenix"><a href="#Phoenix" class="headerlink" title="Phoenix"></a>Phoenix</h1><h2 id="Phoenix定义"><a href="#Phoenix定义" class="headerlink" title="Phoenix定义"></a>Phoenix定义</h2><p>Phoenix 是 HBase 的开源 SQL 皮肤。可以使用标准 JDBC API 代替 HBase 客户端 API来创建表，插入数据和查询 HBase 数据。</p>
-<p>在 Client 和 HBase 之间放一个 Phoenix 中间层不会减慢速度，因为用户编写的数据处理代码和 Phoenix 编写的没有区别，不仅如此，Phoenix 对于用户输入的 SQL 同样会有大量的优化手段（就像 hive 自带 sql 优化器一样）。</p>
-<h2 id="部署Phoenix"><a href="#部署Phoenix" class="headerlink" title="部署Phoenix"></a>部署Phoenix</h2><ol>
-<li><p>解压 tar 包</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 software]# tar -zxvf phoenix-hbase-2.4.0-5.1.2-bin.tar.gz ../server/phoenix</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>复制 server 包并拷贝到各个节点的 hbase&#x2F;lib</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 phoenix]# cp phoenix-server-hbase-2.4.0-5.1.2.jar $HBASE_HOME/lib/</span><br><span class="line">(base) [root@node1 phoenix]# scp phoenix-server-hbase-2.4.0-5.1.2.jar root@node2:/export/server/hbase-2.5.2/lib/</span><br><span class="line">(base) [root@node1 phoenix]# scp phoenix-server-hbase-2.4.0-5.1.2.jar root@node3:/export/server/hbase-2.5.2/lib/</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>配置环境变量</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 phoenix]# vim /etc/profile</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#phoenix</span></span><br><span class="line"><span class="attr">export</span> <span class="string">PHOENIX_HOME=/export/server/phoenix</span></span><br><span class="line"><span class="attr">export</span> <span class="string">PHOENIX_CLASSPATH=$PHOENIX_HOME</span></span><br><span class="line"><span class="attr">export</span> <span class="string">PATH=$PATH:$PHOENIX_HOME/bin</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 phoenix]# source /etc/profile</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>修改配置文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 conf]# cd $HBASE_HOME/conf</span><br><span class="line">(base) [root@node1 conf]# vim hbase-site.xml </span><br></pre></td></tr></table></figure>
-
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 将以下配置添加到 hbase-site.xml 后边</span></span><br><span class="line"><span class="attr">&lt;!--</span> <span class="string">支持HBase命名空间映射 --&gt;</span></span><br><span class="line"><span class="attr">&lt;property&gt;</span></span><br><span class="line">    <span class="attr">&lt;name&gt;phoenix.schema.isNamespaceMappingEnabled&lt;/name&gt;</span></span><br><span class="line">    <span class="attr">&lt;value&gt;true&lt;/value&gt;</span></span><br><span class="line"><span class="attr">&lt;/property&gt;</span></span><br><span class="line"><span class="attr">&lt;!--</span> <span class="string">支持索引预写日志编码 --&gt;</span></span><br><span class="line"><span class="attr">&lt;property&gt;</span></span><br><span class="line">  <span class="attr">&lt;name&gt;hbase.regionserver.wal.codec&lt;/name&gt;</span></span><br><span class="line">  <span class="attr">&lt;value&gt;org.apache.hadoop.hbase.regionserver.wal.IndexedWALEditCodec&lt;/value&gt;</span></span><br><span class="line"><span class="attr">&lt;/property&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>分发到其他服务器上</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 conf]# scp hbase-site.xml root@node2:$PWD</span><br><span class="line">(base) [root@node1 conf]# scp hbase-site.xml root@node3:$PWD</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>将配置后的hbase-site.xml拷贝到phoenix的bin目录</p>
-</li>
-</ol>
-   <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 conf]# cp $HBASE_HOME/conf/hbase-site.xml $PHOENIX_HOME/bin/</span><br></pre></td></tr></table></figure>
-
-<ol start="6">
-<li><p>重启 HBase</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 phoenix]# stop-hbase.sh</span><br><span class="line">(base) [root@node1 phoenix]# start-hbase.sh</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>连接 Phoenix，第一次启动Phoenix连接HBase会稍微慢一点。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 bin]# $PHOENIX_HOME/bin/sqlline.py node1:2181</span><br></pre></td></tr></table></figure></li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/02/26/HBase%E8%BF%9B%E9%98%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/26/HBase%E8%BF%9B%E9%98%B6/" class="post-title-link" itemprop="url">HBase进阶</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-02-26 20:11:21" itemprop="dateCreated datePublished" datetime="2022-02-26T20:11:21+08:00">2022-02-26</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Master架构"><a href="#Master架构" class="headerlink" title="Master架构"></a>Master架构</h1><p><img src="/2022/02/26/HBase%E8%BF%9B%E9%98%B6/image-20221227113711659.png" alt="image-20221227113711659"></p>
-<p>Master，主要进程，具体实现类为HMaster，通常部署在namenode上。</p>
-<h2 id="Meta表格介绍"><a href="#Meta表格介绍" class="headerlink" title="Meta表格介绍"></a>Meta表格介绍</h2><p><strong>禁止修改此表</strong></p>
-<p>全称 hbase：meta，只是在 list 命令中被过滤掉了，本质上和 HBase 的其他表格一样。</p>
-<p>RowKey：</p>
-<p>([table],[region start key],[region id]) 即 表名，region 起始位置和 regionID。</p>
-<p>列：</p>
-<p>info：regioninfo 为 region 信息，存储一个 HRegionInfo 对象。</p>
-<p>info：server 当前 region 所处的 RegionServer 信息，包含端口号。</p>
-<p>info：serverstartcode 当前 region 被分到 RegionServer 的起始时间。</p>
-<p>如果一个表处于切分的过程中，即 region 切分，还会多出两列 info：splitA 和 info：splitB，存储值也是 HRegionInfo 对象，拆分结束后，删除这两列。</p>
-<p>注意：在客户端对元数据进行操作的时候才会连接 master，如果对数据进行读写，直接连接zookeeper 读取目录&#x2F;hbase&#x2F;meta-region-server 节点信息，会记录 meta 表格的位置。直接读取即可，不需要访问 master，这样可以减轻 master 的压力，相当于 master 专注 meta 表的写操作，客户端可直接读取 meta 表。</p>
-<p>在 HBase 的 2.3 版本更新了一种新模式：Master Registry。客户端可以访问 master 来读取meta 表信息。加大了 master 的压力，减轻了 zookeeper 的压力。</p>
-<h2 id="RegionServer架构"><a href="#RegionServer架构" class="headerlink" title="RegionServer架构"></a>RegionServer架构</h2><p><img src="/2022/02/26/HBase%E8%BF%9B%E9%98%B6/image-20221227115325700.png" alt="image-20221227115325700"></p>
-<p>Region Server，主要进程，具体实现类为HRegionServer，通常部署在dataNode上。</p>
-<h3 id="MemStore"><a href="#MemStore" class="headerlink" title="MemStore"></a>MemStore</h3><p>写缓存，由于 HFile 中的数据要求是有序的，所以数据是先存储在 MemStore 中，排好序后，等到达刷写时机才会刷写到 HFile，每次刷写都会形成一个新的 HFile，写入到对应的文件夹 store 中。 </p>
-<h3 id="WAL"><a href="#WAL" class="headerlink" title="WAL"></a>WAL</h3><p>由于数据要经 MemStore 排序后才能刷写到 HFile，但把数据保存在内存中会有很高的概率导致数据丢失，为了解决这个问题，数据会先写在一个叫做 Write-Ahead logfile 的文件中，然后再写入 MemStore 中。所以在系统出现故障的时候，数据可以通过这个日志文件重建。</p>
-<h3 id="BlockCache"><a href="#BlockCache" class="headerlink" title="BlockCache"></a>BlockCache</h3><p>读缓存，每次查询出的数据会缓存在 BlockCache 中，方便下次查询。</p>
-<h2 id="写流程"><a href="#写流程" class="headerlink" title="写流程"></a>写流程</h2><p><img src="/2022/02/26/HBase%E8%BF%9B%E9%98%B6/image-20221227115624551.png" alt="image-20221227115624551"></p>
-<p>写流程从客户端创建连接开始，到最终刷写落盘到HDFS上结束。</p>
-<p>写流程顺序正如 API 编写顺序，首先创建 HBase 的重量级连接</p>
-<p>（1）首先访问 zookeeper，获取 hbase:meta 表位于哪个 Region Server；</p>
-<p>（2）访问对应的 Region Server，获取 hbase:meta 表，将其缓存到连接中，作为连接属性 MetaCache，由于 Meta 表格具有一定的数据量，导致了创建连接比较慢；之后使用创建的连接获取 Table，这是一个轻量级的连接，只有在第一次创建的时候会检查表格是否存在访问 RegionServer，之后在获取 Table 时不会访问 RegionServer；</p>
-<p>（3）调用Table的put方法写入数据，此时还需要解析RowKey，对照缓存的MetaCache，查看具体写入的位置有哪个 RegionServer；</p>
-<p>（4）将数据顺序写入（追加）到 WAL，此处写入是直接落盘的，并设置专门的线程控制 WAL 预写日志的滚动（类似 Flume）；</p>
-<p>（5）根据写入命令的 RowKey 和 ColumnFamily 查看具体写入到哪个 MemStory，并且在 MemStory 中排序；</p>
-<p>（6）向客户端发送 ack；</p>
-<p>（7 ）等达到 MemStore 的刷写时机后，将数据刷写到对应的 store 中。</p>
-<h2 id="MemStore-Flush"><a href="#MemStore-Flush" class="headerlink" title="MemStore Flush"></a>MemStore Flush</h2><p><strong>MemStore 刷写由多个线程控制，条件互相独立：</strong></p>
-<p>主要的刷写规则是控制刷写文件的大小，在每一个刷写线程中都会进行监控</p>
-<p>（1）当某个 memstroe 的大小达到了 hbase.hregion.memstore.flush.size（默认值 128M），其所在 region 的所有 memstore 都会刷写。</p>
-<p>当 memstore 的大小达到了</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hbase.hregion.memstore.flush.size（默认值 128M）</span><br><span class="line">hbase.hregion.memstore.block.multiplier（默认值 4）</span><br></pre></td></tr></table></figure>
-
-<p>时，会刷写同时阻止继续往该 memstore 写数据（由于线程监控是周期性的，所有有可能面对数据洪峰，尽管可能性比较小）</p>
-<p>（2）由 HRegionServer 中的属性 MemStoreFlusher 内部线程 FlushHandler 控制。标准为LOWER_MARK（低水位线）和 HIGH_MARK（高水位线），意义在于避免写缓存使用过多的内存造成 OOM。</p>
-<p>当 region server 中 memstore 的总大小达到低水位线</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">java_heapsize</span><br><span class="line">hbase.regionserver.global.memstore.size（默认值 0.4）</span><br><span class="line">hbase.regionserver.global.memstore.size.lower.limit（默认值 0.95），</span><br></pre></td></tr></table></figure>
-
-<p>region 会按照其所有 memstore 的大小顺序（由大到小）依次进行刷写。直到 region server中所有 memstore 的总大小减小到上述值以下。</p>
-<p>当 region server 中 memstore 的总大小达到高水位线</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">java_heapsize</span><br><span class="line">hbase.regionserver.global.memstore.size（默认值 0.4）</span><br></pre></td></tr></table></figure>
-
-<p>时，会同时阻止继续往所有的 memstore 写数据。</p>
-<p>（3）为了避免数据过长时间处于内存之中，到达自动刷写的时间，也会触发 memstore flush。由 HRegionServer 的属性 PeriodicMemStoreFlusher 控制进行，由于重要性比较低，5min才会执行一次。</p>
-<p>自动刷新的时间间隔由该属性进行配置 hbase.regionserver.optionalcacheflushinterval（默认1 小时）。</p>
-<p>（4）当 WAL 文件的数量超过 hbase.regionserver.max.logs，region 会按照时间顺序依次进行刷写，直到 WAL 文件数量减小到 hbase.regionserver.max.log 以下（该属性名已经废弃，现无需手动设置，最大值为 32）。</p>
-<h2 id="读流程"><a href="#读流程" class="headerlink" title="读流程"></a>读流程</h2><h3 id="HFile结构"><a href="#HFile结构" class="headerlink" title="HFile结构"></a>HFile结构</h3><p>在了解读流程之前，需要先知道读取的数据是什么样子的。</p>
-<p>HFile 是存储在 HDFS 上面每一个 store 文件夹下实际存储数据的文件。里面存储多种内容。包括数据本身（keyValue 键值对）、元数据记录、文件信息、数据索引、元数据索引和一个固定长度的尾部信息（记录文件的修改情况）。</p>
-<p>键值对按照块大小（默认 64K）保存在文件中，数据索引按照块创建，块越多，索引越大。每一个 HFile 还会维护一个布隆过滤器（就像是一个很大的地图，文件中每有一种 key，就在对应的位置标记，读取时可以大致判断要 get 的 key 是否存在 HFile 中）。</p>
-<p>KeyValue 内容如下:</p>
-<p>rowlength ———–→ key 的长度</p>
-<p>row —————–→ key 的值</p>
-<p>columnfamilylength –→ 列族长度</p>
-<p>columnfamily ——–→ 列族</p>
-<p>columnqualifier —–→ 列名</p>
-<p>timestamp ———–→ 时间戳（默认系统时间）</p>
-<p>keytype ————-→ Put</p>
-<p>由于 HFile 存储经过序列化，所以无法直接查看。可以通过 HBase 提供的命令来查看存储在 HDFS 上面的 HFile 元数据内容。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@node1 hbase]$ bin/hbase hfile -m -f /hbase/data/命名空间/表名/regionID/列族/HFile名</span><br></pre></td></tr></table></figure>
-
-<h3 id="读流程-1"><a href="#读流程-1" class="headerlink" title="读流程"></a>读流程</h3><p><img src="/2022/02/26/HBase%E8%BF%9B%E9%98%B6/image-20221227164519768.png" alt="image-20221227164519768"></p>
-<p>写流程从客户端创建连接开始，到合并数据并返回客户端结束。</p>
-<p>创建连接同写流程。</p>
-<p>（1）创建 Table 对象发送 get 请求。</p>
-<p>（2）优先访问 Block Cache，查找是否之前读取过，并且可以读取 HFile 的索引信息和布隆过滤器。</p>
-<p>（3）不管读缓存中是否已经有数据了（可能已经过期了），都需要再次读取写缓存和store 中的文件。</p>
-<p>（4）最终将所有读取到的数据合并版本，按照 get 的要求返回即可。</p>
-<h3 id="合并读取数据优化"><a href="#合并读取数据优化" class="headerlink" title="合并读取数据优化"></a>合并读取数据优化</h3><p>每次读取数据都需要读取三个位置，最后进行版本的合并。效率会非常低，所有系统需要对此优化。</p>
-<p>（1）HFile 带有索引文件，读取对应 RowKey 数据会比较快。</p>
-<p>（2）Block Cache 会缓存之前读取的内容和元数据信息，如果 HFile 没有发生变化（记录在 HFile 尾信息中），则不需要再次读取。</p>
-<p>（3）使用布隆过滤器能够快速过滤当前 HFile 不存在需要读取的 RowKey，从而避免读取文件。（布隆过滤器使用 HASH 算法，不是绝对准确的，出错会造成多扫描一个文件，对读取数据结果没有影响）</p>
-<h2 id="StoreFile-Compaction"><a href="#StoreFile-Compaction" class="headerlink" title="StoreFile Compaction"></a>StoreFile Compaction</h2><p>由于 memstore 每次刷写都会生成一个新的 HFile，文件过多读取不方便，所以会进行文件的合并，清理掉过期和删除的数据，会进行 StoreFile Compaction。</p>
-<p>Compaction 分为两种，分别是 Minor Compaction 和 Major Compaction。Minor Compaction会将临近的若干个较小的 HFile 合并成一个较大的 HFile，并清理掉部分过期和删除的数据，有系统使用一组参数自动控制，Major Compaction 会将一个 Store 下的所有的 HFile 合并成一个大 HFile，并且<strong>会</strong>清理掉所有过期和删除的数据，由参数 hbase.hregion.majorcompaction控制，默认 7 天。</p>
-<p><img src="/2022/02/26/HBase%E8%BF%9B%E9%98%B6/image-20221227164743255.png" alt="image-20221227164743255"></p>
-<p>Minor Compaction 控制机制：</p>
-<p>参与到小合并的文件需要通过参数计算得到，有效的参数有 5 个</p>
-<p>（1）hbase.hstore.compaction.ratio（默认 1.2F）合并文件选择算法中使用的比率。</p>
-<p>（2）hbase.hstore.compaction.min（默认 3） 为 Minor Compaction 的最少文件个数。</p>
-<p>（3）hbase.hstore.compaction.max（默认 10） 为 Minor Compaction 最大文件个数。</p>
-<p>（4）hbase.hstore.compaction.min.size（默认 128M）为单个 Hfile 文件大小最小值，小于这个数会被合并。</p>
-<p>（5）hbase.hstore.compaction.max.size（默认 Long.MAX_VALUE）为单个 Hfile 文件大小最大值，高于这个数不会被合并。小合并机制为拉取整个 store 中的所有文件，做成一个集合。之后按照从旧到新的顺序遍历。</p>
-<p>判断条件为：</p>
-<p><strong>①</strong> 过小合并，过大不合并</p>
-<p><strong>②</strong> 文件大小&#x2F; hbase.hstore.compaction.ratio &lt; (剩余文件大小和) 则参与压缩。所有把比值设置过大，如 10 会最终合并为 1 个特别大的文件，相反设置为 0.4，会最终产生 4 个 storeFile。不建议修改默认值</p>
-<p><strong>③</strong> 满足压缩条件的文件个数达不到个数要求（3 &lt;&#x3D; count &lt;&#x3D; 10）则不压缩。</p>
-<h2 id="Region-Split"><a href="#Region-Split" class="headerlink" title="Region Split"></a>Region Split</h2><p>Region 切分分为两种，创建表格时候的预分区即自定义分区，同时系统默认还会启动一个切分规则，避免单个 Region 中的数据量太大。</p>
-<h3 id="预分区（自定义分区）"><a href="#预分区（自定义分区）" class="headerlink" title="预分区（自定义分区）"></a>预分区（自定义分区）</h3><p>每一个 region 维护着 startRow 与 endRowKey，如果加入的数据符合某个 region 维护的rowKey 范围，则该数据交给这个 region 维护。那么依照这个原则，我们可以将数据所要投放的分区提前大致的规划好，以提高 HBase 性能。</p>
-<h3 id="系统拆分"><a href="#系统拆分" class="headerlink" title="系统拆分"></a>系统拆分</h3><p>Region 的拆分是由 HRegionServer 完成的，在操作之前需要通过 ZK 汇报 master，修改对应的 Meta 表信息添加两列 info：splitA 和 info：splitB 信息。之后需要操作 HDFS 上面对应的文件，按照拆分后的 Region 范围进行标记区分，实际操作为创建文件引用，不会挪动数据。刚完成拆分的时候，两个 Region 都由原先的 RegionServer 管理。之后汇报给 Master，由Master将修改后的信息写入到Meta表中。等待下一次触发负载均衡机制，才会修改Region的管理服务者，而数据要等到下一次压缩时，才会实际进行移动。</p>
-<p>不管是否使用预分区，系统都会默认启动一套 Region 拆分规则。不同版本的拆分规则有差别。系统拆分策略的父类为 RegionSplitPolicy。</p>
-<p>0.94 版本之前 &#x3D;&gt; ConstantSizeRegionSplitPolicy</p>
-<p>（ 1 ） 当 1 个 region 中 的 某 个 Store 下 所 有 StoreFile 的 总 大 小 超 过hbase.hregion.max.filesize （10G），该 Region 就会进行拆分。0.94 版本之后，2.0 版本之前 &#x3D;&gt; IncreasingToUpperBoundRegionSplitPolicy</p>
-<p>（ 2 ） 当 1 个 region 中 的 某 个 Store 下 所 有 StoreFile 的 总 大 小 超 过Min(initialSize<em>R^3 ,hbase.hregion.max.filesize”)，该 Region 就会进行拆分。其中 initialSize 的默认值为 2</em>hbase.hregion.memstore.flush.size，R 为当前 Region Server 中属于该 Table 的Region 个数（0.94 版本之后）。</p>
-<p>具体的切分策略为：</p>
-<p>第一次 split：1^3 * 256 &#x3D; 256MB </p>
-<p>第二次 split：2^3 * 256 &#x3D; 2048MB </p>
-<p>第三次 split：3^3 * 256 &#x3D; 6912MB </p>
-<p>第四次 split：4^3 * 256 &#x3D; 16384MB &gt; 10GB，因此取较小的值 10GB </p>
-<p>后面每次 split 的 size 都是 10GB 了。</p>
-<p>2.0 版本之后 &#x3D;&gt; SteppingSplitPolicy</p>
-<p>（3）Hbase 2.0 引入了新的 split 策略：如果当前 RegionServer 上该表只有一个 Region，按照 2 * hbase.hregion.memstore.flush.size 分裂，否则按照 hbase.hregion.max.filesize 分裂。这叫大道至简，学海抽丝。</p>
-<h1 id="HBase优化"><a href="#HBase优化" class="headerlink" title="HBase优化"></a>HBase优化</h1><h2 id="RowKey设计优化"><a href="#RowKey设计优化" class="headerlink" title="RowKey设计优化"></a>RowKey设计优化</h2><p>一条数据的唯一标识就是 rowkey，那么这条数据存储于哪个分区，取决于 rowkey 处于哪个一个预分区的区间内，设计 rowkey的主要目的 ，就是让数据均匀的分布于所有的 region中，在一定程度上防止数据倾斜。接下来我们就谈一谈 rowkey 常用的设计方案。</p>
-<p>1）生成随机数、hash、散列值</p>
-<p>2）时间戳反转</p>
-<p>3）字符串拼接 </p>
-<h2 id="添加预分区优化"><a href="#添加预分区优化" class="headerlink" title="添加预分区优化"></a>添加预分区优化</h2><p>预分区的分区号同样需要遵守 rowKey 的 scan 原则。所有必须添加在 rowKey 的最前面，前缀为最简单的数字。同时使用 hash 算法将用户名和月份拼接决定分区号。（单独使用用户名会造成单一用户所有数据存储在一个分区）。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">添加预分区优化</span><br><span class="line">startKey stopKey</span><br><span class="line">001</span><br><span class="line">001 002</span><br><span class="line">002 003</span><br><span class="line">...</span><br><span class="line">119 120</span><br><span class="line">分区号=&gt; hash(user+date(MM)) % 120</span><br><span class="line">分区号填充 如果得到 1 =&gt; 001</span><br><span class="line">rowKey 设计格式 =&gt; 分区号 date(yyyy-MM)^A^Auserdate(-dd hh:mm:ss ms)</span><br></pre></td></tr></table></figure>
-
-<h2 id="参数优化"><a href="#参数优化" class="headerlink" title="参数优化"></a>参数优化</h2><h3 id="Zookeeper-会话超时时间"><a href="#Zookeeper-会话超时时间" class="headerlink" title="Zookeeper 会话超时时间"></a>Zookeeper 会话超时时间</h3><p>hbase-site.xml</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">属性：zookeeper.session.timeout</span><br><span class="line">解释：默认值为 90000 毫秒（90s）。当某个 RegionServer 挂掉，90s 之后 Master 才能察觉到。可适当减小此值，尽可能快地检测 regionserver 故障，可调整至 20-30s。</span><br><span class="line">看你能有都能忍耐超时，同时可以调整重试时间和重试次数</span><br><span class="line">hbase.client.pause（默认值 100ms）</span><br><span class="line">hbase.client.retries.number（默认 15 次）</span><br></pre></td></tr></table></figure>
-
-<h3 id="设置-RPC-监听数量"><a href="#设置-RPC-监听数量" class="headerlink" title="设置 RPC 监听数量"></a>设置 RPC 监听数量</h3><p>hbase-site.xml</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">属性：hbase.regionserver.handler.count</span><br><span class="line">解释：默认值为 30，用于指定 RPC 监听的数量，可以根据客户端的请求数进行调整，读写请求较多时，增加此值。</span><br></pre></td></tr></table></figure>
-
-<h3 id="手动控制-Major-Compaction"><a href="#手动控制-Major-Compaction" class="headerlink" title="手动控制 Major Compaction"></a>手动控制 Major Compaction</h3><p>hbase-site.xml</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">属性：hbase.hregion.majorcompaction</span><br><span class="line">解释：默认值：604800000 秒（7 天）， Major Compaction 的周期，若关闭自动 Major Compaction，可将其设为 0。如果关闭一定记得自己手动合并，因为大合并非常有意义</span><br></pre></td></tr></table></figure>
-
-<h3 id="优化-HStore-文件大小"><a href="#优化-HStore-文件大小" class="headerlink" title="优化 HStore 文件大小"></a>优化 HStore 文件大小</h3><p>hbase-site.xml</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">属性：hbase.hregion.max.filesize</span><br><span class="line">解释：默认值 10737418240（10GB），如果需要运行 HBase 的 MR 任务，可以减小此值，因为一个 region 对应一个 map 任务，如果单个 region 过大，会导致 map 任务执行时间过长。该值的意思就是，如果 HFile 的大小达到这个数值，则这个 region 会被切分为两个 Hfile。</span><br></pre></td></tr></table></figure>
-
-<h3 id="优化-HBase-客户端缓存"><a href="#优化-HBase-客户端缓存" class="headerlink" title="优化 HBase 客户端缓存"></a>优化 HBase 客户端缓存</h3><p>hbase-site.xml</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">属性：hbase.client.write.buffer</span><br><span class="line">解释：默认值 2097152bytes（2M）用于指定 HBase 客户端缓存，增大该值可以减少 RPC调用次数，但是会消耗更多内存，反之则反之。一般我们需要设定一定的缓存大小，以达到减少 RPC 次数的目的。</span><br></pre></td></tr></table></figure>
-
-<h3 id="指定-scan-next-扫描-HBase-所获取的行数"><a href="#指定-scan-next-扫描-HBase-所获取的行数" class="headerlink" title="指定 scan.next 扫描 HBase 所获取的行数"></a>指定 scan.next 扫描 HBase 所获取的行数</h3><p>hbase-site.xml</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">属性：hbase.client.scanner.caching</span><br><span class="line">解释：用于指定 scan.next 方法获取的默认行数，值越大，消耗内存越大。</span><br></pre></td></tr></table></figure>
-
-<h3 id="BlockCache-占用-RegionServer-堆内存的比例"><a href="#BlockCache-占用-RegionServer-堆内存的比例" class="headerlink" title="BlockCache 占用 RegionServer 堆内存的比例"></a>BlockCache 占用 RegionServer 堆内存的比例</h3><p>hbase-site.xml</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">属性：hfile.block.cache.size</span><br><span class="line">解释：默认 0.4，读请求比较多的情况下，可适当调大</span><br></pre></td></tr></table></figure>
-
-<h3 id="MemStore-占用-RegionServer-堆内存的比例"><a href="#MemStore-占用-RegionServer-堆内存的比例" class="headerlink" title="MemStore 占用 RegionServer 堆内存的比例"></a>MemStore 占用 RegionServer 堆内存的比例</h3><p>hbase-site.xml</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">属性：hbase.regionserver.global.memstore.size</span><br><span class="line">解释：默认 0.4，写请求较多的情况下，可适当调大</span><br></pre></td></tr></table></figure>
-
-<p>Lars Hofhansl（拉斯·霍夫汉斯）大神推荐 Region 设置 20G，刷写大小设置 128M，其它默认。</p>
-<h2 id="JVM-调优"><a href="#JVM-调优" class="headerlink" title="JVM 调优"></a>JVM 调优</h2><p>JVM 调优的思路有两部分：一是内存设置，二是垃圾回收器设置。</p>
-<p>垃圾回收的修改是使用并发垃圾回收，默认 PO+PS 是并行垃圾回收，会有大量的暂停。理由是 HBsae 大量使用内存用于存储数据，容易遭遇数据洪峰造成 OOM，同时写缓存的数据是不能垃圾回收的，主要回收的就是读缓存，而读缓存垃圾回收不影响性能，所以最终设置的效果可以总结为：防患于未然，早洗早轻松。</p>
-<h3 id="设置使用-CMS-收集器"><a href="#设置使用-CMS-收集器" class="headerlink" title="设置使用 CMS 收集器"></a>设置使用 CMS 收集器</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-XX:+UseConcMarkSweepGC</span><br></pre></td></tr></table></figure>
-
-<h3 id="保持新生代尽量小，同时尽早开启GC"><a href="#保持新生代尽量小，同时尽早开启GC" class="headerlink" title="保持新生代尽量小，同时尽早开启GC"></a>保持新生代尽量小，同时尽早开启GC</h3><p>例如</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">//在内存占用到 70%的时候开启 GC</span><br><span class="line">-XX:CMSInitiatingOccupancyFraction=70</span><br><span class="line">//指定使用 70%，不让 JVM 动态调整</span><br><span class="line">-XX:+UseCMSInitiatingOccupancyOnly</span><br><span class="line">//新生代内存设置为 512m</span><br><span class="line">-Xmn512m</span><br><span class="line">//并行执行新生代垃圾回收</span><br><span class="line">-XX:+UseParNewGC</span><br><span class="line">// 设 置 scanner 扫 描 结 果 占 用 内 存 大 小 ， 在 hbase-site.xml 中，设置</span><br><span class="line">hbase.client.scanner.max.result.size(默认值为 2M)为 eden 空间的 1/8</span><br><span class="line">（大概在 64M）</span><br><span class="line">// 设置多个与 max.result.size * handler.count 相乘的结果小于 Survivor </span><br><span class="line">Space(新生代经过垃圾回收之后存活的对象)</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="HBase-使用经验法则"><a href="#HBase-使用经验法则" class="headerlink" title="HBase 使用经验法则"></a>HBase 使用经验法则</h1><p>官方给出了权威的使用法则：</p>
-<ol>
-<li>Region 大小控制 10-50G</li>
-<li>cell 大小不超过 10M（性能对应小于 100K 的值有优化），如果使用 mob（Medium sized Objects 一种特殊用法）则不超过 50M。</li>
-<li>1 张表有 1 到 3 个列族，不要设计太多。最好就 1 个，如果使用多个尽量保证不会同时读取多个列族。</li>
-<li>1 到 2 个列族的表格，设计 50-100 个 Region。</li>
-<li>列族名称要尽量短，不要去模仿 RDBMS（关系型数据库）具有准确的名称和描述。</li>
-<li>如果 RowKey 设计时间在最前面，会导致有大量的旧数据存储在不活跃的 Region中，使用的时候，仅仅会操作少数的活动 Region，此时建议增加更多的 Region 个数。</li>
-<li>如果只有一个列族用于写入数据，分配内存资源的时候可以做出调整，即写缓存不会占用太多的内存。</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2406,14 +2243,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">140</span>
+          <span class="site-state-item-count">147</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

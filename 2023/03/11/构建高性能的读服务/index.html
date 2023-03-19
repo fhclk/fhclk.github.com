@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="读服务架构读服务架构基本原则：架构尽量不要分层和代码尽可能简单 架构尽量不要分层架构尽量不要分层，读服务要尽可能和数据靠近，减少网络传输。  代码尽可能简单引入框架 在读服务对于性能要求非常严格的情况下，要尽可能地减少引入框架，如果一定要引入，必须经过严格的压测。 读服务处理链路 为了方便排查问题，经常会直接将请求的入参及从存储中获取的数据使用JSON进行序列化为字符串，并进行日志打印。 读取内容">
+<meta property="og:type" content="article">
+<meta property="og:title" content="构建高性能的读服务">
+<meta property="og:url" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="读服务架构读服务架构基本原则：架构尽量不要分层和代码尽可能简单 架构尽量不要分层架构尽量不要分层，读服务要尽可能和数据靠近，减少网络传输。  代码尽可能简单引入框架 在读服务对于性能要求非常严格的情况下，要尽可能地减少引入框架，如果一定要引入，必须经过严格的压测。 读服务处理链路 为了方便排查问题，经常会直接将请求的入参及从存储中获取的数据使用JSON进行序列化为字符串，并进行日志打印。 读取内容">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230314230711343.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230314232121225.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230314233210801.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230314233848722.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230314234155404.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230314234408162.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230314235552695.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315000212106.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315001104991.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315001716994.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315214811771.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315220818642.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315221256782.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315222533146.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315223038586.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315224558458.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315234220484.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315235320874.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315235641216.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230316222524482.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230316222709834.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230316223722370.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230316224639390.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230316225505601.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230316225725864.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230316225803473.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230316230424262.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230316230825902.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230317230732350.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230317230830772.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230317231015075.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230317231706868.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230317231816942.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230317232505211.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230317233829546.png">
+<meta property="og:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230317233952479.png">
+<meta property="article:published_time" content="2023-03-11T15:04:29.000Z">
+<meta property="article:modified_time" content="2023-03-17T15:51:40.976Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="架构">
+<meta property="article:tag" content="后台架构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230314230711343.png">
+
+<link rel="canonical" href="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>构建高性能的读服务 | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          构建高性能的读服务
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-03-11 23:04:29" itemprop="dateCreated datePublished" datetime="2023-03-11T23:04:29+08:00">2023-03-11</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="读服务架构"><a href="#读服务架构" class="headerlink" title="读服务架构"></a>读服务架构</h1><p>读服务架构基本原则：架构尽量不要分层和代码尽可能简单</p>
+<h2 id="架构尽量不要分层"><a href="#架构尽量不要分层" class="headerlink" title="架构尽量不要分层"></a>架构尽量不要分层</h2><p>架构尽量不要分层，读服务要尽可能和数据靠近，减少网络传输。</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230314230711343.png" alt="image-20230314230711343"></p>
+<h2 id="代码尽可能简单"><a href="#代码尽可能简单" class="headerlink" title="代码尽可能简单"></a>代码尽可能简单</h2><p><strong>引入框架</strong></p>
+<p>在读服务对于性能要求非常严格的情况下，要尽可能地减少引入框架，如果一定要引入，必须经过严格的压测。</p>
+<p><strong>读服务处理链路</strong></p>
+<p>为了方便排查问题，经常会直接将请求的入参及从存储中获取的数据使用JSON进行序列化为字符串，并进行日志打印。</p>
+<p><strong>读取内容要按需取</strong></p>
+<p>如果存储为MySQL，则不要使用select *，需要手动指定你要查询的字段。</p>
+<p>如果存储为Redis，则使用Redis的hash结构存储数据。</p>
+<h1 id="存储的选型和架构"><a href="#存储的选型和架构" class="headerlink" title="存储的选型和架构"></a>存储的选型和架构</h1><p>读服务最主要依赖的中间件是存储，因此存储的性能很大程度上决定了读服务的性能。</p>
+<h2 id="架构一"><a href="#架构一" class="headerlink" title="架构一"></a>架构一</h2><p>为了提升性能，实战中的架构通常选用基于内存、性能更好的Redis作为主存储，MySQL作为兜底来构建。</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230314232121225.png" alt="image-20230314232121225"></p>
+<h3 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h3><h4 id="存在缓存穿透的风险"><a href="#存在缓存穿透的风险" class="headerlink" title="存在缓存穿透的风险"></a>存在缓存穿透的风险</h4><ol>
+<li>如果恶意请求不断使用缓存中不存在的数据发送请求，就会导致该请求每次都会被降级到数据库中。</li>
+<li>针对数据库中没有的数据，可以在缓存中设置一个占位符。再次请求这一数据时，查到占位符则直接返回，不用再查数据库。</li>
+<li>如果恶意请求不断变换请求的条件，同时对应的数据在数据库中均不存在，那么缓存中存储的表示无数据的占位符也会把整个缓存撑爆。</li>
+<li>对于请求的参数可以内置一些token或者一些验证数据，在读服务中前置进行校验并拦截。</li>
+</ol>
+<h4 id="缓存集中过期导致雪崩"><a href="#缓存集中过期导致雪崩" class="headerlink" title="缓存集中过期导致雪崩"></a>缓存集中过期导致雪崩</h4><p>对存储在缓存中的数据设置过期时间是为了定期获取数据库中的变更，但如果设置不合理，可能会导致缓存集中过期，进而所有的请求都会因缓存未命中，而直接请求到数据库。</p>
+<p>对于数据库的过期时间，可以在设置时进行<strong>加盐操作</strong>。</p>
+<p>加盐操作：在redis中设置过期时间时加一个随机值，如过期时间设置的是2小时，通过随机数，使每条数据的过期时间不同。</p>
+<h2 id="架构二"><a href="#架构二" class="headerlink" title="架构二"></a>架构二</h2><p>懒加载无法感知实时变更，在缓存中设置过期时间，虽然可以让用户感知到数据的变更，但感知并不是实时的，会有一定延迟。</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230314233210801.png" alt="image-20230314233210801"></p>
+<h3 id="缺陷-1"><a href="#缺陷-1" class="headerlink" title="缺陷"></a>缺陷</h3><h4 id="懒加载无法感知实时变更"><a href="#懒加载无法感知实时变更" class="headerlink" title="懒加载无法感知实时变更"></a>懒加载无法感知实时变更</h4><ol>
+<li>如果你修改完了数据库再更新缓存，在异常情况下，可能出现数据库更新成功了，但缓存更新失败的情况。</li>
+<li>在更新数据库后主动更新缓存的模式，在实际的实施中很容易出现漏洞</li>
+</ol>
+<h4 id="懒加载无法摆脱毛刺的困扰"><a href="#懒加载无法摆脱毛刺的困扰" class="headerlink" title="懒加载无法摆脱毛刺的困扰"></a>懒加载无法摆脱毛刺的困扰</h4><p>使用懒加载的缓存过期方案，还有一个无法避免的问题：性能毛刺。</p>
+<h1 id="全量缓存的基本架构"><a href="#全量缓存的基本架构" class="headerlink" title="全量缓存的基本架构"></a>全量缓存的基本架构</h1><p>全量缓存是指将数据库中的所有数据都存储在缓存中，同时在缓存中不设置过期时间的一种实现方式。它能够解决懒加载无法感知实时变更和懒加载无法摆脱毛刺的困扰的问题。但这种架构的成本将会变的很大（缓存容量要求非常大）。</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230314233848722.png" alt="image-20230314233848722"></p>
+<p>但全量缓存并没有解决更新时的分布式事务问题，反而把问题放大了。</p>
+<p>对此，一种有效的方案是采用订阅数据库的Binlog实现数据同步。</p>
+<h1 id="基于Binlog的全量缓存架构"><a href="#基于Binlog的全量缓存架构" class="headerlink" title="基于Binlog的全量缓存架构"></a>基于Binlog的全量缓存架构</h1><h2 id="Binlog原理"><a href="#Binlog原理" class="headerlink" title="Binlog原理"></a>Binlog原理</h2><p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230314234155404.png" alt="image-20230314234155404"></p>
+<h2 id="开源工具"><a href="#开源工具" class="headerlink" title="开源工具"></a>开源工具</h2><p>Canal、MySQL_Streamer、Maxwell、Databus</p>
+<h2 id="基于Binlog的缓存同步架构"><a href="#基于Binlog的缓存同步架构" class="headerlink" title="基于Binlog的缓存同步架构"></a>基于Binlog的缓存同步架构</h2><p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230314234408162.png" alt="image-20230314234408162"></p>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><p>采用了Binlog的同步方案后，全量缓存的架构变得更加完整。</p>
+<p><strong>降低了延迟</strong></p>
+<p>数据库的主从同步保持在毫秒级别</p>
+<p><strong>解决了分布式事务的问题</strong></p>
+<p>Binlog的主从复制是基于ACK机制</p>
+<p><strong>提升了代码的简洁性和可维护性</strong></p>
+<p>所有对数据库的修改最终都会反映到Binlog里，只要数据库的表结构不变更，对Binlog数据的处理程序就能保持固定。</p>
+<h3 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h3><p><strong>提升了系统的整体复杂度</strong></p>
+<p>整个数据同步的流程变长，且关注点和出错点由一个中间件变为两个。</p>
+<p><strong>缓存的容量会成倍上升，相应的资源成本也大幅上升</strong></p>
+<p>在一些对性能要求极致且实时性高的场景下，只能进行取舍。</p>
+<h3 id="技术上可以提升的点"><a href="#技术上可以提升的点" class="headerlink" title="技术上可以提升的点"></a>技术上可以提升的点</h3><ol>
+<li>存储在缓存中的数据需要经过筛选，有业务含义且会被查询的才进行存储。</li>
+<li>存储在缓存中的数据可以进行压缩。</li>
+</ol>
+<h3 id="节省缓存的技巧"><a href="#节省缓存的技巧" class="headerlink" title="节省缓存的技巧"></a>节省缓存的技巧</h3><h4 id="技巧1"><a href="#技巧1" class="headerlink" title="技巧1"></a>技巧1</h4><p>将数据按JSON格式序列化时，可以在字段上添加替代标识，表示在序列化后此字段的名称用替代标识进行表示。</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230314235552695.png" alt="image-20230314235552695"></p>
+<h4 id="技巧2"><a href="#技巧2" class="headerlink" title="技巧2"></a>技巧2</h4><p>如果你使用的缓存是Redis且使用了其Hash结构存储数据，其Hash结构的Field字段，也可以使用和上述JSON标识一样的模式使用一个较短的标识进行代替。</p>
+<h4 id="技巧3"><a href="#技巧3" class="headerlink" title="技巧3"></a>技巧3</h4><p>使用全量缓存承接读服务所有的请求时，会出现无法感知缓存丢失的问题。</p>
+<h2 id="异步校准-自动化"><a href="#异步校准-自动化" class="headerlink" title="异步校准+自动化"></a>异步校准+自动化</h2><p>保留全量缓存并解决极端问题。</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315000212106.png" alt="image-20230315000212106"></p>
+<p>方案可行性</p>
+<ol>
+<li>根据数据统计，数据在数据中存在而在缓存中不存在的概率几乎为零。</li>
+<li>对数据库大量无效的异步校准查询会导致数据库性能变差。</li>
+<li>即使缓存里数据丢失，只要此条数据存在变更，Binlog都会把它再次刷新至缓存里。</li>
+<li>如果你将此方案应用到生产环境里，同时开启了异步校准，依然存在大量数据丢失的情况，那说明对于缓存中间件的使用和调优还有很大的提升空间。</li>
+</ol>
+<h2 id="其他优点"><a href="#其他优点" class="headerlink" title="其他优点"></a>其他优点</h2><ol>
+<li><p>数据同步模块接到Binlog的数据后，进行一定规则的数据转换后便可直接写入缓存。</p>
+</li>
+<li><p>为了提升性能，可以多集群部署。此架构方式提升了性能，增加了可用性。</p>
+</li>
+</ol>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315001104991.png" alt="image-20230315001104991"></p>
+<ol start="3">
+<li><p>异步并行</p>
+<p>最简单的读服务场景是一次请求只和存储交互一次，但实际中很多时候交互都不止一次。</p>
+<p>采用异步并行可以节省读取时间，提升效率。如每次获取都需要10毫秒，3次读取串行的话需要30毫秒，而异步并行的话只需10毫秒。</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315001716994.png" alt="image-20230315001716994"></p>
+<p>异步并行的问题和局限：</p>
+<p>a. 异步并行增加了线程的消耗，每个异步并行都对应一个线程，进而带来CPU的消耗。</p>
+<p>b. 异步并行的多线程开发也带来了编程的复杂度和维护难度。</p>
+<p>c. 异步并行化只能应用在每一次和存储交互都是独立的、无先后关系的场景里。</p>
+<p>除了上述场景可以采用异步并行化外，对于一次请求查询一批数据的场景也可以进行异步并行化。</p>
+</li>
+</ol>
+<h1 id="基于Binlog的全量缓存架构问题分析"><a href="#基于Binlog的全量缓存架构问题分析" class="headerlink" title="基于Binlog的全量缓存架构问题分析"></a>基于Binlog的全量缓存架构问题分析</h1><p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315214811771.png" alt="image-20230315214811771"></p>
+<p>上图架构中存在的问题。</p>
+<p><strong>问题一：Binlog延迟低是指纯MySQL的主从同步</strong></p>
+<ol>
+<li><p>因为MySQL的主从同步是纯的数据同步，格式和协议完全适配，因此性能损耗极低，而自己使用Binlog同步是经过协议转换的，有一定的性能损耗。</p>
+</li>
+<li><p>其次，上图基于Binlog的同步比MySQL的主从同步多了两个模块，因此整体链路比较长。</p>
+</li>
+<li><p>在实际场景里，为了保持稳定性，同步的是从库的Binlog，这也会导致延迟进一步加大。</p>
+</li>
+<li><p>最后，因为Binlog是串行的，这会导致同步的吞吐量太低，进一步加大同步的延迟。</p>
+</li>
+</ol>
+<p>以上四点会导致Binlog的同步延迟会比预期的要高。</p>
+<p><strong>问题二：如何做Binlog格式解析</strong></p>
+<blockquote>
+<p>程序是数据和逻辑的组合，所有的程序都要按照一定的业务规则对某种数据处理才能产生价值。</p>
+</blockquote>
+<p>Binlog同步转化程序处理的是Binlog的数据，而Binlog的格式是每次对应的SQL，及各维度的数据，这关系到同步程序的设计方案，以及相对应的实现复杂度。</p>
+<p><strong>问题三：如何保证数据不丢失或错误</strong></p>
+<p>MySQL的主从同步逻辑是和业务数据无关的，正式版本发布之后，修改的频率比较低。</p>
+<p>而基于Binlog实现的业务数据同步程序是易变的。因为互联网应用程序业务迭代周期非常快，在业务高速迭代的过程中，如何保证开发人员没有BUG的代码，如何保证数据不丢失或不出错。</p>
+<p><strong>问题四：如何设计缓存数据格式</strong></p>
+<p>现在主流的数据库不只提供Key-value的数据结构，还提供了其他丰富的数据结构类型。</p>
+<h2 id="Binlog如何发送数据"><a href="#Binlog如何发送数据" class="headerlink" title="Binlog如何发送数据"></a>Binlog如何发送数据</h2><p>如何设计数据结构来提升性能、降低系统复杂度？</p>
+<p>以互联网中使用最多的MySQL作为示例。</p>
+<p>MySQL的Binlog分为三种数据格式：statement、row及mixed格式。</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315220818642.png" alt="image-20230315220818642"></p>
+<ul>
+<li>statement格式</li>
+</ul>
+<p>statement格式是把每次执行的SQL语句记录到Binlog文件里，在主从复制时，基于Binlog里的SQL语句进行回放来完成主从复制。</p>
+<p>采用它的好处是：内容少，传输速度快。</p>
+<p>但存在一个问题，在基于Binlog进行数据同步时，需要解析上述的SQL获取变更的字段，存在一定的开发成本。</p>
+<ul>
+<li><p>row格式</p>
+<p>会将SQL语句执行前和执行后的内容记录在文件里。</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315221256782.png" alt="image-20230315221256782"></p>
+</li>
+</ul>
+<p>Binlog记录的数据非常全面，包含了table中所有变更和未变更的数据，同时标记了哪些字段发生了变更。在数据同步时可以完全以它为准。</p>
+<p>优点：同步代码简单。</p>
+<p>缺点：产生的数据量较大。</p>
+<ul>
+<li>mixed模式</li>
+</ul>
+<p>mixed模式是前面两种模式的动态结合。采用mixed模式的Binlog会根据每一条执行的SQL动态判断是记录为row格式还是statement格式。</p>
+<p>在实际中推荐使用row格式或mixed格式。原因如下：</p>
+<ol>
+<li>这两种格式的数据量全，可以让你做更多的逻辑。</li>
+<li>row模式无须解析SQL，实现复杂度非常低。</li>
+</ol>
+<h2 id="Binlog如何高效消费"><a href="#Binlog如何高效消费" class="headerlink" title="Binlog如何高效消费"></a>Binlog如何高效消费</h2><h3 id="全串行的方式进行消费"><a href="#全串行的方式进行消费" class="headerlink" title="全串行的方式进行消费"></a>全串行的方式进行消费</h3><p>MySQL将要消费的数据写入Binlog文件，消费时使用ACK机制进行消费，每确认一条消费一条。依次重复。</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315222533146.png" alt="image-20230315222533146"></p>
+<p>此方式存在两个问题：</p>
+<ol>
+<li>串行消费效率低，延迟大。</li>
+<li>单线程无法利用水平扩展，架构有缺陷。数据量大时无法通过水平扩展提升性能。</li>
+</ol>
+<h3 id="采用并行的方式提升吞吐量及扩展性"><a href="#采用并行的方式提升吞吐量及扩展性" class="headerlink" title="采用并行的方式提升吞吐量及扩展性"></a>采用并行的方式提升吞吐量及扩展性</h3><p>可以通过技术方式对Binlog中不同库或不同表的数据进行串行消费。不同库之间的数据是不相关的。</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315223038586.png" alt="image-20230315223038586"></p>
+<p>存在的问题，并行容易造成数据错乱的问题，如对一条数据进行了两次修改，修改a和修改b，由于并行，可能先消费b后消费a，而a是脏数据，造成了数据混乱。</p>
+<p>解决数据错乱的方案：</p>
+<ol>
+<li><p>方案一：加分布式锁实现细粒度的串行。</p>
+<p>此方案和Binlog的串行区别是粒度。对同一条数据的修改进行串行消费即可。多条数据并行消费并没有关联。</p>
+<p>在实施时，加锁的维度可以根据数据是否需要串行处理而定。它可以是表中的一个字段，也可以是多个字段的组合。确定加锁的维度后，数据库中的多张表可根据需要使用此维度进行串行消费。</p>
+<p>此方案引入了分布式锁，出错率和复杂度较高。</p>
+</li>
+<li><p>方案二：依赖MQ中间件的串行通道特性进行支持。</p>
+<p>采用此方案后，整个同步的实现会更加简单。</p>
+<p>在“Binlog订阅及转发模块”转发Binlog数据前，会按业务规则判断转发的Binlog数据是否在并发后仍需要串行消费。对于需要串行消费的数据会发送到MQ的串行通道，MQ中间件的串行通道的数据均会串行执行，而多个串行通道间则可以并发执行。</p>
+<p>借助MQ中间件的此特性，即解决了乱序问题，又保证了吞吐量。</p>
+</li>
+</ol>
+<h3 id="并行-串行的架构方案"><a href="#并行-串行的架构方案" class="headerlink" title="并行+串行的架构方案"></a>并行+串行的架构方案</h3><p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315224558458.png" alt="image-20230315224558458"></p>
+<h2 id="缓存结构设计"><a href="#缓存结构设计" class="headerlink" title="缓存结构设计"></a>缓存结构设计</h2><p>目前主流的缓存是Redis，以Redis支持为准，来讨论缓存结构设计。</p>
+<p>数据库表是按技术的范式来设计的，会将数据按一对一或一对多拆分成多张表。</p>
+<p>而缓存是面向业务设计的，会尽可能地将业务上一次查询地数据存储为缓存中地一个value值。</p>
+<p>如数据库中商品和订单设计成不同的表，而业务中，将订单数据和商品数据一起存储到value中。</p>
+<p>这种在数据库中多张表存储，而在缓存中只用K-V结构进行冗余存储的数据结构，需要我们在数据同步的时候进行并发控制，防止因为多张表的变更导致并发写入，从而产生数据错乱。</p>
+<p><strong>多张表间共享分布式锁进行协调</strong></p>
+<p>举例：</p>
+<p>数据库中的订单信息表和商品信息表均存储了订单号。在数据同步时可以使用订单号进行加锁。订单信息或订单中的商品信息发生变化后，使用订单号进行加锁控制，进行同步时，两张表中同一个订单号的数据串行执行。一缓存中同一订单的基本信息和商品信息所属在一起的，更新时需要把缓存中的数据读取至同步程序并替换掉此次变更的内容，再回写至缓存中即可。</p>
+<p>在Redis中，可以考虑使用Lua脚本完成上述过程。</p>
+<p>此方式虽然解决了Redis和数据库表结构不匹配带来的问题，但多张表加锁又降低了吞吐量。</p>
+<p><strong>采用反查的方式进行全量覆盖</strong></p>
+<p>在同步时，可以采用反查数据库的方式来补齐Redis需要的数据。</p>
+<p>如在同步订单信息时，可以反查数据库中的商品信息，来补全缓存中订单商品信息。</p>
+<p>此方式虽然简单，但反查库会带来性能消耗和资源的浪费。</p>
+<p>在采用反查方案时，建议反查发送Binlog的从库，从而保障主库的稳定性。</p>
+<p><strong>采用Redis的Hash结构进行局部更新</strong></p>
+<p>对于一个订单的不同表的数据，在redis中存储至各个field，同时redis支持对单个field进行局部更新，当数据出现变更时，无需分布式加锁，哪张表出现变更，只需更新缓存中对于field的信息。</p>
+<img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315234220484.png" alt="image-20230315234220484" style="zoom:50%;">
+
+
+
+<p>为什么使用hash结构，而不是用所有缓存都支持的Key + Value的结构？</p>
+<p>key设计成订单号+子表的标识。</p>
+<ol>
+<li>使用了KV结构后，查询时需要使用多个命令。</li>
+<li>一个订单下的商品是动态的，无法提前固定。</li>
+<li>现在主流缓存都是分布式部署的。如果使用KV，可能出现信息分别存储在两个分片上。而使用Hash，则同一个hash的信息会存储在同一个分片上，不会存储在不同的分片上，不会出现数据查询的问题。</li>
+</ol>
+<h2 id="数据对比发现错误"><a href="#数据对比发现错误" class="headerlink" title="数据对比发现错误"></a>数据对比发现错误</h2><p>数据同步模块是基于业务进行数据转换的，在开发过程中，需要基于业务规则不断地迭代。</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315235320874.png" alt="image-20230315235320874"></p>
+<h2 id="直接写入"><a href="#直接写入" class="headerlink" title="直接写入"></a>直接写入</h2><p>虽然前面对提升同步吞吐量做了非常多地设计，但不可否认延迟是存在地。为了降低延迟，在异步同步的时候可以加入主动同步机制。</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230315235641216.png" alt="image-20230315235641216"></p>
+<p>此架构是一个技术互补的策略，Binlog保证最终一致性但可能存在延迟，主动写入保障无延迟但存在丢数据。</p>
+<h1 id="如何应对热点数据的查询"><a href="#如何应对热点数据的查询" class="headerlink" title="如何应对热点数据的查询"></a>如何应对热点数据的查询</h1><h2 id="为什么前面的架构扛不住相同用户百万的流量"><a href="#为什么前面的架构扛不住相同用户百万的流量" class="headerlink" title="为什么前面的架构扛不住相同用户百万的流量"></a>为什么前面的架构扛不住相同用户百万的流量</h2><p>假设单个节点的流量访问上限是十万。</p>
+<p>不同用户百万的流量，图中是百万不同用户请求。</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230316222524482.png" alt="image-20230316222524482"></p>
+<p>相同用户百万的流量，同一个用户的请求会被路由到集群中的一个分片，单个分片无法处理百万流量。</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230316222709834.png" alt="image-20230316222709834"></p>
+<p>并发次数非常大、数据完全相同的请求称为热点查询。</p>
+<p><strong>热点查询场景</strong></p>
+<ol>
+<li>微博热点吃瓜事件，百万用户同一时间查询某条微博内容，对此条微博的查询就是热查询。</li>
+<li>电商里面的秒杀或者低价薅羊毛活动。同一时刻，用户会不断地刷新商品页面等待秒杀倒计时，对此商品地查询就是热查询。</li>
+</ol>
+<h2 id="主从复制进行垂直扩容"><a href="#主从复制进行垂直扩容" class="headerlink" title="主从复制进行垂直扩容"></a>主从复制进行垂直扩容</h2><p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230316223722370.png" alt="image-20230316223722370"></p>
+<p>此方案存在一个较大地问题，就是浪费资源，主从复制除了有应对热点地功能，另外一个主要作用是为了高可用。</p>
+<p>为了保证高可用，会设置从节点地数量与主节点地数量相同，相同从节点数量也带来了较大地资源浪费。为了节约资源，对高可用模块进行改造，不要求所有分配的从节点必须相同，但这个代价非常高昂。</p>
+<p>热点查询是随机出现的，不可能提前预测，不能提前扩容某个分片，这种意义不大。</p>
+<blockquote>
+<p>主从复制能够解决一定流量的热点查询且实施起来较简单，但不具备扩展性，在应对更大流量的热点时会有些吃力。</p>
+</blockquote>
+<h2 id="利用应用内的前置缓存"><a href="#利用应用内的前置缓存" class="headerlink" title="利用应用内的前置缓存"></a>利用应用内的前置缓存</h2><p>热点查询是对相同数据进行不断重复查询的一种场景。</p>
+<p>特点：次数多，需要存储的数据少。</p>
+<p>可以将热点数据前置存储在应用内。</p>
+<p>前置缓存的架构</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230316224639390.png" alt="image-20230316224639390"></p>
+<p>需关注的点：</p>
+<ol>
+<li><p>首先是应用内缓存需要设置上限。</p>
+<p>应用所属主机的内存是有限的，且其内存还要支持业务应用使用。在使用应用内的前置缓存时，必须设置容量的上限且设置容量满时的逐出策略。逐出策略可以是LRU，将最少使用的数据逐出。热点数据可以设置过期时间，过期了就清除掉。</p>
+</li>
+<li><p>其次是根据业务对待延迟的问题，前置缓存的数据要么定期刷新，要么主动刷新。如果业务上可以容忍一定时间的延迟，可以在缓存数据上设置一个刷新时间即可。如果想要实时感知变化，可以采用Binlog的方式在变更时主动刷新。</p>
+</li>
+<li><p>再者要把控好瞬间的逃逸流量。</p>
+</li>
+<li><p>如何发现热点缓存并前置。</p>
+</li>
+</ol>
+<p>前置缓存实时刷新架构</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230316225505601.png" alt="image-20230316225505601"></p>
+<p>此种架构实施难度大，在实际种，设置刷新时间即可解决问题。</p>
+<p><strong>逃逸流量</strong></p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230316225725864.png" alt="image-20230316225725864"></p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230316225803473.png" alt="image-20230316225803473"></p>
+<p><strong>如何发现热点缓存并前置</strong></p>
+<ol>
+<li><p>被动发现</p>
+<p>被动发现是借助前置缓存有容量上限实现的。所有的请求都优先从前置缓存获取数据。并在未查询到时加载服务端数据到本地的前置缓存里。此方式也会把非热点数据存储至前置缓存里。导致非热点数据产生非必要的延迟性。</p>
+</li>
+<li><p>主动发现</p>
+<p>主动发现需求借助一些外部计数工具来实现热点的发现。</p>
+</li>
+</ol>
+<p>进行计数的前置缓存方案</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230316230424262.png" alt="image-20230316230424262"></p>
+<h2 id="降级兜底不可少"><a href="#降级兜底不可少" class="headerlink" title="降级兜底不可少"></a>降级兜底不可少</h2><p>当热点查询发生时，部署的QPS要大于热点查询的QPS。但实际并非如此，部署的QPS未必都能大于热点查询的QPS，对于超预期的流量，可以使用前期限流的策略。</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230316230825902.png" alt="image-20230316230825902"></p>
+<p>单机限流设置成压测的一半，主要保证服务器cpu不到100%。</p>
+<h2 id="其他前置策略"><a href="#其他前置策略" class="headerlink" title="其他前置策略"></a>其他前置策略</h2><p>除了服务端应用前置缓存，前端架构里也有应对方案。</p>
+<blockquote>
+<p>比如在接入层（如Nginx）进行前置缓存。</p>
+<p>数据前置至离用户更近的CDN及开启浏览器缓存。</p>
+</blockquote>
+<h1 id="自动化测试回归"><a href="#自动化测试回归" class="headerlink" title="自动化测试回归"></a>自动化测试回归</h1><h2 id="为什么要自动化测试"><a href="#为什么要自动化测试" class="headerlink" title="为什么要自动化测试"></a>为什么要自动化测试</h2><p>极大地降低业务因升级重构而带来地回归问题，真正做到了回归自动化、研发自动化。避免用户场景覆盖遗留导致漏测地问题。</p>
+<p>针对架构升级地场景，不管是因为技术还是业务导致地系统重构架构升级，它的改造量和范围都是非常大的，测试工作量都是以月为单位。</p>
+<p>针对日常需求的场景，对于后台系统，基本都是微服务架构，对外会提供一至多个接口。测试只会对改造的接口和某些场景进行测试。在实际案例里，需求涉及的接口或场景上线后均不会出现bug，但同一个服务里的其他接口，即当次未涉及修改的被测接口，就比较容易出现bug。内部接口可能改动到共同使用的代码，需求对全部代码进行测试，工作量巨大。</p>
+<h2 id="如何实现自动化回归"><a href="#如何实现自动化回归" class="headerlink" title="如何实现自动化回归"></a>如何实现自动化回归</h2><h3 id="自动化回归方案的基本原理"><a href="#自动化回归方案的基本原理" class="headerlink" title="自动化回归方案的基本原理"></a>自动化回归方案的基本原理</h3><p>读服务能够实现测试回归自动化有两个前置条件。</p>
+<ol>
+<li><p>读服务均是查询，它是无状态的。无状态是指每次请求都是无副作用的、可以重复的。同样的请求入参，在后台数据无变化的情况下，多次重试的结果均一样。相比而言，写或者扣减业务就不行。</p>
+</li>
+<li><p>不管是架构升级还是日常需求，读服务对外接口的出入参格式是没有变化的。</p>
+</li>
+</ol>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230317230732350.png" alt="image-20230317230732350"></p>
+<p>采用过滤器的日志收集</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230317230830772.png" alt="image-20230317230830772"></p>
+<p>再过滤器中，会对所有的入参、出参进行记录，并通过MQ发送出去。</p>
+<p>记录的数据格式如下</p>
+<img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230317231015075.png" alt="image-20230317231015075" style="zoom:50%;">
+
+<p>对于发送出去的MQ，自动化回归的消费服务会按应用和接口进行处理，对于应用和接口方法的标识数据可以存储在数据库里，对于入参和出参可以存储在NoSQL里，如HBase（数据量大）。</p>
+<p>即使将参数存储在原生分布式的NoSQL里，也要对采集的日志进行一些过滤、去重以及无效数据定期清理等操作。</p>
+<p>对于压测，需要关闭日志采集，如果不做管控，对于存储的消耗将是巨大的。</p>
+<p>日志采集和业务处理在同一个进程里，会影响业务处理的性能。针对这种情况，可以将日志采集独立出来。</p>
+<p>单独进程的日志收集架构图：</p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230317231706868.png" alt="image-20230317231706868"></p>
+<p><strong>数据回放</strong></p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230317231816942.png" alt="image-20230317231816942"></p>
+<p><strong>差异对比</strong></p>
+<p>在完成了数据回放后，可以对回放产生的结果数据与预期数据进行比较。</p>
+<p>比较方式：二进制校验和（数据是否整体一致），文本比对（将数据转换成json格式，再进行对比）。</p>
+<p>采用文本对比，可以直观地看到哪个字段数据有差异，从而更快定位到问题。正常情况下，只要存在差异的数据，均可认为是bug，是需要进行修复的。有些时候，比如接口会对每次请求产生一个唯一标识，用此标识来打印日志并返回给调用方，此种情况，标识不一样而产生差异，但它不会对业务产生影响。（需要工具能够忽略标识字段）</p>
+<p><strong>离线回放模式</strong></p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230317232505211.png" alt="image-20230317232505211"></p>
+<p><strong>实时回放模式</strong></p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230317233829546.png" alt="image-20230317233829546"></p>
+<p><strong>无录制的实时回放模式</strong></p>
+<p><img src="/2023/03/11/%E6%9E%84%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E8%AF%BB%E6%9C%8D%E5%8A%A1/image-20230317233952479.png" alt="image-20230317233952479"></p>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
+<li>在进行自动化回归时，写接口一定要屏蔽。会产生脏数据。</li>
+<li>除了离线模式外，实时回放模式和无录制的实时回放模式，都会对线上系统产生一定的流量压力。</li>
+<li>即使采用了无录制的实时回放模式，也只是通过更长的时间的回放尽可能地覆盖更多地业务场景。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"># 架构</a> -->
+              <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"><i class="fa fa-tag"></i>  架构</a>
+              <!-- <a href="/tags/%E5%90%8E%E5%8F%B0%E6%9E%B6%E6%9E%84/" rel="tag"># 后台架构</a> -->
+              <a href="/tags/%E5%90%8E%E5%8F%B0%E6%9E%B6%E6%9E%84/" rel="tag"><i class="fa fa-tag"></i>  后台架构</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/03/10/%E5%90%8E%E5%8F%B0%E4%B8%9A%E5%8A%A1%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F/" rel="prev" title="后台业务系统的架构模式">
+      <i class="fa fa-chevron-left"></i> 后台业务系统的架构模式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/03/12/%E6%9E%84%E5%BB%BA%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E5%86%99%E6%9C%8D%E5%8A%A1/" rel="next" title="构建高可用的写服务">
+      构建高可用的写服务 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BB%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">读服务架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E5%B0%BD%E9%87%8F%E4%B8%8D%E8%A6%81%E5%88%86%E5%B1%82"><span class="nav-number">1.1.</span> <span class="nav-text">架构尽量不要分层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%B0%BD%E5%8F%AF%E8%83%BD%E7%AE%80%E5%8D%95"><span class="nav-number">1.2.</span> <span class="nav-text">代码尽可能简单</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E7%9A%84%E9%80%89%E5%9E%8B%E5%92%8C%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">存储的选型和架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E4%B8%80"><span class="nav-number">2.1.</span> <span class="nav-text">架构一</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%BA%E9%99%B7"><span class="nav-number">2.1.1.</span> <span class="nav-text">缺陷</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E5%9C%A8%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%9A%84%E9%A3%8E%E9%99%A9"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">存在缓存穿透的风险</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E9%9B%86%E4%B8%AD%E8%BF%87%E6%9C%9F%E5%AF%BC%E8%87%B4%E9%9B%AA%E5%B4%A9"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">缓存集中过期导致雪崩</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E4%BA%8C"><span class="nav-number">2.2.</span> <span class="nav-text">架构二</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%BA%E9%99%B7-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">缺陷</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%87%92%E5%8A%A0%E8%BD%BD%E6%97%A0%E6%B3%95%E6%84%9F%E7%9F%A5%E5%AE%9E%E6%97%B6%E5%8F%98%E6%9B%B4"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">懒加载无法感知实时变更</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%87%92%E5%8A%A0%E8%BD%BD%E6%97%A0%E6%B3%95%E6%91%86%E8%84%B1%E6%AF%9B%E5%88%BA%E7%9A%84%E5%9B%B0%E6%89%B0"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">懒加载无法摆脱毛刺的困扰</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A8%E9%87%8F%E7%BC%93%E5%AD%98%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">全量缓存的基本架构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8EBinlog%E7%9A%84%E5%85%A8%E9%87%8F%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84"><span class="nav-number">4.</span> <span class="nav-text">基于Binlog的全量缓存架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Binlog%E5%8E%9F%E7%90%86"><span class="nav-number">4.1.</span> <span class="nav-text">Binlog原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7"><span class="nav-number">4.2.</span> <span class="nav-text">开源工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8EBinlog%E7%9A%84%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5%E6%9E%B6%E6%9E%84"><span class="nav-number">4.3.</span> <span class="nav-text">基于Binlog的缓存同步架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E7%82%B9"><span class="nav-number">4.3.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">4.3.2.</span> <span class="nav-text">存在的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E4%B8%8A%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%8D%87%E7%9A%84%E7%82%B9"><span class="nav-number">4.3.3.</span> <span class="nav-text">技术上可以提升的点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8A%82%E7%9C%81%E7%BC%93%E5%AD%98%E7%9A%84%E6%8A%80%E5%B7%A7"><span class="nav-number">4.3.4.</span> <span class="nav-text">节省缓存的技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%80%E5%B7%A71"><span class="nav-number">4.3.4.1.</span> <span class="nav-text">技巧1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%80%E5%B7%A72"><span class="nav-number">4.3.4.2.</span> <span class="nav-text">技巧2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%80%E5%B7%A73"><span class="nav-number">4.3.4.3.</span> <span class="nav-text">技巧3</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E6%A0%A1%E5%87%86-%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="nav-number">4.4.</span> <span class="nav-text">异步校准+自动化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E4%BC%98%E7%82%B9"><span class="nav-number">4.5.</span> <span class="nav-text">其他优点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8EBinlog%E7%9A%84%E5%85%A8%E9%87%8F%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">基于Binlog的全量缓存架构问题分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Binlog%E5%A6%82%E4%BD%95%E5%8F%91%E9%80%81%E6%95%B0%E6%8D%AE"><span class="nav-number">5.1.</span> <span class="nav-text">Binlog如何发送数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Binlog%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E6%B6%88%E8%B4%B9"><span class="nav-number">5.2.</span> <span class="nav-text">Binlog如何高效消费</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E4%B8%B2%E8%A1%8C%E7%9A%84%E6%96%B9%E5%BC%8F%E8%BF%9B%E8%A1%8C%E6%B6%88%E8%B4%B9"><span class="nav-number">5.2.1.</span> <span class="nav-text">全串行的方式进行消费</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%87%E7%94%A8%E5%B9%B6%E8%A1%8C%E7%9A%84%E6%96%B9%E5%BC%8F%E6%8F%90%E5%8D%87%E5%90%9E%E5%90%90%E9%87%8F%E5%8F%8A%E6%89%A9%E5%B1%95%E6%80%A7"><span class="nav-number">5.2.2.</span> <span class="nav-text">采用并行的方式提升吞吐量及扩展性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E8%A1%8C-%E4%B8%B2%E8%A1%8C%E7%9A%84%E6%9E%B6%E6%9E%84%E6%96%B9%E6%A1%88"><span class="nav-number">5.2.3.</span> <span class="nav-text">并行+串行的架构方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">5.3.</span> <span class="nav-text">缓存结构设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%AF%B9%E6%AF%94%E5%8F%91%E7%8E%B0%E9%94%99%E8%AF%AF"><span class="nav-number">5.4.</span> <span class="nav-text">数据对比发现错误</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E5%86%99%E5%85%A5"><span class="nav-number">5.5.</span> <span class="nav-text">直接写入</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9%E7%83%AD%E7%82%B9%E6%95%B0%E6%8D%AE%E7%9A%84%E6%9F%A5%E8%AF%A2"><span class="nav-number">6.</span> <span class="nav-text">如何应对热点数据的查询</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%89%8D%E9%9D%A2%E7%9A%84%E6%9E%B6%E6%9E%84%E6%89%9B%E4%B8%8D%E4%BD%8F%E7%9B%B8%E5%90%8C%E7%94%A8%E6%88%B7%E7%99%BE%E4%B8%87%E7%9A%84%E6%B5%81%E9%87%8F"><span class="nav-number">6.1.</span> <span class="nav-text">为什么前面的架构扛不住相同用户百万的流量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%9B%E8%A1%8C%E5%9E%82%E7%9B%B4%E6%89%A9%E5%AE%B9"><span class="nav-number">6.2.</span> <span class="nav-text">主从复制进行垂直扩容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E5%BA%94%E7%94%A8%E5%86%85%E7%9A%84%E5%89%8D%E7%BD%AE%E7%BC%93%E5%AD%98"><span class="nav-number">6.3.</span> <span class="nav-text">利用应用内的前置缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%8D%E7%BA%A7%E5%85%9C%E5%BA%95%E4%B8%8D%E5%8F%AF%E5%B0%91"><span class="nav-number">6.4.</span> <span class="nav-text">降级兜底不可少</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%89%8D%E7%BD%AE%E7%AD%96%E7%95%A5"><span class="nav-number">6.5.</span> <span class="nav-text">其他前置策略</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%9B%9E%E5%BD%92"><span class="nav-number">7.</span> <span class="nav-text">自动化测试回归</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95"><span class="nav-number">7.1.</span> <span class="nav-text">为什么要自动化测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E5%BD%92"><span class="nav-number">7.2.</span> <span class="nav-text">如何实现自动化回归</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E5%BD%92%E6%96%B9%E6%A1%88%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">7.2.1.</span> <span class="nav-text">自动化回归方案的基本原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">7.3.</span> <span class="nav-text">注意事项</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">147</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>

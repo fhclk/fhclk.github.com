@@ -151,6 +151,582 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/02/01/Spark%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">Spark基础</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-01 21:07:40" itemprop="dateCreated datePublished" datetime="2022-02-01T21:07:40+08:00">2022-02-01</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Spark框架概述"><a href="#Spark框架概述" class="headerlink" title="Spark框架概述"></a>Spark框架概述</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>Apache Spark是用于大规模数据处理的统一分析引擎。</p>
+<p>RDD：弹性分布式数据集。RDD是一种分布式内存抽象，其使得程序员能够在大规模集群中做内存运算，并且有一定的容错方式。而这也是整个Spark的核心数据结构，Spark整个平台都围绕着RDD进行。</p>
+<p><img src="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/image-20221208221426265.png" alt="image-20221208221426265"></p>
+<p>Spark的特点是对任意类型的数据进行自定义计算。它可以计算结构化、半结构化、非结构化等各种类型的数据结构。同时也支持使用Python、Java、Scala、R及SQL语言去开发应用程序计算数据。</p>
+<h2 id="Spark-VS-Hadoop-MapReduce"><a href="#Spark-VS-Hadoop-MapReduce" class="headerlink" title="Spark VS Hadoop(MapReduce)"></a>Spark VS Hadoop(MapReduce)</h2><p>Spark和Hadoop技术栈的区别：</p>
+<p><img src="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/image-20221208221847274.png" alt="image-20221208221847274"></p>
+<p>尽管Spark相对Hadoop具有较大优势，但Spark并不能完全替代Hadoop。</p>
+<ul>
+<li>在计算层面，Spark相比较MapReduce有巨大的性能优势，但至今仍有许多计算工具基于MapReduce架构，比如非常成熟的Hive</li>
+<li>Spark仅做计算，而Hadoop生态圈不仅有计算（MapReduce），也有存储（HDFS）和资源管理调度（YARN），HDFS和YARN仍是许多大数据体系的核心架构。</li>
+</ul>
+<h2 id="Spark四大特点"><a href="#Spark四大特点" class="headerlink" title="Spark四大特点"></a>Spark四大特点</h2><h3 id="速度快"><a href="#速度快" class="headerlink" title="速度快"></a>速度快</h3><p>Spark支持内存计算，并且通过DAG（有向无环图）执行引擎支持无环数据流，其在内存中运行速度比MapReduce快（官方宣称比MapReduce快100倍，在硬盘中快10倍）。</p>
+<p>Spark处理数据与MapReduce处理数据相比，有两个不同点：</p>
+<ul>
+<li>Spark处理数据时，可以将中间处理结果存储到内存中。</li>
+<li>Spark提供了非常丰富的算子（API），可以做到复杂任务在一个Spark程序中完成。</li>
+</ul>
+<h3 id="易于使用"><a href="#易于使用" class="headerlink" title="易于使用"></a>易于使用</h3><p>Spark支持使用Python、Java、Scala、R及SQL语言去开发应用程序</p>
+<h3 id="通用性强"><a href="#通用性强" class="headerlink" title="通用性强"></a>通用性强</h3><p><img src="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/image-20221208223515333.png" alt="image-20221208223515333"></p>
+<p>可以在一个应用中无缝地使用这些工具库。</p>
+<h3 id="运行方式"><a href="#运行方式" class="headerlink" title="运行方式"></a>运行方式</h3><p>Spark支持多种运行方式。包括Hadoop和Mesos，也支持Standalone的独立运行模式，也可以运行在云Kubernetes上。</p>
+<p>对于数据源，Spark支持HDFS、HBase、Cassandra及Kafka等。</p>
+<h2 id="Spark框架模块"><a href="#Spark框架模块" class="headerlink" title="Spark框架模块"></a>Spark框架模块</h2><p><img src="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/image-20221208223922127.png" alt="image-20221208223922127"></p>
+<p><strong>Spark Core</strong></p>
+<p>Spark的核心，提供Spark核心功能，是Spark运行的基础。Spark Core以RDD为数据抽象，提供Python、Java、Scala、R语言的API，可以编程进行海量离线数据批处理计算。</p>
+<p><strong>SparkSQL</strong></p>
+<p>基于SparkCore之上，提供结构化数据的处理模块，SparkSQL支持以SQL语言对数据进行处理，SparkSQL本身针对离线计算场景。同时基于SparkSQL，Spark提供了StructedStreaming模块，进行数据流式计算。</p>
+<p><strong>SparkStreaming</strong></p>
+<p>以SparkCore为基础，提供数据流式计算的功能。</p>
+<p><strong>MLlib</strong></p>
+<p>以SparkCore为基础，进行机器学习，内置大量机器学习卡和API算法。</p>
+<p><strong>GraphX</strong></p>
+<p>以SparkCore为基础，进行图计算</p>
+<h2 id="Spark运行模式"><a href="#Spark运行模式" class="headerlink" title="Spark运行模式"></a>Spark运行模式</h2><p><strong>本地模式（单机）</strong></p>
+<p>以一个独立的进程，通过其内部的多个线程来模拟整个Spark运行环境</p>
+<p><strong>Standalone模式（集群）</strong></p>
+<p>Spark中各个角色以独立进程的形式存在，并组成Spark集群环境</p>
+<p><strong>Hadoop YARN模式（集群）</strong></p>
+<p>Spark中的各个角色运行在YARN的容器内部，并组成Spark集群环境</p>
+<p><strong>Kubernetes模式（容器集群）</strong></p>
+<p>Spark中的各个角色运行在Kubernetes的容器内部，并组成Spark集群环境</p>
+<h3 id="Spark的架构角色"><a href="#Spark的架构角色" class="headerlink" title="Spark的架构角色"></a>Spark的架构角色</h3><h4 id="YARN角色"><a href="#YARN角色" class="headerlink" title="YARN角色"></a>YARN角色</h4><p>资源管理层面：</p>
+<ul>
+<li>集群资源管理者（Master）：ResourceManager</li>
+<li>单机资源管理者（Worker）：NodeManager</li>
+</ul>
+<p>任务计算层面：</p>
+<ul>
+<li>单任务管理者（Master）：ApplicationMaster</li>
+<li>单任务执行者（Worder）：Task（容器内计算框架的工作角色）</li>
+</ul>
+<p><img src="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/image-20221208225238293.png" alt="image-20221208225238293"></p>
+<h4 id="Spark运行角色"><a href="#Spark运行角色" class="headerlink" title="Spark运行角色"></a>Spark运行角色</h4><p>资源管理层面：</p>
+<ul>
+<li>管理者：Master角色（管理整个集群的资源），YARN是ResourceManager</li>
+<li>工作者：Worker角色（管理单个服务器的资源），YARN是NodeManager</li>
+</ul>
+<p>任务执行层面</p>
+<ul>
+<li>某任务管理者：Driver角色（管理单个任务在运行的时候的工作），YARN是ApplicationMaster</li>
+<li>某任务执行者：Executor角色（单个任务运行的时候的一堆工作者，干活的），YARN是容器中运行的具体工作进程（TASK）</li>
+</ul>
+<p><img src="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/image-20221208225924296.png" alt="image-20221208225924296"></p>
+<h1 id="Spark部署方式"><a href="#Spark部署方式" class="headerlink" title="Spark部署方式"></a>Spark部署方式</h1><h2 id="Local"><a href="#Local" class="headerlink" title="Local"></a>Local</h2><p>Local模式是以一个独立进程配合其内部线程来提供完成Spark运行时环境。Local模式可以通过spark-shell&#x2F;pyspark&#x2F;spark-submit等来开启。</p>
+<h2 id="Standalone"><a href="#Standalone" class="headerlink" title="Standalone"></a>Standalone</h2><h3 id="Standalone架构"><a href="#Standalone架构" class="headerlink" title="Standalone架构"></a>Standalone架构</h3><p>Standalone模式是Sark自带的一种集群模式，不同于本地模式启动多个进程来模拟集群环境，Standalone模式是真实的在多个机器之间搭建Spark集群的环境，完全可以利用该模式搭建多机器机器，用于实际的大数据处理。</p>
+<p>Standalone是完整的Spark运行环境，其中Master角色以Master进程存在，Worker角色以Worker进程存在。Driver和Executor运行于Worker进程内，由Worker提供资源供给它们运行。</p>
+<p><img src="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/image-20221210151603188.png" alt="image-20221210151603188"></p>
+<p>Standalone集群在进程上主要有3类进程：</p>
+<ol>
+<li><p>主节点Master进程</p>
+<p>Master角色，管理整个集群资源，并托管运行各个任务的Driver。</p>
+</li>
+<li><p>从节点Workers</p>
+<p>Worker角色，管理每个集群的资源，分配对应的资源来运行Executor（TASK）；每个从节点分配资源信息给Worker管理，资源信息包含Memory和CPU Cores核数</p>
+</li>
+<li><p>历史服务器HistoryServer（可选）</p>
+<p>Spark Application运行完成后，保存事件日志数据至HDFS，启动HistoryServer可以查看应用运行相关信息</p>
+</li>
+</ol>
+<p><img src="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/image-20221210152323860.png" alt="image-20221210152323860"></p>
+<h3 id="Spark应用架构"><a href="#Spark应用架构" class="headerlink" title="Spark应用架构"></a>Spark应用架构</h3><p><img src="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/image-20221210155620073.png" alt="image-20221210155620073"></p>
+<p><img src="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/image-20221210155700797.png" alt="image-20221210155700797"></p>
+<p>从上图可以看出Spark Application运行到集群上时，由两部分组成：Driver Program和Excutors。</p>
+<p><strong>Driver Program</strong></p>
+<p>相当于AppMaster，整个应用的管理者，负责应用中所有Job的调度执行。</p>
+<p>运行JVM Process，运行程序的main函数，必须建立SparkContext上下文对象。</p>
+<p>一个SparkApplication仅有一个。</p>
+<p><strong>Executors</strong></p>
+<p>相当于一个线程池，运行JVM Process，其中有很多线程，每个线程运行一个Task任务，一个Task任务运行需要1 core CPU，所以可以认为Executor中线程数就等于CPU core核数。</p>
+<p>一个Spark Application中可以有多个Executors，可以设置个数和资源信息。</p>
+<p><strong>执行流程</strong></p>
+<p>用户程序从最开始的提交到最终的计算执行，需要经历一下几个阶段：</p>
+<ol>
+<li>用户程序创建SparkContext时，新创建的SparkContext实例会连接到ClusterManager。 ClusterManager会根据用户提交时设置的CPU和内存等信息为本次提交分配计算资源，启动Executor。</li>
+<li>Driver会将用户程序划分为不同的执行阶段Stage，每个执行阶段Stage由一组完全相同的Task组成，这些Task分别作用于待处理数据的不同分区。在接到划分完成和Task创建后，Driver会向Executor发送Task。</li>
+<li>Executor在接收到Task后，会下载Task的运行时依赖，在准备好Task的执行环境后，会开始执行Task，并且将Task的运行状态汇报给Driver。</li>
+<li>Driver会根据收到的Task的运行状态来处理不同的状态更新。Task分两种：一种时Shuffle Map Task，它实现数据的重新洗牌，洗牌的结果保存到Executor所在节点的文件系统中；另外一种是Result Task，它负责生成结果数据。</li>
+<li>Driver会不断地调用Task，将Task发送到Executor执行，在所有地Task都正确执行或者超过执行次数地限制仍然没有执行成功时停止。</li>
+</ol>
+<p><strong>Spark程序运行层次结构</strong></p>
+<p>Spark Application程序运行时三个核心概念：Job、Stage、Task。</p>
+<ul>
+<li><strong>Job</strong> ：由多个Task地并行计算部分，一般Spark中的action操作（如save、collect）会生成一个Job</li>
+<li><strong>Stage</strong> ：Job的组成单位，一个Job会切分成多个Stage，Stage彼此之间互相依赖顺序执行，而每个Stage是多个Task的集合，类似map和reduce stage</li>
+<li><strong>Task</strong> ：被分配到Executor的单位工作内容，它是Spark中的最小执行单位，一般来说有多少个paritition，就会有多少个Task，就会有多少个Task，每个Task只会处理单一分支上的数据。</li>
+</ul>
+<blockquote>
+<p>一个Spark Application中，包含多个Job，每个Job有多个Stage组成，每个Job的执行安装DAG图进行的。其中每个Satge中包含多个Task任务，每个Task以线程方式执行。</p>
+</blockquote>
+<p><strong>端口</strong></p>
+<ul>
+<li>4040：是一个运行的Application在运行的过程中临时绑定的端口，用以查看当前的任务状态。4040被占用会顺延到4041、4042等。4040是一个临时端口，当程序运行完成后，4040就会被注销。</li>
+<li>8080：默认时Standalone下，Master角色的web端口，用以查看当前Master（集群）的状态</li>
+<li>18080：默认时历史服务器的端口，由于每个程序运行完成后，4040端口就被注销了，可以通过历史服务费回看某个程序的运行状态。</li>
+</ul>
+<h2 id="Standalone-HA"><a href="#Standalone-HA" class="headerlink" title="Standalone HA"></a>Standalone HA</h2><p>基于Zookeeper实现HA</p>
+<p>Zookeeer提供了一个Leader Election机制，利用这个机制可以保证虽然集群存在多个Master，但是只有一个是Active，其他的都是Standby。当Active的Master出现故障时，另外的一个Standy Master会被选举出来。由于集群的信息，及woker、driver和Application的信息都已经持久化到文件系统，因此在切换的过程中只会影响新Job的提交，对于正在进行的Job没有任何影响。</p>
+<p><img src="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/image-20221210163520123.png" alt="image-20221210163520123"></p>
+<h2 id="Spark-On-YARN"><a href="#Spark-On-YARN" class="headerlink" title="Spark On YARN"></a>Spark On YARN</h2><p>多数情况下，各企业都会有Haddop集群，为了节约服务器资源，将Spark运行到YARN集群中，不需要再单独部署Spark Standalone集群。</p>
+<p>在Spark on YARN中，无需部署Spark集群，只要一个服务器充当Spark客户端，即可提交任务到YARN集群中运行。</p>
+<h3 id="Spark-On-YARN的本质"><a href="#Spark-On-YARN的本质" class="headerlink" title="Spark On YARN的本质"></a>Spark On YARN的本质</h3><p>Master角色由YARN的ResourceManager担任。</p>
+<p>Worker角色由YARN的NodeManager担任。</p>
+<p>Driver角色运行在YARN容器内或提交任务的客户端进程中。</p>
+<p>真正干活的Executor运行在YARN提供的容器内。</p>
+<p><img src="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/image-20221210172323763.png" alt="image-20221210172323763"></p>
+<h3 id="部署模式DeloyMode"><a href="#部署模式DeloyMode" class="headerlink" title="部署模式DeloyMode"></a>部署模式DeloyMode</h3><p><strong>Cluster模式</strong></p>
+<p>Driver运行在YARN容器内部，和ApplicationMaster在同一个容器内</p>
+<p><img src="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/image-20221210180238773.png" alt="image-20221210180238773"></p>
+<p>详细流程：</p>
+<p><img src="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/image-20221210182646551.png" alt="image-20221210182646551"></p>
+<p>具体流程步骤：</p>
+<ol>
+<li>任务提交后会和ResourceManager通讯申请启动ApplicationMaster；</li>
+<li>随后ResourceManager分配Container，在合适的NodeManager上启动ApplicationMaster，此时的ApplicationMaster就是Driver；</li>
+<li>Driver启动后向ResourceManager申请Executor内存，ResourceManager接到ApplicationMaster的资源申请后会分配Container，然后在合适的NodeManager上启动Executor进程；</li>
+<li>Executor进程启动后会向Driver反向注册，Executor全部注册完成后Driver开始执行main函数；</li>
+<li>之后执行到Action算子时，触发一个Job，并根据宽依赖开始划分stage，每个stage生成对应的TaskSet，之后将Task分发到各个Executor上执行</li>
+</ol>
+<p><strong>Client模式</strong></p>
+<p>Driver运行在客户端进程中，比如Driver运行在spark-submit程序的进程中</p>
+<p><img src="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/image-20221210180341609.png" alt="image-20221210180341609"></p>
+<p>详细流程：</p>
+<p><img src="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/image-20221210181813615.png" alt="image-20221210181813615"></p>
+<p>具体流程步骤：</p>
+<ol>
+<li>Driver在任务提交的本地机器上运行，Driver启动后会和ResourceManager通讯申请启动ApplicationMaster；</li>
+<li>随后ResourceManager分配Container，在合适的NodeManager上启动ApplicationMaster，此时的ApplicationMaster的功能相当于一个ExecutorLaucher，只负责向ResourceManager申请Executor内存；</li>
+<li>ResourceManager接到ApplicationMaster的资源申请后会分配Container，然后ApplicationMaster在资源分配指定的NodeManager上启动Executor进程；</li>
+<li>Executor进程启动后会向Driver反向注册，Executor全部注册完成后Driver开始执行main函数；</li>
+<li>之后执行到Action算子时，触发一个Job，并根据宽依赖开始划分stage，每个stage生成对应的TaskSet，之后将Task分发到各个Executor上执行</li>
+</ol>
+<p><strong>两种模式的区别</strong></p>
+<img src="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/image-20221210180524025.png" alt="image-20221210180524025" style="zoom:80%;">
+
+
+
+<p><strong>使用方式</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SPARK_HOME = /export/server/spark</span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">&#123;SPARK_HOME&#125;/bin/spark-submit --master yarn -- deploy-mode client|cluster test.py</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="PySpark"><a href="#PySpark" class="headerlink" title="PySpark"></a>PySpark</h1><p>PySpark是Spark官方提供的一个Python类库，内置了完全的Spark API，可以通过PySpark类库来编写Spark应用程序，并将其提交到Spark集群中运行。</p>
+<p>Python On Spark执行原理</p>
+<p>PySark宗旨是在不破坏Spark已有的运行时架构，在Spark架构外层包装一层Python API，借助Py4j实现Python和Java的交互，进而实现通过Python编写Spark应用程序，其运行时架构如图所示。</p>
+<p><img src="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/image-20221210202831245.png" alt="image-20221210202831245"></p>
+<p><img src="/2022/02/01/Spark%E5%9F%BA%E7%A1%80/image-20221210202906475.png" alt="image-20221210202906475"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/01/13/%E5%81%9A%E4%B8%80%E4%B8%AA%E6%9C%89%E6%B8%A9%E5%BA%A6%E6%9C%89%E6%9D%A1%E7%90%86%E7%9A%84%E8%A1%A8%E8%BE%BE%E8%80%85/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/13/%E5%81%9A%E4%B8%80%E4%B8%AA%E6%9C%89%E6%B8%A9%E5%BA%A6%E6%9C%89%E6%9D%A1%E7%90%86%E7%9A%84%E8%A1%A8%E8%BE%BE%E8%80%85/" class="post-title-link" itemprop="url">做一个有温度有条理的表达者</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-13 23:12:46" itemprop="dateCreated datePublished" datetime="2022-01-13T23:12:46+08:00">2022-01-13</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="为什么讲故事很重要"><a href="#为什么讲故事很重要" class="headerlink" title="为什么讲故事很重要"></a>为什么讲故事很重要</h1><p>输出是掌握别人传授干货的重要一环。【费曼学习法】<br>故事一直是传播信息的最重要的载体没有之一。</p>
+<h1 id="如何讲好一个故事"><a href="#如何讲好一个故事" class="headerlink" title="如何讲好一个故事"></a>如何讲好一个故事</h1><p>结构决定下限，其他(升华等)决定上限</p>
+<ol>
+<li>启(简单交代背景)</li>
+<li>承(引发共鸣)</li>
+<li>转(制造冲突，加强吸引注意。紧接反转，继续引发情绪共鸣)</li>
+<li>合(闭合式或开放式结局)</li>
+<li>升华(引出道理)</li>
+</ol>
+<h1 id="如何讲好一个道理"><a href="#如何讲好一个道理" class="headerlink" title="如何讲好一个道理"></a>如何讲好一个道理</h1><p>金字塔原理&#x2F;论证类比法</p>
+<img src="/2022/01/13/%E5%81%9A%E4%B8%80%E4%B8%AA%E6%9C%89%E6%B8%A9%E5%BA%A6%E6%9C%89%E6%9D%A1%E7%90%86%E7%9A%84%E8%A1%A8%E8%BE%BE%E8%80%85/image-20230219231456527.png" alt="image-20230219231456527" style="zoom:67%;">
+
+<ol>
+<li>结论先行(引起疑惑和兴趣)</li>
+<li>以上统下(从主论点引出多个分论点，分论点支撑主论点的成立)</li>
+<li>管理分组(归类整理)</li>
+<li>逻辑递进(控制分论点&#x2F;分组的逻辑关系，让听者不掉队)</li>
+</ol>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>借故事讲道理是传达思想最有效的方式。<br>讲好故事&#x2F;讲好道理&#x3D;超越80%地人。<br>讲好故事+讲好道理+有趣&#x3D;完美</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/" class="post-title-link" itemprop="url">Azkaban进阶</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-12 22:02:03" itemprop="dateCreated datePublished" datetime="2022-01-12T22:02:03+08:00">2022-01-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="JavaProcess-作业类型案例"><a href="#JavaProcess-作业类型案例" class="headerlink" title="JavaProcess 作业类型案例"></a>JavaProcess 作业类型案例</h1><p>JavaProcess 类型可以运行一个自定义主类方法，type 类型为 javaprocess，可用的配置为：</p>
+<blockquote>
+<p>Xms：最小堆</p>
+<p>Xmx：最大堆</p>
+<p>classpath：类路径</p>
+<p>java.class：要运行的 Java 对象，其中必须包含 Main 方法</p>
+<p>main.args：main 方法的参数</p>
+</blockquote>
+<p>案例：</p>
+<ol>
+<li><p>新建一个 azkaban 的 maven 工程</p>
+</li>
+<li><p>创建包名：com.st</p>
+</li>
+<li><p>创建 AzTest 类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AzTest</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;This is for testing&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>打包成 jar 包 azkaban-1.0-SNAPSHOT.jar</p>
+</li>
+<li><p>新建 testJava.flow，内容如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">nodes:</span><br><span class="line">  - name: test_java</span><br><span class="line">    type: javaprocess</span><br><span class="line">    config:</span><br><span class="line">      Xms: 96M</span><br><span class="line">      Xmx: 200M</span><br><span class="line">      java.class: com.st.AzTest</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>将 Jar 包、flow 文件和 project 文件打包成 javatest.zip</p>
+</li>
+<li><p>创建项目&#x3D;》上传 javatest.zip &#x3D;》执行作业&#x3D;》观察结果</p>
+</li>
+</ol>
+<h1 id="条件工作流案例"><a href="#条件工作流案例" class="headerlink" title="条件工作流案例"></a>条件工作流案例</h1><p>条件工作流功能允许用户自定义执行条件来决定是否运行某些Job。条件可以由当前Job的父 Job 输出的运行时参数构成，也可以使用预定义宏。在这些条件下，用户可以在确定 Job执行逻辑时获得更大的灵活性，例如，只要父 Job 之一成功，就可以运行当前 Job。</p>
+<h2 id="运行时参数案例"><a href="#运行时参数案例" class="headerlink" title="运行时参数案例"></a>运行时参数案例</h2><ol>
+<li><p>基本原理<br> （1）父 Job 将参数写入 JOB_OUTPUT_PROP_FILE 环境变量所指向的文件<br> （2）子 Job 使用 ${jobName:param}来获取父 Job 输出的参数并定义执行条件</p>
+</li>
+<li><p>支持的条件运算符：<br> （1）&#x3D;&#x3D; 等于<br> （2）!&#x3D; 不等于<br> （3）&gt; 大于<br> （4）&gt;&#x3D; 大于等于<br> （5）&lt; 小于<br> （6）&lt;&#x3D; 小于等于<br> （7）&amp;&amp; 与<br> （8）|| 或<br> （9）! 非</p>
+</li>
+<li><p>案例：</p>
+</li>
+</ol>
+<p>  需求：</p>
+<p>  JobA 执行一个 shell 脚本。</p>
+<p>  JobB 执行一个 shell 脚本，但 JobB 不需要每天都执行，而只需要每个周一执行。</p>
+<p>  （1）新建 JobA.sh</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">echo &quot;do JobA&quot;</span><br><span class="line">wk=`date +%w`</span><br><span class="line">echo &quot;&#123;\&quot;wk\&quot;:$wk&#125;&quot; &gt; $JOB_OUTPUT_PROP_FILE</span><br></pre></td></tr></table></figure>
+
+<p>  （2）新建 JobB.sh</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">echo &quot;do JobB&quot;</span><br></pre></td></tr></table></figure>
+
+<p>  （3）新建 condition.flow</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">nodes:</span><br><span class="line">- name: JobA</span><br><span class="line"> type: command</span><br><span class="line"> config:</span><br><span class="line"> command: sh JobA.sh</span><br><span class="line">- name: JobB</span><br><span class="line"> type: command</span><br><span class="line"> dependsOn:</span><br><span class="line"> - JobA</span><br><span class="line"> config:</span><br><span class="line"> command: sh JobB.sh</span><br><span class="line"> condition: $&#123;JobA:wk&#125; == 1</span><br></pre></td></tr></table></figure>
+
+<p>  （4）将 JobA.sh、JobB.sh、condition.flow 和 azkaban.project 打包成 condition.zip<br>  （5）创建 condition 项目&#x3D;》上传 condition.zip 文件&#x3D;》执行作业&#x3D;》观察结果<br>  （6）按照我们设定的条件，JobB 会根据当日日期决定是否执行。</p>
+<p>  <img src="/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230227233252168.png" alt="image-20230227233252168"></p>
+<h2 id="预定义宏案例"><a href="#预定义宏案例" class="headerlink" title="预定义宏案例"></a>预定义宏案例</h2><p>Azkaban 中预置了几个特殊的判断条件，称为预定义宏。<br>预定义宏会根据所有父 Job 的完成情况进行判断，再决定是否执行。可用的预定义宏如<br>下：<br>（1）all_success: 表示父 Job 全部成功才执行(默认)<br>（2）all_done：表示父 Job 全部完成才执行<br>（3）all_failed：表示父 Job 全部失败才执行<br>（4）one_success：表示父 Job 至少一个成功才执行<br>（5）one_failed：表示父 Job 至少一个失败才执行</p>
+<p>案例<br>需求：<br>JobA 执行一个 shell 脚本<br>JobB 执行一个 shell 脚本<br>JobC 执行一个 shell 脚本，要求 JobA、JobB 中有一个成功即可执行<br>（1）新建 JobA.sh</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">echo &quot;do JobA&quot;</span><br></pre></td></tr></table></figure>
+<p>（2）新建 JobC.sh</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">echo &quot;do JobC&quot;</span><br></pre></td></tr></table></figure>
+<p>（3）新建 macro.flow</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">nodes:</span><br><span class="line">- name: JobA</span><br><span class="line"> type: command</span><br><span class="line"> config:</span><br><span class="line"> command: sh JobA.sh</span><br><span class="line">- name: JobB</span><br><span class="line"> type: command</span><br><span class="line"> config:</span><br><span class="line"> command: sh JobB.sh</span><br><span class="line">- name: JobC</span><br><span class="line"> type: command</span><br><span class="line"> dependsOn:</span><br><span class="line"> - JobA</span><br><span class="line"> - JobB</span><br><span class="line"> config:</span><br><span class="line"> command: sh JobC.sh</span><br><span class="line"> condition: one_success</span><br></pre></td></tr></table></figure>
+<p>（4）JobA.sh、JobC.sh、macro.flow、azkaban.project 文件，打包成 macro.zip。<br>注意：没有 JobB.sh。<br>（5）创建 macro 项目&#x3D;》上传 macro.zip 文件&#x3D;》执行作业&#x3D;》观察结果</p>
+<p><img src="/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230227233228872.png" alt="image-20230227233228872"></p>
+<h1 id="定时执行案例"><a href="#定时执行案例" class="headerlink" title="定时执行案例"></a>定时执行案例</h1><p>需求：JobA 每间隔 1 分钟执行一次；</p>
+<p>具体步骤：</p>
+<p>1）Azkaban 可以定时执行工作流。在执行工作流时候，选择左下角 Schedule</p>
+<p><img src="/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230228210029040.png" alt="image-20230228210029040"></p>
+<p>2）右上角注意时区是上海，然后在左面填写具体执行事件，填写的方法和 crontab 配置定时任务规则一致。</p>
+<p><img src="/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230228210157551.png" alt="image-20230228210157551"></p>
+<p><img src="/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230228210241189.png" alt="image-20230228210241189"></p>
+<p>3）观察结果</p>
+<p><img src="/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230228210331444.png" alt="image-20230228210331444"></p>
+<p><img src="/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230228210359458.png" alt="image-20230228210359458"></p>
+<p>4）删除定时调度</p>
+<p>点击 remove Schedule 即可删除当前任务的调度规则。</p>
+<p><img src="/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230228210435344.png" alt="image-20230228210435344"></p>
+<h1 id="Azkaban-多-Executor-模式注意事项"><a href="#Azkaban-多-Executor-模式注意事项" class="headerlink" title="Azkaban 多 Executor 模式注意事项"></a>Azkaban 多 Executor 模式注意事项</h1><p>Azkaban 多 Executor 模式是指，在集群中多个节点部署 Executor。在这种模式下，<br>Azkaban web Server 会根据策略，选取其中一个 Executor 去执行任务。<br>为确保所选的 Executor 能够准确的执行任务，我们须在以下两种方案任选其一，推荐使<br>用方案二。<br>方案一：指定特定的 Executor（node1）去执行任务。<br>1）在 MySQL 中 azkaban 数据库 executors 表中，查询 node1 上的 Executor 的 id。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; use azkaban;</span><br><span class="line">Reading table information for completion of table and column names</span><br><span class="line">You can turn off this feature to get a quicker startup with -A</span><br><span class="line">Database changed</span><br><span class="line">mysql&gt; select * from executors;</span><br><span class="line">+----+-----------+-------+--------+</span><br><span class="line">| id | host | port | active |</span><br><span class="line">+----+-----------+-------+--------+</span><br><span class="line">| 1 | node1 | 12321 | 1 |</span><br><span class="line">| 2 | node2 | 12321 | 1 |</span><br><span class="line">| 3 | node3 | 12321 | 1 |</span><br><span class="line">+----+-----------+-------+--------+</span><br><span class="line">3 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<p>2）在执行工作流程时加入 useExecutor 属性，如下</p>
+<p><img src="/2022/01/12/Azkaban%E8%BF%9B%E9%98%B6/image-20230227233001173.png" alt="image-20230227233001173"></p>
+<p>方案二：在 Executor 所在所有节点部署任务所需脚本和应用。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/01/09/Azkaban%E6%A1%88%E4%BE%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/09/Azkaban%E6%A1%88%E4%BE%8B/" class="post-title-link" itemprop="url">Azkaban案例</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-09 22:02:49" itemprop="dateCreated datePublished" datetime="2022-01-09T22:02:49+08:00">2022-01-09</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Work-Flow案例"><a href="#Work-Flow案例" class="headerlink" title="Work Flow案例"></a>Work Flow案例</h1><h2 id="Hello-World案例"><a href="#Hello-World案例" class="headerlink" title="Hello World案例"></a>Hello World案例</h2><ol>
+<li><p>在 windows 环境， 新建 azkaban.project 文件， 编辑内容如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">azkaban-flow-version: 2.0</span><br></pre></td></tr></table></figure>
+
+<p>注意：该文件作用，是采用新的 Flow-API 方式解析 flow 文件。</p>
+</li>
+<li><p>新建 basic.flow 文件，内容如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">nodes:</span><br><span class="line">\- name: jobA</span><br><span class="line">type: command</span><br><span class="line">config:</span><br><span class="line">command: echo &quot;Hello World&quot;</span><br></pre></td></tr></table></figure>
+
+<p>（1） Name： job 名称<br>（2） Type： job 类型。 command 表示你要执行作业的方式为命令<br>（3） Config： job 配置</p>
+</li>
+<li><p>将 azkaban.project、 basic.flow 文件压缩到一个 zip 文件(first.zip)，文件名称必须是英文。  </p>
+</li>
+<li><p>在 WebServer 新建项目： <a target="_blank" rel="noopener" href="http://node1:8081/index">http://node1:8081/index</a>  </p>
+</li>
+<li><p>给项目名称命名和添加项目描述  </p>
+</li>
+<li><p>上传文件 first.zip  </p>
+</li>
+<li><p>执行任务流  </p>
+</li>
+<li><p>在日志文件中，查看运行结果</p>
+</li>
+</ol>
+<h2 id="作业依赖案例"><a href="#作业依赖案例" class="headerlink" title="作业依赖案例"></a>作业依赖案例</h2><p>需求： JobA 和 JobB 执行完了，才能执行 JobC<br>具体步骤：  </p>
+<ol>
+<li><p>修改 basic.flow 为如下内容  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">nodes:</span><br><span class="line">- name: jobC</span><br><span class="line">type: command</span><br><span class="line"># jobC 依赖 JobA 和 JobB</span><br><span class="line">dependsOn:</span><br><span class="line">- jobA</span><br><span class="line">- jobB</span><br><span class="line">config:</span><br><span class="line">command: echo &quot;I’m JobC&quot;</span><br><span class="line">- name: jobA</span><br><span class="line">type: command</span><br><span class="line">config:</span><br><span class="line">command: echo &quot;I’m JobA&quot;</span><br><span class="line">- name: jobB</span><br><span class="line">type: command</span><br><span class="line">config:</span><br><span class="line">command: echo &quot;I’m JobB&quot;</span><br></pre></td></tr></table></figure>
+
+<p>dependsOn：作业依赖  </p>
+</li>
+<li><p>将修改后的 basic.flow 和 azkaban.project 压缩成 second.zip 文件  </p>
+</li>
+<li><p>重复 HelloWorld 案例后续步骤</p>
+</li>
+</ol>
+<h2 id="自动失败重试案例"><a href="#自动失败重试案例" class="headerlink" title="自动失败重试案例"></a>自动失败重试案例</h2><p>需求：如果执行任务失败，需要重试 3 次，重试的时间间隔 10000ms<br>具体步骤：</p>
+<ol>
+<li><p>编译配置流  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">nodes:</span><br><span class="line">- name: JobA</span><br><span class="line">type: command</span><br><span class="line">config:</span><br><span class="line">command: sh /not_exists.sh</span><br><span class="line">retries: 3</span><br><span class="line">retry.backoff: 10000</span><br></pre></td></tr></table></figure>
+
+<p>参数说明：<br>retries：重试次数<br>retry.backoff：重试的时间间隔  </p>
+</li>
+<li><p>将修改后的 basic.flow 和 azkaban.project 压缩成 four.zip 文件  </p>
+</li>
+<li><p>重复 HelloWorld 案例后续步骤  </p>
+</li>
+<li><p>执行并观察到一次失败+三次重试  </p>
+</li>
+<li><p>也可以在 Flow 全局配置中添加任务失败重试配置，此时重试配置会应用到所有 Job。  </p>
+<p>案例如下：  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">config:</span><br><span class="line">retries: 3</span><br><span class="line">retry.backoff: 10000</span><br><span class="line">nodes:</span><br><span class="line">- name: JobA</span><br><span class="line">type: command</span><br><span class="line">config:</span><br><span class="line">command: sh /not_exists.sh</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="手动失败重试案例"><a href="#手动失败重试案例" class="headerlink" title="手动失败重试案例"></a>手动失败重试案例</h2><p>需求： JobA&#x3D;》 JobB（依赖于 A） &#x3D;》 JobC&#x3D;》 JobD&#x3D;》 JobE&#x3D;》 JobF。生产环境，任何 Job 都<br>有可能挂掉，可以根据需求执行想要执行的 Job。<br>具体步骤：</p>
+<ol>
+<li><p>编译配置流  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">nodes:</span><br><span class="line">- name: JobA</span><br><span class="line">type: command</span><br><span class="line">config:</span><br><span class="line">command: echo &quot;This is JobA.&quot;</span><br><span class="line">- name: JobB</span><br><span class="line">type: command</span><br><span class="line">dependsOn:</span><br><span class="line">- JobA</span><br><span class="line">config:</span><br><span class="line">command: echo &quot;This is JobB.&quot;</span><br><span class="line">- name: JobC</span><br><span class="line">type: command</span><br><span class="line">dependsOn:</span><br><span class="line">- JobB</span><br><span class="line">config:</span><br><span class="line">command: echo &quot;This is JobC.&quot;</span><br><span class="line">- name: JobD</span><br><span class="line">type: command</span><br><span class="line">dependsOn:</span><br><span class="line">- JobC</span><br><span class="line">config:</span><br><span class="line">command: echo &quot;This is JobD.&quot;</span><br><span class="line">- name: JobE</span><br><span class="line">type: command</span><br><span class="line">dependsOn:</span><br><span class="line">- JobD</span><br><span class="line">config:</span><br><span class="line">command: echo &quot;This is JobE.&quot;</span><br><span class="line">- name: JobF</span><br><span class="line">type: command</span><br><span class="line">dependsOn:</span><br><span class="line">- JobE</span><br><span class="line">config:</span><br><span class="line">command: echo &quot;This is JobF.&quot;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>将修改后的 basic.flow 和 azkaban.project 压缩成 five.zip 文件  </p>
+</li>
+<li><p>重复 HelloWorld 案例后续步骤</p>
+<p>Enable 和 Disable 下面都分别有如下参数：<br>Parents：该作业的上一个任务<br>Ancestors：该作业前的所有任务<br>Children：该作业后的一个任务<br>Descendents：该作业后的所有任务<br>Enable All： 所有的任务  </p>
+</li>
+<li><p>可以根据需求选择性执行对应的任务。</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/01/06/Azkaban%E9%83%A8%E7%BD%B2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2029,1351 +2605,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/11/04/Sqoop%E7%AE%80%E5%8D%95%E6%A1%88%E4%BE%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/04/Sqoop%E7%AE%80%E5%8D%95%E6%A1%88%E4%BE%8B/" class="post-title-link" itemprop="url">Sqoop简单案例</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-11-04 21:10:18" itemprop="dateCreated datePublished" datetime="2021-11-04T21:10:18+08:00">2021-11-04</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="导入数据"><a href="#导入数据" class="headerlink" title="导入数据"></a>导入数据</h1><p>在Sqoop中，“导入”概念指：从非大数据集群（RDBMS）向大数据集群（HDFS，HIVE，HBASE）中传输数据，叫做：导入，即使用import关键字。</p>
-<h2 id="RDBMS到HDFS"><a href="#RDBMS到HDFS" class="headerlink" title="RDBMS到HDFS"></a>RDBMS到HDFS</h2><ol>
-<li><p>确定Mysql服务开启正常</p>
-</li>
-<li><p>在Mysql中新建一张表并插入一些数据</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> DATABASE company;</span><br><span class="line"></span><br><span class="line"><span class="keyword">show</span> <span class="keyword">create</span> database company;</span><br><span class="line"><span class="keyword">ALTER</span> DATABASE company <span class="type">CHARACTER</span> <span class="keyword">SET</span> <span class="operator">=</span> utf8mb4 <span class="keyword">COLLATE</span> <span class="operator">=</span> utf8mb4_unicode_ci;</span><br><span class="line"></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">TABLE</span> company.staff;</span><br><span class="line"></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> company.staff(</span><br><span class="line">	id <span class="type">int</span>(<span class="number">4</span>) <span class="keyword">PRIMARY</span> key <span class="keyword">not</span> <span class="keyword">null</span> auto_increment,</span><br><span class="line">	name <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">	sex <span class="type">VARCHAR</span>(<span class="number">255</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> company.staff(name, sex) <span class="keyword">values</span>(<span class="string">&#x27;张三&#x27;</span>, <span class="string">&#x27;男&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> company.staff(name, sex) <span class="keyword">values</span>(<span class="string">&#x27;朱四&#x27;</span>, <span class="string">&#x27;男&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> company.staff(name, sex) <span class="keyword">values</span>(<span class="string">&#x27;李兰&#x27;</span>, <span class="string">&#x27;女&#x27;</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> company.staff(name, sex) <span class="keyword">values</span>(<span class="string">&#x27;王芳&#x27;</span>, <span class="string">&#x27;女&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> company.staff;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>导入数据</p>
-<p>a. 全部导入</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 sqoop]# bin/sqoop import \</span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">--connect jdbc:mysql://node1:3306/company \</span></span><br><span class="line"><span class="language-bash">&gt; --username root \</span></span><br><span class="line"><span class="language-bash">&gt; --password hadoop \</span></span><br><span class="line"><span class="language-bash">&gt; --table staff \</span></span><br><span class="line"><span class="language-bash">&gt; --target-dir /user/company \</span></span><br><span class="line"><span class="language-bash">&gt; --delete-target-dir \</span></span><br><span class="line"><span class="language-bash">&gt; --num-mappers 1 \</span></span><br><span class="line"><span class="language-bash">&gt; --fields-terminated-by <span class="string">&quot;\t&quot;</span></span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>b. 查询导入</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 sqoop]# bin/sqoop import \</span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">--connect jdbc:mysql://node1:3306/company \</span></span><br><span class="line"><span class="language-bash">&gt; --username root \</span></span><br><span class="line"><span class="language-bash">&gt; --password hadoop \</span></span><br><span class="line"><span class="language-bash">&gt; --target-dir /user/company \</span></span><br><span class="line"><span class="language-bash">&gt; --delete-target-dir \</span></span><br><span class="line"><span class="language-bash">&gt; --num-mappers 1 \</span></span><br><span class="line"><span class="language-bash">&gt; --fields-terminated-by <span class="string">&quot;\t&quot;</span> \</span></span><br><span class="line"><span class="language-bash">&gt; --query <span class="string">&#x27;select name,sex from staff where id&lt;=1 and $CONDITIONS;&#x27;</span></span></span><br></pre></td></tr></table></figure>
-
-<p>提示：must contain ‘$CONDITIONS’ in WHERE clause.</p>
-<p>如果query后使用的是双引号，则$CONDITIONS前必须加转移符，防止shell识别为自己的变量。</p>
-<p>c. 导入指定列</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 sqoop]# bin/sqoop import \</span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">--connect jdbc:mysql://node1:3306/company \</span></span><br><span class="line"><span class="language-bash">&gt; --username root \</span></span><br><span class="line"><span class="language-bash">&gt; --password hadoop \</span></span><br><span class="line"><span class="language-bash">&gt; --target-dir /user/company \</span></span><br><span class="line"><span class="language-bash">&gt; --delete-target-dir \</span></span><br><span class="line"><span class="language-bash">&gt; --num-mappers 1 \</span></span><br><span class="line"><span class="language-bash">&gt; --fields-terminated-by <span class="string">&quot;\t&quot;</span> \</span></span><br><span class="line"><span class="language-bash">&gt; --columns <span class="built_in">id</span>,sex \</span></span><br><span class="line"><span class="language-bash">&gt; --table staff</span></span><br></pre></td></tr></table></figure>
-
-<p>提示：columns中如果涉及到多列，用逗号分隔，分隔时不要添加空格</p>
-<p>d. 使用sqoop关键字筛选查询导入数据</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 sqoop]# bin/sqoop import \</span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">--connect jdbc:mysql://node1:3306/company \</span></span><br><span class="line"><span class="language-bash">&gt; --username root \</span></span><br><span class="line"><span class="language-bash">&gt; --password hadoop \</span></span><br><span class="line"><span class="language-bash">&gt; --target-dir /user/company \</span></span><br><span class="line"><span class="language-bash">&gt; --delete-target-dir \</span></span><br><span class="line"><span class="language-bash">&gt; --num-mappers 1 \</span></span><br><span class="line"><span class="language-bash">&gt; --fields-terminated-by <span class="string">&quot;\t&quot;</span> \</span></span><br><span class="line"><span class="language-bash">&gt; --table staff \</span></span><br><span class="line"><span class="language-bash">&gt; --<span class="built_in">where</span> <span class="string">&quot;id=1&quot;</span></span></span><br></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="RDBMS到HIVE"><a href="#RDBMS到HIVE" class="headerlink" title="RDBMS到HIVE"></a>RDBMS到HIVE</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 sqoop]# bin/sqoop import \</span><br><span class="line">--connect jdbc:mysql://node1:3306/company \</span><br><span class="line">--username root \</span><br><span class="line">--password hadoop \</span><br><span class="line">--table staff \</span><br><span class="line">--num-mappers 1 \</span><br><span class="line">--hive-import \</span><br><span class="line">--fields-terminated-by &quot;\t&quot; \</span><br><span class="line">--hive-overwrite \</span><br><span class="line">--hive-table staff_hive</span><br></pre></td></tr></table></figure>
-
-<p>提示：该过程分为两步，第一步将数据导入到HDFS，第二步将导入到HDFS的数据迁移到Hive仓库，第一步默认的临时目录是&#x2F;user&#x2F;root&#x2F;表名</p>
-<h2 id="RDBMS到HBase"><a href="#RDBMS到HBase" class="headerlink" title="RDBMS到HBase"></a>RDBMS到HBase</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 sqoop]# bin/sqoop import \</span><br><span class="line">--connect jdbc:mysql://node1:3306/company \</span><br><span class="line">--username root \</span><br><span class="line">--password hadoop \</span><br><span class="line">--table company \</span><br><span class="line">--columns &quot;id,name,sex&quot; \</span><br><span class="line">--column-family &quot;info&quot; \</span><br><span class="line">--hbase-create-table \</span><br><span class="line">--hbase-row-key &quot;id&quot; \</span><br><span class="line">--hbase-table &quot;hbase_company&quot; \</span><br><span class="line">--num-mappers 1 \</span><br><span class="line">--split-by id</span><br></pre></td></tr></table></figure>
-
-<p>提示：sqoop1.4.6只支持HBase1.0.1之前的版本的自动创建HBase表的功能</p>
-<p>解决方案：手动创建HBase表</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">hbase&gt; </span><span class="language-bash">create <span class="string">&#x27;hbase_company,&#x27;</span>info<span class="string">&#x27;</span></span></span><br></pre></td></tr></table></figure>
-
-<p>在HBase中scan这张表得到如下内容</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">hbase&gt; </span><span class="language-bash">scan <span class="string">&#x27;hbase_company&#x27;</span></span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h1 id="导出数据"><a href="#导出数据" class="headerlink" title="导出数据"></a>导出数据</h1><p>在Sqoop中，“导出”概念指：从大数据集群（HDFS，HIVE，HBASE）向非大数据集群（RDBMS）中传输数据，叫做：导出，即使用export关键字。</p>
-<h2 id="HIVE-x2F-HDFS到RDBMS"><a href="#HIVE-x2F-HDFS到RDBMS" class="headerlink" title="HIVE&#x2F;HDFS到RDBMS"></a>HIVE&#x2F;HDFS到RDBMS</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 sqoop]# bin/sqoop export \</span><br><span class="line">--connect jdbc:mysql://node1:3306/company \</span><br><span class="line">--username root \</span><br><span class="line">--password hadoop \</span><br><span class="line">--table staff \</span><br><span class="line">--num-mappers 1 \</span><br><span class="line">--export-dir /user/hive/warehouse/staff_hive \</span><br><span class="line">--input-fields-terminated-by &quot;\t&quot;</span><br></pre></td></tr></table></figure>
-
-<p>提示：Mysql中如果表不存在，不会自动创建</p>
-<h2 id="脚本打包"><a href="#脚本打包" class="headerlink" title="脚本打包"></a>脚本打包</h2><p>使用opt格式的文件打包sqoop命令，然后执行</p>
-<ol>
-<li><p>创建一个.opt文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 sqoop]# mkdir opt</span><br><span class="line">(base) [root@node1 sqoop]# touch opt/job_HDFS2RDBMS.opt</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>编写sqoop脚本</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 sqoop]# vim opt/job_HDFS2RDBMS.opt</span><br><span class="line"></span><br><span class="line">export</span><br><span class="line">--connect</span><br><span class="line">jdbc:mysql://node1:3306/company</span><br><span class="line">--username</span><br><span class="line">root</span><br><span class="line">--password</span><br><span class="line">hadoop</span><br><span class="line">--table</span><br><span class="line">staff</span><br><span class="line">--num-mappers</span><br><span class="line">1</span><br><span class="line">--export-dir</span><br><span class="line">/user/hive/warehouse/staff_hive</span><br><span class="line">--input-fields-terminated-by</span><br><span class="line">&quot;\t&quot;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>执行该脚本</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 sqoop]# bin/sqoop --options-file opt/job_HDFS2RDBMS.opt</span><br></pre></td></tr></table></figure></li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/11/03/Sqoop%E6%A6%82%E5%BF%B5%E4%B8%8E%E5%AE%89%E8%A3%85/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/03/Sqoop%E6%A6%82%E5%BF%B5%E4%B8%8E%E5%AE%89%E8%A3%85/" class="post-title-link" itemprop="url">Sqoop概念与安装</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-11-03 22:00:02" itemprop="dateCreated datePublished" datetime="2021-11-03T22:00:02+08:00">2021-11-03</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Sqoop概念"><a href="#Sqoop概念" class="headerlink" title="Sqoop概念"></a>Sqoop概念</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Sqoop是一款开源的工具，主要用于在Hadoop(Hive)与传统的数据库(mysql、postgresql…)间进行数据的传递，可以将一个关系型数据库（例如 ： MySQL ,Oracle ,Postgres等）中的数据导进到Hadoop的HDFS中，也可以将HDFS的数据导进到关系型数据库中。</p>
-<p>Sqoop项目开始于2009年，最早是作为Hadoop的一个第三方模块存在，后来为了让使用者能够快速部署，也为了让开发人员能够更快速的迭代开发，Sqoop独立成为一个Apache项目。</p>
-<p>Sqoop2的最新版本是1.99.7。请注意，2与1不兼容，且特征不完整，它并不打算用于生产部署。</p>
-<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>将导入或导出命令翻译成mapreduce程序来实现。</p>
-<p>在翻译出的mapreduce中主要是对inputformat和outputformat进行定制。</p>
-<h1 id="Sqoop安装"><a href="#Sqoop安装" class="headerlink" title="Sqoop安装"></a>Sqoop安装</h1><h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><p>已安装Java和Hadoop</p>
-<h2 id="下载并解压"><a href="#下载并解压" class="headerlink" title="下载并解压"></a>下载并解压</h2><ol>
-<li><p>下载地址</p>
-<p><a target="_blank" rel="noopener" href="https://archive.apache.org/dist/sqoop/1.4.7/">https://archive.apache.org/dist/sqoop/1.4.7/</a></p>
-<p>下载 sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz和sqoop-1.4.7.tar.gz ，原因是它没有支持hadoop3以上的版本。</p>
-</li>
-<li><p>上传至服务器</p>
-<p>将sqoop-1.4.7.tar.gz上传到&#x2F;export&#x2F;software&#x2F;目录</p>
-</li>
-<li><p>解压</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 software]# tar -zxvf sqoop-1.4.7.tar.gz </span><br><span class="line">(base) [root@node1 software]# mv sqoop-1.4.7 ../server/sqoop</span><br></pre></td></tr></table></figure>
-
-<p>本地解压 sqoop-1.4.7.bin_hadoop-2.6.0.tar.gz，将根目录下的sqoop-1.4.7.jar上传至&#x2F;export&#x2F;server&#x2F;sqoop目录。将 sqoop-1.4.7.bin_hadoop-2.6.0中lib目录下的ant-contrib-1.0b3.jar、ant-eclipse-1.0-jvm1.2.jar和avro-1.8.1.jar三个文件上传至&#x2F;export&#x2F;server&#x2F;sqoop&#x2F;lib目录</p>
-</li>
-</ol>
-<h2 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h2><ol>
-<li><p>重命名配置文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 conf]# mv sqoop-env-template.sh sqoop-env.sh</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>修改配置文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 conf]# vim sqoop-env.sh </span><br></pre></td></tr></table></figure>
-
-<p>添加内容</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">export</span> <span class="string">HADOOP_COMMON_HOME=/export/server/hadoop-3.3.0</span></span><br><span class="line"><span class="attr">export</span> <span class="string">HADOOP_MAPRED_HOME=/export/server/hadoop-3.3.0</span></span><br><span class="line"><span class="attr">export</span> <span class="string">HIVE_HOME=/export/server/apache-hive-3.1.2-bin</span></span><br><span class="line"><span class="attr">export</span> <span class="string">HIVE_CONF_DIR=/export/server/apache-hive-3.1.2-bin/conf</span></span><br><span class="line"><span class="attr">export</span> <span class="string">HADOOP_CLASSPATH=$HADOOP_CLASSPATH:$HIVE_HOME/lib/*</span></span><br></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="拷贝JDBC驱动"><a href="#拷贝JDBC驱动" class="headerlink" title="拷贝JDBC驱动"></a>拷贝JDBC驱动</h2><p>拷贝jdbc驱动到sqoop的lib目录下</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 sqoop]# cp /export/server/apache-hive-3.1.2-bin/lib/mysql-connector-java-5.1.32.jar ./lib/</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="验证Sqoop"><a href="#验证Sqoop" class="headerlink" title="验证Sqoop"></a>验证Sqoop</h2><p>warning忽略</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 sqoop]# ./bin/sqoop help</span><br><span class="line">Warning: /export/server/sqoop/bin/../../hcatalog does not exist! HCatalog jobs will fail.</span><br><span class="line">Please set $HCAT_HOME to the root of your HCatalog installation.</span><br><span class="line">Warning: /export/server/sqoop/bin/../../accumulo does not exist! Accumulo imports will fail.</span><br><span class="line">Please set $ACCUMULO_HOME to the root of your Accumulo installation.</span><br><span class="line">Warning: /export/server/sqoop/bin/../../zookeeper does not exist! Accumulo imports will fail.</span><br><span class="line">Please set $ZOOKEEPER_HOME to the root of your Zookeeper installation.</span><br><span class="line">SLF4J: Class path contains multiple SLF4J bindings.</span><br><span class="line">SLF4J: Found binding in [jar:file:/export/server/hadoop-3.3.0/share/hadoop/common/lib/slf4j-log4j12-1.7.25.jar!/org/slf4j/impl/StaticLoggerBinder.class]</span><br><span class="line">SLF4J: Found binding in [jar:file:/export/server/apache-hive-3.1.2-bin/lib/log4j-slf4j-impl-2.10.0.jar!/org/slf4j/impl/StaticLoggerBinder.class]</span><br><span class="line">SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.</span><br><span class="line">SLF4J: Actual binding is of type [org.slf4j.impl.Log4jLoggerFactory]</span><br><span class="line">2023-02-04 22:39:39,872 INFO sqoop.Sqoop: Running Sqoop version: 1.4.7</span><br><span class="line">usage: sqoop COMMAND [ARGS]</span><br><span class="line"></span><br><span class="line">Available commands:</span><br><span class="line">  codegen            Generate code to interact with database records</span><br><span class="line">  create-hive-table  Import a table definition into Hive</span><br><span class="line">  eval               Evaluate a SQL statement and display the results</span><br><span class="line">  export             Export an HDFS directory to a database table</span><br><span class="line">  help               List available commands</span><br><span class="line">  import             Import a table from a database to HDFS</span><br><span class="line">  import-all-tables  Import tables from a database to HDFS</span><br><span class="line">  import-mainframe   Import datasets from a mainframe server to HDFS</span><br><span class="line">  job                Work with saved jobs</span><br><span class="line">  list-databases     List available databases on a server</span><br><span class="line">  list-tables        List available tables in a database</span><br><span class="line">  merge              Merge results of incremental imports</span><br><span class="line">  metastore          Run a standalone Sqoop metastore</span><br><span class="line">  version            Display version information</span><br><span class="line"></span><br><span class="line">See &#x27;sqoop help COMMAND&#x27; for information on a specific command.</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="测试Sqoop是否能够成功连接数据库"><a href="#测试Sqoop是否能够成功连接数据库" class="headerlink" title="测试Sqoop是否能够成功连接数据库"></a>测试Sqoop是否能够成功连接数据库</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 sqoop]# ./bin/sqoop list-databases --connect jdbc:mysql://node1:3306/ --username root --password hadoop</span><br><span class="line">Warning: /export/server/sqoop/bin/../../hcatalog does not exist! HCatalog jobs will fail.</span><br><span class="line">Please set $HCAT_HOME to the root of your HCatalog installation.</span><br><span class="line">Warning: /export/server/sqoop/bin/../../accumulo does not exist! Accumulo imports will fail.</span><br><span class="line">Please set $ACCUMULO_HOME to the root of your Accumulo installation.</span><br><span class="line">Warning: /export/server/sqoop/bin/../../zookeeper does not exist! Accumulo imports will fail.</span><br><span class="line">Please set $ZOOKEEPER_HOME to the root of your Zookeeper installation.</span><br><span class="line">SLF4J: Class path contains multiple SLF4J bindings.</span><br><span class="line">SLF4J: Found binding in [jar:file:/export/server/hadoop-3.3.0/share/hadoop/common/lib/slf4j-log4j12-1.7.25.jar!/org/slf4j/impl/StaticLoggerBinder.class]</span><br><span class="line">SLF4J: Found binding in [jar:file:/export/server/apache-hive-3.1.2-bin/lib/log4j-slf4j-impl-2.10.0.jar!/org/slf4j/impl/StaticLoggerBinder.class]</span><br><span class="line">SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.</span><br><span class="line">SLF4J: Actual binding is of type [org.slf4j.impl.Log4jLoggerFactory]</span><br><span class="line">2023-02-04 22:41:54,565 INFO sqoop.Sqoop: Running Sqoop version: 1.4.7</span><br><span class="line">2023-02-04 22:41:54,619 WARN tool.BaseSqoopTool: Setting your password on the command-line is insecure. Consider using -P instead.</span><br><span class="line">2023-02-04 22:41:54,730 INFO manager.MySQLManager: Preparing to use a MySQL streaming resultset.</span><br><span class="line">information_schema</span><br><span class="line">ke</span><br><span class="line">mysql</span><br><span class="line">performance_schema</span><br><span class="line">sys</span><br><span class="line">test</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/10/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83%E5%A4%A7%E5%85%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/10/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83%E5%A4%A7%E5%85%A8/" class="post-title-link" itemprop="url">Android代码规范大全</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-10-12 10:07:01" itemprop="dateCreated datePublished" datetime="2021-10-12T10:07:01+08:00">2021-10-12</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="1-Android-的工具规范"><a href="#1-Android-的工具规范" class="headerlink" title="1. Android  的工具规范"></a>1. Android  的工具规范</h1><p>工欲善其事，必先利其器。</p>
-<p>由于 Android 基本都基于 Android Studio 进行开发，所以工具规范全部以 Android Studio 为前提。</p>
-<ol>
-<li><p>必须使用最新的稳定版本的 Android Studio 进行开发；</p>
-</li>
-<li><p>编码格式必须统一为 UTF-8；</p>
-</li>
-<li><p>删除多余的 import，减少警告出现，可利用 AS 的 Optimize Imports（Settings -&gt; Keymap -&gt; Optimize Imports）快捷键，设置自己的喜好。</p>
-<p><img src="/2021/10/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83%E5%A4%A7%E5%85%A8/3994917-1a291e03ae423f05.png" alt="img"></p>
-</li>
-<li><p>编辑完 .java、.kt、.xml 等文件后必须格式化（需要在设置好以下几点的前提下）</p>
-</li>
-</ol>
-<blockquote>
-<p>Reformat Code 的必要性，一定需要保证 IDE 配置一致为前提，尽可能贴切于 Android Studio 默认。<br>强烈建议对于比较长的老代码局部格式化，不全局格式化</p>
-</blockquote>
-<ul>
-<li><p>每行字符数不得超过 160 字符，设置 Editor -&gt; Code Style</p>
-<p><img src="/2021/10/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83%E5%A4%A7%E5%85%A8/3994917-61e300e496a95f64.png" alt="img"></p>
-</li>
-<li><p>全部设置为单路径引用，<code>kotlinx.android.synthetic.main</code> 除外。</p>
-<p><img src="/2021/10/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83%E5%A4%A7%E5%85%A8/3994917-3f7f4bc33a6934fa.png" alt="img"></p>
-<p>Java Code Style</p>
-</li>
-</ul>
-<p><img src="/2021/10/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83%E5%A4%A7%E5%85%A8/3994917-f606ccbb39f443da.png" alt="img"></p>
-<p>Kotlin Code Style</p>
-<p><img src="/2021/10/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83%E5%A4%A7%E5%85%A8/3994917-7f2d624a1a0604ab.png" alt="img"></p>
-<p>XML Code Style</p>
-<p>以上几处设置完毕，其他采用 Android Studio 默认方式，再进行 Reformat Code 快捷键即可。</p>
-<p><img src="/2021/10/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83%E5%A4%A7%E5%85%A8/3994917-3b14e3dc15e966f8.png" alt="img"></p>
-<p>Reformat Code 快捷键设置</p>
-<h1 id="2-Android-的分包规范"><a href="#2-Android-的分包规范" class="headerlink" title="2. Android 的分包规范"></a>2. Android 的分包规范</h1><p>前面强调了工具的统一配置，再利用 Android Studio 本身的功能便可把代码风格变得一致。接下来就带来第二部分：Android 的分包规范。</p>
-<p>对于分包，我们需要达成一致，我们采用 PBF 方式，不推荐使用 PBL 方式。</p>
-<blockquote>
-<p>PBF（按功能分包 Package By Feature）<br>PBL（按层分包 Package By Layer）</p>
-</blockquote>
-<p>PBF 可能不是很好区分在哪个功能中，不过也比 PBL 要好找很多，且 PBF 与 PBL 相比较有如下优势：</p>
-<ul>
-<li>package 内高内聚，package 间低耦合<br>哪块要添新功能，只改某一个 package 下的东西，而PBL 需要改多个 package，非常麻烦。</li>
-<li>package 有私有作用域（package-private scope）<br>原则上一个 package 下的不允许其他类访问都是不应该加上 public 的。</li>
-<li>很容易删除功能<br>统计发现新功能没人用，这个版本那块功能得去掉。如果是 PBL，得从功能入口到整个业务流程把受到牵连的所有能删的代码和 class 都揪出来删掉，一不小心就完蛋。如果是 PBF，好说，先删掉对应包，再删掉功能入口（删掉包后入口肯定报错了），完事。</li>
-<li>高度抽象<br>解决问题的一般方法是从抽象到具体，PBF 包名是对功能模块的抽象，包内的 class 是实现细节，符合从抽象到具体，而 PBL 弄反了。PBF 从确定 AppName 开始，根据功能模块划分 package，再考虑每块的具体实现细节，而 PBL 从一开始就要考虑要不要 dao 层，要不要 com 层等等。</li>
-<li>只通过 class 来分离逻辑代码<br>PBL 既分离 class 又分离 package，而 PBF 只通过 class 来分离逻辑代码。</li>
-<li>package 的大小有意义了<br>PBL 中包的大小无限增长是合理的，因为功能越添越多，而 PBF 中包太大（包里 class 太多）表示这块需要重构（划分子包）。</li>
-</ul>
-<h1 id="3-Android-的命名规范"><a href="#3-Android-的命名规范" class="headerlink" title="3. Android 的命名规范"></a>3. Android 的命名规范</h1><p>代码中的命名严禁使用拼音与英文混合的方式，更不允许直接使用中文的方式。正确的英文拼写和语法可以让阅读者易于理解，避免歧义。</p>
-<blockquote>
-<p>注意：即使纯拼音命名方式也要避免采用。但国际通用的名称，可视同英文，比如 <code>toutiao</code>、<code>douyin</code> 等。</p>
-</blockquote>
-<h2 id="3-1-包名"><a href="#3-1-包名" class="headerlink" title="3.1 包名"></a>3.1 包名</h2><p>Android 里面有 package 的概念，所以需要约定一下包名命名规范。</p>
-<p>包名全部小写，不允许出现中文、大写字母或者下划线，前面为子模块命名，再根据 PBF 方式进行命名。</p>
-<h2 id="3-2-类名"><a href="#3-2-类名" class="headerlink" title="3.2 类名"></a>3.2 类名</h2><p>类名都以 <code>UpperCamelCase</code> 风格编写。</p>
-<p>类名通常是名词或名词短语，接口名称有时可能是形容词或形容词短语。现在还没有特定的规则或行之有效的约定来命名注解类型。</p>
-<p>名词，采用大驼峰命名法，尽量避免缩写，除非该缩写是众所周知的， 比如 HTML、URL，如果类名称中包含单词缩写，则单词缩写的每个字母均应大写。</p>
-<table>
-<thead>
-<tr>
-<th align="left">类</th>
-<th align="left">描述</th>
-<th align="left">例如</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>Activity</code> 类</td>
-<td align="left">模块名 + <code>Activity</code></td>
-<td align="left">闪屏页类 <code>SplashActivity</code></td>
-</tr>
-<tr>
-<td align="left"><code>Fragment</code> 类</td>
-<td align="left">模块名 + <code>Fragment</code></td>
-<td align="left">主页类 <code>HomeFragment</code></td>
-</tr>
-<tr>
-<td align="left"><code>Service</code> 类</td>
-<td align="left">模块名 + <code>Service</code></td>
-<td align="left">时间服务 <code>TimeService</code></td>
-</tr>
-<tr>
-<td align="left"><code>BroadcastReceiver</code> 类</td>
-<td align="left">功能名 + <code>Receiver</code></td>
-<td align="left">推送接收 <code>JPushReceiver</code></td>
-</tr>
-<tr>
-<td align="left"><code>ContentProvider</code> 类</td>
-<td align="left">功能名 + <code>Provider</code></td>
-<td align="left"><code>ShareProvider</code></td>
-</tr>
-<tr>
-<td align="left">自定义 View</td>
-<td align="left">功能名 + View&#x2F;ViewGroup(组件名称)</td>
-<td align="left"><code>ShapeButton</code></td>
-</tr>
-<tr>
-<td align="left">Dialog对话框</td>
-<td align="left">功能名+Dialog</td>
-<td align="left"><code>ImagePickerDialog</code></td>
-</tr>
-<tr>
-<td align="left"><code>Adapter</code> 类</td>
-<td align="left">模块名 + <code>Adapter</code></td>
-<td align="left">课程详情适配器 <code>LessonDetailAdapter</code></td>
-</tr>
-<tr>
-<td align="left">解析类</td>
-<td align="left">功能名 + <code>Parser</code></td>
-<td align="left">首页解析类 <code>HomePosterParser</code></td>
-</tr>
-<tr>
-<td align="left">工具方法类</td>
-<td align="left">功能名 + <code>Utils</code> 或 <code>Manager</code></td>
-<td align="left">线程池管理类：<code>ThreadPoolManager</code> 日志工具类：<code>LogUtils</code>（<code>Logger</code> 也可） 打印工具类：<code>PrinterUtils</code></td>
-</tr>
-<tr>
-<td align="left">数据库类</td>
-<td align="left">功能名 +  <code>DBHelper</code></td>
-<td align="left">新闻数据库：<code>NewsDBHelper</code></td>
-</tr>
-<tr>
-<td align="left">自定义的共享基础类</td>
-<td align="left"><code>Base</code> + 基础</td>
-<td align="left"><code>BaseActivity</code>, <code>BaseFragment</code></td>
-</tr>
-<tr>
-<td align="left">抽象类</td>
-<td align="left"><code>Base</code> &#x2F; <code>Abstract</code> 开头</td>
-<td align="left"><code>AbstractLogin</code></td>
-</tr>
-<tr>
-<td align="left">异常类</td>
-<td align="left"><code>Exception</code> 结尾</td>
-<td align="left"><code>LoginException</code></td>
-</tr>
-<tr>
-<td align="left">接口</td>
-<td align="left"><code>able</code> &#x2F; <code>ible</code> 结尾 &#x2F; I 开头</td>
-<td align="left"><code>Runnable</code>, <code>Accessible</code> ，<code>ILoginView</code></td>
-</tr>
-</tbody></table>
-<p>测试类的命名以它要测试的类的名称开始，以 Test 结束。例如：<code>HashTest</code> 或 <code>HashIntegrationTest</code>。</p>
-<p>接口（interface）：命名规则与类一样采用大驼峰命名法，多以 able 或 ible 结尾，如 <code>interface Runnable</code>、<code>interface Accessible</code>。</p>
-<blockquote>
-<p>注意：如果项目采用 MVP，所有 Model、View、Presenter 的接口都以 I 为前缀，不加后缀，其他的接口采用上述命名规则。</p>
-</blockquote>
-<h2 id="3-3-方法名"><a href="#3-3-方法名" class="headerlink" title="3.3 方法名"></a>3.3 方法名</h2><p>方法名都以 <code>lowerCamelCase</code> 风格编写。</p>
-<p>方法名通常是动词或动词短语。</p>
-<table>
-<thead>
-<tr>
-<th align="left">方法</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>initXX()</code></td>
-<td>初始化相关方法，使用 init 为前缀标识，如初始化布局 <code>initView()</code></td>
-</tr>
-<tr>
-<td align="left"><code>isXX()</code>, <code>checkXX()</code></td>
-<td>方法返回值为 boolean 型的请使用 is&#x2F;check 为前缀标识</td>
-</tr>
-<tr>
-<td align="left"><code>getXX()</code></td>
-<td>返回某个值的方法，使用 get 为前缀标识</td>
-</tr>
-<tr>
-<td align="left"><code>setXX()</code></td>
-<td>设置某个属性值</td>
-</tr>
-<tr>
-<td align="left"><code>handleXX()</code>, <code>processXX()</code></td>
-<td>对数据进行处理的方法</td>
-</tr>
-<tr>
-<td align="left"><code>displayXX()</code>, <code>showXX()</code></td>
-<td>弹出提示框和提示信息，使用 display&#x2F;show 为前缀标识</td>
-</tr>
-<tr>
-<td align="left"><code>updateXX()</code></td>
-<td>更新数据</td>
-</tr>
-<tr>
-<td align="left"><code>saveXX()</code>, <code>insertXX()</code></td>
-<td>保存或插入数据</td>
-</tr>
-<tr>
-<td align="left"><code>resetXX()</code></td>
-<td>重置数据</td>
-</tr>
-<tr>
-<td align="left"><code>clearXX()</code></td>
-<td>清除数据</td>
-</tr>
-<tr>
-<td align="left"><code>removeXX()</code>, <code>deleteXX()</code></td>
-<td>移除数据或者视图等，如 <code>removeView()</code></td>
-</tr>
-<tr>
-<td align="left"><code>drawXX()</code></td>
-<td>绘制数据或效果相关的，使用 draw 前缀标识</td>
-</tr>
-</tbody></table>
-<h2 id="3-4-变量命名"><a href="#3-4-变量命名" class="headerlink" title="3.4 变量命名"></a>3.4 变量命名</h2><p>这里的变量为广义的变量，包括了常量、局部变量、全局变量等，它们的基础规则是：</p>
-<ul>
-<li>类型需要是名词 &#x2F; 名词短语；</li>
-<li>采用 <code>lowerCamelCase</code> 风格；</li>
-</ul>
-<p>在具体的变量命名时，会根据该变量的类型不同而附加额外的命名规则：</p>
-<table>
-<thead>
-<tr>
-<th align="left">类型</th>
-<th align="left">说明</th>
-<th align="left">例如</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">常量</td>
-<td align="left">大写 &amp; 下划线隔开，Kotlin 一定要 const val</td>
-<td align="left"><code>const val TYPE_NORMAL = 1</code>   <code>static final TYPE_NORMAL = 1</code></td>
-</tr>
-<tr>
-<td align="left">临时变量名</td>
-<td align="left">整型：<code>i</code>、<code>j</code>、<code>k</code>、<code>m</code>、<code>n</code> ，字符型一般用 <code>c</code>、<code>d</code>、<code>e</code></td>
-<td align="left"><code>for(int i = 0;i &lt; len; i++)</code></td>
-</tr>
-<tr>
-<td align="left">其他变量</td>
-<td align="left"><code>lowerCamelCase</code> 风格即可，私有变量也不要使用 <code>m</code> 开头</td>
-<td align="left"><code>private int tmp;</code></td>
-</tr>
-<tr>
-<td align="left">Kotlin</td>
-<td align="left">只读变量使用 <code>val</code>，可变变量使用 <code>var</code>，尽可能使用 <code>val</code></td>
-<td align="left"><code>var tmp = 0</code>  <code>val defaultIndex = 0</code></td>
-</tr>
-</tbody></table>
-<h2 id="3-5-资源命名"><a href="#3-5-资源命名" class="headerlink" title="3.5 资源命名"></a>3.5 资源命名</h2><p>Android 的资源包括：</p>
-<p><img src="/2021/10/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83%E5%A4%A7%E5%85%A8/3994917-03c995a36e14ed45.png" alt="img"></p>
-<p>资源文件命名为全部小写，采用下划线命名法。</p>
-<h3 id="3-5-1-动画资源文件（anim-x2F-和-animator-x2F-）"><a href="#3-5-1-动画资源文件（anim-x2F-和-animator-x2F-）" class="headerlink" title="3.5.1 动画资源文件（anim&#x2F; 和 animator&#x2F;）"></a>3.5.1 动画资源文件（anim&#x2F; 和 animator&#x2F;）</h3><p>安卓主要包含属性动画和视图动画，其视图动画包括补间动画和逐帧动画。属性动画文件需要放在 <code>res/animator/</code> 目录下，视图动画文件需放在 <code>res/anim/</code> 目录下。命名规则：<code>&#123;模块名_&#125;逻辑名称</code>。</p>
-<blockquote>
-<p>说明：<code>&#123;&#125;</code> 中的内容为可选，<code>逻辑名称</code> 可由多个单词加下划线组成。例如：<code>refresh_progress.xml</code>、<code>market_cart_add.xml</code>、<code>market_cart_remove.xml</code>。</p>
-</blockquote>
-<p>如果是普通的补间动画或者属性动画，可采用：<code>动画类型_方向</code> 的命名方式。</p>
-<p>例如：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>fade_in</code></td>
-<td>淡入</td>
-</tr>
-<tr>
-<td><code>fade_out</code></td>
-<td>淡出</td>
-</tr>
-<tr>
-<td><code>push_down_in</code></td>
-<td>从下方推入</td>
-</tr>
-<tr>
-<td><code>push_down_out</code></td>
-<td>从下方推出</td>
-</tr>
-<tr>
-<td><code>push_left</code></td>
-<td>推向左方</td>
-</tr>
-<tr>
-<td><code>slide_in_from_top</code></td>
-<td>从头部滑动进入</td>
-</tr>
-<tr>
-<td><code>zoom_enter</code></td>
-<td>变形进入</td>
-</tr>
-<tr>
-<td><code>slide_in</code></td>
-<td>滑动进入</td>
-</tr>
-<tr>
-<td><code>shrink_to_middle</code></td>
-<td>中间缩小</td>
-</tr>
-</tbody></table>
-<h3 id="3-5-2-颜色资源文件（color-x2F-）"><a href="#3-5-2-颜色资源文件（color-x2F-）" class="headerlink" title="3.5.2 颜色资源文件（color&#x2F;）"></a>3.5.2 颜色资源文件（color&#x2F;）</h3><p>color&#x2F; 是专门用于存放颜色相关资源的文件夹。命名规则：<code>类型&#123;_模块名&#125;_逻辑名称</code>。</p>
-<blockquote>
-<p>说明：<code>&#123;&#125;</code> 中的内容为可选。例如：<code>sel_btn_font.xml</code>。</p>
-</blockquote>
-<p>颜色资源也可以放于 <code>res/drawable/</code> 目录，引用时则用 <code>@drawable</code> 来引用，但不推荐这么做，最好还是把两者分开。</p>
-<h3 id="3-5-3-图片资源文件（drawable-x2F-和-mipmap-x2F-）"><a href="#3-5-3-图片资源文件（drawable-x2F-和-mipmap-x2F-）" class="headerlink" title="3.5.3 图片资源文件（drawable&#x2F; 和 mipmap&#x2F;）"></a>3.5.3 图片资源文件（drawable&#x2F; 和 mipmap&#x2F;）</h3><p><code>res/drawable/</code> 目录下放的是位图文件（.png、.9.png、.jpg、.gif）或编译为可绘制对象资源子类型的 XML 文件，而 <code>res/mipmap/</code> 目录下放的是不同密度的启动图标，所以 <code>res/mipmap/</code> 只用于存放启动图标，其余图片资源文件都应该放到 <code>res/drawable/</code> 目录下。</p>
-<p>命名规则：<code>类型&#123;_模块名&#125;_逻辑名称</code>、<code>类型&#123;_模块名&#125;_颜色</code>。</p>
-<blockquote>
-<p>说明：<code>&#123;&#125;</code> 中的内容为可选；<code>类型</code> 可以是可绘制对象资源类型，也可以是控件类型最后可加后缀 <code>_small</code> 表示小图，<code>_big</code> 表示大图。</p>
-</blockquote>
-<p>例如：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>btn_main_about.png</code></td>
-<td>主页关于按键 <code>类型_模块名_逻辑名称</code></td>
-</tr>
-<tr>
-<td><code>btn_back.png</code></td>
-<td>返回按键 <code>类型_逻辑名称</code></td>
-</tr>
-<tr>
-<td><code>divider_maket_white.png</code></td>
-<td>商城白色分割线 <code>类型_模块名_颜色</code></td>
-</tr>
-<tr>
-<td><code>ic_edit.png</code></td>
-<td>编辑图标 <code>类型_逻辑名称</code></td>
-</tr>
-<tr>
-<td><code>bg_main.png</code></td>
-<td>主页背景 <code>类型_逻辑名称</code></td>
-</tr>
-<tr>
-<td><code>btn_red.png</code></td>
-<td>红色按键 <code>类型_颜色</code></td>
-</tr>
-<tr>
-<td><code>btn_red_big.png</code></td>
-<td>红色大按键 <code>类型_颜色</code></td>
-</tr>
-<tr>
-<td><code>ic_avatar_small.png</code></td>
-<td>小头像图标 <code>类型_逻辑名称</code></td>
-</tr>
-<tr>
-<td><code>bg_input.png</code></td>
-<td>输入框背景 <code>类型_逻辑名称</code></td>
-</tr>
-<tr>
-<td><code>divider_white.png</code></td>
-<td>白色分割线 <code>类型_颜色</code></td>
-</tr>
-<tr>
-<td><code>bg_main_head.png</code></td>
-<td>主页头部背景 <code>类型_模块名_逻辑名称</code></td>
-</tr>
-<tr>
-<td><code>def_search_cell.png</code></td>
-<td>搜索页面默认单元图片 <code>类型_模块名_逻辑名称</code></td>
-</tr>
-<tr>
-<td><code>ic_more_help.png</code></td>
-<td>更多帮助图标 <code>类型_逻辑名称</code></td>
-</tr>
-<tr>
-<td><code>divider_list_line.png</code></td>
-<td>列表分割线 <code>类型_逻辑名称</code></td>
-</tr>
-<tr>
-<td><code>sel_search_ok.xml</code></td>
-<td>搜索界面确认选择器 <code>类型_模块名_逻辑名称</code></td>
-</tr>
-<tr>
-<td><code>shape_music_ring.xml</code></td>
-<td>音乐界面环形形状 <code>类型_模块名_逻辑名称</code></td>
-</tr>
-</tbody></table>
-<p>如果有多种形态，如按钮选择器：<code>sel_btn_xx.xml</code>，采用如下命名：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>sel_btn_xx</code></td>
-<td>作用在 <code>btn_xx</code> 上的 <code>selector</code></td>
-</tr>
-<tr>
-<td><code>btn_xx_normal</code></td>
-<td>默认状态效果</td>
-</tr>
-<tr>
-<td><code>btn_xx_pressed</code></td>
-<td><code>state_pressed</code> 点击效果</td>
-</tr>
-<tr>
-<td><code>btn_xx_focused</code></td>
-<td><code>state_focused</code> 聚焦效果</td>
-</tr>
-<tr>
-<td><code>btn_xx_disabled</code></td>
-<td><code>state_enabled</code> 不可用效果</td>
-</tr>
-<tr>
-<td><code>btn_xx_checked</code></td>
-<td><code>state_checked</code> 选中效果</td>
-</tr>
-<tr>
-<td><code>btn_xx_selected</code></td>
-<td><code>state_selected</code> 选中效果</td>
-</tr>
-<tr>
-<td><code>btn_xx_hovered</code></td>
-<td><code>state_hovered</code> 悬停效果</td>
-</tr>
-<tr>
-<td><code>btn_xx_checkable</code></td>
-<td><code>state_checkable</code> 可选效果</td>
-</tr>
-<tr>
-<td><code>btn_xx_activated</code></td>
-<td><code>state_activated</code> 激活效果</td>
-</tr>
-<tr>
-<td><code>btn_xx_window_focused</code></td>
-<td><code>state_window_focused</code> 窗口聚焦效果</td>
-</tr>
-</tbody></table>
-<blockquote>
-<p>注意：使用 Android Studio 的插件 SelectorChapek 可以快速生成 selector，前提是命名要规范。</p>
-</blockquote>
-<h3 id="3-5-4-布局资源文件（layout-x2F-）"><a href="#3-5-4-布局资源文件（layout-x2F-）" class="headerlink" title="3.5.4 布局资源文件（layout&#x2F;）"></a>3.5.4 布局资源文件（layout&#x2F;）</h3><p>命名规则：<code>类型_模块名</code>、<code>&#123;模块名_&#125;类型_逻辑名称</code>。(也采用 PBF，方便查看，尤其在大项目中)</p>
-<blockquote>
-<p>说明：<code>&#123;&#125;</code> 中的内容为可选。</p>
-</blockquote>
-<p>例如：</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>名称</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>Activity</code></td>
-<td><code>main_activity.xml</code></td>
-<td>主窗体 <code>模块名_类型</code></td>
-</tr>
-<tr>
-<td><code>Fragment</code></td>
-<td><code>music_fragment.xml</code></td>
-<td>音乐片段 <code>模块名_类型</code></td>
-</tr>
-<tr>
-<td><code>Dialog</code></td>
-<td><code>loading_dialog.xml</code></td>
-<td>加载对话框 <code>逻辑名称_类型</code></td>
-</tr>
-<tr>
-<td><code>PopupWindow</code></td>
-<td><code>info_ppw.xml</code></td>
-<td>信息弹窗（PopupWindow） <code>逻辑名称_类型</code></td>
-</tr>
-<tr>
-<td><code>adapter</code> 的列表项</td>
-<td><code>main_song_item.xml</code></td>
-<td>主页歌曲列表项 <code>模块名_类型_逻辑名称</code></td>
-</tr>
-</tbody></table>
-<h3 id="3-5-5-布局资源-id-命名"><a href="#3-5-5-布局资源-id-命名" class="headerlink" title="3.5.5 布局资源 id 命名"></a>3.5.5 布局资源 id 命名</h3><p>命名规则：<code>&#123;模块名_&#125;_逻辑名_view 缩写（功能）</code>，例如： <code>main_search_btn</code>、<code>back_btn</code>。此外，采用 Kotlinx 直接获取布局文件的时候，id 命名采用驼峰样式。</p>
-<blockquote>
-<p>说明：<code>&#123;&#125;</code> 中的内容为可选。参考 GoogleSamples Demo：<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=https://github.com/android/architecture-samples">https://github.com/android/architecture-samples</a></p>
-</blockquote>
-<p>例如：</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>规范</th>
-<th>命名示例</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>TextView</code></td>
-<td><code>xxx_text</code></td>
-<td><code>user_login_text</code></td>
-</tr>
-<tr>
-<td><code>EditText</code></td>
-<td><code>xxx_edit</code></td>
-<td><code>user_login_edit</code></td>
-</tr>
-<tr>
-<td><code>ImageView</code></td>
-<td><code>xxx_iv</code></td>
-<td><code>user_login_iv</code></td>
-</tr>
-<tr>
-<td><code>Button</code></td>
-<td><code>xxx_btn</code></td>
-<td><code>user_login_btn</code></td>
-</tr>
-<tr>
-<td><code>CheckBox</code></td>
-<td><code>xxx_cb</code></td>
-<td><code>user_login_cb</code></td>
-</tr>
-<tr>
-<td><code>GridView</code></td>
-<td><code>xxx_gv</code></td>
-<td><code>user_login_gv</code></td>
-</tr>
-<tr>
-<td><code>ListView</code></td>
-<td><code>xxx_lv</code></td>
-<td><code>user_login_lv</code></td>
-</tr>
-<tr>
-<td><code>RecyclerView</code></td>
-<td><code>xxx_rv</code></td>
-<td><code>user_login_rv</code></td>
-</tr>
-<tr>
-<td><code>RadioButton</code></td>
-<td><code>xxx_rb</code></td>
-<td><code>user_login_rb</code></td>
-</tr>
-<tr>
-<td><code>LinearLayout</code></td>
-<td><code>xxx_ll</code></td>
-<td><code>user_login_ll</code></td>
-</tr>
-<tr>
-<td><code>RelativeLayout</code></td>
-<td><code>xxx_rl</code></td>
-<td><code>user_login_rl</code></td>
-</tr>
-<tr>
-<td><code>FrameLayout</code></td>
-<td><code>xxx_fl</code></td>
-<td><code>user_login_fl</code></td>
-</tr>
-<tr>
-<td><code>GridLayout</code></td>
-<td><code>xxx_gl</code></td>
-<td><code>user_login_gl</code></td>
-</tr>
-<tr>
-<td><code>ConstraintLayout</code></td>
-<td><code>xxx_cl</code></td>
-<td><code>user_login_cl</code></td>
-</tr>
-</tbody></table>
-<h3 id="3-5-6-菜单资源文件（menu-x2F-）"><a href="#3-5-6-菜单资源文件（menu-x2F-）" class="headerlink" title="3.5.6 菜单资源文件（menu&#x2F;）"></a>3.5.6 菜单资源文件（menu&#x2F;）</h3><p>菜单相关的资源文件应放在该目录下。命名规则：<code>&#123;模块名_&#125;逻辑名称</code></p>
-<blockquote>
-<p>说明：<code>&#123;&#125;</code> 中的内容为可选。例如：<code>main_drawer.xml</code>、<code>navigation.xml</code>。</p>
-</blockquote>
-<h3 id="3-5-7-colors-xml"><a href="#3-5-7-colors-xml" class="headerlink" title="3.5.7 colors.xml"></a>3.5.7 colors.xml</h3><p><code>&lt;color&gt;</code> 的 <code>name</code> 命名使用下划线命名法，在你的 <code>colors.xml</code> 文件中应该只是映射颜色的名称一个 ARGB 值，而没有其它的。不要使用它为不同的按钮来定义 ARGB 值。</p>
-<p>例如，不要像下面这样做：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;button_foreground&quot;</span>&gt;</span>#FFFFFF<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;button_background&quot;</span>&gt;</span>#2A91BD<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;comment_background_inactive&quot;</span>&gt;</span>#5F5F5F<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;comment_background_active&quot;</span>&gt;</span>#939393<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;comment_foreground&quot;</span>&gt;</span>#FFFFFF<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;comment_foreground_important&quot;</span>&gt;</span>#FF9D2F<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;comment_shadow&quot;</span>&gt;</span>#323232<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>使用这种格式，会非常容易重复定义 ARGB 值，而且如果应用要改变基色的话会非常困难。同时，这些定义是跟一些环境关联起来的，如 <code>button</code> 或者 <code>comment</code>，应该放到一个按钮风格中，而不是在 <code>colors.xml</code> 文件中。</p>
-<p>相反，应该这样做：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- grayscale --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;white&quot;</span>     &gt;</span>#FFFFFF<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;gray_light&quot;</span>&gt;</span>#DBDBDB<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;gray&quot;</span>      &gt;</span>#939393<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;gray_dark&quot;</span> &gt;</span>#5F5F5F<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;black&quot;</span>     &gt;</span>#323232<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- basic colors --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;green&quot;</span>&gt;</span>#27D34D<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;blue&quot;</span>&gt;</span>#2A91BD<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;orange&quot;</span>&gt;</span>#FF9D2F<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">color</span> <span class="attr">name</span>=<span class="string">&quot;red&quot;</span>&gt;</span>#FF432F<span class="tag">&lt;/<span class="name">color</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>向应用设计者那里要这个调色板，名称不需要跟 <code>&quot;green&quot;</code>、<code>&quot;blue&quot;</code> 等等相同。<code>&quot;brand_primary&quot;</code>、<code>&quot;brand_secondary&quot;</code>、<code>&quot;brand_negative&quot;</code> 这样的名字也是完全可以接受的。像这样规范的颜色很容易修改或重构，会使应用一共使用了多少种不同的颜色变得非常清晰。通常一个具有审美价值的 UI 来说，减少使用颜色的种类是非常重要的。</p>
-<blockquote>
-<p>注意：如果某些颜色和主题有关，那就单独写一个 <code>colors_theme.xml</code>。</p>
-</blockquote>
-<h3 id="3-5-8-strings-xml"><a href="#3-5-8-strings-xml" class="headerlink" title="3.5.8 strings.xml"></a>3.5.8 strings.xml</h3><p><code>&lt;string&gt;</code> 的 <code>name</code> 命名使用下划线命名法，采用以下规则：<code>&#123;模块名_&#125;逻辑名称</code>，这样方便同一个界面的所有 <code>string</code> 都放到一起，方便查找。</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>main_menu_about</code></td>
-<td>主菜单按键文字</td>
-</tr>
-<tr>
-<td><code>friend_title</code></td>
-<td>好友模块标题栏</td>
-</tr>
-<tr>
-<td><code>friend_dialog_del</code></td>
-<td>好友删除提示</td>
-</tr>
-<tr>
-<td><code>login_check_email</code></td>
-<td>登录验证</td>
-</tr>
-<tr>
-<td><code>dialog_title</code></td>
-<td>弹出框标题</td>
-</tr>
-<tr>
-<td><code>button_ok</code></td>
-<td>确认键</td>
-</tr>
-<tr>
-<td><code>loading</code></td>
-<td>加载文字</td>
-</tr>
-</tbody></table>
-<h3 id="3-5-9-styles-xml"><a href="#3-5-9-styles-xml" class="headerlink" title="3.5.9 styles.xml"></a>3.5.9 styles.xml</h3><style> 的 name 命名使用大驼峰命名法，几乎每个项目都需要适当的使用 styles.xml 文件，因为对于一个视图来说，有一个重复的外观是很常见的，将所有的外观细节属性（colors、padding、font）放在 styles.xml 文件中。 在应用中对于大多数文本内容，最起码你应该有一个通用的 styles.xml 文件，例如：
-
-
-
-
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;ContentText&quot;</span>&gt;</span><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">&quot;android:textSize&quot;</span>&gt;</span>@dimen/font_normal<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">&quot;android:textColor&quot;</span>&gt;</span>@color/basic_black<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-应用到 `TextView` 中：
-
-
-
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:text</span>=<span class="string">&quot;@string/price&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">style</span>=<span class="string">&quot;@style/ContentText&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-
-或许你需要为按钮控件做同样的事情，不要停止在那里，将一组相关的和重复 `android:xxxx` 的属性放到一个通用的 `<style>` 中。
-
-# 4. Android 的注释规范
-
-## 4.1 类注释
-
-每个类完成后应该有作者姓名和联系方式的注释，对自己的代码负责。
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * &lt;pre&gt;</span></span><br><span class="line"><span class="comment"> *     author : nanchen</span></span><br><span class="line"><span class="comment"> *     e-mail : xxx@xx</span></span><br><span class="line"><span class="comment"> *     time   : 2021/01/18</span></span><br><span class="line"><span class="comment"> *     desc   : xxxx 描述</span></span><br><span class="line"><span class="comment"> *     version: 1.0</span></span><br><span class="line"><span class="comment"> * &lt;/pre&gt;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WelcomeActivity</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-具体可以在 AS 中自己配制，进入 Settings -> Editor -> File and Code Templates -> Includes -> File Header，输入
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * &lt;pre&gt;</span></span><br><span class="line"><span class="comment"> *     author : $&#123;USER&#125;</span></span><br><span class="line"><span class="comment"> *     e-mail : xxx@xx</span></span><br><span class="line"><span class="comment"> *     time   : $&#123;YEAR&#125;/$&#123;MONTH&#125;/$&#123;DAY&#125;</span></span><br><span class="line"><span class="comment"> *     desc   :</span></span><br><span class="line"><span class="comment"> *     version: 1.0</span></span><br><span class="line"><span class="comment"> * &lt;/pre&gt;</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
-
-这样便可在每次新建类的时候自动加上该头注释。
-
-## 4.2 方法注释
-
-每一个成员方法（包括自定义成员方法、覆盖方法、属性方法）的方法头都必须做方法头注释，在方法前一行输入 `/** + 回车` 或者设置 `Fix doc comment`（Settings -> Keymap -> Fix doc comment）快捷键，AS 便会帮你生成模板，我们只需要补全参数即可，如下所示。**`@param` , `@return` , `@throws` , `@deprecated` 这 4 种标记出现的时候，描述都不能为空。当描述无法在一行中容纳，连续行至少需要再缩进 4 个空格。**
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Report an accessibility action to this view&#x27;s parents for delegated processing.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;Implementations of &#123;<span class="doctag">@link</span> #performAccessibilityAction(int, Bundle)&#125; may internally</span></span><br><span class="line"><span class="comment"> * call this method to delegate an accessibility action to a supporting parent. If the parent</span></span><br><span class="line"><span class="comment"> * returns true from its</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> ViewParent#onNestedPrePerformAccessibilityAction(View, int, android.os.Bundle)&#125;</span></span><br><span class="line"><span class="comment"> * method this method will return true to signify that the action was consumed.&lt;/p&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;This method is useful for implementing nested scrolling child views. If</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> #isNestedScrollingEnabled()&#125; returns true and the action is a scrolling action</span></span><br><span class="line"><span class="comment"> * a custom view implementation may invoke this method to allow a parent to consume the</span></span><br><span class="line"><span class="comment"> * scroll first. If this method returns true the custom view should skip its own scrolling</span></span><br><span class="line"><span class="comment"> * behavior.&lt;/p&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> action Accessibility action to delegate</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> arguments Optional action arguments</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> true if the action was consumed by a parent</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">dispatchNestedPrePerformAccessibilityAction</span><span class="params">(<span class="type">int</span> action, Bundle arguments)</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">ViewParent</span> <span class="variable">p</span> <span class="operator">=</span> getParent(); p != <span class="literal">null</span>; p = p.getParent()) &#123;</span><br><span class="line">        <span class="keyword">if</span> (p.onNestedPrePerformAccessibilityAction(<span class="built_in">this</span>, action, arguments)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-## 4.3 块注释
-
-块注释与其周围的代码在同一缩进级别。它们可以是 `/* ... */` 风格，也可以是 `// ...` 风格（**`//` 后最好带一个空格**）。对于多行的 `/* ... */` 注释，后续行必须从 `*` 开始， 并且与前一行的 `*` 对齐。以下示例注释都是 OK 的。
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * This is okay.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// And so</span></span><br><span class="line"><span class="comment">// is this.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Or you can</span></span><br><span class="line"><span class="comment">* even do this. */</span></span><br></pre></td></tr></table></figure>
-
-注释不要封闭在由星号或其它字符绘制的框架里。
-
-> Tip：在写多行注释时，如果你希望在必要时能重新换行（即注释像段落风格一样），那么使用
-> `/* ... */`。
-
-比如：
-
-
-
-![img](Android代码规范大全/3994917-2a34deef5a6d8bca.png)
-
-## 4.4 全局变量的注释
-
-全局变量的注释样式如下（注意注释之间有空格）：
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The next available accessibility id.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> nextAccessibilityViewId;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The animation currently associated with this view.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">Animation</span> <span class="variable">currentAnimation</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
-
-## 4.5 其他一些注释
-
-AS 已帮你集成了一些注释模板，我们只需要直接使用即可，在代码中输入 `TODO`、`FIXME` 等这些注释模板，回车后便会出现如下注释。
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// <span class="doctag">TODO:</span> 17/3/14 需要实现，但目前还未实现的功能的说明</span></span><br><span class="line"><span class="comment">// <span class="doctag">FIXME:</span> 17/3/14 需要修正，甚至代码是错误的，不能工作，需要修复的说明</span></span><br></pre></td></tr></table></figure>
-
-## 4.5 注释必须遵守的规范
-
-### 4.5.1 不言自明的方法不要加注释。
-
-比如 `Item getItem(int index)` 是一段自说明的代码，我们可以直接从方法的命名就能知道它是干嘛的，所以不需要增加注释。
-
-### 4.5.2 提测的代码不应该有 TODO 这样的注释
-
-# 5. 代码样式规范
-
-## 5.1 使用标准大括号样式
-
-左大括号不单独占一行，与其前面的代码位于同一行：
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="title function_">func</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (something) &#123;</span><br><span class="line">            <span class="comment">// ...</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (somethingElse) &#123;</span><br><span class="line">            <span class="comment">// ...</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// ...</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-我们需要在条件语句周围添加大括号。例外情况：如果整个条件语句（条件和主体）适合放在同一行，那么您可以（但不是必须）将其全部放在一行上。例如，我们接受以下样式：
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (condition) &#123;</span><br><span class="line">    body();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-同样也接受以下样式：
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (condition) body();</span><br></pre></td></tr></table></figure>
-
-但不接受以下样式：
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (condition)</span><br><span class="line">    body();  <span class="comment">// bad!</span></span><br></pre></td></tr></table></figure>
-
-## 5.2 编写简短方法
-
-在可行的情况下，尽量编写短小精炼的方法。我们了解，有些情况下较长的方法是恰当的，因此对方法的代码长度没有做出硬性限制。如果某个方法的代码超出 40 行，请考虑是否可以在不破坏程序结构的前提下对其拆解。
-
-## 5.3 类成员的顺序
-
-这并没有唯一的正确解决方案，但如果都使用一致的顺序将会提高代码的可读性，推荐使用如下排序：
-
-1. 常量（Kotlin 伴生对象放在开头）
-2. 字段
-3. 构造函数
-4. 重写函数和回调
-5. 公有函数
-6. 私有函数
-7. 内部类或接口
-
-例如：
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MainActivity</span> <span class="keyword">extends</span> <span class="title class_">Activity</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">TAG</span> <span class="operator">=</span> MainActivity.class.getSimpleName();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String mTitle;</span><br><span class="line">    <span class="keyword">private</span> TextView mTextViewTitle;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">()</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setTitle</span><span class="params">(String title)</span> &#123;</span><br><span class="line">        mTitle = title;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">setUpView</span><span class="params">()</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">AnInnerClass</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-如果类继承于 Android 组件（例如 `Activity` 或 `Fragment`），那么把重写函数按照他们的生命周期进行排序是一个非常好的习惯，例如，`Activity` 实现了 `onCreate()`、`onDestroy()`、`onPause()`、`onResume()`，它的正确排序如下所示：
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MainActivity</span> <span class="keyword">extends</span> <span class="title class_">Activity</span> &#123;</span><br><span class="line">    <span class="comment">//Order matches Activity lifecycle</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onResume</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onPause</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onDestroy</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-## 5.4 函数参数的排序
-
-在 Android 开发过程中，`Context` 在函数参数中是再常见不过的了，我们最好把 `Context` 作为其第一个参数。
-
-正相反，我们把回调接口应该作为其最后一个参数。
-
-例如：
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Context always goes first</span></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">loadUser</span><span class="params">(Context context, <span class="type">int</span> userId)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Callbacks always go last</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">loadUserAsync</span><span class="params">(Context context, <span class="type">int</span> userId, UserCallback callback)</span>;</span><br></pre></td></tr></table></figure>
-
-## 5.5 字符串常量的命名和值
-
-Android SDK 中的很多类都用到了键值对函数，比如 `SharedPreferences`、`Bundle`、`Intent`，所以，即便是一个小应用，我们最终也不得不编写大量的字符串常量。
-
-当时用到这些类的时候，我们 **必须** 将它们的键定义为 `static final` 字段，并遵循以下指示作为前缀。
-
-| 类                 | 字段名前缀  |
-| ------------------ | ----------- |
-| SharedPreferences  | `PREF_`     |
-| Bundle             | `BUNDLE_`   |
-| Fragment Arguments | `ARGUMENT_` |
-| Intent Extra       | `EXTRA_`    |
-| Intent Action      | `ACTION_`   |
-
-说明：虽然 `Fragment.getArguments()` 得到的也是 `Bundle` ，但因为这是 `Bundle` 的常用用法，所以特意为此定义一个不同的前缀。
-
-例如：
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 注意：字段的值与名称相同以避免重复问题</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PREF_EMAIL</span> <span class="operator">=</span> <span class="string">&quot;PREF_EMAIL&quot;</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">BUNDLE_AGE</span> <span class="operator">=</span> <span class="string">&quot;BUNDLE_AGE&quot;</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ARGUMENT_USER_ID</span> <span class="operator">=</span> <span class="string">&quot;ARGUMENT_USER_ID&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 与意图相关的项使用完整的包名作为值的前缀</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">EXTRA_SURNAME</span> <span class="operator">=</span> <span class="string">&quot;com.myapp.extras.EXTRA_SURNAME&quot;</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ACTION_OPEN_USER</span> <span class="operator">=</span> <span class="string">&quot;com.myapp.action.ACTION_OPEN_USER&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-## 5.6 行长限制
-
-代码中每一行文本的长度都应该不超过 160 个字符。虽然关于此规则存在很多争论，但最终决定仍是以 160 个字符为上限，如果行长超过了 160（AS 窗口右侧的竖线就是设置的行宽末尾 ），我们通常有两种方法来缩减行长。
-
-- 提取一个局部变量或方法（最好）。
-- 使用换行符将一行换成多行。
-
-不过存在以下例外情况：
-
-- 如果备注行包含长度超过 160 个字符的示例命令或文字网址，那么为了便于剪切和粘贴，该行可以超过 160 个字符。
-- 导入语句行可以超出此限制，因为用户很少会看到它们（这也简化了工具编写流程）。
-
-### 5.6.1 换行策略
-
-这没有一个准确的解决方案来决定如何换行，通常不同的解决方案都是有效的，但是有一些规则可以应用于常见的情况。
-
-#### 5.6.1.1 操作符的换行
-
-除赋值操作符之外，我们把换行符放在操作符之前，例如：
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">longName</span> <span class="operator">=</span> anotherVeryLongVariable + anEvenLongerOne - thisRidiculousLongOne</span><br><span class="line">        + theFinalOne;</span><br></pre></td></tr></table></figure>
-
-赋值操作符的换行我们放在其后，例如：
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">longName</span> <span class="operator">=</span></span><br><span class="line">        anotherVeryLongVariable + anEvenLongerOne - thisRidiculousLongOne + theFinalOne;</span><br></pre></td></tr></table></figure>
-
-#### 5.6.1.2 函数链的换行
-
-当同一行中调用多个函数时（比如使用构建器时），对每个函数的调用应该在新的一行中，我们把换行符插入在 `.` 之前。
-
-例如：
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Picasso.with(context).load(<span class="string">&quot;https://blankj.com/images/avatar.jpg&quot;</span>).into(ivAvatar);</span><br></pre></td></tr></table></figure>
-
-我们应该使用如下规则：
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Picasso.with(context)</span><br><span class="line">        .load(<span class="string">&quot;https://blankj.com/images/avatar.jpg&quot;</span>)</span><br><span class="line">        .into(ivAvatar);</span><br></pre></td></tr></table></figure>
-
-#### 5.6.1.3 多参数的换行
-
-当一个方法有很多参数或者参数很长的时候，我们应该在每个 `,` 后面进行换行。
-
-比如：
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">loadPicture(context, <span class="string">&quot;https://blankj.com/images/avatar.jpg&quot;</span>, ivAvatar, <span class="string">&quot;Avatar of the user&quot;</span>, clickListener);</span><br></pre></td></tr></table></figure>
-
-我们应该使用如下规则：
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">loadPicture(context,</span><br><span class="line">        <span class="string">&quot;https://blankj.com/images/avatar.jpg&quot;</span>,</span><br><span class="line">        ivAvatar,</span><br><span class="line">        <span class="string">&quot;Avatar of the user&quot;</span>,</span><br><span class="line">        clickListener);</span><br></pre></td></tr></table></figure>
-
-#### 5.6.1.4 RxJava 链式的换行
-
-RxJava 的每个操作符都需要换新行，并且把换行符插入在 `.` 之前。
-
-例如：
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Observable&lt;Location&gt; <span class="title function_">syncLocations</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> mDatabaseHelper.getAllLocations()</span><br><span class="line">            .concatMap(<span class="keyword">new</span> <span class="title class_">Func1</span>&lt;Location, Observable&lt;? <span class="keyword">extends</span> <span class="title class_">Location</span>&gt;&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                 <span class="keyword">public</span> Observable&lt;? <span class="keyword">extends</span> <span class="title class_">Location</span>&gt; call(Location location) &#123;</span><br><span class="line">                     <span class="keyword">return</span> mRetrofitService.getLocation(location.id);</span><br><span class="line">                 &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">            .retry(<span class="keyword">new</span> <span class="title class_">Func2</span>&lt;Integer, Throwable, Boolean&gt;() &#123;</span><br><span class="line">                 <span class="meta">@Override</span></span><br><span class="line">                 <span class="keyword">public</span> Boolean <span class="title function_">call</span><span class="params">(Integer numRetries, Throwable throwable)</span> &#123;</span><br><span class="line">                     <span class="keyword">return</span> throwable <span class="keyword">instanceof</span> RetrofitError;</span><br><span class="line">                 &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-参考文档：
-
-
-原文链接：https://www.jianshu.com/p/e3afd461ebce
-</style>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/09/25/Flume%E7%9B%91%E6%8E%A7-Ganglia/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/25/Flume%E7%9B%91%E6%8E%A7-Ganglia/" class="post-title-link" itemprop="url">Flume监控-Ganglia</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-25 21:04:34" itemprop="dateCreated datePublished" datetime="2021-09-25T21:04:34+08:00">2021-09-25</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Ganglia安装与部署"><a href="#Ganglia安装与部署" class="headerlink" title="Ganglia安装与部署"></a>Ganglia安装与部署</h1><p>Ganglia 由 gmond、gmetad 和 gweb 三部分组成。</p>
-<p>gmond（Ganglia Monitoring Daemon）是一种轻量级服务，安装在每台需要收集指标数据的节点主机上。使用 gmond，你可以很容易收集很多系统指标数据，如 CPU、内存、磁盘、网络和活跃进程的数据等。</p>
-<p>gmetad（Ganglia Meta Daemon）整合所有信息，并将其以 RRD 格式存储至磁盘的服务。</p>
-<p>gweb（Ganglia Web）Ganglia 可视化工具，gweb 是一种利用浏览器显示 gmetad 所存储数据的 PHP 前端。在 Web 界面中以图表方式展现集群的运行状态下收集的多种不同指标数据。</p>
-<h2 id="安装ganglia"><a href="#安装ganglia" class="headerlink" title="安装ganglia"></a>安装ganglia</h2><ol>
-<li><p>规划</p>
-<p>node1: web gmetad gmod</p>
-<p>node2: gmod</p>
-<p>node3: gmod</p>
-</li>
-<li><p>在node1、node2、node3上分别安装epel-release</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# yum -y install epel-release</span><br><span class="line">(base) [root@node2 ~]# yum -y install epel-release</span><br><span class="line">(base) [root@node3 ~]# yum -y install epel-release</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>在node1上安装</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# yum -y install ganglia-gmetad</span><br><span class="line">(base) [root@node1 ~]# yum -y install ganglia-web</span><br><span class="line">(base) [root@node1 ~]# yum -y install ganglia-gmond</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>在node2和node3上安装</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node2 ~]# yum -y install ganglia-gmond</span><br><span class="line">(base) [root@node3 ~]# yum -y install ganglia-gmond</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="配置参数"><a href="#配置参数" class="headerlink" title="配置参数"></a>配置参数</h2><ol>
-<li>在 node1 修改配置文件&#x2F;etc&#x2F;httpd&#x2F;conf.d&#x2F;ganglia.conf</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# vim /etc/httpd/conf.d/ganglia.conf </span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># Ganglia monitoring system php web frontend</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"></span></span><br><span class="line">Alias /ganglia /usr/share/ganglia</span><br><span class="line"></span><br><span class="line">&lt;Location /ganglia&gt;</span><br><span class="line"><span class="meta prompt_">  #</span><span class="language-bash">Require <span class="built_in">local</span></span></span><br><span class="line"><span class="meta prompt_">  # </span><span class="language-bash">通过 windows 访问 ganglia,需要配置 Linux 对应的主机(windows)ip 地址</span></span><br><span class="line">   Require ip 192.168.88.1</span><br><span class="line"><span class="meta prompt_">  # </span><span class="language-bash">Require ip 10.1.2.3</span></span><br><span class="line"><span class="meta prompt_">  # </span><span class="language-bash">Require host example.org</span></span><br><span class="line">&lt;/Location&gt;</span><br></pre></td></tr></table></figure>
-
-
-
-<ol start="2">
-<li>在 node1 修改配置文件&#x2F;etc&#x2F;ganglia&#x2F;gmetad.conf</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# vim /etc/ganglia/gmetad.conf</span><br></pre></td></tr></table></figure>
-
-<p>文件中修改</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data_source &quot;my cluster&quot; node1</span><br></pre></td></tr></table></figure>
-
-
-
-<ol start="3">
-<li>在 node1 node2 node3 修改配置文件&#x2F;etc&#x2F;ganglia&#x2F;gmond.conf</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# /etc/ganglia/gmond.conf</span><br></pre></td></tr></table></figure>
-
-<p>修改为：</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">...</span></span><br><span class="line"><span class="attr">/*</span></span><br><span class="line"> <span class="attr">*</span> <span class="string">The cluster attributes specified will be used as part of the &lt;CLUSTER&gt;</span></span><br><span class="line"> <span class="attr">*</span> <span class="string">tag that will wrap all hosts collected by this instance.</span></span><br><span class="line"> <span class="attr">*/</span></span><br><span class="line"><span class="attr">cluster</span> <span class="string">&#123;</span></span><br><span class="line">  <span class="attr">name</span> = <span class="string">&quot;my cluster&quot;</span></span><br><span class="line">  <span class="attr">owner</span> = <span class="string">&quot;unspecified&quot;</span></span><br><span class="line">  <span class="attr">latlong</span> = <span class="string">&quot;unspecified&quot;</span></span><br><span class="line">  <span class="attr">url</span> = <span class="string">&quot;unspecified&quot;</span></span><br><span class="line"><span class="attr">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">/*</span> <span class="string">The host section describes attributes of the host, like the location */</span></span><br><span class="line"><span class="attr">host</span> <span class="string">&#123;</span></span><br><span class="line">  <span class="attr">location</span> = <span class="string">&quot;unspecified&quot;</span></span><br><span class="line"><span class="attr">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">/*</span> <span class="string">Feel free to specify as many udp_send_channels as you like.  Gmond</span></span><br><span class="line">   <span class="attr">used</span> <span class="string">to only support having a single channel */</span></span><br><span class="line"><span class="attr">udp_send_channel</span> <span class="string">&#123;</span></span><br><span class="line"><span class="comment">  #bind_hostname = yes # Highly recommended, soon to be default.</span></span><br><span class="line"><span class="comment">                       # This option tells gmond to use a source address</span></span><br><span class="line"><span class="comment">                       # that resolves to the machine&#x27;s hostname.  Without</span></span><br><span class="line"><span class="comment">                       # this, the metrics may appear to come from any</span></span><br><span class="line"><span class="comment">                       # interface and the DNS names associated with</span></span><br><span class="line"><span class="comment">                       # those IPs will be used to create the RRDs.</span></span><br><span class="line"><span class="comment">  #mcast_join = 239.2.11.71</span></span><br><span class="line">  <span class="attr">host</span> = <span class="string">node1</span></span><br><span class="line">  <span class="attr">port</span> = <span class="string">8649</span></span><br><span class="line">  <span class="attr">ttl</span> = <span class="string">1</span></span><br><span class="line"><span class="attr">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">/*</span> <span class="string">You can specify as many udp_recv_channels as you like as well. */</span></span><br><span class="line"><span class="attr">udp_recv_channel</span> <span class="string">&#123;</span></span><br><span class="line"><span class="comment">  # mcast_join = 239.2.11.71</span></span><br><span class="line">  <span class="attr">port</span> = <span class="string">8649</span></span><br><span class="line">  <span class="attr">bind</span> = <span class="string">0.0.0.0</span></span><br><span class="line">  <span class="attr">retry_bind</span> = <span class="string">true</span></span><br><span class="line"><span class="comment">  # Size of the UDP buffer. If you are handling lots of metrics you really</span></span><br><span class="line"><span class="comment">  # should bump it up to e.g. 10MB or even higher.</span></span><br><span class="line"><span class="comment">  # buffer = 10485760</span></span><br><span class="line"><span class="attr">&#125;</span></span><br><span class="line"><span class="attr">...</span></span><br></pre></td></tr></table></figure>
-
-
-
-<ol start="4">
-<li>在 node1 修改配置文件&#x2F;etc&#x2F;selinux&#x2F;config</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# /etc/selinux/config</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># This file controls the state of SELinux on the system.</span></span><br><span class="line"><span class="comment"># SELINUX= can take one of these three values:</span></span><br><span class="line"><span class="comment">#     enforcing - SELinux security policy is enforced.</span></span><br><span class="line"><span class="comment">#     permissive - SELinux prints warnings instead of enforcing.</span></span><br><span class="line"><span class="comment">#     disabled - No SELinux policy is loaded.</span></span><br><span class="line"><span class="attr">SELINUX</span>=<span class="string">disabled</span></span><br><span class="line"><span class="comment"># SELINUXTYPE= can take one of three values:</span></span><br><span class="line"><span class="comment">#     targeted - Targeted processes are protected,</span></span><br><span class="line"><span class="comment">#     minimum - Modification of targeted policy. Only selected processes are protected. </span></span><br><span class="line"><span class="comment">#     mls - Multi Level Security protection.</span></span><br><span class="line"><span class="attr">SELINUXTYPE</span>=<span class="string">targeted </span></span><br></pre></td></tr></table></figure>
-
-<p>提示：selinux 生效需要重启，如果此时不想重启，可以临时生效之：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# setenforce 0</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="启动ganglia"><a href="#启动ganglia" class="headerlink" title="启动ganglia"></a>启动ganglia</h2><ol>
-<li><p>在node1、node2和node3启动</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# systemctl start gmond</span><br><span class="line">(base) [root@node2 ~]# systemctl start gmond</span><br><span class="line">(base) [root@node3 ~]# systemctl start gmond</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>在node1启动</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# systemctl start httpd</span><br><span class="line">(base) [root@node1 ~]# systemctl start gmetad</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="访问ganglia"><a href="#访问ganglia" class="headerlink" title="访问ganglia"></a>访问ganglia</h2><p><a target="_blank" rel="noopener" href="http://node1/ganglia">http://node1/ganglia</a></p>
-<p>提示：如果完成以上操作依然出现权限不足错误，请修改&#x2F;var&#x2F;lib&#x2F;ganglia 目录的权限：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# chmod -R 777 /var/lib/ganglia</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="Flume监控"><a href="#Flume监控" class="headerlink" title="Flume监控"></a>Flume监控</h1><ol>
-<li><p>启动Flume</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# bin/flume-ng agent \</span><br><span class="line">-c conf/ \</span><br><span class="line">-n a1 \</span><br><span class="line">-f job/flume-netcat-logger.conf \</span><br><span class="line">-Dflume.root.logger=INFO,console \</span><br><span class="line">-Dflume.monitoring.type=ganglia \</span><br><span class="line">-Dflume.monitoring.hosts=node1:8649</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>发送数据</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# nc localhost 44444</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>监控</p>
-<p><img src="/2021/09/25/Flume%E7%9B%91%E6%8E%A7-Ganglia/image-20230202130842851.png" alt="image-20230202130842851"></p>
-<table>
-<thead>
-<tr>
-<th>字段（图表名称）</th>
-<th>字段含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>EventPutAttemptCount</td>
-<td>source 尝试写入 channel 的事件总数量</td>
-</tr>
-<tr>
-<td>EventPutSuccessCount</td>
-<td>成功写入 channel 且提交的事件总数量</td>
-</tr>
-<tr>
-<td>EventTakeAttemptCount</td>
-<td>sink 尝试从 channel 拉取事件的总数量。</td>
-</tr>
-<tr>
-<td>EventTakeSuccessCount</td>
-<td>sink 成功读取的事件的总数量</td>
-</tr>
-<tr>
-<td>StartTime</td>
-<td>channel 启动的时间（毫秒）</td>
-</tr>
-<tr>
-<td>StopTime</td>
-<td>channel 停止的时间（毫秒）</td>
-</tr>
-<tr>
-<td>ChannelSize</td>
-<td>目前 channel 中事件的总数量</td>
-</tr>
-<tr>
-<td>ChannelFillPercentage</td>
-<td>channel 占用百分比</td>
-</tr>
-<tr>
-<td>ChannelCapacity</td>
-<td>channel 的容量</td>
-</tr>
-</tbody></table>
-</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -3441,14 +2676,14 @@ RxJava 的每个操作符都需要换新行，并且把换行符插入在 `.` �
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">140</span>
+          <span class="site-state-item-count">147</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

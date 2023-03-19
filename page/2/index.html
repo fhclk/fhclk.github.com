@@ -151,6 +151,263 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/09/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%92%8C%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/09/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%92%8C%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/" class="post-title-link" itemprop="url">微服务基本概念和核心思想</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-09-12 18:18:59" itemprop="dateCreated datePublished" datetime="2022-09-12T18:18:59+08:00">2022-09-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><p>把传统地单体架构的业务系统，打散为更细粒度的单位，每一个单位都是可以独立的进行需求设计开发测试部署和交付的，每个单位都能够做到独立的自治。这个打散的单位就是微服务，同时拆分出来的每个单位之间，只能通过轻量的rest API接口进行协同或者交互。</p>
+<h1 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h1><p>微服务的核心：大拆小，拆小的每个组件都能够做到独立自治。</p>
+<h1 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h1><p>一个简单的采购系统。</p>
+<p><img src="/2022/09/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%92%8C%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/microservice1.png" alt="架构"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/08/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%AD%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8%E3%80%81%E6%95%8F%E6%8D%B7%E5%92%8C%E5%A4%8D%E6%9D%82%E5%BA%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%AD%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8%E3%80%81%E6%95%8F%E6%8D%B7%E5%92%8C%E5%A4%8D%E6%9D%82%E5%BA%A6/" class="post-title-link" itemprop="url">微服务中的高可用、敏捷和复杂度</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-08-12 19:37:02" itemprop="dateCreated datePublished" datetime="2022-08-12T19:37:02+08:00">2022-08-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="高可用"><a href="#高可用" class="headerlink" title="高可用"></a>高可用</h1><p>微服务是通过对传统的单体应用进行拆分，来实现整个应用它本身的弹性和可扩展能力，但是当对单体应用进行了拆分，对数据库进行了水平和垂直拆分后，一定会引入分布式的问题，基于CAP原理在引入分布式以后，对于整个应用架构底层技术架构，它本身的高可用和高一致性，往往没办法做到同时满足，要么是CP优先，要么是AP优先，两者中只能选一个，因此，在解决一个新问题时，引入新的技术新的架构去解决一个问题的复杂度时，往往会带来其他新的复杂性。</p>
+<h1 id="敏捷"><a href="#敏捷" class="headerlink" title="敏捷"></a>敏捷</h1><p>错误观念：</p>
+<blockquote>
+<p>应用微服务架构后，整个应用的开发会更加高效更加敏捷。</p>
+</blockquote>
+<p>但是实际中敏捷开发和微服务没有任何关系。</p>
+<p>引入微服务架构后，对原来的单体应用做了拆分，做了前后端分离，整个微服务开发团队，前端和后端人和人之间的沟通和协调会跟多，对整个敏捷开发、敏捷管理的要求更高。</p>
+<h1 id="复杂度"><a href="#复杂度" class="headerlink" title="复杂度"></a>复杂度</h1><p>微服务架构的引入会增加系统的复杂度。</p>
+<p>引入微服务后，微服务与微服务之间有集成点，前端和后端之间也有集成点，还和企业原有技术如Paas平台，底层的消息安全缓存等各种技术服务能力之间有集成点。</p>
+<p>在有大量接口集成和交付的情况下面，整个微服务应用的开发和交付的复杂度呈现指数级的增长。如果一个团队微服务治理的能力没有跟上，盲目的实施微服务，或者把单体应用拆分成微服务时拆分的太细，往往带来后续的微服务的开发集成、微服务管控、微服务运维一些灾难性的问题。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/06/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%97%B6%E6%9E%B6%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/06/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%97%B6%E6%9E%B6%E6%9E%84/" class="post-title-link" itemprop="url">大数据实时架构</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-06-03 20:01:05" itemprop="dateCreated datePublished" datetime="2022-06-03T20:01:05+08:00">2022-06-03</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><img src="/2022/06/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%97%B6%E6%9E%B6%E6%9E%84/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%97%B6%E6%9E%B6%E6%9E%84.png" alt="大数据实时架构"></p>
+<p>在实际开发中，可以省略日志服务，日志直接发送给Kafka，从而节省日志服务的部署。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/06/02/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%A6%BB%E7%BA%BF%E6%9E%B6%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/06/02/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%A6%BB%E7%BA%BF%E6%9E%B6%E6%9E%84/" class="post-title-link" itemprop="url">大数据离线架构</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-06-02 16:06:15" itemprop="dateCreated datePublished" datetime="2022-06-02T16:06:15+08:00">2022-06-02</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><img src="/2022/06/02/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%A6%BB%E7%BA%BF%E6%9E%B6%E6%9E%84/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%A6%BB%E7%BA%BF%E6%9E%B6%E6%9E%84.png" alt="大数据离线架构"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/04/13/Flink%E6%97%B6%E9%97%B4%E5%92%8C%E7%AA%97%E5%8F%A3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -844,320 +1101,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/03/24/SOA%E6%9E%B6%E6%9E%84%E6%80%9D%E6%83%B3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/24/SOA%E6%9E%B6%E6%9E%84%E6%80%9D%E6%83%B3/" class="post-title-link" itemprop="url">SOA架构思想</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-24 23:24:42" itemprop="dateCreated datePublished" datetime="2022-03-24T23:24:42+08:00">2022-03-24</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>SOA（service oriented architecture）面向服务的架构</p>
-<p>SOA是伴随着单体式的建设系统的方式产生的。在微服务之前都是单体应用，它们是竖井式的一个一个的竖井垂直建立起来的，业务系统越建越多，业务系统之间的集成和协同问题就越发昆明，在这个原因下，出现了SOA的架构思想。</p>
-<h1 id="架构思想"><a href="#架构思想" class="headerlink" title="架构思想"></a>架构思想</h1><p>对于SOA有一个标准的定义，SOA架构思想是要去找到当前系统中可以复用的服务能力，这个服务能力本身也具备粗粒度、无状态一些关键的服务特征，在找到了这些可复用的能力以后，我们可以基于这些接口服务来灵活的组装和编排上层的业务应用和业务流程，这个就是SOA最核心的架构思想。</p>
-<p>简单理解：</p>
-<ol>
-<li>要找到可重用的服务。</li>
-<li>灵活的组合和编排服务来满足业务流程。</li>
-</ol>
-<p>在找到可重用的服务后，需要对这些服务进行统一的管控治理，而着一些能力往往就是涉及到我们常说的ESB的企业服务总线，在往上面走，这些服务要去组合和编排，去满足业务流程，这个往往会涉及到BPM业务流程管理和BPEL流程编排着一些关键内容。所以会看到SOA的架构思想往往跟实现的一些技术和产品有一个对应。</p>
-<p>举例：</p>
-<p>一个公司要去拓展自媒体业务，新建一个自媒体团队，进行分析，发现自媒体业务流程，包括前期文案的编写，视频录制，美工裁剪，最后的运营和宣传。把自媒体业务分解后，可以将原有的团队人员来做具体的工作，如产品做前期文案编写，ui做视频裁剪，市场做营运和宣传，在原有的产品和技术团队找到对应的人做不同的事，这样就最大化的复用了企业已有的资源和能力，而不是将所有的东西都从头重新去完完全全独立的去建设一套，这个就是SOA架构思想。</p>
-<p>SOA架构思想并不过时，SOA里面强调的可复用、解耦、灵活的组装编排，在很多场景都会出现和应用到。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/03/22/Kafka%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/22/Kafka%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="post-title-link" itemprop="url">Kafka源码解析</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-22 21:03:38" itemprop="dateCreated datePublished" datetime="2022-03-22T21:03:38+08:00">2022-03-22</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h1><h1 id="生产者源码"><a href="#生产者源码" class="headerlink" title="生产者源码"></a>生产者源码</h1><h1 id="消费者源码"><a href="#消费者源码" class="headerlink" title="消费者源码"></a>消费者源码</h1><h1 id="服务器源码"><a href="#服务器源码" class="headerlink" title="服务器源码"></a>服务器源码</h1>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/03/20/Kafka%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/20/Kafka%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98/" class="post-title-link" itemprop="url">Kafka生产调优</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-20 20:32:22" itemprop="dateCreated datePublished" datetime="2022-03-20T20:32:22+08:00">2022-03-20</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="硬件配置选择"><a href="#硬件配置选择" class="headerlink" title="硬件配置选择"></a>硬件配置选择</h1><h1 id="Kafka生产者"><a href="#Kafka生产者" class="headerlink" title="Kafka生产者"></a>Kafka生产者</h1><h1 id="Kafka-Broker"><a href="#Kafka-Broker" class="headerlink" title="Kafka Broker"></a>Kafka Broker</h1><h1 id="Kafka消费者"><a href="#Kafka消费者" class="headerlink" title="Kafka消费者"></a>Kafka消费者</h1><h1 id="总体"><a href="#总体" class="headerlink" title="总体"></a>总体</h1>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/" class="post-title-link" itemprop="url">Kafka外部系统集成</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-18 21:02:14" itemprop="dateCreated datePublished" datetime="2022-03-18T21:02:14+08:00">2022-03-18</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="集成Flume"><a href="#集成Flume" class="headerlink" title="集成Flume"></a>集成Flume</h1><p><img src="/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/image-20230202132247145.png" alt="image-20230202132247145"></p>
-<h2 id="Flume生产者"><a href="#Flume生产者" class="headerlink" title="Flume生产者"></a>Flume生产者</h2><p><img src="/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/image-20230202132414125.png" alt="image-20230202132414125"></p>
-<ol>
-<li><p>启动kafka集群</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# ./bin/zk.sh start</span><br><span class="line">(base) [root@node1 ~]# ./bin/kf.sh start</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>启动kafka消费者</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-console-consumer.sh --bootstrap-server node1:9092 --topic first</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>配置flume</p>
-<p>文件名file_to_kafka.conf</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1 组件定义</span></span><br><span class="line"><span class="attr">a1.sources</span> = <span class="string">r1</span></span><br><span class="line"><span class="attr">a1.sinks</span> = <span class="string">k1</span></span><br><span class="line"><span class="attr">a1.channels</span> = <span class="string">c1</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 2 配置 source</span></span><br><span class="line"><span class="attr">a1.sources.r1.type</span> = <span class="string">TAILDIR</span></span><br><span class="line"><span class="attr">a1.sources.r1.filegroups</span> = <span class="string">f1</span></span><br><span class="line"><span class="attr">a1.sources.r1.filegroups.f1</span> = <span class="string">/root/data/applog/app.*</span></span><br><span class="line"><span class="attr">a1.sources.r1.positionFile</span> = <span class="string">/root/data/flume/taildir_position.json</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 3 配置 channel</span></span><br><span class="line"><span class="attr">a1.channels.c1.type</span> = <span class="string">memory</span></span><br><span class="line"><span class="attr">a1.channels.c1.capacity</span> = <span class="string">1000</span></span><br><span class="line"><span class="attr">a1.channels.c1.transactionCapacity</span> = <span class="string">100</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 4 配置 sink</span></span><br><span class="line"><span class="attr">a1.sinks.k1.type</span> = <span class="string">org.apache.flume.sink.kafka.KafkaSink</span></span><br><span class="line"><span class="attr">a1.sinks.k1.kafka.bootstrap.servers</span> = <span class="string">node1:9092,node2:9092,node3:9092</span></span><br><span class="line"><span class="attr">a1.sinks.k1.kafka.topic</span> = <span class="string">first</span></span><br><span class="line"><span class="attr">a1.sinks.k1.kafka.flumeBatchSize</span> = <span class="string">20</span></span><br><span class="line"><span class="attr">a1.sinks.k1.kafka.producer.acks</span> = <span class="string">1</span></span><br><span class="line"><span class="attr">a1.sinks.k1.kafka.producer.linger.ms</span> = <span class="string">1</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 5 拼接组件</span></span><br><span class="line"><span class="attr">a1.sources.r1.channels</span> = <span class="string">c1</span></span><br><span class="line"><span class="attr">a1.sinks.k1.channel</span> = <span class="string">c1</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>启动flume</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# bin/flume-ng agent -c conf/ -n a1 -f job/file_to_kafka.conf -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>向&#x2F;root&#x2F;data&#x2F;app.log 里追加数据</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# echo hello &gt;&gt; /root/data/applog/app.log</span><br><span class="line">(base) [root@node1 ~]# echo hello flume &gt;&gt; /root/data/applog/app.log</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>查看 kafka 消费者消费情况</p>
-<p><img src="/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/image-20230202160913784.png" alt="image-20230202160913784"></p>
-</li>
-</ol>
-<h2 id="Flume消费者"><a href="#Flume消费者" class="headerlink" title="Flume消费者"></a>Flume消费者</h2><p><img src="/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/image-20230202161059358.png" alt="image-20230202161059358"></p>
-<ol>
-<li><p>配置flume</p>
-<p>文件名：kafka_to_file.conf</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1 组件定义</span></span><br><span class="line"><span class="attr">a1.sources</span> = <span class="string">r1</span></span><br><span class="line"><span class="attr">a1.sinks</span> = <span class="string">k1</span></span><br><span class="line"><span class="attr">a1.channels</span> = <span class="string">c1</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 2 配置 source</span></span><br><span class="line"><span class="attr">a1.sources.r1.type</span> = <span class="string">org.apache.flume.source.kafka.KafkaSource</span></span><br><span class="line"><span class="attr">a1.sources.r1.batchSize</span> = <span class="string">50</span></span><br><span class="line"><span class="attr">a1.sources.r1.batchDurationMillis</span> = <span class="string">200</span></span><br><span class="line"><span class="attr">a1.sources.r1.kafka.bootstrap.servers</span> = <span class="string">node1:9092</span></span><br><span class="line"><span class="attr">a1.sources.r1.kafka.topics</span> = <span class="string">first</span></span><br><span class="line"><span class="attr">a1.sources.r1.kafka.consumer.group.id</span> = <span class="string">custom.g.id</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 3 配置 channel</span></span><br><span class="line"><span class="attr">a1.channels.c1.type</span> = <span class="string">memory</span></span><br><span class="line"><span class="attr">a1.channels.c1.capacity</span> = <span class="string">1000</span></span><br><span class="line"><span class="attr">a1.channels.c1.transactionCapacity</span> = <span class="string">100</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 4 配置 sink</span></span><br><span class="line"><span class="attr">a1.sinks.k1.type</span> = <span class="string">logger</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>启动flume</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# bin/flume-ng agent -c conf/ -n a1 -f job/kafka_to_file.conf -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>启动kafka生产者</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-console-producer.sh --bootstrap-server node1:9092 --topic first</span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">hello flume</span></span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">hello hadoop</span></span><br><span class="line"><span class="meta prompt_">&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>观察控制台输出</p>
-<p><img src="/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/image-20230202163426516.png" alt="image-20230202163426516"></p>
-</li>
-</ol>
-<h1 id="集成Flink"><a href="#集成Flink" class="headerlink" title="集成Flink"></a>集成Flink</h1><p><img src="/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/image-20230130220442486.png" alt="image-20230130220442486"></p>
-<h1 id="集成SpringBoot"><a href="#集成SpringBoot" class="headerlink" title="集成SpringBoot"></a>集成SpringBoot</h1><p><img src="/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/image-20230130220559057.png" alt="image-20230130220559057"></p>
-<h1 id="集成Spark"><a href="#集成Spark" class="headerlink" title="集成Spark"></a>集成Spark</h1><p><img src="/2022/03/18/Kafka%E5%A4%96%E9%83%A8%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/image-20230130220639873.png" alt="image-20230130220639873"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1225,14 +1172,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">140</span>
+          <span class="site-state-item-count">147</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="meta标签自动刷新&#x2F;跳转1&lt;meta http-equiv&#x3D;&quot;Refresh&quot; content&#x3D;&quot;5;URL&#x3D;page2.html&quot;&gt;  假设要实现PPT自动播放的功能，只需在每个页面的meta标签内设置好下一个页面地址即可。 1&lt;meta http-equiv&#x3D;&quot;Refresh&quot; content&#x3D;&amp;quot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTML中易忽略的标签">
+<meta property="og:url" content="http://fhclk.github.io/2017/10/19/HTML%E4%B8%AD%E6%98%93%E5%BF%BD%E7%95%A5%E7%9A%84%E6%A0%87%E7%AD%BE/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="meta标签自动刷新&#x2F;跳转1&lt;meta http-equiv&#x3D;&quot;Refresh&quot; content&#x3D;&quot;5;URL&#x3D;page2.html&quot;&gt;  假设要实现PPT自动播放的功能，只需在每个页面的meta标签内设置好下一个页面地址即可。 1&lt;meta http-equiv&#x3D;&quot;Refresh&quot; content&#x3D;&amp;quot">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://fhclk.github.io/2017/10/19/HTML%E4%B8%AD%E6%98%93%E5%BF%BD%E7%95%A5%E7%9A%84%E6%A0%87%E7%AD%BE/image-20230319203320817.png">
+<meta property="og:image" content="http://fhclk.github.io/2017/10/19/HTML%E4%B8%AD%E6%98%93%E5%BF%BD%E7%95%A5%E7%9A%84%E6%A0%87%E7%AD%BE/image-20230319204750649.png">
+<meta property="article:published_time" content="2017-10-19T12:02:26.000Z">
+<meta property="article:modified_time" content="2023-03-19T12:57:48.383Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="HTML">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/2017/10/19/HTML%E4%B8%AD%E6%98%93%E5%BF%BD%E7%95%A5%E7%9A%84%E6%A0%87%E7%AD%BE/image-20230319203320817.png">
+
+<link rel="canonical" href="http://fhclk.github.io/2017/10/19/HTML%E4%B8%AD%E6%98%93%E5%BF%BD%E7%95%A5%E7%9A%84%E6%A0%87%E7%AD%BE/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>HTML中易忽略的标签 | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2017/10/19/HTML%E4%B8%AD%E6%98%93%E5%BF%BD%E7%95%A5%E7%9A%84%E6%A0%87%E7%AD%BE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HTML中易忽略的标签
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-10-19 20:02:26" itemprop="dateCreated datePublished" datetime="2017-10-19T20:02:26+08:00">2017-10-19</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="meta标签"><a href="#meta标签" class="headerlink" title="meta标签"></a>meta标签</h1><h2 id="自动刷新-x2F-跳转"><a href="#自动刷新-x2F-跳转" class="headerlink" title="自动刷新&#x2F;跳转"></a>自动刷新&#x2F;跳转</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Refresh&quot;</span> <span class="attr">content</span>=<span class="string">&quot;5;URL=page2.html&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>假设要实现PPT自动播放的功能，只需在每个页面的meta标签内设置好下一个页面地址即可。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Refresh&quot;</span> <span class="attr">content</span>=<span class="string">&quot;60&quot;</span> &gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>比如每隔一分钟就需要刷新页面的大屏幕监控，也可以通过meta标签来实现，只需去掉后面的URL。</p>
+<blockquote>
+<p>使用这种方式，刷新和跳转是不可取消的，对刷新时间间隔或者需要手动取消的，推荐使用JavaScript定时器来实现。</p>
+<p>如果只是想实现页面的定时刷新或跳转（比如某些页面缺乏访问权限，在x秒后跳回首页这样的场景），建议使用meta标签</p>
+</blockquote>
+<h1 id="title标签"><a href="#title标签" class="headerlink" title="title标签"></a>title标签</h1><h2 id="Hack手段：消息提醒"><a href="#Hack手段：消息提醒" class="headerlink" title="Hack手段：消息提醒"></a>Hack手段：消息提醒</h2><p>B&#x2F;S架构在处理某些场景，比如即时通信时，会变得比较麻烦，因为前后端通信深度依赖HTTP协议，而HTTP协议是采用”请求-响应“模式。一种低效的解决方案是客户端通过轮询机制获取最新消息，（HTML5下可以使用WebSocket协议）</p>
+<p>HTML5标准发布之前，浏览器没有开放图标闪烁、弹出系统消息之类的接口，只能借助一些Hack手段，比如修改title标签来达到类似的效果。代码如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> msgNum = <span class="number">1</span> <span class="comment">//条数</span></span><br><span class="line"><span class="keyword">let</span> count = <span class="number">0</span> <span class="comment">//计数器</span></span><br><span class="line"><span class="keyword">const</span> inerval = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    count = (count + <span class="number">1</span>) % <span class="number">2</span></span><br><span class="line">    <span class="keyword">if</span> (msgNum === <span class="number">0</span>) &#123;</span><br><span class="line">        doucument.<span class="property">title</span> += <span class="string">&#x27;聊天页面&#x27;</span></span><br><span class="line">        <span class="built_in">clearInterval</span>(interval)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> refix = count % <span class="number">2</span> ? <span class="string">`新消息(<span class="subst">$&#123;msgNum&#125;</span>)`</span> : <span class="string">&quot;&quot;</span></span><br><span class="line">    doucument.<span class="property">title</span> = <span class="string">`<span class="subst">$&#123;prefix&#125;</span>聊天页面`</span></span><br><span class="line">&#125;, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>HTML5中可以使用Web notifications API弹出系统消息。</p>
+<p>动态修改title标签，还可以将一些关键信息显示在标签上，（比如下载时的进度、当前操作步骤等）</p>
+<h1 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h1><p>性能问题的两方面原因：渲染速度慢、请求时间长。</p>
+<p>合理地利用标签，可以在一定程度上提升渲染速度以及减少请求时间。</p>
+<h1 id="script标签"><a href="#script标签" class="headerlink" title="script标签"></a>script标签</h1><h2 id="调整加载顺序提升渲染速度"><a href="#调整加载顺序提升渲染速度" class="headerlink" title="调整加载顺序提升渲染速度"></a>调整加载顺序提升渲染速度</h2><p>渲染引擎在解析HTML时，若遇到script标签引用文件，则会暂停解析过程，同时通知网络线程加载文件，文件加载后会切换至JavaScript引擎来执行对应代码，代码执行完成后切换至渲染引擎继续渲染页面。</p>
+<h2 id="script标签的3个属性"><a href="#script标签的3个属性" class="headerlink" title="script标签的3个属性"></a>script标签的3个属性</h2><ul>
+<li><p>async属性</p>
+<p>立即请求文件，但不阻塞渲染属性，文件加载完毕后阻塞渲染引擎并立即执行文件内容。</p>
+</li>
+<li><p>defer属性</p>
+<p>立即请求文件，但不阻塞渲染属性，等到解析完HTML之后再执行文件内容。</p>
+</li>
+<li><p>HTML5标准type属性</p>
+<p>对应的值为module。</p>
+<p>让浏览器按照ES6标准将文件当作模块进行解析，默认阻塞效果同defer，也可以配合async在请求完成后立即执行。</p>
+</li>
+</ul>
+<p><img src="/2017/10/19/HTML%E4%B8%AD%E6%98%93%E5%BF%BD%E7%95%A5%E7%9A%84%E6%A0%87%E7%AD%BE/image-20230319203320817.png" alt="image-20230319203320817"></p>
+<p>当渲染引擎解析HTML遇到script标签引入文件时，会立即渲染一次。</p>
+<p>构建工具会把编译好的引用JavaScript代码的script标签放入到body标签底部。当渲染引擎执行到body底部时会先将已解析的内容渲染出来，然后再去请求响应的JavaScript文件。</p>
+<p>如果时内联脚本（不通过src引用外部脚本文件），渲染引擎不好渲染。</p>
+<h1 id="link标签"><a href="#link标签" class="headerlink" title="link标签"></a>link标签</h1><h2 id="通过预处理提升渲染速度"><a href="#通过预处理提升渲染速度" class="headerlink" title="通过预处理提升渲染速度"></a>通过预处理提升渲染速度</h2><ul>
+<li><p>dns-prefetch</p>
+<p>当link标签的rel属性值为”dns-prefetch“时，浏览器会对某个域名预先进行DNS解析并缓存。当浏览器再访问同一域名的资源时，可以减少通过域名查询ip的过程，从而提升速度。</p>
+</li>
+<li><p>preconnect</p>
+<p>让浏览器在一个HTTP请求正式发给服务器前预先执行一些操作，包括DNS解析、TLS协商、TCP握手，通过消除往返延迟来为用户节省时间。</p>
+</li>
+<li><p>prefetch&#x2F;preload</p>
+<p>两个值都是让浏览器预先下载并缓存某个资源，但不同的是：prefetch可能会在浏览器忙时被忽略，而preload则是一定会被预先下载</p>
+</li>
+<li><p>prerender</p>
+<p>浏览器不仅会加载资源，还会解析执行页面，进行预渲染。</p>
+<p><img src="/2017/10/19/HTML%E4%B8%AD%E6%98%93%E5%BF%BD%E7%95%A5%E7%9A%84%E6%A0%87%E7%AD%BE/image-20230319204750649.png" alt="image-20230319204750649"></p>
+</li>
+</ul>
+<h1 id="搜索优化"><a href="#搜索优化" class="headerlink" title="搜索优化"></a>搜索优化</h1><h2 id="meta标签：提取关键信息"><a href="#meta标签：提取关键信息" class="headerlink" title="meta标签：提取关键信息"></a>meta标签：提取关键信息</h2><p>meta标签专门为搜索引擎设置一些描述信息，方便用户预览到搜索结果</p>
+<p>在实际工作中，推荐使用一些关键字工具来挑选，比如Google trends、站长工具</p>
+<h2 id="link标签：减少重复"><a href="#link标签：减少重复" class="headerlink" title="link标签：减少重复"></a>link标签：减少重复</h2><p>对于同一个页面会有多个网址，又或者存在某些重定向页面，比如：</p>
+<p><a target="_blank" rel="noopener" href="https://xx.com/a.html">https://xx.com/a.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://xx.com/detail?id=a">https://xx.com/detail?id=a</a></p>
+<p>可以使用link标签，避免搜索引擎抓取相同页面的数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link href=&quot;https://xx.com/a.html&quot; rel=&quot;canonical&quot; &gt;</span><br></pre></td></tr></table></figure>
+
+<p>合并网址的方式：比如使用站点地图，或者在HTTP请求响应头部添加rel&#x3D;”canonical”</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"># 前端</a> -->
+              <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"><i class="fa fa-tag"></i>  前端</a>
+              <!-- <a href="/tags/HTML/" rel="tag"># HTML</a> -->
+              <a href="/tags/HTML/" rel="tag"><i class="fa fa-tag"></i>  HTML</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/10/15/react-native/" rel="prev" title="React Native">
+      <i class="fa fa-chevron-left"></i> React Native
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/10/22/%E9%AB%98%E6%95%88%E6%93%8D%E4%BD%9CDOM/" rel="next" title="高效操作DOM">
+      高效操作DOM <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:22px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#meta%E6%A0%87%E7%AD%BE"><span class="nav-number">1.</span> <span class="nav-text">meta标签</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%B0-x2F-%E8%B7%B3%E8%BD%AC"><span class="nav-number">1.1.</span> <span class="nav-text">自动刷新&#x2F;跳转</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#title%E6%A0%87%E7%AD%BE"><span class="nav-number">2.</span> <span class="nav-text">title标签</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hack%E6%89%8B%E6%AE%B5%EF%BC%9A%E6%B6%88%E6%81%AF%E6%8F%90%E9%86%92"><span class="nav-number">2.1.</span> <span class="nav-text">Hack手段：消息提醒</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">3.</span> <span class="nav-text">性能优化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#script%E6%A0%87%E7%AD%BE"><span class="nav-number">4.</span> <span class="nav-text">script标签</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E6%95%B4%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F%E6%8F%90%E5%8D%87%E6%B8%B2%E6%9F%93%E9%80%9F%E5%BA%A6"><span class="nav-number">4.1.</span> <span class="nav-text">调整加载顺序提升渲染速度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#script%E6%A0%87%E7%AD%BE%E7%9A%843%E4%B8%AA%E5%B1%9E%E6%80%A7"><span class="nav-number">4.2.</span> <span class="nav-text">script标签的3个属性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#link%E6%A0%87%E7%AD%BE"><span class="nav-number">5.</span> <span class="nav-text">link标签</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E9%A2%84%E5%A4%84%E7%90%86%E6%8F%90%E5%8D%87%E6%B8%B2%E6%9F%93%E9%80%9F%E5%BA%A6"><span class="nav-number">5.1.</span> <span class="nav-text">通过预处理提升渲染速度</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E4%BC%98%E5%8C%96"><span class="nav-number">6.</span> <span class="nav-text">搜索优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#meta%E6%A0%87%E7%AD%BE%EF%BC%9A%E6%8F%90%E5%8F%96%E5%85%B3%E9%94%AE%E4%BF%A1%E6%81%AF"><span class="nav-number">6.1.</span> <span class="nav-text">meta标签：提取关键信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#link%E6%A0%87%E7%AD%BE%EF%BC%9A%E5%87%8F%E5%B0%91%E9%87%8D%E5%A4%8D"><span class="nav-number">6.2.</span> <span class="nav-text">link标签：减少重复</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">147</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>

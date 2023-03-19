@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="微服务和微服务间横向集成，即横向东西流量，尽量不要去调同步的web service的服务接口，更适合的方式是通过消息中间件去解耦，把同步请求调用变成走消息中间件，通过消息异步调用，从而到达解耦的目的。传统在使用消息中间件时，更过的是应用消息中间件做销峰处理、消息发布订阅等。在微服务中，应用消息队列、EDA事件机制，很重要的点是对各个微服务横向之间进行彻底的解耦。举例一个采购的微服务，一个库存的微服">
+  <meta name="description" content="微服务和微服务间横向集成，即横向东西流量，尽量不要去调同步的web service的服务接口，更适合的方式是通过消息中间件去解耦，把同步请求调用变成走消息中间件，通过消息异步调用，从而到达解耦的目的。传统在使用消息中间件时，更过的是应用消息中间件做销峰处理、消息发布订阅等。在微服务中，应用消息队列、EDA事件机制，可用来是对各个微服务横向之间进行彻底的解耦。举例在微服务架构中，包括一个采购的微服务">
 <meta property="og:type" content="article">
 <meta property="og:title" content="微服务间通过消息队列和事件机制异步解耦">
 <meta property="og:url" content="http://fhclk.github.io/2022/12/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%97%B4%E9%80%9A%E8%BF%87%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%92%8C%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6%E5%BC%82%E6%AD%A5%E8%A7%A3%E8%80%A6/index.html">
 <meta property="og:site_name" content="拾荒者">
-<meta property="og:description" content="微服务和微服务间横向集成，即横向东西流量，尽量不要去调同步的web service的服务接口，更适合的方式是通过消息中间件去解耦，把同步请求调用变成走消息中间件，通过消息异步调用，从而到达解耦的目的。传统在使用消息中间件时，更过的是应用消息中间件做销峰处理、消息发布订阅等。在微服务中，应用消息队列、EDA事件机制，很重要的点是对各个微服务横向之间进行彻底的解耦。举例一个采购的微服务，一个库存的微服">
+<meta property="og:description" content="微服务和微服务间横向集成，即横向东西流量，尽量不要去调同步的web service的服务接口，更适合的方式是通过消息中间件去解耦，把同步请求调用变成走消息中间件，通过消息异步调用，从而到达解耦的目的。传统在使用消息中间件时，更过的是应用消息中间件做销峰处理、消息发布订阅等。在微服务中，应用消息队列、EDA事件机制，可用来是对各个微服务横向之间进行彻底的解耦。举例在微服务架构中，包括一个采购的微服务">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-12-12T13:10:09.000Z">
-<meta property="article:modified_time" content="2023-03-12T15:20:20.392Z">
+<meta property="article:modified_time" content="2023-03-13T13:40:40.402Z">
 <meta property="article:author" content="fhclk">
 <meta property="article:tag" content="架构">
 <meta property="article:tag" content="微服务">
@@ -195,7 +195,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>微服务和微服务间横向集成，即横向东西流量，尽量不要去调同步的web service的服务接口，更适合的方式是通过消息中间件去解耦，把同步请求调用变成走消息中间件，通过消息异步调用，从而到达解耦的目的。<br>传统在使用消息中间件时，更过的是应用消息中间件做销峰处理、消息发布订阅等。<br>在微服务中，应用消息队列、EDA事件机制，很重要的点是对各个微服务横向之间进行彻底的解耦。<br><strong>举例</strong><br>一个采购的微服务，一个库存的微服务。</p>
+        <p>微服务和微服务间横向集成，即横向东西流量，尽量不要去调同步的web service的服务接口，更适合的方式是通过消息中间件去解耦，把同步请求调用变成走消息中间件，通过消息异步调用，从而到达解耦的目的。<br>传统在使用消息中间件时，更过的是应用消息中间件做销峰处理、消息发布订阅等。<br>在微服务中，应用消息队列、EDA事件机制，可用来是对各个微服务横向之间进行彻底的解耦。<br><strong>举例</strong><br>在微服务架构中，包括一个采购的微服务和一个库存的微服务。</p>
 <ol>
 <li>原来的实现方式<br>一个订单形成后，通过调用一个实时的API接口，把采购订单同步到库存中心里去。</li>
 <li>微服务架构方式<br>采用微服务架构方式的两个变化：<br>一是采购订单不需要同步到库存中心，库存中心需要的时候实时查询采购订单。<br>二是采购中心首先将采购订单发布到消息中间件和消息队列里面，然后库存中心去订阅消息队列的消息，然后通过异步的方式来获取采购订单，这样才能够彻底的实现采购微服务和库存微服务之间的解耦。</li>
@@ -226,7 +226,10 @@
     <a href="/2022/11/02/%E4%BC%81%E4%B8%9A%E6%9E%B6%E6%9E%84%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91-%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E8%A7%84%E5%88%92%E7%9A%84%E6%BC%94%E8%BF%9B/" rel="prev" title="企业架构底层逻辑-技术架构规划的演进">
       <i class="fa fa-chevron-left"></i> 企业架构底层逻辑-技术架构规划的演进
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2023/03/10/%E5%90%8E%E5%8F%B0%E4%B8%9A%E5%8A%A1%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F/" rel="next" title="后台业务系统的架构模式">
+      后台业务系统的架构模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -309,14 +312,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">140</span>
+          <span class="site-state-item-count">147</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
