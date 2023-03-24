@@ -151,6 +151,402 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/08/17/Swagger3%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/08/17/Swagger3%E4%BD%BF%E7%94%A8/" class="post-title-link" itemprop="url">Swagger使用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-08-17 23:00:02" itemprop="dateCreated datePublished" datetime="2021-08-17T23:00:02+08:00">2021-08-17</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Swagger3-使用"><a href="#Swagger3-使用" class="headerlink" title="Swagger3 使用"></a>Swagger3 使用</h3><h4 id="添加依赖"><a href="#添加依赖" class="headerlink" title="添加依赖"></a>添加依赖</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Swagger 是一个遵循了 OpenAPI 规范的一项技术，而 springfox 则是这项技术的具体实现。</p>
+<h4 id="开启Swagger"><a href="#开启Swagger" class="headerlink" title="开启Swagger"></a>开启Swagger</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableOpenApi</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MallApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(MallApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="配置摘要信息"><a href="#配置摘要信息" class="headerlink" title="配置摘要信息"></a>配置摘要信息</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.builders.RequestHandlerSelectors;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.spi.DocumentationType;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.spring.web.plugins.Docket;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SwaggerConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Docket <span class="title function_">createRestApi</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Docket</span>(DocumentationType.OAS_30)</span><br><span class="line">                .apiInfo(apiInfo())</span><br><span class="line">                .select()</span><br><span class="line">                .apis(RequestHandlerSelectors.basePackage(<span class="string">&quot;com.macro.mall.controller&quot;</span>))</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> ApiInfo <span class="title function_">apiInfo</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ApiInfoBuilder</span>()</span><br><span class="line">                .title(<span class="string">&quot;SwaggerUI演示&quot;</span>)</span><br><span class="line">                .description(<span class="string">&quot;mall&quot;</span>)</span><br><span class="line">                .version(<span class="string">&quot;1.0.0&quot;</span>)</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="访问Swagger"><a href="#访问Swagger" class="headerlink" title="访问Swagger"></a>访问Swagger</h4><p><a target="_blank" rel="noopener" href="http://localhost:8080/swagger-ui/">http://localhost:8080/swagger-ui/</a></p>
+<h3 id="Swagger2使用"><a href="#Swagger2使用" class="headerlink" title="Swagger2使用"></a>Swagger2使用</h3><h4 id="添加依赖-1"><a href="#添加依赖-1" class="headerlink" title="添加依赖"></a>添加依赖</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger-ui<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="开启Swagger-1"><a href="#开启Swagger-1" class="headerlink" title="开启Swagger"></a>开启Swagger</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableSwagger2</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MallTinyApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(MallTinyApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="配置摘要信息-1"><a href="#配置摘要信息-1" class="headerlink" title="配置摘要信息"></a>配置摘要信息</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.builders.ApiInfoBuilder;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.builders.RequestHandlerSelectors;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.service.ApiInfo;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.spi.DocumentationType;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.spring.web.plugins.Docket;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.swagger2.annotations.EnableSwagger2;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableSwagger2</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SwaggerConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Docket <span class="title function_">createRestApi</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Docket</span>(DocumentationType.SWAGGER_2)</span><br><span class="line">                .apiInfo(apiInfo())</span><br><span class="line">                .select()</span><br><span class="line">                .apis(RequestHandlerSelectors.basePackage(<span class="string">&quot;com.macro.mall&quot;</span>))</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ApiInfo <span class="title function_">apiInfo</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ApiInfoBuilder</span>()</span><br><span class="line">                .title(<span class="string">&quot;SwaggerUI演示&quot;</span>)</span><br><span class="line">                .description(<span class="string">&quot;mall&quot;</span>)</span><br><span class="line">                .version(<span class="string">&quot;1.0.0&quot;</span>)</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="访问Swagger-1"><a href="#访问Swagger-1" class="headerlink" title="访问Swagger"></a>访问Swagger</h4><p><a target="_blank" rel="noopener" href="http://localhost:8080/swagger-ui.html">http://localhost:8080/swagger-ui.html</a></p>
+<h3 id="生产环境"><a href="#生产环境" class="headerlink" title="生产环境"></a>生产环境</h3><p>生产环境中要关闭接口文档的显示</p>
+<p>在application.properties或application.yml中设置</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">springfox:</span></span><br><span class="line">  <span class="attr">documentation:</span></span><br><span class="line">    <span class="attr">enabled:</span> <span class="literal">true</span> <span class="comment">#在生产环境中要设置swagger-ui的enabled值为false,用来关闭文档的显示</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Swagger注解的使用说明"><a href="#Swagger注解的使用说明" class="headerlink" title="Swagger注解的使用说明"></a>Swagger注解的使用说明</h3><h4 id="Api"><a href="#Api" class="headerlink" title="@Api"></a>@Api</h4><blockquote>
+<p>@Api：用在请求的类上，表示对类的说明</p>
+<p>​		tags &#x3D; “说明该类的作用”， 可以在UI界面上看到的注解“</p>
+<p>​		value &#x3D; ”该参数没有什么意义，在UI上也可以看到，所以不需要配置“</p>
+</blockquote>
+<h4 id="ApiOperation"><a href="#ApiOperation" class="headerlink" title="@ApiOperation"></a>@ApiOperation</h4><blockquote>
+<p>@ApiOperation：用在请求的方法上，说明方法用途、作用</p>
+<p>​		value &#x3D; ”说明方法的用途、作用“</p>
+<p>​		notes &#x3D; ”方法的备注说明“</p>
+</blockquote>
+<h4 id="ApiImplicitParams"><a href="#ApiImplicitParams" class="headerlink" title="@ApiImplicitParams"></a>@ApiImplicitParams</h4><blockquote>
+<p>@ApiImplicitParams：用在请求方法上，表示一组参数说明</p>
+<p>​		@ApiImplicitParam：用在@ApiImplicitParams注解中，指定一个请求参数的各个方面</p>
+<p>​				name：参数名</p>
+<p>​				value：参数的汉字说明、解释</p>
+<p>​				required：参数是否必须传</p>
+<p>​				paramType：参数放在哪个地方</p>
+<p>​						header  &#x3D;&#x3D;&#x3D;&gt; 请求参数的获取： @RequestHeader</p>
+<p>​						query    &#x3D;&#x3D;&#x3D;&gt; 请求参数的获取： @RequestParam</p>
+<p>​						path（用于restful接口） &#x3D;&#x3D;&#x3D;&gt; 请求参数的获取：@PathVariable</p>
+<p>​						div（不常用）</p>
+<p>​						form（不常用）</p>
+<p>​				dataType：参数类型，默认String，其他值Integer</p>
+<p>​				defaultValue：参数的默认值</p>
+</blockquote>
+<h4 id="ApiResponses"><a href="#ApiResponses" class="headerlink" title="@ApiResponses"></a>@ApiResponses</h4><blockquote>
+<p>@ApiResponses：用在请求方法上，表示一组响应</p>
+<p>​		@ApiResponse：用在@ApiResponses中，一般表达一个错误的响应信息</p>
+<p>​				code：数字，例如：400</p>
+<p>​				message：信息</p>
+<p>​				response：抛出的异常类</p>
+</blockquote>
+<h4 id="ApiModel"><a href="#ApiModel" class="headerlink" title="@ApiModel"></a>@ApiModel</h4><blockquote>
+<p>@ApiModel：用于响应类上，表示一个返回相应数据的信息</p>
+</blockquote>
+<h4 id="ApiModelProperty"><a href="#ApiModelProperty" class="headerlink" title="@ApiModelProperty"></a>@ApiModelProperty</h4><blockquote>
+<p>@ApiModelProperty：用在属性上，描述相应类的属性</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Api(tags = &quot;商品品牌管理&quot;)</span></span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/brand&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PmsBrandController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> PmsBrandService pmsBrandService;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">LOGGER</span> <span class="operator">=</span> LoggerFactory.getLogger(PmsBrandController.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation(value = &quot;获取所有商品列表&quot;)</span></span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;listAll&quot;, method = RequestMethod.GET)</span></span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="keyword">public</span> CommonResult&lt;List&lt;PmsBrand&gt;&gt; <span class="title function_">getBrandList</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> CommonResult.success(pmsBrandService.listAllBrand());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation(&quot;添加品牌&quot;)</span></span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/create&quot;, method = RequestMethod.POST)</span></span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="keyword">public</span> CommonResult <span class="title function_">createBrand</span><span class="params">(<span class="meta">@RequestBody</span> PmsBrand pmsBrand)</span> &#123;</span><br><span class="line">        CommonResult commonResult;</span><br><span class="line">        <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> pmsBrandService.createBrand(pmsBrand);</span><br><span class="line">        <span class="keyword">if</span> (count == <span class="number">1</span>) &#123;</span><br><span class="line">            commonResult = CommonResult.success(pmsBrand);</span><br><span class="line">            LOGGER.debug(<span class="string">&quot;createbrand success: &#123;&#125;&quot;</span>, pmsBrand);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            commonResult = CommonResult.failed(<span class="string">&quot;操作失败&quot;</span>);</span><br><span class="line">            LOGGER.debug(<span class="string">&quot;createbrand failed: &#123;&#125;&quot;</span>, pmsBrand);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> commonResult;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation(&quot;更新指定id的品牌信息&quot;)</span></span><br><span class="line">    <span class="meta">@PostMapping(value = &quot;/update/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="keyword">public</span> CommonResult <span class="title function_">updateBrand</span><span class="params">(<span class="meta">@PathVariable(&quot;id&quot;)</span> Long id, <span class="meta">@RequestBody</span> PmsBrand pmsBrandDto, BindingResult result)</span> &#123;</span><br><span class="line">        CommonResult commonResult;</span><br><span class="line">        <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> pmsBrandService.updateBrand(id, pmsBrandDto);</span><br><span class="line">        <span class="keyword">if</span> (count == <span class="number">1</span>) &#123;</span><br><span class="line">            commonResult = CommonResult.success(pmsBrandDto);</span><br><span class="line">            LOGGER.debug(<span class="string">&quot;updateBrand success: &#123;&#125;&quot;</span>, pmsBrandDto);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            commonResult = CommonResult.failed(<span class="string">&quot;操作失败&quot;</span>);</span><br><span class="line">            LOGGER.debug(<span class="string">&quot;updateBrand failed: &#123;&#125;&quot;</span>, pmsBrandDto);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> commonResult;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/08/15/Hadoop-Yarn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/08/15/Hadoop-Yarn/" class="post-title-link" itemprop="url">Hadoop-Yarn</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-08-15 09:07:01" itemprop="dateCreated datePublished" datetime="2021-08-15T09:07:01+08:00">2021-08-15</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="YARN概述"><a href="#YARN概述" class="headerlink" title="YARN概述"></a>YARN概述</h1><p>YARN （Yet Another Resource Negotiator，另一种资源协调者），是一个通用的资源管理系统和调度平台，可为上层应用提供统一的资源管理和调度。</p>
+<h1 id="YARN架构、组件"><a href="#YARN架构、组件" class="headerlink" title="YARN架构、组件"></a>YARN架构、组件</h1><h2 id="YARN架构图"><a href="#YARN架构图" class="headerlink" title="YARN架构图"></a>YARN架构图</h2><img src="/2021/08/15/Hadoop-Yarn/image-20221213153344431.png" alt="image-20221213153344431" style="zoom:80%;">
+
+<h2 id="YARN组件"><a href="#YARN组件" class="headerlink" title="YARN组件"></a>YARN组件</h2><p><strong>ResourceManager（RM）</strong></p>
+<p>YARN集群中的主角色，决定系统中所有应用程序之间资源分配的最终权限，即最终仲裁者。接收用户的作业提交，并通过NM分配、管理各个机器上的计算资源。</p>
+<p><strong>NodeManager（NM）</strong></p>
+<p>YARN中的从角色，一台机器上一个，负责管理本机器上的计算资源。根据RM命令，启动Container容器、监视容器的资源使用情况。并且向RM主角色汇报资源使用情况。</p>
+<p><strong>ApplicationMaster（AM）</strong></p>
+<p>用户提交的每个应用程序均包含一个AM。负责程序内部各阶段的资源申请，监督程序的执行情况。</p>
+<p><strong>Client</strong></p>
+<p><strong>Container容器</strong></p>
+<h1 id="程序提交YARN交互流程"><a href="#程序提交YARN交互流程" class="headerlink" title="程序提交YARN交互流程"></a>程序提交YARN交互流程</h1><h2 id="核心交互流程"><a href="#核心交互流程" class="headerlink" title="核心交互流程"></a>核心交互流程</h2><ul>
+<li>MR作业提交  Client -&gt; RM</li>
+<li>资源的申请  MrAppMaster -&gt; RM</li>
+<li>MR作业状态汇报 Container （Map|Reduce Task） -&gt; Container (MrAppMaster)</li>
+<li>节点的状态汇报 NM -&gt; RM</li>
+</ul>
+<h2 id="整体概述"><a href="#整体概述" class="headerlink" title="整体概述"></a>整体概述</h2><p>当用户向YARN中提交一个应用程序后，YARN将分成两个阶段运行该应用程序。</p>
+<p>第一阶段：客户申请资源启动运行本次程序的ApplicationMaster。</p>
+<p>第二阶段：ApplicationMaster根据本次程序内部具体情况，为它申请资源，并监控它的整个运行过程，直到运行完成。</p>
+<p><img src="/2021/08/15/Hadoop-Yarn/image-20221213154706877.png" alt="image-20221213154706877"></p>
+<h2 id="MR提交YARN交互流程"><a href="#MR提交YARN交互流程" class="headerlink" title="MR提交YARN交互流程"></a>MR提交YARN交互流程</h2><ol>
+<li>用户通过客户端向YARN中ResourceManager提交应用程序。</li>
+<li>ResourceManager为该应用程序分配第一个Container（容器），并与对应的NodeManager通信，要求它在这个Container中启动这个应用程序的ApplicationMaster。</li>
+<li>ApplicationMaster启动成功后，首先向ResourceManager注册并保持通信，这样用户可以直接通过ResourceManager查看应用程序的运行状态。</li>
+<li>AM为本次程序内部的各个Task任务向RM申请资源，并监控它的运行状态。</li>
+<li>一旦ApplicationMaster申请到资源后，便与对应的NodeManager通信，要求它启动任务。</li>
+<li>NodeManager为任务设置好运行环境后，将任务启动命令写到一个脚本中，并通过运行该脚本启动任务。</li>
+<li>各个任务通过某个RPC协议向ApplicationMaster汇报自己的状态和进度，以让ApplicationMaster随时掌握各个任务的运行状态，从而可以在任务失败时重新启动任务。在应用程序运行过程中，用户可以随时通过RPC向ApplicationMaster查询应用程序的当前运行状态。</li>
+<li>应用程序运行完成后，ApplicationMaster向ResourceManager注销并关闭自己。</li>
+</ol>
+<h1 id="YARN资源调度器Scheduler"><a href="#YARN资源调度器Scheduler" class="headerlink" title="YARN资源调度器Scheduler"></a>YARN资源调度器Scheduler</h1><h2 id="YARN资源调度器Scheduler-1"><a href="#YARN资源调度器Scheduler-1" class="headerlink" title="YARN资源调度器Scheduler"></a>YARN资源调度器Scheduler</h2><p>YARN调度程序的工作是根据一些定义的策略为应用程序分配资源。<br>在YARN中，负责给应用程序分配资源的就是Scheduler，它是ResourceManager的核心组件之一。Scheduler完全专用于调度作业，它无法跟踪应用程序的状态。<br>一般而言，调度是一个难题，并且没有一个“最佳”策略，为此，YARN提供了多种调度器和可配置的策略供选择。</p>
+<h2 id="调度器策略"><a href="#调度器策略" class="headerlink" title="调度器策略"></a>调度器策略</h2><h3 id="三种调度器"><a href="#三种调度器" class="headerlink" title="三种调度器"></a>三种调度器</h3><h4 id="FIFO-Scheduler（先进先出调度器）"><a href="#FIFO-Scheduler（先进先出调度器）" class="headerlink" title="FIFO Scheduler（先进先出调度器）"></a>FIFO Scheduler（先进先出调度器）</h4><p>先提交的应用先运行。调度工作不考虑优先级和范围，适用于负载较低的小规模集群<br>优点：无需配置、先到先得、易于执行<br>缺点：任务的优先级不会变高，因此优先级高的作业需要等待，不适合共享集群。很少使用</p>
+<h4 id="Capacity-Scheduler（容量调度器）（YARN默认）"><a href="#Capacity-Scheduler（容量调度器）（YARN默认）" class="headerlink" title="Capacity Scheduler（容量调度器）（YARN默认）"></a>Capacity Scheduler（容量调度器）（YARN默认）</h4><p>允许多个组织共享整个集群资源，每个组织可以获得集群的一部分计算能力。通过为每个组织分配专门的队列，然后再为每个队列分配一定的集群资源，这样整个集群可以通过设置多个队列的方式给多个组织提供服务了。<br>Capacity可以理解成一个个的资源队列，这个资源队列是用户自己去分配的。队列内部又可以垂直划分，这样一个组织内部的多个成员就可以共享这个队列资源了，在一个队列内部，资源的调度是采用先进先出策略。<br>Capacity Scheduler调度器以队列为单位划分资源。简单通俗点来说，就是一个个队列有独立的资源，队列的结构和资源是可以进行配置的。<br><strong>特性优势</strong></p>
+<ul>
+<li>层次化的队列设计</li>
+<li>容量保证</li>
+<li>安全</li>
+<li>弹性分配</li>
+</ul>
+<p>	</p>
+<h4 id="Fair-Scheduler（公平调度器）"><a href="#Fair-Scheduler（公平调度器）" class="headerlink" title="Fair Scheduler（公平调度器）"></a>Fair Scheduler（公平调度器）</h4><p>提供了YARN应用程序公平的共享大型集群中资源的另一种方式。使所有应用在平均情况下随着时间的流逝可以获得相等的资源份额。<br>设计目标是为所有的应用分配公平的资源（对公平的定义通过参数来设置）。<br>公平调度可以在多个队列间工作，允许资源共享和抢占。<br><strong>特性优势</strong></p>
+<ul>
+<li>分层队列</li>
+<li>基于用户或组的队列映射</li>
+<li>资源抢占</li>
+<li>保证最小配额</li>
+<li>允许资源共享</li>
+<li>默认不限制每个队列和用户可以同时运行应用的数量</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/08/14/Hadoop-MapReduce/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/08/14/Hadoop-MapReduce/" class="post-title-link" itemprop="url">Hadoop-MapReduce</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-08-14 10:17:09" itemprop="dateCreated datePublished" datetime="2021-08-14T10:17:09+08:00">2021-08-14</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="分布式计算分而治之思想"><a href="#分布式计算分而治之思想" class="headerlink" title="分布式计算分而治之思想"></a>分布式计算分而治之思想</h1><h2 id="分布式计算"><a href="#分布式计算" class="headerlink" title="分布式计算"></a>分布式计算</h2><p>分布式计算是一种计算方法，它将应用分解成许多小的部分，分配给多台计算机进行处理。从而节约整体计算时间，提高计算效率。</p>
+<h2 id="MapReduce思想"><a href="#MapReduce思想" class="headerlink" title="MapReduce思想"></a>MapReduce思想</h2><p>MapReduce思想核心：<strong>先分再合，分而治之</strong>。即把一个复杂的问题，按照一定的“分解”方法分为等价的规模较小的若干部分，然后逐个解决，分别找出各部分的结果，然后把各部分的结果组成整个问题的最终结果。</p>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213101954806.png" alt="image-20221213101954806"></p>
+<ul>
+<li>Map表示第一阶段，负责“拆分”：即把复杂的任务分解成若干个“简单的子任务”来处理。可以进行拆分的前提是这些小任务可以并行计算，彼此间几乎没有依赖关系。</li>
+<li>Reduce表示第二阶段，负责“合并”：即对map阶段的结果进行全局汇总。</li>
+<li>这两个阶段合起来就是MapReduce思想的体现。</li>
+</ul>
+<h2 id="大数据处理场景"><a href="#大数据处理场景" class="headerlink" title="大数据处理场景"></a>大数据处理场景</h2><p>采用MapReduce分而治之策略，首先Map阶段进行拆分，把大数据拆分成若个份小数据，多个程序同时并行计算产生中间结果；然后Reduce聚合阶段，通过程序对并行的结果进行最终的汇总计算，得出最终结果。</p>
+<p><strong>不可拆分的计算任务或相互间有依赖关系的数据无法进行并行计算</strong></p>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213102715695.png" alt="image-20221213102715695"></p>
+<h2 id="构建抽象编程模型"><a href="#构建抽象编程模型" class="headerlink" title="构建抽象编程模型"></a>构建抽象编程模型</h2><ul>
+<li><p>MapReduce借鉴了函数式语言中的思想，用Map和Reduce两个函数提供了高层的并行编程抽象模型。</p>
+<p>map：对一组数据元素进行某种重复式的处理</p>
+<p>reduce：对Map的中间结果进行某种进一步的结果处理</p>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213103050117.png" alt="image-20221213103050117"></p>
+</li>
+<li><p>MapReduce中定义了如下的Map和Reduce两个抽象的编程接口，由用户去编程实现：</p>
+<p>map：（k1; v1) -&gt; (k2; v2)</p>
+<p>reduce：(k2: [v2]) -&gt; (k3; v3)</p>
+</li>
+<li><p>通过以上两个编程接口，可以看出MapReduce处理的数据类型是&lt;key, value&gt;键值对。</p>
+</li>
+</ul>
+<h2 id="统一架构，隐藏底层细节"><a href="#统一架构，隐藏底层细节" class="headerlink" title="统一架构，隐藏底层细节"></a>统一架构，隐藏底层细节</h2><p>MapReduce设计并统一了计算框架，隐藏了绝大多数系统层面的处理细节。</p>
+<h1 id="MapReduce介绍"><a href="#MapReduce介绍" class="headerlink" title="MapReduce介绍"></a>MapReduce介绍</h1><p>Hadoop MapReduce是一个分布式计算框架，用于轻松编写分布式应用程序，这些应用程序以可靠，容错的方式并行处理大型硬件集群（多节点）上的大量数据（TB级别）。</p>
+<p>MapReduce是一种面向海量数据处理的一种指导思想，也是一种用于大规模数据进行分布式计算的编程模型。</p>
+<p><strong>MapReduce特点</strong></p>
+<ul>
+<li><p>易于编程</p>
+<p>提供了用于二次开发的接口</p>
+</li>
+<li><p>良好的扩展</p>
+<p>可以通过增加机器（计算节点）来扩展它的计算能力</p>
+</li>
+<li><p>高容错性</p>
+<p>分布式搭建和部署，当某一个节点出现故障时，可以把上面的任务转移到另一个节点上运行，不影响整个任务。这个过程Hadoop内部完成</p>
+</li>
+<li><p>适合海量数据的离线处理</p>
+<p>可以处理GB、TB、PB级别数据</p>
+</li>
+</ul>
+<p><strong>MapReduce局限性</strong></p>
+<ul>
+<li>实时计算性能差</li>
+<li>不能进行流式计算</li>
+</ul>
+<h1 id="MapReduce实例进程"><a href="#MapReduce实例进程" class="headerlink" title="MapReduce实例进程"></a>MapReduce实例进程</h1><p>一个完整的MapReduce程序在分布式运行时有三类</p>
+<ul>
+<li>MRAppMaster：负责整个MR程序的过程调度及状态协调</li>
+<li>MapTask：负责map阶段的整个数据处理流程</li>
+<li>ReduceTask：负责reduce阶段的整个数据处理流程</li>
+</ul>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213110013345.png" alt="image-20221213110013345"></p>
+<h1 id="MapReduce阶段组成"><a href="#MapReduce阶段组成" class="headerlink" title="MapReduce阶段组成"></a>MapReduce阶段组成</h1><ul>
+<li>一个MapReduce编程模型只能包含一个Map阶段和一个Reduce阶段，或者只有Map阶段。</li>
+<li>不能有很多个Map阶段、多个Reduce阶段的情形。</li>
+<li>如果用户的业务逻辑非常复杂，那就只能多个MapReduce程序串行运行。</li>
+</ul>
+<img src="/2021/08/14/Hadoop-MapReduce/image-20221213111404853.png" alt="image-20221213111404853" style="zoom: 80%;">
+
+
+
+<h1 id="MapReduce数据类型"><a href="#MapReduce数据类型" class="headerlink" title="MapReduce数据类型"></a>MapReduce数据类型</h1><p>整个MapReduce程序中，数据都是以KV兼职对的形式流转的。</p>
+<p>在实际编程解决各种业务问题中，需要考虑每个阶段的输入输出kv分别是什么。</p>
+<p>MapReduce中内置了很多默认属性，比如排序、分组等，都和数据的k有关。</p>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213113122471.png" alt="image-20221213113122471"></p>
+<h1 id="MapReduce执行流程"><a href="#MapReduce执行流程" class="headerlink" title="MapReduce执行流程"></a>MapReduce执行流程</h1><h2 id="MapReduce整体执行流程图"><a href="#MapReduce整体执行流程图" class="headerlink" title="MapReduce整体执行流程图"></a>MapReduce整体执行流程图</h2><p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213142024380.png" alt="image-20221213142024380"></p>
+<h2 id="Map阶段执行流程"><a href="#Map阶段执行流程" class="headerlink" title="Map阶段执行流程"></a>Map阶段执行流程</h2><ul>
+<li>第一阶段：把输入目录下文件按照一定的标准逐个进行逻辑切片，形成切片规划。默认Split size &#x3D; Block size （128M），每一个切片由一个MapTask处理。（getSplits）</li>
+<li>第二阶段：对切片中的数据按照一定的规则读取解析返回&lt;key, value&gt;对。默认是按行读取数据。key是每一行的起始位置偏移量，value是本行的文本内容。（TextInutFormat）</li>
+<li>第三阶段：调用Mapper类中的map方法处理数据。每读取解析出来的一个&lt;key, value&gt;，调用一次map方法。</li>
+<li>第四阶段：按照一定的规则对map输出的键值对进行分区partition。默认不分区，因为只有一个reducetask。分区的数量就是reducetask运行的数量。</li>
+<li>第五阶段：Map输出数据写入内存缓冲区，达到比例溢出到磁盘上。溢出spill的时候根据key进行排序sort。默认根据key字典排序。</li>
+<li>第六阶段：对所有溢出文件进行最终的merge合并，成为一个文件。</li>
+</ul>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213142808652.png" alt="image-20221213142808652"></p>
+<h2 id="Reduce阶段执行流程"><a href="#Reduce阶段执行流程" class="headerlink" title="Reduce阶段执行流程"></a>Reduce阶段执行流程</h2><ul>
+<li>第一阶段：ReduceTask会主动从MapTask复制拉取属于需要自己处理的数据。</li>
+<li>第二阶段：把拉取来的数据，全部进行merge合并，即把分散的数据合并成一个大的数据。再对合并后的数据排序。</li>
+<li>第三阶段：对排序后的键值对调用reduce方法。键相等的键值对调用一次reduce方法。最后把这些输出的键值对写入到HDFS文件中。</li>
+</ul>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213143229439.png" alt="image-20221213143229439"></p>
+<h2 id="Shuffle机制"><a href="#Shuffle机制" class="headerlink" title="Shuffle机制"></a>Shuffle机制</h2><h3 id="shuffle概念"><a href="#shuffle概念" class="headerlink" title="shuffle概念"></a>shuffle概念</h3><p>Shuffle的本意是洗牌、混洗的意思，把一组有规则地数据尽量打乱成无规则地数据。</p>
+<p>在MapReduce中，Shuffle更像是洗牌的逆过程，指的是将map端的无规则输出按指定的规则“打乱”成具有一定规则的数据，以便reduce端接收处理。</p>
+<p>一般把从Map产生输出开始到Reduce取得数据作为输入之前的过程称之为shuffle。</p>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213144448734.png" alt="image-20221213144448734"></p>
+<h3 id="Map端Shuffle"><a href="#Map端Shuffle" class="headerlink" title="Map端Shuffle"></a>Map端Shuffle</h3><p>Collect阶段：将MapTask的结果收集输出到默认大小为100M的环形缓冲区，保存之前会对key进行分区的计算，默认Hash分区。</p>
+<p>Spill阶段：当内存的数据达到一定的阈值的时候，就会将数据写入磁盘，在将数据写入磁盘之前需要对数据进行一次排序的操作，如果配置了combiner，还会将有相同分区号和key的数据进行排序。</p>
+<p>Merge阶段：把所有溢出的文件进行一次合并操作，以确保一个MapTask最终只产生一个中间数据文件。</p>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213144901309.png" alt="image-20221213144901309"></p>
+<h3 id="Reduce端Shuffle"><a href="#Reduce端Shuffle" class="headerlink" title="Reduce端Shuffle"></a>Reduce端Shuffle</h3><p>Copy阶段：ReduceTask启动Fetcher线程到已经完成MapTask的节点上复制一份属于自己的数据。</p>
+<p>Merge阶段：在ReduceTask远程复制数据的同时，会在后台开启两个线程对内存到本地的数据文件进行合并操作。</p>
+<p>Sort阶段：在对数据进行合并的同时，会进行排序操作，由于MapTask阶段已经对数据进行了局部的排序，ReduceTask只需保证Copy的数据的最终整体有效性即可。</p>
+<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213145258144.png" alt="image-20221213145258144"></p>
+<h3 id="shuffle机制弊病"><a href="#shuffle机制弊病" class="headerlink" title="shuffle机制弊病"></a>shuffle机制弊病</h3><p>Shuffle是MapReduce成的核心与精髓，是MapReduce的灵魂所在。</p>
+<p>Shuffle也是MapReduce被诟病最多的地方。MapReduce相比较于Spark、Flink计算引擎慢的原因，根Shuffle机制有很大的关系。Shuffle频繁涉及到数据在内存、磁盘之间的多次往复。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/08/13/Hadoop-HDFS/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -976,396 +1372,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/01/11/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%85%B3%E9%94%AE%E7%82%B9/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/11/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%85%B3%E9%94%AE%E7%82%B9/" class="post-title-link" itemprop="url">微服务关键点</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-01-11 19:21:31" itemprop="dateCreated datePublished" datetime="2021-01-11T19:21:31+08:00">2021-01-11</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="微服务的核心"><a href="#微服务的核心" class="headerlink" title="微服务的核心"></a>微服务的核心</h1><ol>
-<li>将一个单体系统，拆成多个小的业务模块，同时各个小的业务模块需要通过Http rest接口去做交付和集成。</li>
-<li>在拆分后每个微服务都需要做到高度地独立自治，从底层基础设施资源，到数据库、中间件、应用层、前端，拆分后的服务能完全地独立组成一套系统。</li>
-</ol>
-<h1 id="关键点"><a href="#关键点" class="headerlink" title="关键点"></a>关键点</h1><h2 id="实际开发中是不是一定要用相关地微服务开发框架？"><a href="#实际开发中是不是一定要用相关地微服务开发框架？" class="headerlink" title="实际开发中是不是一定要用相关地微服务开发框架？"></a>实际开发中是不是一定要用相关地微服务开发框架？</h2><p>只要满足单体系统做了拆分后，满足各个拆分以后的组件之间通过轻量的http rest接口做集成，就是微服务。</p>
-<h2 id="微服务怎样做拆分？"><a href="#微服务怎样做拆分？" class="headerlink" title="微服务怎样做拆分？"></a>微服务怎样做拆分？</h2><ol>
-<li><p>采用结构化的分析方法，基于实际的业务架构数据架构，基于CRUD的矩阵分析，做聚合做拆分；</p>
-</li>
-<li><p>通过当前的领域建模，通过事件风暴，通过基于对象的聚类，去识别这个限界上下文，然后再去做聚合做拆分。</p>
-</li>
-</ol>
-<p>微服务拆分核心重点，微服务拆分后，各个微服务之间能够做到尽量的松耦合。</p>
-<p>微服务拆分还跟系统的复杂度、团队组织架构模式相关。<br>举例：<br>假如一个团队三四个人，要将系统拆成八九个个微服务，这种情况不现实。一个人管理多个微服务，在前期很难找到一个标准的管控规范来控制每个开发人员，使各个微服务之间不发生错误的调用，比如，微服务a不直接去访问微服务b的数据库。</p>
-<p>如果一个系统，本身业务复杂度没有那么复杂时，没必要拆分得那么细。</p>
-<h2 id="微服务治理"><a href="#微服务治理" class="headerlink" title="微服务治理"></a>微服务治理</h2><p>微服务本身的设计开发和后续的微服务治理能够分开。</p>
-<p>在Spring cloud中，包含服务注册发现中心、微服务网关、限流熔断、链路监控，但是其中存在一个问题是，Spring Cloud中，很多设计开发的能力和后续的治理能力耦合在一起，在开发时一些治理的配置项存在于配置文件中，这种情况不太合理。<br>随着云原生，DevOps的一个发展，微服务的治理逐渐会变成类似于基于service mesh服务网格的这种模式，服务网格的微服务自理模式下面，通过在devops持续集成部署的时候，自动的去下发这个边车代理，这样做到微服务开发时没有任何一个侵入性。</p>
-<h2 id="微服务和SOA架构的比较"><a href="#微服务和SOA架构的比较" class="headerlink" title="微服务和SOA架构的比较"></a>微服务和SOA架构的比较</h2><p>SOA架构是一个中心化的架构模式，微服务是完全的去中心化，实际上这个理解不是特别的准确，在微服务架构种，有时候会用到微服务网关，或者是API网关，API网关是一个中心化的模式，所有的流量都需要经过API网关，它根SOA架构下ESB总线的道理是一样的，只不过API网关更加轻量。<br>微服务架构是一个去中心化的架构，在实际开发种，微服务架构有两类流量，一类是整个微服务要对外暴露的南北流量，一个是微服务内部交互的东西流量，对于东西流量的交互，尽量是去中心化的。不管是基于service mesh，还是基于服务注册发现中心，都可以看到，东西流量的交互一定可以实现去中心化。但是对于整个微服务需要对外暴露接口的时候，还是要通过API网关，它根SOA种的ESB总线是一样的原理。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/12/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/12/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" class="post-title-link" itemprop="url">微服务</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-12-12 10:11:36" itemprop="dateCreated datePublished" datetime="2020-12-12T10:11:36+08:00">2020-12-12</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="微服务定义"><a href="#微服务定义" class="headerlink" title="微服务定义"></a>微服务定义</h4><p>微服务架构是一种架构风格和架构思想，它倡导我们在传统软件应用架构的基础上，将系统业务按照功能拆分为更加细粒度的服务，所拆分的每一个服务都是一个独立的应用，这些应用对外提供公共的API，可以独立承担对外服务的职责，通过此种思想方式所开发的软件服务实体就是“微服务”，而围绕着微服务思想构建的一系列体系结构(包括开发、测试、部署等)。</p>
-<h5 id="微服务优缺点"><a href="#微服务优缺点" class="headerlink" title="微服务优缺点"></a>微服务优缺点</h5><h6 id="微服务特点一：快速响应需求变化"><a href="#微服务特点一：快速响应需求变化" class="headerlink" title="微服务特点一：快速响应需求变化"></a>微服务特点一：快速响应需求变化</h6><p>采用单体巨型非微服务架构有个问题，系统里面的业务模块非常多，大家一 起发布、修改、编译很难进行协调，很难做到敏捷开发、发 布、上线。</p>
-<p>微服务本质上是小微程序，相比较来说，很重要的特点是拆分概念。微服务首先是拆分，把大的拆成小的，把整体拆成部分。每个部分单独开发迭代。</p>
-<blockquote>
-<p>微服务的优点：拆完以后更灵活，各个子系统可以独立开发、独立测试、独立部署、独立进程，最后再集成。</p>
-</blockquote>
-<p>独立开发拆分以后自主性更强了，独立开发、独立测试、独立部署、独立进程，是 微服务快速响应业务需求变化的重要特点。</p>
-<h6 id="微服务特点二：敏捷开发、敏捷运维DevOps"><a href="#微服务特点二：敏捷开发、敏捷运维DevOps" class="headerlink" title="微服务特点二：敏捷开发、敏捷运维DevOps"></a>微服务特点二：敏捷开发、敏捷运维DevOps</h6><blockquote>
-<p>微服务的优点：本质上是拆完以后更好开发。</p>
-</blockquote>
-<p>总结如下：</p>
-<ol>
-<li>易于替换；</li>
-<li>独立部署；</li>
-<li>专注某个任务；</li>
-<li>高度解耦；</li>
-<li>基于功能进行组织：商品、支付、评论、机票、新闻、酒店、游戏等；</li>
-<li>服务可以使用不同的语言、系统、平台；</li>
-<li>通信使用语言中立的协议，通常是http；</li>
-<li>独立技术栈；</li>
-<li>易于测试；</li>
-</ol>
-<h4 id="微服务Microservice的设计原则"><a href="#微服务Microservice的设计原则" class="headerlink" title="微服务Microservice的设计原则"></a>微服务Microservice的设计原则</h4><blockquote>
-<p>需求第一</p>
-</blockquote>
-<p>一定要以需求为出发点。所有的架构好与坏一定是相对的，相对他处的一个需求背景。因为微服务架构能够在某些业务场景中具备优势，所以它相比传统的架构，他有一些优点但是同时也存在着缺点，它不完美。 </p>
-<blockquote>
-<p>单一职责</p>
-</blockquote>
-<p>我们的服务尽量是体现单一职责的思想，粒度不是越细越好，也不是越 粗越好。</p>
-<blockquote>
-<p>协议统一</p>
-</blockquote>
-<p>尽量去统一协议，目前的协议主要是 rest。</p>
-<blockquote>
-<p>独立开发</p>
-</blockquote>
-<p>独立开发一般咱们这里面提到的我们说的是模块拆分以后开发人员一般是独立我们按照模块进行拆分，然后每个人负责一块，每个人熟悉一块代码和逻辑业务逻辑这样的话开发时间都会相对来说高很多。</p>
-<blockquote>
-<p>独立部署</p>
-</blockquote>
-<p>独立部署这也是微服架构的很重要的一个原则，微服务架构拆分以后又会出现可能很多程序很多进程，而且每一个模块不是所有的都更新只需要迭代我那一块就行了，就是体现了我们说叫分而治之的这样一个思想，大家一起统一部署。</p>
-<h4 id="微服务Microservice的拆分原则"><a href="#微服务Microservice的拆分原则" class="headerlink" title="微服务Microservice的拆分原则"></a>微服务Microservice的拆分原则</h4><ol>
-<li><p>按照业务模块拆分</p>
-</li>
-<li><p>DDD思路可以借鉴，不能照搬</p>
-<p>DDD 本身不是架构设计模式，DDD 是一种但是在向对象设计的一个思想或者原则，它是用来解决复杂业务逻辑的一个拆分问题的，它本身并不解决整个架构层次的问题，它是解决业务层的，理解这一点。</p>
-</li>
-<li><p>单一职责（Single Responsibility）</p>
-</li>
-</ol>
-<h4 id="微服务设计的关注点"><a href="#微服务设计的关注点" class="headerlink" title="微服务设计的关注点"></a>微服务设计的关注点</h4><ol>
-<li>并发性</li>
-<li>可用性</li>
-<li>安全性</li>
-<li>密等性</li>
-<li>重用性</li>
-</ol>
-<h4 id="微服务架构设计的5大考量"><a href="#微服务架构设计的5大考量" class="headerlink" title="微服务架构设计的5大考量"></a>微服务架构设计的5大考量</h4><ol>
-<li>微服务拆分</li>
-<li>微服务高可用</li>
-<li>微数据安全</li>
-<li>微服务数据同步</li>
-<li>微服务监控</li>
-</ol>
-<h4 id="微服务的经典设计模式"><a href="#微服务的经典设计模式" class="headerlink" title="微服务的经典设计模式"></a>微服务的经典设计模式</h4><h5 id="微服务架构设计模式"><a href="#微服务架构设计模式" class="headerlink" title="微服务架构设计模式"></a>微服务架构设计模式</h5><ol>
-<li>业务分解：DDD模式</li>
-<li>DataBase PerService 每数据库单服务</li>
-<li>API Gateway pattern API网关模式</li>
-<li>Client-side 和 Remote Procedure Invocation 模式</li>
-<li>Messaging 和 Procedure Invocation 模式</li>
-<li>Single Service per Host 和 Multiple Services per Host 模式</li>
-<li>AOP: Microservice chassis pattern</li>
-<li>Externalized Configuration</li>
-<li>Service Component Test 和 Service Integration Contract Test</li>
-<li>Circuit Breaker 断路器模式</li>
-<li>Access Token 访问令牌模式</li>
-<li>观察者模式： Distributed tracing、 Health check API</li>
-<li>UI模式：MVC、MVP、MVVM模式</li>
-</ol>
-<p><img src="/2020/12/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1/image-20210820095240441.png" alt="image-20210820095240441"></p>
-<p>如图所示，以微服务架构为中心向外发散，有许多设计模式，正下方有两个，一个叫客户端发现，一个叫服务端发现，服务的注册和发现机制也是一个设计模式，微服架构属于更复杂的分布架构，里面也会用到消息通信，通过消息和数据库、其他微服务进行消息补偿。 </p>
-<p>网关的微服务太多，只有一个出口，需要给它同一个代理；安全问题，如图中Access token，和令牌相关的；另外还有高并发的熔断限流，circuit breaker 叫断路器模式，熔断相关，分布式日志、分布式加策、追踪、服务拆分模式、单数据库模式、单实例、单数据库模式多服务共享数据库模式、服务编排模式、统一配置模式等等。</p>
-<p>这里主要是分布式架构领域相关的设计模式，还有分布式事务模式，一般用的都是补偿的方式。 </p>
-<p>服务拆分的一般借鉴 DDD 模式，但不是照搬，不能完全等同。</p>
-<h5 id="微服务设计模式分类"><a href="#微服务设计模式分类" class="headerlink" title="微服务设计模式分类"></a>微服务设计模式分类</h5><h6 id="应用架构模式"><a href="#应用架构模式" class="headerlink" title="应用架构模式"></a>应用架构模式</h6><ol>
-<li>单点登录</li>
-<li>注册发现</li>
-<li>熔断限流</li>
-<li>断路器</li>
-<li>网关模式</li>
-<li>消息补偿模式</li>
-<li>令牌模式</li>
-</ol>
-<h6 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h6><ol>
-<li>分库 Single Service</li>
-<li>共库多 Service</li>
-<li>多库同步</li>
-<li>事务性补偿</li>
-</ol>
-<h6 id="日志追踪模式"><a href="#日志追踪模式" class="headerlink" title="日志追踪模式"></a>日志追踪模式</h6><ol>
-<li><p>观察者模式 paterns</p>
-</li>
-<li><p>Log aggregation</p>
-</li>
-<li><p>Application metrics</p>
-</li>
-<li><p>Audit logging</p>
-</li>
-<li><p>Distributed tracing</p>
-</li>
-<li><p>Exception tracking</p>
-</li>
-<li><p>Health check API</p>
-</li>
-<li><p>Log deployments and changes</p>
-</li>
-<li><p>分布式链路追踪模式</p>
-</li>
-</ol>
-<h6 id="UI模式"><a href="#UI模式" class="headerlink" title="UI模式"></a>UI模式</h6><ol>
-<li>MVC</li>
-<li>MVP</li>
-<li>MVVM</li>
-<li>Server-side page fragment composition</li>
-<li>Client-side UI composition</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/11/01/Redis/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/11/01/Redis/" class="post-title-link" itemprop="url">Redis</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-11-01 10:10:29" itemprop="dateCreated datePublished" datetime="2020-11-01T10:10:29+08:00">2020-11-01</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>Redis（Remote Dictionary Server），即远程字典服务。</p>
-<p>redis是一个key-value存储系统。和Memcached类似，它支持存储的value类型相对更多，包括string(字符串)、list(链表)、set(集合)、zset(sorted set –有序集合)和hash（哈希类型）。这些数据类型都支持push&#x2F;pop、add&#x2F;remove及取交集并集和差集及更丰富的操作，而且这些操作都是原子性的。在此基础上，redis支持各种不同方式的排序。与memcached一样，为了保证效率，数据都是缓存在内存中。区别的是redis会周期性的把更新的数据写入磁盘或者把修改操作写入追加的记录文件，并且在此基础上实现了master-slave(主从)同步。</p>
-<p>Redis 是一个高性能的key-value数据库。 redis的出现，很大程度补偿了<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/memcached">memcached</a>这类key&#x2F;value存储的不足，在部 分场合可以对关系数据库起到很好的补充作用。它提供了Java，C&#x2F;C++，C#，PHP，JavaScript，Perl，Object-C，Python，Ruby，Erlang等客户端，使用很方便。 </p>
-<p>Redis支持主从同步。数据可以从主服务器向任意数量的从服务器上同步，从服务器可以是关联其他从服务器的主服务器。这使得Redis可执行单层树复制。存盘可以有意无意的对数据进行写操作。由于完全实现了发布&#x2F;订阅机制，使得从数据库在任何地方同步树时，可订阅一个频道并接收主服务器完整的消息发布记录。同步对读取操作的可扩展性和数据冗余很有帮助。</p>
-<p><code>读的速度是110000次/s,写的速度是81000次/s 。</code></p>
-<p><strong>Redis能干嘛？</strong></p>
-<p>1、 内存存储、持久化</p>
-<p>2、 效率高，可以用于高速存储</p>
-<p>3、 法边订阅系统</p>
-<p>4、 地图信息分析</p>
-<p>5、 计时器、计数器（浏览量）</p>
-<p>6、 ……</p>
-<p><strong>特性</strong></p>
-<p>1、 多样的数据类型</p>
-<p>2、 持久化</p>
-<p>3、 集群</p>
-<p>4、 事务</p>
-<p>5、 ……</p>
-<h3 id="Redis安装"><a href="#Redis安装" class="headerlink" title="Redis安装"></a>Redis安装</h3><h4 id="Windows安装"><a href="#Windows安装" class="headerlink" title="Windows安装"></a>Windows安装</h4><p>1、下载 <a target="_blank" rel="noopener" href="https://github.com/microsoftarchive/redis/releases">https://github.com/microsoftarchive/redis/releases</a></p>
-<p>2、 解压</p>
-<p>3、 cmd下执行</p>
-<blockquote>
-<p>redis-server redis.windows.conf</p>
-</blockquote>
-<h4 id="Linux安装"><a href="#Linux安装" class="headerlink" title="Linux安装"></a>Linux安装</h4><h5 id="下载Redis"><a href="#下载Redis" class="headerlink" title="下载Redis"></a>下载Redis</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://download.redis.io/releases/redis-6.2.5.tar.gz</span><br></pre></td></tr></table></figure>
-
-
-
-<h5 id="解压Redis"><a href="#解压Redis" class="headerlink" title="解压Redis"></a>解压Redis</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf redis-6.2.5.tar.gz </span><br></pre></td></tr></table></figure>
-
-
-
-<h5 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> redis-6.2.5</span><br><span class="line"></span><br><span class="line">make </span><br><span class="line"></span><br><span class="line">make install PREFIX=/usr/bin/redis</span><br></pre></td></tr></table></figure>
-
-
-
-<h5 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> /opt/redis-6.2.5/redis.conf /usr/bin/redis/</span><br><span class="line"></span><br><span class="line">vim redis.conf    <span class="comment">#修改daemonize no 改成 yes</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /usr/local/redis/bin</span><br><span class="line"></span><br><span class="line">./redis-server ./redis.conf</span><br><span class="line"></span><br><span class="line">ps -ef |grep redis</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h3><p>1、 Redis默认有16个数据库，默认使用第0个，可以使用select切换数据库</p>
-<blockquote>
-<p>set key value  #设置key value</p>
-<p>get key  #获取key对应的value</p>
-<p>keys *   #列出所有keys</p>
-<p>DBSIZE  #数量</p>
-<p>select #切换数据库</p>
-<p>flushdb  #清空数据库</p>
-<p>flushall  #清空所有数据库</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> name zhangsan</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get name</span><br><span class="line"><span class="string">&quot;zhangsan&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; DBSIZE</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> name1 lisi</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get name1</span><br><span class="line"><span class="string">&quot;lisi&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">1) <span class="string">&quot;name1&quot;</span></span><br><span class="line">2) <span class="string">&quot;name&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; DBSIZE</span><br><span class="line">(<span class="built_in">integer</span>) 2</span><br><span class="line">127.0.0.1:6379&gt; select 3</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379[3]&gt; keys *</span><br><span class="line">(empty array)</span><br><span class="line">127.0.0.1:6379[3]&gt; DBSIZE</span><br><span class="line">(<span class="built_in">integer</span>) 0</span><br><span class="line">127.0.0.1:6379[3]&gt; </span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; ping</span><br><span class="line">PONG</span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">1) &quot;name1&quot;</span><br><span class="line">2) &quot;name&quot;</span><br><span class="line">127.0.0.1:6379&gt; flushdb</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; DBSIZE</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; set x y</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">1) &quot;x&quot;</span><br><span class="line">127.0.0.1:6379&gt; select 3</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379[3]&gt; DBSIZE</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379[3]&gt; set a b</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379[3]&gt; keys *</span><br><span class="line">1) &quot;a&quot;</span><br><span class="line">127.0.0.1:6379[3]&gt; flushall</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379[3]&gt; DBSIZE</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379[3]&gt; select 0</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; DBSIZE</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; </span><br></pre></td></tr></table></figure>
-
-
-
-<blockquote>
-<p>Redis是单线程的</p>
-</blockquote>
-<p>Redis是基于内存操作，CPU不是Redis行能瓶颈，Redis的瓶颈是根据机器的内存和网络带宽</p>
-<h4 id="String"><a href="#String" class="headerlink" title="String"></a>String</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> key1 v1   <span class="comment">#设置值</span></span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get key1</span><br><span class="line"><span class="string">&quot;v1&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; EXISTS key1   <span class="comment">#判断是否存在</span></span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; APPEND key1 <span class="string">&quot;hello&quot;</span>   <span class="comment">#追加字符串</span></span><br><span class="line">(<span class="built_in">integer</span>) 7</span><br><span class="line">127.0.0.1:6379&gt; get key1</span><br><span class="line"><span class="string">&quot;v1hello&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; STRLEN key1    <span class="comment">#获取字符串长度</span></span><br><span class="line">(<span class="built_in">integer</span>) 7</span><br><span class="line">127.0.0.1:6379&gt; </span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1433,14 +1443,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">147</span>
+          <span class="site-state-item-count">153</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-count">32</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

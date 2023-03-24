@@ -151,6 +151,431 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/05/01/webpack4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/05/01/webpack4/" class="post-title-link" itemprop="url">webpack4</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-05-01 16:49:27" itemprop="dateCreated datePublished" datetime="2019-05-01T16:49:27+08:00">2019-05-01</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>webpack是一个JavaScript应用程序的静态模块打包器，当webpack处理应用程序时，它会递归构建一个依赖关系图，其中包含应用程序需要的每个模块，然后将所有这些模块打包成一个或多个bundle</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/04/23/JavaScript%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%861/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/04/23/JavaScript%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%861/" class="post-title-link" itemprop="url">JavaScript工作原理1</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-04-23 13:50:06" itemprop="dateCreated datePublished" datetime="2019-04-23T13:50:06+08:00">2019-04-23</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="引擎，运行时和调用堆栈的概述"><a href="#引擎，运行时和调用堆栈的概述" class="headerlink" title="引擎，运行时和调用堆栈的概述"></a>引擎，运行时和调用堆栈的概述</h2><h4 id="JavaScript引擎"><a href="#JavaScript引擎" class="headerlink" title="JavaScript引擎"></a>JavaScript引擎</h4><p>JavaScript引擎的一个流行示例是Google的V8引擎，在Chrome和Node.js中使用V8引擎。<br>V8引擎由两个主要的部件组成：     </p>
+<ul>
+<li>Memory Heap（内存堆） -   内存分配地址的地方</li>
+<li>Call Stack （调用堆栈）  -  代码执行的地方</li>
+</ul>
+<h4 id="Runtime-运行时"><a href="#Runtime-运行时" class="headerlink" title="Runtime(运行时)"></a>Runtime(运行时)</h4><p><img src="/2019/04/23/JavaScript%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%861/runtime.png"></p>
+<h4 id="调用栈"><a href="#调用栈" class="headerlink" title="调用栈"></a>调用栈</h4><p>JavaScript是一种单线程编程语言，它只有一个调用堆栈。因此，它一次只能做一件事。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">function multiply(x, y) &#123;</span><br><span class="line">	return x * y;</span><br><span class="line">&#125;</span><br><span class="line">function printSquare(x) &#123;</span><br><span class="line">	var s = multiply(x, x);</span><br><span class="line">	console.log(s);</span><br><span class="line">&#125;</span><br><span class="line">printSquare(5);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2019/04/23/JavaScript%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%861/callStackExample.png"></p>
+<h2 id="深入V8引擎"><a href="#深入V8引擎" class="headerlink" title="深入V8引擎"></a>深入V8引擎</h2><p>JavaScript引擎是执行JavaScript代码的程序和解释器。JavaScript引擎可以实现为标准解释器，或者以某种形式将JavaScript编译为字节码的即时编译器。<br>V8最初被设计用来提高web浏览器中JavaScript执行的性能。为了获得速度，V8 将 JavaScript 代码转换成更高效的机器码，而不是使用解释器。它通过实现 JIT (Just-In-Time) 编译器将 JavaScript 代码编译为执行时的机器码，就像许多现代 JavaScript 引擎(如SpiderMonkey或Rhino (Mozilla)) 所做的那样。这里的主要区别是 V8 不生成字节码或任何中间代码。<br>在V8的5.9版本出来之前，V8引擎使用了两个编译器：    </p>
+<ul>
+<li>full-codegen 一个简单和非常快的编译器，产生简单和相对较慢的机器码。</li>
+<li>Crankshaft 一种更复杂（Just-in-Time）的优化编译器，生成高度优化的代码。</li>
+</ul>
+<p>V8引擎也在内部使用多个线程：</p>
+<ul>
+<li>主线程执行你所期望的操作：获取代码、编译代码并执行它</li>
+<li>还有一个单独的线程用于编译，因此主线程可以在前者优化代码的同时继续执行</li>
+<li>一个Profiler线程，它会告诉运行时我们花了很多时间，让Crankshaft可以优化它们</li>
+<li>一些线程处理垃圾收集器</li>
+</ul>
+<p>当第一次执行 JavaScript 代码时，V8 利用 full-codegen 编译器，直接将解析的 JavaScript 翻译成机器代码而不进行任何转换。这使得它可以非常快速地开始执行机器代码。请注意，V8 不使用中间字节码，从而不需要解释器。</p>
+<p>当代码已经运行一段时间后，分析线程已经收集了足够的数据来判断应该优化哪个方法。</p>
+<p>接下来，Crankshaft  从另一个线程开始优化。它将 JavaScript 抽象语法树转换为被称为 Hydrogen 的高级静态单分配（SSA）表示，并尝试优化 Hydrogen 图，大多数优化都是在这个级别完成的。</p>
+<h3 id="优化代码"><a href="#优化代码" class="headerlink" title="优化代码"></a>优化代码</h3><h4 id="内联优化"><a href="#内联优化" class="headerlink" title="内联优化"></a>内联优化</h4><p>第一个优化是提前内联尽可能多的代码。内联是用被调用函数的主体替换调用点（调用函数的代码行）的过程。</p>
+<p><img src="/2019/04/23/JavaScript%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%861/inlineOptimize.png"></p>
+<h4 id="隐藏类"><a href="#隐藏类" class="headerlink" title="隐藏类"></a>隐藏类</h4><h4 id="内联缓存"><a href="#内联缓存" class="headerlink" title="内联缓存"></a>内联缓存</h4><h4 id="编译成机器语言"><a href="#编译成机器语言" class="headerlink" title="编译成机器语言"></a>编译成机器语言</h4><h4 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h4><h4 id="点火和涡轮风扇"><a href="#点火和涡轮风扇" class="headerlink" title="点火和涡轮风扇"></a>点火和涡轮风扇</h4><h4 id="如何写出优化的JavaScript"><a href="#如何写出优化的JavaScript" class="headerlink" title="如何写出优化的JavaScript"></a>如何写出优化的JavaScript</h4><ol>
+<li>对象属性的顺序：永远用相同的顺序为您的对象属性实例化，这样隐藏类和随后的优化代码才能共享。    </li>
+<li>动态属性：在对象实例化后为其新增属性会导致隐藏类变化，从而会减慢为旧隐藏类所优化的方法的执行。所以，尽量在构造函数中分配对象的所有属性。</li>
+<li>方法：重复执行相同方法的代码会比不同的方法只执行一次的代码运行的更快（由于内联缓存）。</li>
+<li>数组：避免使用keys不是递增数字的稀疏数组（sparse arrays）。并不为每个元素分配内存的稀疏数组实质上是一个hash表。这种数组中的元素比通常数组的元素会花销更大才能获取到。此外，避免使用预申请的大型数组。最好随着需要慢慢增加数组的大小。最后，不要删除数组中的元素，因这会使得keys变得稀疏。</li>
+<li>标记值（Tagged values）: V8用32个比特来表示对象和数字。它使用1个比特来区分是一个对象（flag &#x3D; 1）还是一个整型（flag &#x3D; 0）（被称为SMI或SMall Integer，小整型，因其只有31比特来表示值）。然后，如果一个数值大于31比特，V8就会给这个数字进行装箱操作（boxing），将其变成double型，并创建一个新的对象将这个double型数字放入其中。所以，为了避免代价很高的boxing操作，尽量使用31比特的有符号数。</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/04/04/spark%E5%85%A5%E9%97%A8-python-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/04/04/spark%E5%85%A5%E9%97%A8-python-3/" class="post-title-link" itemprop="url">spark入门(python)3 - RDD</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-04-04 19:17:33" itemprop="dateCreated datePublished" datetime="2019-04-04T19:17:33+08:00">2019-04-04</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="RDD的设计与运行原理"><a href="#RDD的设计与运行原理" class="headerlink" title="RDD的设计与运行原理"></a>RDD的设计与运行原理</h2><h3 id="RDD设计背景"><a href="#RDD设计背景" class="headerlink" title="RDD设计背景"></a>RDD设计背景</h3><p>在实际应用中，存在许多迭代式算法，在不同计算阶段之间会重用中间结果，即一个阶段的输出结果会作为下一个阶段的输入。但是，目前的MapReduce框架都是把中间结果写入到HDFS中，带来了大量的数据复制、磁盘IO和序列化开销。虽然，类似Pregel等图计算框架也是将结果保存在内存当中，但是，这些框架只能支持一些特定的计算模式，并没有提供一种通用的数据抽象。RDD就是为了满足这种需求而出现的，它提供了一个抽象的数据架构，我们不必担心底层数据的分布式特性，只需将具体的应用逻辑表达为一系列转换处理，不同RDD之间的转换操作形成依赖关系，可以实现管道化，从而避免了中间结果的存储，大大降低了数据复制、磁盘IO和序列化开销。</p>
+<h3 id="RDD概念"><a href="#RDD概念" class="headerlink" title="RDD概念"></a>RDD概念</h3><p>一个RDD就是一个分布式对象集合，本质上是一个只读的分区记录集合，每个RDD可以分成多个分区，每个分区就是一个数据集片段，并且一个RDD的不同分区可以被保存到集群中不同的节点上，从而可以在集群中的不同节点上进行并行计算。RDD提供了一种高度受限的共享内存模型，即RDD是只读的记录分区的集合，不能直接修改，只能基于稳定的物理存储中的数据集来创建RDD，或者通过在其他RDD上执行确定的转换操作（如map、join和groupBy）而创建得到新的RDD。RDD提供了一组丰富的操作以支持常见的数据运算，分为“行动”（Action）和“转换”（Transformation）两种类型，前者用于执行计算并指定输出的形式，后者指定RDD之间的相互依赖关系。两类操作的主要区别是，转换操作（比如map、filter、groupBy、join等）接受RDD并返回RDD，而行动操作（比如count、collect等）接受RDD但返回非RDD（即输出一个值或结果）。RDD提供的转换接口都非常简单，都是类似map、filter、groupBy、join等粗粒度的数据转换操作，而不是针对某个数据项的细粒度修改。因此，RDD比较适合对于数据集中元素执行相同操作的批处理式应用，而不适合用于需要异步、细粒度状态的应用，比如Web应用系统、增量式的网页爬虫等。正因为这样，这种粗粒度转换接口设计，会使人直觉上认为RDD的功能很受限、不够强大。但是，实际上RDD已经被实践证明可以很好地应用于许多并行计算应用中，可以具备很多现有计算框架（比如MapReduce、SQL、Pregel等）的表达能力，并且可以应用于这些框架处理不了的交互式数据挖掘应用。</p>
+<p>RDD典型的执行过程如下：       </p>
+<ol>
+<li>RDD读入外部数据源（或者内存中的集合）进行创建</li>
+<li>RDD经过一些列的“转换”操作，每一次都会产生不同的RDD，提供下一个“转换”使用</li>
+<li>最后一个RDD经“行动”操作进行处理，并输出到外部数据源（或者变成Scala集合或标量）</li>
+</ol>
+<p>需要说明的是，RDD采用了惰性调用，即在RDD的执行过程中，真正的计算发生在RDD的“行动”操作，对于“行动”之前的所有“转换”操作，Spark只是记录下“转换”操作应用的一些基础数据集以及RDD生成的轨迹，即相互之间的依赖关系，而不会触发真正的计算。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/" class="post-title-link" itemprop="url">Spark入门(python)2 - Spark的安装与使用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-04-02 16:06:15" itemprop="dateCreated datePublished" datetime="2019-04-02T16:06:15+08:00">2019-04-02</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Spark的安装与使用"><a href="#Spark的安装与使用" class="headerlink" title="Spark的安装与使用"></a>Spark的安装与使用</h2><h3 id="Mac下安装Spark"><a href="#Mac下安装Spark" class="headerlink" title="Mac下安装Spark"></a>Mac下安装Spark</h3><h4 id="配置ssh"><a href="#配置ssh" class="headerlink" title="配置ssh"></a>配置ssh</h4><p>系统偏好设置-&gt;选择共享-&gt;勾选远程登录。<br>配置ssh，使<code>ssh localhost</code>不需要输入密码。       </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa    </span><br><span class="line">$ cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys     </span><br><span class="line">$ ssh localhost</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装scala"><a href="#安装scala" class="headerlink" title="安装scala"></a>安装scala</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install scala</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装Spark"><a href="#安装Spark" class="headerlink" title="安装Spark"></a>安装Spark</h4><ol>
+<li><p>到<a target="_blank" rel="noopener" href="http://spark.apache.org/downloads.html">http://spark.apache.org/downloads.html</a>下载Spark<br><img src="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/%E4%B8%8B%E8%BD%BDSpark.png" alt="下载Spark"></p>
+</li>
+<li><p>解压到目录下</p>
+</li>
+<li><p>配置.zshrc或者.bashrc</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export SPARK_HOME=/Users/xy/Documents/bigData/spark-2.4.3-bin-hadoop2.7</span><br><span class="line">export PATH=$&#123;PATH&#125;:$&#123;SPARK_HOME&#125;/bin</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>到Spark解压路径下，执行<code>./sbin/start-all.sh</code>，在浏览器中访问<code>http://localhost:8080/</code>，看是否可以访问。<br><img src="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/Spark%E5%AE%89%E8%A3%85%E7%BB%93%E6%9E%9C.png" alt="Spark安装结果"></p>
+</li>
+<li><p>运行pyspark<br><img src="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/%E8%BF%90%E8%A1%8Cpyspark.png" alt="运行pyspark"></p>
+</li>
+</ol>
+<h3 id="在pyspark中运行代码-本地"><a href="#在pyspark中运行代码-本地" class="headerlink" title="在pyspark中运行代码(本地)"></a>在pyspark中运行代码(本地)</h3><p>pyspark命令及其常用的参数如下：       </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pyspark --master &lt;master-url&gt;</span><br></pre></td></tr></table></figure>
+<p>Spark的运行模式取决于传递给SparkContext的Master URL的值。Master URL可以是以下任一种形式：  </p>
+<ul>
+<li>local 使用一个Worker线程本地化运行SPARK(完全不并行)</li>
+<li>local[*] 使用逻辑CPU个数数量的线程来本地化运行Spark</li>
+<li>local[K] 使用K个Worker线程本地化运行Spark（理想情况下，K应该根据运行机器的CPU核数设定）</li>
+<li>spark:&#x2F;&#x2F;HOST:PORT 连接到指定的Spark standalone master。默认端口是7077.</li>
+<li>yarn-client 以客户端模式连接YARN集群。集群的位置可以在HADOOP_CONF_DIR 环境变量中找到。</li>
+<li>yarn-cluster 以集群模式连接YARN集群。集群的位置可以在HADOOP_CONF_DIR 环境变量中找到。</li>
+<li>mesos:&#x2F;&#x2F;HOST:PORT 连接到指定的Mesos集群。默认接口是5050。</li>
+</ul>
+<p>在Spark中采用本地模式启动pyspark的命令主要包含以下参数：</p>
+<ul>
+<li>–master：这个参数表示当前的pyspark要连接到哪个master，如果是local[*]，就是使用本地模式启动pyspark，其中，中括号内的星号表示需要使用几个CPU核心(core)；</li>
+<li>–jars： 这个参数用于把相关的JAR包添加到CLASSPATH中；如果有多个jar包，可以使用逗号分隔符连接它们；</li>
+</ul>
+<h4 id="Spark运行独立的python代码"><a href="#Spark运行独立的python代码" class="headerlink" title="Spark运行独立的python代码"></a>Spark运行独立的python代码</h4><ol>
+<li>使用virtualenv创立独立python环境</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">virtualent spark-py3 --python=python3</span><br><span class="line">cd spark-py3</span><br><span class="line">source ./bin/activate</span><br><span class="line">pip install pyspark</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>在test.py中编写代码</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">from pyspark import SparkContext</span><br><span class="line">sc = SparkContext( &#x27;local&#x27;, &#x27;test&#x27;)</span><br><span class="line">logFile = &quot;file:///Users/xy/Documents/bigData/spark-2.4.3-bin-hadoop2.7/README.md&quot;</span><br><span class="line">logData = sc.textFile(logFile, 2).cache()</span><br><span class="line">numAs = logData.filter(lambda line: &#x27;a&#x27; in line).count()</span><br><span class="line">numBs = logData.filter(lambda line: &#x27;b&#x27; in line).count()</span><br><span class="line">print(&#x27;Lines with a: %s, Lines with b: %s&#x27; % (numAs, numBs))</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>运行代码<code>python3 test.py</code></li>
+</ol>
+<p><img src="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/Spark%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81.png" alt="Spark测试代码"></p>
+<h2 id="Spark应用程序"><a href="#Spark应用程序" class="headerlink" title="Spark应用程序"></a>Spark应用程序</h2><h3 id="加载本地文件"><a href="#加载本地文件" class="headerlink" title="加载本地文件"></a>加载本地文件</h3><p>运行pyspark <code>pyspark --master local[4]</code>        </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from pyspark import SparkContext</span><br><span class="line">&gt;&gt;&gt; #排除异常</span><br><span class="line">&gt;&gt;&gt; try:</span><br><span class="line">...     sc.stop()</span><br><span class="line">... except:</span><br><span class="line">...     pass</span><br><span class="line">... </span><br><span class="line">&gt;&gt;&gt; sc = SparkContext(&#x27;local[2]&#x27;,&#x27;First Spark App&#x27;)</span><br><span class="line">&gt;&gt;&gt; textFile = sc.textFile(&#x27;file:///Users/xy/Documents/develop/study/bigData/spark-2.4.3-bin-hadoop2.7/README.md&#x27;)</span><br><span class="line">&gt;&gt;&gt; textFile.first()</span><br><span class="line">u&#x27;# Apache Spark&#x27;</span><br><span class="line">&gt;&gt;&gt; textFile.saveAsTextFile(&#x27;file:///Users/xy/Documents/writeback&#x27;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/%E8%AF%BB%E5%86%99%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6.png" alt="读写本地文件"></p>
+<p>运行结果<br><img src="/2019/04/02/spark%E5%85%A5%E9%97%A8-python-2/%E8%AF%BB%E5%86%99%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%9C.png" alt="读写本地文件结果"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/03/31/spark%E5%85%A5%E9%97%A8-python/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/31/spark%E5%85%A5%E9%97%A8-python/" class="post-title-link" itemprop="url">Spark入门(python)1 - Spark的设计与运行原理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-03-31 11:57:31" itemprop="dateCreated datePublished" datetime="2019-03-31T11:57:31+08:00">2019-03-31</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Spark运行架构"><a href="#Spark运行架构" class="headerlink" title="Spark运行架构"></a>Spark运行架构</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
+<li>RDD 弹性分布数据集（Resilient Distributed Dataset），是分布式内存的一个抽象概念，提供了一种高度受限的共享内存模型</li>
+<li>DAG 有向无环图（Directed Acyclic Graph），反映RDD之间的依赖关系</li>
+<li>Executor 运行在工作节点上的一个进程，负责运行任务，并为应用程序存储数据</li>
+<li>应用 用户编写的Spark应用程序</li>
+<li>任务 运行在Executor上的工作单元</li>
+<li>作业 一个作业包含多个RDD及作用于相应RDD上的各种操作</li>
+<li>阶段 是作业的基本调度单位，一个作业会分为多组任务，每组任务被称为“阶段”，或者也被称为“任务集”</li>
+</ul>
+<h3 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h3><p><img src="/2019/03/31/spark%E5%85%A5%E9%97%A8-python/Spark%E8%BF%90%E8%A1%8C%E6%9E%B6%E6%9E%84.jpg" alt="Spark运行架构"><br>&amp;emsp;Spark运行架构包括集群资源管理器（Cluster Manager）、运行作业任务的工作节点（Worker Node）、每个应用的任务控制节点（Driver）和每个工作节点上负责具体任务的执行进程（Executor）。其中，集群资源管理器可以是Spark自带的资源管理器，也可以是YARN或Mesos等资源管理框架。<br>与Hadoop MapReduce计算框架相比，Spark所采用的Executor有两个优点：      </p>
+<ol>
+<li>利用多线程来执行具体的任务（Hadoop MapReduce采用的是进程模型），减少任务的启动开销；      </li>
+<li>Executor中有一个BlockManager存储模块，会将内存和磁盘共同作为存储设备，当需要多轮迭代计算时，可以将中间结果存储到这个存储模块里，下次需要时，就可以直接读该存储模块里的数据，而不需要读写到HDFS等文件系统里，因而有效减少了IO开销；或者在交互式查询场景下，预先将表缓存到该存储系统上，从而可以提高读写IO性能。</li>
+</ol>
+<p><img src="/2019/03/31/spark%E5%85%A5%E9%97%A8-python/Spark%E4%B8%AD%E5%90%84%E7%A7%8D%E6%A6%82%E5%BF%B5%E4%B9%8B%E9%97%B4%E7%9A%84%E7%9B%B8%E4%BA%92%E5%85%B3%E7%B3%BB.jpg" alt="Spark中各种概念之间的相互关系"><br>如上图，在Spark中，一个应用（Application）由一个任务控制节点（Driver）和若干个作业（Job）构成，一个作业由多个阶段（Stage）构成，一个阶段由多个任务（Task）组成。当执行一个应用时，任务控制节点会向集群管理器（Cluster Manager）申请资源，启动Executor，并向Executor发送应用程序代码和文件，然后在Executor上执行任务，运行结束后，执行结果会返回给任务控制节点，或者写到HDFS或者其他数据库中。       </p>
+<h3 id="Spark运行基本流程"><a href="#Spark运行基本流程" class="headerlink" title="Spark运行基本流程"></a>Spark运行基本流程</h3><p><img src="/2019/03/31/spark%E5%85%A5%E9%97%A8-python/Spark%E8%BF%90%E8%A1%8C%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B.jpg" alt="Spark运行基本流程"><br>Spark的基本运行流程如下：     </p>
+<ol>
+<li>当一个Spark应用被提交时，首先需要为这个应用构建起基本的运行环境，即由任务控制节点（Driver）创建一个SparkContext，由SparkContext负责和资源管理器（Cluster Manager）的通信以及进行资源的申请、任务的分配和监控等。SparkContext会向资源管理器注册并申请运行Executor的资源；    </li>
+<li>资源管理器为Executor分配资源，并启动Executor进程，Executor运行情况将随着“心跳”发送到资源管理器上；       </li>
+<li>SparkContext根据RDD的依赖关系构建DAG图，DAG图提交给DAG调度器（DAGScheduler）进行解析，将DAG图分解成多个“阶段”（每个阶段都是一个任务集），并且计算出各个阶段之间的依赖关系，然后把一个个“任务集”提交给底层的任务调度器（TaskScheduler）进行处理；Executor向SparkContext申请任务，任务调度器将任务分发给Executor运行，同时，SparkContext将应用程序代码发放给Executor；       </li>
+<li>任务在Executor上运行，把执行结果反馈给任务调度器，然后反馈给DAG调度器，运行完毕后写入数据并释放所有资源。</li>
+</ol>
+<p>Spark运行架构的特点：        </p>
+<ol>
+<li>每个应用都有自己专属的Executor进程，并且该进程在应用运行期间一直驻留。Executor进程以多线程的方式运行任务，减少了多进程任务频繁的启动开销，使得任务执行变得非常高效和可靠；          </li>
+<li>Spark运行过程与资源管理器无关，只要能够获取Executor进程并保持通信即可；       </li>
+<li>Executor上有一个BlockManager存储模块，类似于键值存储系统（把内存和磁盘共同作为存储设备），在处理迭代计算任务时，不需要把中间结果写入到HDFS等文件系统，而是直接放在这个存储系统上，后续有需要时就可以直接读取；在交互式查询场景下，也可以把表提前缓存到这个存储系统上，提高读写IO性能；             </li>
+<li>任务采用了数据本地性和推测执行等优化机制。数据本地性是尽量将计算移到数据所在的节点上进行，即“计算向数据靠拢”，因为移动计算比移动数据所占的网络资源要少得多。而且，Spark采用了延时调度机制，可以在更大的程度上实现执行过程优化。比如，拥有数据的节点当前正被其他的任务占用，那么，在这种情况下是否需要将数据移动到其他的空闲节点呢？答案是不一定。因为，如果经过预测发现当前节点结束当前任务的时间要比移动数据的时间还要少，那么，调度就会等待，直到当前节点可用。</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2019/03/23/React%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -821,663 +1246,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2018/10/18/Redux/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/10/18/Redux/" class="post-title-link" itemprop="url">Redux</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-10-18 14:54:15" itemprop="dateCreated datePublished" datetime="2018-10-18T14:54:15+08:00">2018-10-18</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Redux是JavaScript状态容器，是管理应用状态的js库。是单向数据流应用架构的一种比较优雅的实现。</p>
-<p>Redux 和 React 之间没有关系。Redux 支持 React、Angular、Ember、jQuery 甚至纯 JavaScript。</p>
-<h3 id="三大原则"><a href="#三大原则" class="headerlink" title="三大原则"></a>三大原则</h3><ol>
-<li><p>单一数据源</p>
-<p> 使用redux的程序，所有的state都存储在一个单一的数据源store内部，类似一棵树</p>
-</li>
-<li><p>state是只读的</p>
-<p> state是只读的，能改变state的唯一方式是触发action来修改</p>
-</li>
-<li><p>使用纯函数执行修改</p>
-<p> 为描述action如何改变state，需要编写reducer。reducer是纯函数（一个函数的返回结果只依赖于它的参数，并且在执行过程里面没有副作用，我们就把这个函数叫做纯函数），用来处理数据逻辑的，具体就是根据 Action 处理 State 的函数。只需要根据action，返回对应的state。而且必须要有返回。</p>
-</li>
-</ol>
-<h3 id="三大概念"><a href="#三大概念" class="headerlink" title="三大概念"></a>三大概念</h3><ul>
-<li>Action</li>
-<li>Reducer</li>
-<li>Store</li>
-</ul>
-<h3 id="Action"><a href="#Action" class="headerlink" title="Action"></a>Action</h3><p>Action 本质上是JavaScript普通对象</p>
-<blockquote>
-<p>Actions are payloads of information that send data from your application to your store. They are the only source of information for the store. You send them to the store using store.dispatch().</p>
-</blockquote>
-<p>Action 通常只是描述某一特定事情。例如一加入购物车的action</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	type: &#x27;ADD_CART&#x27;,</span><br><span class="line">	goods: &#123;</span><br><span class="line">		...</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>通常情况下，会使用创建函数（Action Creater)返回Action对象。    </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">const ADD_CART = &#x27;ADD_CART&#x27;;</span><br><span class="line">function addToCart(goods) &#123;</span><br><span class="line">	return &#123;</span><br><span class="line">		type: ADD_CARD,</span><br><span class="line">		goods</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>唯一改变state的方法是触发事先定义好的action。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">state = store.getState();</span><br><span class="line">store.dispatch(addToCart(goods));</span><br><span class="line">state = store.getState();</span><br></pre></td></tr></table></figure>
-
-<h3 id="Reducer"><a href="#Reducer" class="headerlink" title="Reducer"></a>Reducer</h3><blockquote>
-<p>Actions describe the fact that something happened, but don’t specify how the application’s state changes in response. This is the job of a reducer</p>
-</blockquote>
-<p>Reducer是用来处理数据逻辑的，具体就是根据Action来处理state的函数</p>
-<p><code>(previousState, action) =&gt; newState</code></p>
-<h4 id="编写Reducer"><a href="#编写Reducer" class="headerlink" title="编写Reducer"></a>编写Reducer</h4><h5 id="设计State结构"><a href="#设计State结构" class="headerlink" title="设计State结构"></a>设计State结构</h5><p>在Redux应用中，所有的state都被保存在一个单一对象中。     </p>
-<p>通常，这个 state 树还需要存放其它一些数据，例如 UI 相关的 state。这样做没问题，但尽量把这些数据与 UI 相关的 state 分开。</p>
-<p>例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  goods:&#123;&#125;,</span><br><span class="line">  carts: [&#123;</span><br><span class="line">    ...</span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    ...</span><br><span class="line">  &#125;],</span><br><span class="line">  comments: [&#123;</span><br><span class="line">    ...</span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    ...</span><br><span class="line">  &#125;]</span><br><span class="line">  //相关的 UI state</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="根据State结构编写reducer"><a href="#根据State结构编写reducer" class="headerlink" title="根据State结构编写reducer"></a>根据State结构编写reducer</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">function app(state = initialState, action) &#123;//这里一个技巧是使用 ES6 参数默认值语法 来精简代码。</span><br><span class="line">  switch (action.type) &#123;</span><br><span class="line">    case &#x27;ACTION_NAME1&#x27;:</span><br><span class="line">      //处理state //注意1：返回 新的状态，不要修改 state。 应该新建了一个副本。</span><br><span class="line">      return newState;</span><br><span class="line">    case &#x27;ACTION_NAME1&#x27;:</span><br><span class="line">      //处理state 返回 新的状态</span><br><span class="line">      return newState;</span><br><span class="line">    default://注意2：在 default 情况下返回旧的 state, 如果没有旧的状态就返回初始状态 initialState</span><br><span class="line">      return state;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>而 reducer 是可以拆分和合成的。真正开发项目的时候 State 会涉及很多功能，在一个 reducer 中处理所有逻辑会非常混乱，所以需要拆分成多个小 reducer，每个 reducer 只处理它管理的那部分State数据。所以根据 state 的结构调整拆分上面的 reducer ：     </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">function goods(state = Map(), action) &#123;</span><br><span class="line">  switch (action.type) &#123;</span><br><span class="line">    case types.INIT_GOODS:</span><br><span class="line">      state = Immutable.fromJS(action.goods);</span><br><span class="line">      return state;</span><br><span class="line">    case types.SET_GOODS_COLLECT:</span><br><span class="line">      state = state.update(&#x27;isCollect&#x27;, v=&gt;!v);</span><br><span class="line">      state = state.update(&#x27;collectNum&#x27;, v=&gt; (state.get(&#x27;isCollect&#x27;) ? v + 1 : v - 1));</span><br><span class="line">      return state;</span><br><span class="line">    default:</span><br><span class="line">      return state;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function comments(state = List(), action) &#123;</span><br><span class="line">  switch (action.type) &#123;</span><br><span class="line">    case types.INIT_COMMENTS:</span><br><span class="line">      state = Immutable.fromJS(action.comments);</span><br><span class="line">      return state;</span><br><span class="line">    case types.GET_MORE_COMMENT:</span><br><span class="line">      action.comments.map(function(item) &#123;</span><br><span class="line">        state = state.push(item);</span><br><span class="line">      &#125;);</span><br><span class="line">      return state;</span><br><span class="line">    default:</span><br><span class="line">      return state;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function carts(state = List(), action) &#123;</span><br><span class="line">  switch (action.type) &#123;</span><br><span class="line">    case types.INIT_CARTS:</span><br><span class="line">      state = Immutable.fromJS(action.carts);</span><br><span class="line">      return state;</span><br><span class="line">    case types.ADD_CART:</span><br><span class="line">      state = Immutable.fromJS(action.carts);</span><br><span class="line">      return state;</span><br><span class="line">    default:</span><br><span class="line">      return state;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>redux 提供 combineReducers() 函数来调用我们编写的一系列 reducer，每个 reducer 根据它们的 key 来筛选出 state 中的一部分数据并处理，然后这个生成的函数所所有 reducer 的结果合并成一个大的对象。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">const rootReducer = combineReducers(&#123;</span><br><span class="line">  goods,</span><br><span class="line">  comments,</span><br><span class="line">  carts</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">export default rootReducer;</span><br></pre></td></tr></table></figure>
-
-<h3 id="Store"><a href="#Store" class="headerlink" title="Store"></a>Store</h3><p>action 用来描述“发生了什么”, reducers 会根据 action 更新 state。</p>
-<p>Store 就是把它们联系到一起的对象，是用来维持应用的 state 的。</p>
-<p>store有四个方法。</p>
-<ul>
-<li>getState： 获取应用当前 state。</li>
-<li>subscribe：添加监听器。</li>
-<li>dispatch：分发 action。更新 state。</li>
-<li>replaceReducer：替换 store 当前用来处理 state 的 reducer。</li>
-</ul>
-<p>常用的是dispatch，这是修改State的唯一途径，使用起来也非常简单。</p>
-<p>Redux 应用只有一个单一的 store。当需要拆分处理数据的逻辑时，使用 reducer 组合 而不是创建多个 store。而官方的 Flux 实现，则是一个应用可以有一个或多个 store， Flux 中 store 的划分可大可小。</p>
-<p>创建一个 store     </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let store = createStore(rootReducers, initialState);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<p>获取 state </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">store.getState();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>更新 state </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">store.dispatch(addToCart(goods));     </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">import &#123; combineReducers, createStore &#125; from &#x27;redux&#x27;</span><br><span class="line">var objectAssign = require(&#x27;object-assign&#x27;);</span><br><span class="line"></span><br><span class="line">// Action</span><br><span class="line">const ADD_CART = &#x27;ADD_CART&#x27;;</span><br><span class="line">const SET_GOODS_COLLECT = &#x27;SET_GOODS_COLLECT&#x27;;</span><br><span class="line"></span><br><span class="line">function addToCart(goods) &#123;</span><br><span class="line">  return &#123;</span><br><span class="line">    type: ADD_CART,</span><br><span class="line">    goods</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function collectGoods() &#123;</span><br><span class="line">  return &#123;</span><br><span class="line">    type: SET_GOODS_COLLECT</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// reducers</span><br><span class="line">var initGoods = &#123;&quot;id&quot;: 123, &quot;name&quot;: &quot;星战正版机器人BB-8&quot;, isCollect: false&#125;;</span><br><span class="line">function goods(state = initGoods, action) &#123;</span><br><span class="line">  switch (action.type) &#123;</span><br><span class="line">    case SET_GOODS_COLLECT:</span><br><span class="line">      return objectAssign(&#123;&#125;, state, &#123;isCollect: !state.isCollect&#125;);</span><br><span class="line"></span><br><span class="line">    default:</span><br><span class="line">      return state;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var initCarts = [];</span><br><span class="line">function carts(state = initCarts, action) &#123;//es6 特性</span><br><span class="line">  switch (action.type) &#123;</span><br><span class="line">    case ADD_CART:</span><br><span class="line">      return [...state, action.goods];//es6 特性</span><br><span class="line">    default:</span><br><span class="line">      return state;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const rootReducer = combineReducers(&#123;</span><br><span class="line">  goods,</span><br><span class="line">  carts</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">let store = createStore(rootReducer);</span><br><span class="line"></span><br><span class="line">console.log(store.getState());</span><br><span class="line">store.dispatch(collectGoods());</span><br><span class="line">console.log(store.getState());</span><br><span class="line"></span><br><span class="line">store.dispatch(addToCart(&#123;&quot;id&quot;: 124, &quot;name&quot;: &quot;ABC&quot;, isCollect: false&#125;));</span><br><span class="line">console.log(store.getState());</span><br><span class="line">store.dispatch(addToCart(&#123;&quot;id&quot;: 125, &quot;name&quot;: &quot;BCD&quot;, isCollect: false&#125;));</span><br><span class="line">console.log(store.getState());</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2018/10/02/%E8%AF%BB%E3%80%8A%E8%81%8A%E5%87%BA%E6%9D%A5%E7%9A%84%E4%BC%81%E4%B8%9A%E5%B8%9D%E5%9B%BD%E3%80%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/10/02/%E8%AF%BB%E3%80%8A%E8%81%8A%E5%87%BA%E6%9D%A5%E7%9A%84%E4%BC%81%E4%B8%9A%E5%B8%9D%E5%9B%BD%E3%80%8B/" class="post-title-link" itemprop="url">读《聊出来的企业帝国:马化腾与腾讯管理模式》</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-10-02 10:49:50" itemprop="dateCreated datePublished" datetime="2018-10-02T10:49:50+08:00">2018-10-02</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2018/07/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/07/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/" class="post-title-link" itemprop="url">Android代码规范</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-07-12 10:08:41" itemprop="dateCreated datePublished" datetime="2018-07-12T10:08:41+08:00">2018-07-12</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="常规规范"><a href="#常规规范" class="headerlink" title="常规规范"></a>常规规范</h4><ol>
-<li><p>不用0dp，而用0px，这样就可以在获取时避免系统进行换算，提升代码的执行效率。</p>
-</li>
-<li><p>字符串比较，用 <code> &quot;xxx&quot;.equals(object)</code>，而不是<code>object.equals(&quot;xxx&quot;)</code>，因为object可能为空。</p>
-</li>
-<li><p>尽量采用switch case来判断，如果不能再考虑if else，在多条件下switch case会更加简洁。</p>
-</li>
-<li><p>不推荐使用layout_marginLeft和layout_marginRight，推荐使用layout_marginStart和layout_marginEnd，padding同理。</p>
-</li>
-<li><p>如果在 layout_marginStart 和 layout_marginEnd 的值相同的情况下，使用 layout_marginHorizontal，而 layout_marginTop 和 layout_marginBottom 也同理，使用 layout_marginVertical，能用一句代码能做的事不要写两句，padding 属性也是同理。</p>
-</li>
-<li><p>在能满足需求的情况下，尽量用 invisible 来代替 gone，因为 gone 会触发当前整个 View 树进行重新测量和绘制。</p>
-</li>
-<li><p>api 和 implementation，在能满足使用的情况下，优先选用 implementation，因为这样可以减少一些编译时间。</p>
-</li>
-<li><p>ListView 和 RecyclerView 都能实现需求的前提下，优先选用 RecyclerView。</p>
-</li>
-<li><p>ScrollView 和 NestedScrollView 都能实现需求的前提下，优先选用 NestedScrollView，是因为 NestedScrollView 和 RecyclerView 支持相互嵌套，而 ScrollView 是不支持嵌套滚动的。</p>
-</li>
-<li><p>如果一个类不需要被继承，请直接用 final 进行修饰，如果一个字段在类初始化过程中已经赋值并且没有地方进行二次赋值，也应当用 final 修饰。</p>
-</li>
-<li><p>阿里巴巴代码约束插件，并及时地对插件所提示的代码警告进行处理或者抑制警告。</p>
-<p><em><a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/plugin/10046-alibaba-java-coding-guidelines">https://plugins.jetbrains.com/plugin/10046-alibaba-java-coding-guidelines</a></em></p>
-</li>
-<li><p>应用图标应该放在 mipmap 目录下，其他图片资源应当放到 drawable 目录下</p>
-</li>
-</ol>
-<h4 id="后台接口规范"><a href="#后台接口规范" class="headerlink" title="后台接口规范"></a>后台接口规范</h4><ol>
-<li>后台返回的 id 值，不要使用 int 或者 long 类型来接收，而应该用 string 类型来接收，因为不需要对这个 id 值进行运算，所以不需要关心它是什么类型的。</li>
-<li>后台返回的金额数值应该使用 String 来接收，而不能用浮点数来接收，因为 float 或者 double 在数值比较大的时候会容易丢失精度，并且还需要自己手动转换出想要保留的小数位，最好的方式是后台返回什么前端就展示什么，而到了运算的时候，则应该用 BigDecimal 类来进行转换和计算，当然金额在前端一般展示居多，运算的情况还算是比较少的。</li>
-<li>在定义后台返回的 Bean 类时，不应当将一些没有使用到的字段添加到代码中，因为这样会消耗性能，因为 Gson 是通过反射将后台字段赋值到 Java 字段中，所以应当避免一些不必要的字段解析，另外臃余的字段也会给排查问题造成一定的阻碍。</li>
-<li>如果后台给定的字段名不符合代码命名的时候，例如当遇到 student_name 这种命名时，应当使用 Gson 框架中的 @SerializedName 注解进行重命名。</li>
-<li>请求的接口参数和返回字段必须要写上注释，除此之外还应该备注对应的后台接口文档地址，以便后续能够更好地进行维护和迭代。</li>
-<li>后台返回的 Bean 类字段不能直接访问，而应该通过生成 Get 方法，然后使用这个 Get 方法来访问字段。</li>
-<li>接口请求成功的提示可以不显示，但请求失败的提示需要显示给到用户，否则会加大排查问题的难度，也极有可能会把问题掩盖掉，从而导致问题遗留到线上去。</li>
-</ol>
-<h4 id="变量命名规范"><a href="#变量命名规范" class="headerlink" title="变量命名规范"></a>变量命名规范</h4><ol>
-<li>严禁使用中文或者中文拼音进行命名</li>
-<li>使用驼峰命名风格（最好控制三个单词内）</li>
-<li>局部变量应用作用来命名</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">String name;</span><br><span class="line">TextView nameView;</span><br><span class="line">FrameLayout nameLayout;</span><br><span class="line"><span class="comment">//只有一个类型的控件时，也可以</span></span><br><span class="line">TextView textView;</span><br><span class="line">RecyclerView recyclerView;</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>成员变量必须以m开头</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String mName;</span><br></pre></td></tr></table></figure>
-
-<ol start="5">
-<li>布尔值命名，不应该以is开头</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">boolean</span> <span class="variable">mDebug</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line"><span class="type">boolean</span> <span class="variable">debug</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>静态变量用s开头</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> Handler sHandler;</span><br></pre></td></tr></table></figure>
-
-<ol start="5">
-<li>常量则需要用大写，并且用下划线代替驼峰</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">TAG</span> <span class="operator">=</span> <span class="string">&quot;abc&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-<h4 id="包名命名规范"><a href="#包名命名规范" class="headerlink" title="包名命名规范"></a>包名命名规范</h4><ol>
-<li>不允许包名中携带英文大写</li>
-<li>包名应该以简洁的方式命名</li>
-<li>包名要按照模块或者作用来划分</li>
-<li>不要在某一包名下放置一些无关的类</li>
-</ol>
-<h4 id="方法命名规范"><a href="#方法命名规范" class="headerlink" title="方法命名规范"></a>方法命名规范</h4><ol>
-<li>initXX：初始化相关方法，使用 init 为前缀标识，如初始化布局 initView。</li>
-<li>isXX：方法返回值为 boolean 型的请使用 is 或 check 为前缀标识。</li>
-<li>getXX：返回某个值的方法，使用 get 为前缀标识，例如 getName。</li>
-<li>setXX：设置某个属性值，使用 set 为前缀标识，例如 setName。</li>
-<li>handlerXX&#x2F;processXX：对数据进行处理的方法，例如 handleMessage。</li>
-<li>displayXX&#x2F;showXX：弹出提示框和提示信息，例如 showDialog。</li>
-<li>updateXX：更新某个东西，例如 updateData。</li>
-<li>saveXX：保存某个东西，例如 saveData。</li>
-<li>resetXX：重置某个东西，例如 resetData。</li>
-<li>clearXX：清除某个东西，例如 clearData</li>
-<li>removeXX：移除数据或者视图等，例如 removeView。</li>
-<li>drawXX：绘制数据或效果相关的，使用 draw 前缀标识，例如 drawText。</li>
-</ol>
-<h4 id="类文件命名规范"><a href="#类文件命名规范" class="headerlink" title="类文件命名规范"></a>类文件命名规范</h4><p>业务模块以 模块 + 类型 来命名</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HomeActivity.java;</span><br><span class="line">SettingFragment.java;</span><br><span class="line">HomeAdapter.java;</span><br><span class="line">AddressDialog.java;</span><br></pre></td></tr></table></figure>
-
-<p>技术模块以类的 作用 来命名</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CrashHandler.java;</span><br><span class="line">PickerLayoutManager.java;</span><br></pre></td></tr></table></figure>
-
-<h4 id="接口命名规范"><a href="#接口命名规范" class="headerlink" title="接口命名规范"></a>接口命名规范</h4><p>如果是监听事件可以参考 View 的写法及命名</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">View</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> View.OnClickListener mListener;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setOnClickListener</span><span class="params">(OnClickListener listener)</span> &#123;</span><br><span class="line">        mListener = listener;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">OnClickListener</span> &#123;</span><br><span class="line">        <span class="keyword">void</span> <span class="title function_">onClick</span><span class="params">(View v)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果是回调事件可以参考 Handler 的写法及命名</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Handler</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Callback</span> &#123;</span><br><span class="line">        <span class="type">boolean</span> <span class="title function_">handleMessage</span><span class="params">(Message msg)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>至于接口写在内部还是外部，具体可以视实际情况而定，如果功能比较庞大，就可以考虑抽取成外部的，只作用在某个类上的，则就可以直接写成内部的。</p>
-<h4 id="布局文件命名规范"><a href="#布局文件命名规范" class="headerlink" title="布局文件命名规范"></a>布局文件命名规范</h4><p>以 模块 + 类型 来命名</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">home_activity.xml</span><br><span class="line">setting_fragment.xml</span><br><span class="line">menu_item.xml</span><br><span class="line">address_dialog.xml</span><br></pre></td></tr></table></figure>
-
-<p>这样写的好处在于，由于 res 文件夹下是没有层级概念，通过前缀的命名可以帮助我们更好定位到同一模块下的资源<br>例如分享对话框中，有对话框 Root 布局和 Item 布局</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">share_dialog.xml（Root 布局）</span><br><span class="line">share_item.xml（Item 布局）</span><br></pre></td></tr></table></figure>
-
-<h4 id="资源文件命名规范"><a href="#资源文件命名规范" class="headerlink" title="资源文件命名规范"></a>资源文件命名规范</h4><p>如果是业务模块下的资源，以 模块 + 类型 来命名</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">share_link_ic.png（复制链接）</span><br><span class="line">share_moment_ic.png（分享到朋友圈）</span><br><span class="line">share_qq_ic.png（分享到 QQ 好友）</span><br><span class="line">share_qzone_ic.png（分享到 QQ 空间）</span><br><span class="line">share_wechat_ic.png（分享到微信好友）</span><br></pre></td></tr></table></figure>
-
-<p>如果和业务模块不相干的资源，以 作用 + 类型 来命名，例如通用的控件样式资源</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">button_rect_selector.xml（通用直角按钮样式）</span><br><span class="line">button_round_selector.xml（通用圆角按钮样式）</span><br></pre></td></tr></table></figure>
-
-<p>这种资源有一个共同特点，它不属于哪个模块，但是在不同模块都有用到，所以不能用业务的模块名作为文件名前缀。</p>
-<h4 id="接口实现规范"><a href="#接口实现规范" class="headerlink" title="接口实现规范"></a>接口实现规范</h4><p>一般情况下，我们会在类中这样实现接口，这样写的好处是，可以减少对象的创建，并且代码也比较美观。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">PasswordEditText</span> <span class="keyword">extends</span> <span class="title class_">EditText</span></span><br><span class="line">        <span class="keyword">implements</span> <span class="title class_">View</span>.OnTouchListener,</span><br><span class="line">        View.OnFocusChangeListener, TextWatcher &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">PasswordEditText</span><span class="params">(Context context, AttributeSet attrs, <span class="type">int</span> defStyleAttr)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">        setOnTouchListener(<span class="built_in">this</span>);</span><br><span class="line">        setOnFocusChangeListener(<span class="built_in">this</span>);</span><br><span class="line">        addTextChangedListener(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onFocusChange</span><span class="params">(View view, <span class="type">boolean</span> hasFocus)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onTouch</span><span class="params">(View view, MotionEvent event)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onTextChanged</span><span class="params">(CharSequence s, <span class="type">int</span> start, <span class="type">int</span> before, <span class="type">int</span> count)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">beforeTextChanged</span><span class="params">(CharSequence s, <span class="type">int</span> start, <span class="type">int</span> count, <span class="type">int</span> after)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterTextChanged</span><span class="params">(Editable s)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>但是有一个美中不足的地方，就是在实现的接口过多时，我们很难分辨是哪个方法是哪个接口的，这个时候可以使用注释的方式来解决这个问题，加上 @link 还可以帮助我们快速定位接口类在项目中所在的位置。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">PasswordEditText</span> <span class="keyword">extends</span> <span class="title class_">EditText</span></span><br><span class="line">        <span class="keyword">implements</span> <span class="title class_">View</span>.OnTouchListener,</span><br><span class="line">        View.OnFocusChangeListener, TextWatcher &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">PasswordEditText</span><span class="params">(Context context, AttributeSet attrs, <span class="type">int</span> defStyleAttr)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">        setOnTouchListener(<span class="built_in">this</span>);</span><br><span class="line">        setOnFocusChangeListener(<span class="built_in">this</span>);</span><br><span class="line">        addTextChangedListener(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * &#123;<span class="doctag">@link</span> OnFocusChangeListener&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onFocusChange</span><span class="params">(View view, <span class="type">boolean</span> hasFocus)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * &#123;<span class="doctag">@link</span> OnTouchListener&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onTouch</span><span class="params">(View view, MotionEvent event)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * &#123;<span class="doctag">@link</span> TextWatcher&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onTextChanged</span><span class="params">(CharSequence s, <span class="type">int</span> start, <span class="type">int</span> before, <span class="type">int</span> count)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">beforeTextChanged</span><span class="params">(CharSequence s, <span class="type">int</span> start, <span class="type">int</span> count, <span class="type">int</span> after)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterTextChanged</span><span class="params">(Editable s)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="异常捕获规范"><a href="#异常捕获规范" class="headerlink" title="异常捕获规范"></a>异常捕获规范</h4><p>请不要使用此方式捕获异常，因为这种方式会把问题给隐藏掉，从而会加大后续排查问题的难度。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">	Xxx.xxx();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span>(Exception e) &#123;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如需捕获异常，请用以下方式进行捕获，列出具体的异常类型，并在代码中输出对应的日志。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 捕获这个异常，避免程序崩溃</span></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 目前发现在 Android 7.1 主线程被阻塞之后弹吐司会导致崩溃，可使用 Thread.sleep(5000) 进行复现</span></span><br><span class="line">    <span class="comment">// 查看源码得知 Google 已经在 Android 8.0 已经修复了此问题</span></span><br><span class="line">    <span class="comment">// 主线程阻塞之后 Toast 也会被阻塞，Toast 因为显示超时导致 Window Token 失效</span></span><br><span class="line">    mHandler.handleMessage(msg);</span><br><span class="line">&#125; <span class="keyword">catch</span> (WindowManager.BadTokenException | IllegalStateException e) &#123;</span><br><span class="line">    <span class="comment">// android.view.WindowManager$BadTokenException：Unable to add window -- token android.os.BinderProxy is not valid; is your activity running?</span></span><br><span class="line">    <span class="comment">// java.lang.IllegalStateException：View android.widget.TextView has already been added to the window manager.</span></span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果这个异常不是通过方法 throws 关键字抛出，则需要在 try 块中说明崩溃的缘由，并注明抛出的异常信息。<br>有异常就一定要 try catch ？，这种想法其实是错的，例如我们项目用 Glide 加载图片会抛出以下异常：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Caused by: java.lang.IllegalArgumentException: You cannot start a load <span class="keyword">for</span> a destroyed activity</span><br><span class="line">   at com.bumptech.glide.manager.RequestManagerRetriever.assertNotDestroyed(RequestManagerRetriever.java:<span class="number">348</span>)</span><br><span class="line">   at com.bumptech.glide.manager.RequestManagerRetriever.get(RequestManagerRetriever.java:<span class="number">148</span>)</span><br><span class="line">   at com.bumptech.glide.Glide.with(Glide.java:<span class="number">826</span>)</span><br></pre></td></tr></table></figure>
-
-<p>这是因为 Activity 的销毁了而去加载图片导致的（场景：异步执行图片加载），大多人的解决方式可能是：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// Activity 销毁后执行加载图片会触发 crash</span></span><br><span class="line">    Glide.with(<span class="built_in">this</span>)</span><br><span class="line">            .load(url)</span><br><span class="line">            .into(mImageView);</span><br><span class="line">&#125; <span class="keyword">catch</span> (IllegalArgumentException e) &#123;</span><br><span class="line">    <span class="comment">// java.lang.IllegalArgumentException: You cannot start a load for a destroyed activity</span></span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>虽然这种方式可以解决 crash 的问题，但是显得不够严谨，Glide 抛异常给外层，其实无非就想告诉调用者，调用的时机错了，正确的处理方式不是直接捕获这个异常，而是应该在外层做好逻辑判断，避免会进入出现 crash的代码，正确的处理示例如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (isFinishing() || isDestroyed()) &#123;</span><br><span class="line">   <span class="comment">// Glide：You cannot start a load for a destroyed activity</span></span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line">Glide.with(<span class="built_in">this</span>)</span><br><span class="line">        .load(url)</span><br><span class="line">        .into(mImageView);</span><br></pre></td></tr></table></figure>
-
-<p>所以尽量不要通过 try catch 的方式来处理异常，除非外层真的判断不了，否则应该通过一些逻辑判断来避免进入一些会 crash 的代码。</p>
-<h4 id="Activity跳转约定"><a href="#Activity跳转约定" class="headerlink" title="Activity跳转约定"></a>Activity跳转约定</h4><p>应当将 Intent 中的 key 常量保存到一个管理类中，又或者定义在目标的 Activity 中</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IntentKey</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** id */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ID</span> <span class="operator">=</span> <span class="string">&quot;id&quot;</span>;</span><br><span class="line">    <span class="comment">/** token */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">TOKEN</span> <span class="operator">=</span> <span class="string">&quot;token&quot;</span>;</span><br><span class="line">    <span class="comment">/** 订单 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ORDER</span> <span class="operator">=</span> <span class="string">&quot;order&quot;</span>;</span><br><span class="line">    <span class="comment">/** 余额 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">BALANCE</span> <span class="operator">=</span> <span class="string">&quot;balance&quot;</span>;</span><br><span class="line">    <span class="comment">/** 时间 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">TIME</span> <span class="operator">=</span> <span class="string">&quot;time&quot;</span>;</span><br><span class="line">    <span class="comment">/** URL */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">URL</span> <span class="operator">=</span> <span class="string">&quot;url&quot;</span>;</span><br><span class="line">    <span class="comment">/** 路径 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PATH</span> <span class="operator">=</span> <span class="string">&quot;path&quot;</span>;</span><br><span class="line">    <span class="comment">/** 其他 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">OTHER</span> <span class="operator">=</span> <span class="string">&quot;other&quot;</span>;</span><br><span class="line"></span><br><span class="line">    .....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果跳转的 Activity 需要传递参数，应该在目标的 Activity 中定义静态的 start 又或者 newIntent 方法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">WebActivity</span> <span class="keyword">extends</span> <span class="title class_">Activity</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">start</span><span class="params">(Context context, String url)</span> &#123;</span><br><span class="line">        <span class="type">Intent</span> <span class="variable">intent</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Intent</span>(context, WebActivity.class);</span><br><span class="line">        intent.putExtra(IntentKey.URL, url);</span><br><span class="line">        context.startActivity(intent);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">WebActivity</span> <span class="keyword">extends</span> <span class="title class_">Activity</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Intent <span class="title function_">newIntent</span><span class="params">(Context context, String url)</span> &#123;</span><br><span class="line">        <span class="type">Intent</span> <span class="variable">intent</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Intent</span>(context, WebActivity.class);</span><br><span class="line">        intent.putExtra(IntentKey.URL, url);</span><br><span class="line">        <span class="keyword">return</span> intent;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>如果创建的 Fragment 需要传递参数，应该在目标的 Fragment 中定义静态的 newInstance 方法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">WebFragment</span> <span class="keyword">extends</span> <span class="title class_">Fragment</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> WebFragment <span class="title function_">newInstance</span><span class="params">(String url)</span> &#123;</span><br><span class="line">        <span class="type">WebFragment</span> <span class="variable">fragment</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">WebFragment</span>();</span><br><span class="line">        <span class="type">Bundle</span> <span class="variable">bundle</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Bundle</span>();</span><br><span class="line">        bundle.putString(IntentKey.URL, url);</span><br><span class="line">        fragment.setArguments(bundle);</span><br><span class="line">        <span class="keyword">return</span> fragment;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果跳转的 Activity 或者创建的 Fragment 不需要传任何参数，可以不需要定义这些静态方法</p>
-<h4 id="第三方框架使用规范"><a href="#第三方框架使用规范" class="headerlink" title="第三方框架使用规范"></a>第三方框架使用规范</h4><p>集成一些第三方框架或者 SDK，必须注明作用和出处，以便出现问题时能够快速核查和反馈</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 权限请求框架：https://github.com/getActivity/XXPermissions</span></span><br><span class="line">implementation <span class="string">&#x27;com.hjq:xxpermissions:9.8&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>尽量不要选择功能相同的两套框架，应当引用最合适的一套框架进行开发。<br>使用第三方库必须要依赖指定的版本号，而不能使用 + 号来指定依赖库最新的版本号。<br>使用第三方开源库出现问题或者 Bug 时应及时通知到开源库的作者，如果没有及时回复就根据实际情况对问题进行修复。<br>尽量避免 Copy 第三方库的技术代码到项目中，特别是在放置到项目业务模块中，因为这样会增加项目的复杂度，从而降低可维护性。<br>如果出现问题不能找到开源库的作者，如果需要修改，应当将这些代码抽取到单独的 Module 中。<br>能用框架就用成熟框架，尽量不要自己编写或者修改框架，如果有需要，要对这块进行严格测试。</p>
-<h4 id="代码注释规范"><a href="#代码注释规范" class="headerlink" title="代码注释规范"></a>代码注释规范</h4><p>类注释规范：author 是创建者（必填项）、time 是创建时间（必填项）、desc 是类的描述（必填项），doc是文档地址（非必填），github 是开源地址（如果项目是开源的则必填，否则不填）</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> *    author : xxx</span><br><span class="line"> *    time   : xxxx/xx/xx</span><br><span class="line"> *    desc   : xxx</span><br><span class="line"> *    doc    : xxx</span><br><span class="line"> */</span><br><span class="line">public final class Permission &#123;</span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>方法注释规范：方法注释可根据实际情况而定。</p>
-<p>字段注释规范：根据字段的作用而定</p>
-<h4 id="String-ID命名规范"><a href="#String-ID命名规范" class="headerlink" title="String ID命名规范"></a>String ID命名规范</h4><p>以 模块 + 功能 来命名</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 主界面 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;home_nav_index&quot;</span>&gt;</span>首页<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;home_nav_found&quot;</span>&gt;</span>发现<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;home_nav_message&quot;</span>&gt;</span>消息<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;home_nav_me&quot;</span>&gt;</span>我的<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;home_exit_hint&quot;</span>&gt;</span>再按一次退出<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 登录界面 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;login_register&quot;</span>&gt;</span>注册<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;login_phone_hint&quot;</span>&gt;</span>请输入手机号<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;login_password_hint&quot;</span>&gt;</span>请输入密码<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;login_forget&quot;</span>&gt;</span>忘记密码？<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;login_text&quot;</span>&gt;</span>登录<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;login_other&quot;</span>&gt;</span>其他登录方式<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 注册界面 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;register_title&quot;</span>&gt;</span>注册<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;register_hint&quot;</span>&gt;</span>手机号仅用于登录和保护账号安全<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;register_login&quot;</span>&gt;</span>登录<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;register_password_hint1&quot;</span>&gt;</span>设置密码<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;register_password_hint2&quot;</span>&gt;</span>再次输入密码<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;register_password_input_error&quot;</span>&gt;</span>两次密码输入不一致，请重新输入<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 设置界面 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;setting_title&quot;</span>&gt;</span>设置<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;setting_language_switchover&quot;</span>&gt;</span>语言切换<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;setting_language_simple&quot;</span>&gt;</span>简体中文<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;setting_language_complex&quot;</span>&gt;</span>繁体中文<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="Anim-ID命名规范"><a href="#Anim-ID命名规范" class="headerlink" title="Anim ID命名规范"></a>Anim ID命名规范</h4><p>应用到某个模块 View</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">login_left_balloon_view.xml</span><br><span class="line">login_right_balloon_view.xml</span><br></pre></td></tr></table></figure>
-
-<p>应用到全局 Activity</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">left_in_activity.xml</span><br><span class="line">left_out_activity.xml</span><br></pre></td></tr></table></figure>
-
-<p>应用到全局 Dialog</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bottom_in_dialog.xml</span><br><span class="line">bottom_out_dialog.xml</span><br></pre></td></tr></table></figure>
-
-<h4 id="View-ID命名规范"><a href="#View-ID命名规范" class="headerlink" title="View ID命名规范"></a>View ID命名规范</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@+id/R.id.rg_login_type</span><br><span class="line">@+id/R.id.et_login_phone</span><br><span class="line">@+id/R.id.et_login_sms</span><br><span class="line">@+id/R.id.et_login_password</span><br><span class="line">@+id/R.id.btn_login_commit</span><br></pre></td></tr></table></figure>
-
-<p>View 和 Layout 控件缩写表，这里列举最常见的几个</p>
-<table>
-<thead>
-<tr>
-<th>TextView</th>
-<th>tv</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>EditText</td>
-<td>et</td>
-</tr>
-<tr>
-<td>Button</td>
-<td>btn</td>
-</tr>
-<tr>
-<td>ImageView</td>
-<td>iv</td>
-</tr>
-<tr>
-<td>ImageButton</td>
-<td>ib</td>
-</tr>
-<tr>
-<td>ListView</td>
-<td>lv</td>
-</tr>
-<tr>
-<td>RecyclerView</td>
-<td>rv</td>
-</tr>
-<tr>
-<td>RadioButton</td>
-<td>rb</td>
-</tr>
-<tr>
-<td>RadioGroup</td>
-<td>rg</td>
-</tr>
-<tr>
-<td>ProgressBar</td>
-<td>pb</td>
-</tr>
-<tr>
-<td>CheckBox</td>
-<td>cb</td>
-</tr>
-<tr>
-<td>TableLayout</td>
-<td>tl</td>
-</tr>
-<tr>
-<td>ScrollView</td>
-<td>sv</td>
-</tr>
-<tr>
-<td>LinearLayout</td>
-<td>ll</td>
-</tr>
-<tr>
-<td>RelativeLayout</td>
-<td>rl</td>
-</tr>
-<tr>
-<td>FrameLayout</td>
-<td>fl</td>
-</tr>
-</tbody></table>
-<h4 id="Style样式命名规范"><a href="#Style样式命名规范" class="headerlink" title="Style样式命名规范"></a>Style样式命名规范</h4><p>如果只是主题相关的样式，以 Theme 命名结尾，控件样式则以 Style 命名结尾，命名要求尽量简洁，并且需要有代码注释</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 应用主题样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;AppTheme&quot;</span> <span class="attr">parent</span>=<span class="string">&quot;Theme.AppCompat.DayNight.NoActionBar&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 全屏主题样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;FullScreenTheme&quot;</span> <span class="attr">parent</span>=<span class="string">&quot;AppTheme&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 闪屏页主题样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;SplashTheme&quot;</span> <span class="attr">parent</span>=<span class="string">&quot;FullScreenTheme&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 默认圆角按钮样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;ButtonStyle&quot;</span> <span class="attr">parent</span>=<span class="string">&quot;Widget.AppCompat.Button.Borderless&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 不带圆角按钮样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;RectButtonStyle&quot;</span> <span class="attr">parent</span>=<span class="string">&quot;ButtonStyle&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 默认文本框样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;EditTextStyle&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 验证码按钮样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;CountdownViewStyle&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="预览属性约定"><a href="#预览属性约定" class="headerlink" title="预览属性约定"></a>预览属性约定</h4><p>应该在布局文件根布局中定义 tools:context 属性，以便在布局文件中快速定位到对应的类</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">FrameLayout</span> <span class="attr">xmlns:android</span>=<span class="string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:app</span>=<span class="string">&quot;http://schemas.android.com/apk/res-auto&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tools</span>=<span class="string">&quot;http://schemas.android.com/tools&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:context</span>=<span class="string">&quot;.ui.activity.HomeActivity&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">FrameLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tools:context=&quot;.ui.activity.HomeActivity&quot;</span><br><span class="line"></span><br><span class="line">tools:context=&quot;.ui.fragment.SettingFragment&quot;</span><br><span class="line"></span><br><span class="line">tools:context=&quot;.ui.adapter.HomeAdapter&quot;</span><br><span class="line"></span><br><span class="line">tools:context=&quot;.ui.dialog.PersonDataDialog&quot;</span><br></pre></td></tr></table></figure>
-
-<p>此外，tools 属性还有各种各样的用途，例如 RecyclerView 的 tools 属性</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">androidx.recyclerview.widget.RecyclerView</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">&quot;@+id/rv_pay_list&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:overScrollMode</span>=<span class="string">&quot;never&quot;</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:listitem</span>=<span class="string">&quot;@layout/item_dialog_pay_password&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:itemCount</span>=<span class="string">&quot;9&quot;</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:layoutManager</span>=<span class="string">&quot;androidx.recyclerview.widget.GridLayoutManager&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:spanCount</span>=<span class="string">&quot;3&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>tools 这种命名不止可以应用于 RecyclerView，还可以应用于其他 View 的属性，比如常用的 TextView 和 ImageView</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:text</span>=<span class="string">&quot;学生姓名&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">ImageView</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">&quot;@+id/iv_home_course_image&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:src</span>=<span class="string">&quot;@drawable/bg_home_placeholder&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>如果某个 TextView 显示的字符串是一成不变的，那么可以直接定义在布局文件中，如果是动态变化的，那么应该使用 tools:text 预览属性，而不应该使用 android:text，其他布局属性也同理。</p>
-<h4 id="资源使用约定"><a href="#资源使用约定" class="headerlink" title="资源使用约定"></a>资源使用约定</h4><p><strong>String 硬编码规范</strong>：如果项目已经适配了多语种，则严禁写死在 Java 代码或者布局文件中，如果没有这块需求的话，也建议将 String 资源定义在 string.xml 文件，此项不强制要求，大家根据实际情况而定。<br><strong>Color 硬编码规范</strong>：在没有使用夜间模式的情况下，允许大部分 Color 值直接定义在布局文件中，但是如果某个色值引用得比较多（例如主题强调色、默认背景色等），需要抽取到 color.xml 文件中。<br><strong>Dimens 硬编码规范</strong>：允许写死在 Java 代码或者布局文件中，但是如果使用了通配符方案对屏幕进行适配，那么则不能直接写死。<br><strong>Style 样式规范</strong>：对于一些常用并且样式比较统一的控件，例如 Button、EditText 等，我们对这些控件的样式进行抽取到 style.xml 文件中来，避免属性重复定义。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2018/05/25/read-fupan1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/05/25/read-fupan1/" class="post-title-link" itemprop="url">读《复盘+把经验转化为能力》</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-05-25 20:32:54" itemprop="dateCreated datePublished" datetime="2018-05-25T20:32:54+08:00">2018-05-25</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;前几天把《复盘+把经验转化为能力》读了一遍。书中详细的介绍了复盘的概念，为什么要用复盘，复盘的实施步骤，及详细描述美军AAR和联想的复盘过程等。通篇本书，略觉书中内容略有繁琐，并且略有夸大复盘在企业发展和企业管理中的作用，每个公司和每个个人均有其特性，不能都按照书中详尽的复盘流程来复盘，达到自己对失败项目的深入总结和学习过程。<br>&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;柳传志首创复盘理论，并将其运用于联想内部管理中，取得不错的效果。美军也将AAR永远美军军事训练中，并对大量训练进行AAR，从而达到教学目标。等等实例，说明复盘是一种有效的学习方法。<br>&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;在复盘过程中，应该以严肃、认真的态度还原这个事件或项目的发展过程，应该尽量摒弃个人情感，其中包括想妥协责任、贬低他人、抬高自己、随意等情感，尽量客观的还原整个事件过程，找出其中引发问题的节点，进行反思总结，避免再次因同样的问题而造成项目或事情的失败，从而达到学习的目的。<br>&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;个人将复盘理念运用到个人的成长学习过程中，可以养成一种严禁的做事风格，并一种比较好的学习方法，从以往经历中、其他人的经历或其他事件的失败过程，汲取经验，从而到达自我的提高，避免自己犯同样的错误而导致事情的失败，避免掉入相同的坑中。<br>&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;团队和部门将复盘理念运用到项目管理中，可以避免项目因相同的原因出现相同的问题，浪费时间或者造成项目的失败。通过对复盘的实施，提升团队成员做事的严禁性，并从过去失败的实例中汲取经验教训，从而提升团队质量，提高团队做事的效率，项目的执行过程中的效率和质量有所提升。<br>&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;复盘是一个从过去经历中总结经验，学习提高的过程。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2018/03/25/read-xtjgsjsjc/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/03/25/read-xtjgsjsjc/" class="post-title-link" itemprop="url">读《系统架构设计师教程》</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-03-25 13:49:05" itemprop="dateCreated datePublished" datetime="2018-03-25T13:49:05+08:00">2018-03-25</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="计算机组成与体系结构"><a href="#计算机组成与体系结构" class="headerlink" title="计算机组成与体系结构"></a>计算机组成与体系结构</h2><h3 id="计算机系统组成"><a href="#计算机系统组成" class="headerlink" title="计算机系统组成"></a>计算机系统组成</h3><h4 id="计算机硬件的组成"><a href="#计算机硬件的组成" class="headerlink" title="计算机硬件的组成"></a>计算机硬件的组成</h4><p><img src="/2018/03/25/read-xtjgsjsjc/computerStruct.png"></p>
-<ul>
-<li>控制器是分析和执行指令的部件，也是统一指挥并控制计算机各部件协 调工作的中心部件，所依据的是机器指令。</li>
-<li>运算器也称为算术逻辑单元(ArithmeticandLogicUnit，ALU)，其主要功能是在控制器的控制下完成各种算术运算和逻辑运算。</li>
-<li>主存储器也称为内存储器(通常简称为“内存”或“主存”)。存储现场操作的信息与中间结果，包括机器指令和数据。</li>
-<li>辅助存储器也称为外存储器，通常简称为外存或辅存。存储需要长 期保存的各种信息。</li>
-<li>输入设备的任务是把人们编好的程序和原始数据送到计算机中去，并且 将它们转换成计算机内部所能识别和接受的信息方式。按输入信息的形态可分为字符 (包括汉字)输入、图形输入、图像输入及语音输入等。目前，常见的输入设备有键盘、 鼠 标、扫描仪等。</li>
-<li>输出设备的任务是将计算机的处理结果以人或其他设备所能接受的 形 式送出计算机。目前，最常用的输出设备是打印机和显示器。</li>
-</ul>
-<h4 id="计算机系统结构的分类"><a href="#计算机系统结构的分类" class="headerlink" title="计算机系统结构的分类"></a>计算机系统结构的分类</h4><h4 id="复杂指令集系统与精简指令集系统"><a href="#复杂指令集系统与精简指令集系统" class="headerlink" title="复杂指令集系统与精简指令集系统"></a>复杂指令集系统与精简指令集系统</h4><h4 id="总线"><a href="#总线" class="headerlink" title="总线"></a>总线</h4><p>总线是一组能为多个部件分时共享的公共信息传送线路。共享是指总线上可以挂接多个 部件，各个部件之间相互交换的信息都可以通过这组公共线路传送;分时是指同一时刻只允 许有一个部件向总线发送信息，如果出现两个或两个以上部件同时向总线发送信息，势必导 致信号冲突。当然，在同一时刻，允许多个部件同时从总线上接收相同的信息。<br>按总线相对于 CPU 或其他芯片的位置可分为内部总线和外部总线两种。<br>按总线功能来划分，又可分为地址总线、数据总线、控制总线三类。</p>
-<h3 id="存储器系统"><a href="#存储器系统" class="headerlink" title="存储器系统"></a>存储器系统</h3><p>传统的存储器系统一般分为高速缓冲存储器(Cache)、主存、辅存三级。<br>存储器中数据常用的存取方式有顺序存取、直接存取、随机存取和相联存取四种。</p>
-<h4 id="主存储器系统"><a href="#主存储器系统" class="headerlink" title="主存储器系统"></a>主存储器系统</h4><p>主存用来存放计算机运行期间所需要的程序和数据，CPU 可直接随机地进行读&#x2F;写。<br>根据工艺和技术不同，主存可分为随机存取存储器和只 读存储器。</p>
-<h4 id="辅助存储器"><a href="#辅助存储器" class="headerlink" title="辅助存储器"></a>辅助存储器</h4><ol>
-<li>磁带存储器磁带存储器是一种顺序存取的设备，其特点包括:存取时间较长，但存储 容量大，便于携带，价格便宜。磁带应用的场景越来越少，目前主要用于资料的归档保存。</li>
-<li>硬盘存储器在硬盘中，信息分布呈以下层次:记录面、圆柱面、磁道和扇区.</li>
-</ol>
-<h4 id="Cache存储器"><a href="#Cache存储器" class="headerlink" title="Cache存储器"></a>Cache存储器</h4><p>通常在 CPU 和内存之间设置小容量的 Cache。Cache 容量小但速度快，内存速度较低但容量大， 通过优化调度算法，系统的性能会大大改善，仿佛其存储系统容量与内存相当而访问速度近 似 Cache。    </p>
-<h3 id="流水线"><a href="#流水线" class="headerlink" title="流水线"></a>流水线</h3><p>流水线技术把一个任务分解为若干顺序执行的子任务，不同的子任务由不同的执行机构 负责执行，而这些机构可以同时并行工作。在任一时刻，任一任务只占用其中一个执行机构， 这样就可以实现多个任务的重叠执行，以提高工作效率。</p>
-<h4 id="流水线周期"><a href="#流水线周期" class="headerlink" title="流水线周期"></a>流水线周期</h4><p>流水线应用过程中，会将需要处理的工作分为 N 个阶段，最耗时的那一段所消耗的时 间为流水线周期。</p>
-<h4 id="计算流水线执行时间"><a href="#计算流水线执行时间" class="headerlink" title="计算流水线执行时间"></a>计算流水线执行时间</h4><p>流水线执行时间&#x3D;第 1 条指令的执行时间+(n-1)*流水线周期.<br>注:n 代表需要处理的任务数量。  </p>
-<h4 id="流水线的吞吐率"><a href="#流水线的吞吐率" class="headerlink" title="流水线的吞吐率"></a>流水线的吞吐率</h4><p>流水线的吞吐率(Though Put rate，TP)是指在单位时间内流水线所完成的任务数量或输出的结果数量。有些文献也称为平均吞吐率、实际吞率。计算流水线吞吐率的最基本的公式如下:<br><img src="/2018/03/25/read-xtjgsjsjc/thoughPutRate.png"></p>
-<h4 id="流水线的加速比"><a href="#流水线的加速比" class="headerlink" title="流水线的加速比"></a>流水线的加速比</h4><p>完成同样一批任务，不使用流水线所用的时间与使用流水线所用的时间之比称为流水线 的加速比(speedup ratio)。     </p>
-<h2 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h2><p>操作系统的基本类型有:批处理操作系统、分时操作系 统和实时操作系统。从资源管理的角度看，操作系统主要是对处理器、存储器、文件、设备 和作业进行管理。</p>
-<h3 id="操作系统的类型与结构"><a href="#操作系统的类型与结构" class="headerlink" title="操作系统的类型与结构"></a>操作系统的类型与结构</h3><h4 id="操作系统的分类"><a href="#操作系统的分类" class="headerlink" title="操作系统的分类"></a>操作系统的分类</h4><p>按照操作系统的功能划分，操作系统的基本类型有批处理操作系统、分时操作系统、实时操作系统、网络操作系统、分布式操作系统、嵌入式操作统、微内核操作系统等。</p>
-<h3 id="操作系统的基本原理"><a href="#操作系统的基本原理" class="headerlink" title="操作系统的基本原理"></a>操作系统的基本原理</h3><p>操作系统的主要功能是进行处理机与进程管理、存储管理、设备管理、文件管理和作业管理的工作</p>
-<h4 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h4><p><img src="/2018/03/25/read-xtjgsjsjc/progressStates.png"></p>
-<h4 id="存储管理"><a href="#存储管理" class="headerlink" title="存储管理"></a>存储管理</h4><h4 id="设备管理"><a href="#设备管理" class="headerlink" title="设备管理"></a>设备管理</h4><h4 id="文件管理"><a href="#文件管理" class="headerlink" title="文件管理"></a>文件管理</h4><h4 id="作业管理"><a href="#作业管理" class="headerlink" title="作业管理"></a>作业管理</h4><h2 id="数据库系统"><a href="#数据库系统" class="headerlink" title="数据库系统"></a>数据库系统</h2><h3 id="数据库管理系统的类型"><a href="#数据库管理系统的类型" class="headerlink" title="数据库管理系统的类型"></a>数据库管理系统的类型</h3><h3 id="书籍模式与范式"><a href="#书籍模式与范式" class="headerlink" title="书籍模式与范式"></a>书籍模式与范式</h3><h4 id="数据库的结构与模式"><a href="#数据库的结构与模式" class="headerlink" title="数据库的结构与模式"></a>数据库的结构与模式</h4><h4 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h4><h4 id="关系代数"><a href="#关系代数" class="headerlink" title="关系代数"></a>关系代数</h4><h4 id="数据的规范化"><a href="#数据的规范化" class="headerlink" title="数据的规范化"></a>数据的规范化</h4><h4 id="反规范化"><a href="#反规范化" class="headerlink" title="反规范化"></a>反规范化</h4><h3 id="数据库设计"><a href="#数据库设计" class="headerlink" title="数据库设计"></a>数据库设计</h3><h4 id="数据库设计的方法"><a href="#数据库设计的方法" class="headerlink" title="数据库设计的方法"></a>数据库设计的方法</h4><h4 id="数据库设计的基础步骤"><a href="#数据库设计的基础步骤" class="headerlink" title="数据库设计的基础步骤"></a>数据库设计的基础步骤</h4><h4 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h4><h4 id="概念结构设计"><a href="#概念结构设计" class="headerlink" title="概念结构设计"></a>概念结构设计</h4><h4 id="逻辑结构设计"><a href="#逻辑结构设计" class="headerlink" title="逻辑结构设计"></a>逻辑结构设计</h4><h4 id="物理结构设计"><a href="#物理结构设计" class="headerlink" title="物理结构设计"></a>物理结构设计</h4><h3 id="事务管理"><a href="#事务管理" class="headerlink" title="事务管理"></a>事务管理</h3><h4 id="并发控制"><a href="#并发控制" class="headerlink" title="并发控制"></a>并发控制</h4><h4 id="故障与恢复"><a href="#故障与恢复" class="headerlink" title="故障与恢复"></a>故障与恢复</h4><h3 id="备份与恢复"><a href="#备份与恢复" class="headerlink" title="备份与恢复"></a>备份与恢复</h3><h3 id="分布式数据库系统"><a href="#分布式数据库系统" class="headerlink" title="分布式数据库系统"></a>分布式数据库系统</h3><h4 id="分布式数据库的概念"><a href="#分布式数据库的概念" class="headerlink" title="分布式数据库的概念"></a>分布式数据库的概念</h4><h4 id="分布式数据库的架构"><a href="#分布式数据库的架构" class="headerlink" title="分布式数据库的架构"></a>分布式数据库的架构</h4><h3 id="数据仓库"><a href="#数据仓库" class="headerlink" title="数据仓库"></a>数据仓库</h3><h4 id="数据仓库的概念"><a href="#数据仓库的概念" class="headerlink" title="数据仓库的概念"></a>数据仓库的概念</h4><h4 id="数据挖掘的功能"><a href="#数据挖掘的功能" class="headerlink" title="数据挖掘的功能"></a>数据挖掘的功能</h4><h4 id="数据挖掘常用技术"><a href="#数据挖掘常用技术" class="headerlink" title="数据挖掘常用技术"></a>数据挖掘常用技术</h4><h4 id="数据挖掘的流程"><a href="#数据挖掘的流程" class="headerlink" title="数据挖掘的流程"></a>数据挖掘的流程</h4><h3 id="NoSQL"><a href="#NoSQL" class="headerlink" title="NoSQL"></a>NoSQL</h3><h3 id="大数据"><a href="#大数据" class="headerlink" title="大数据"></a>大数据</h3><h2 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h2><h3 id="网络架构与协议"><a href="#网络架构与协议" class="headerlink" title="网络架构与协议"></a>网络架构与协议</h3><h4 id="网络互连模型"><a href="#网络互连模型" class="headerlink" title="网络互连模型"></a>网络互连模型</h4><h4 id="常见的网络协议"><a href="#常见的网络协议" class="headerlink" title="常见的网络协议"></a>常见的网络协议</h4><h4 id="IPv6"><a href="#IPv6" class="headerlink" title="IPv6"></a>IPv6</h4><h3 id="局域网与广域网"><a href="#局域网与广域网" class="headerlink" title="局域网与广域网"></a>局域网与广域网</h3><h4 id="局域网基础知识"><a href="#局域网基础知识" class="headerlink" title="局域网基础知识"></a>局域网基础知识</h4><h4 id="无线局域网"><a href="#无线局域网" class="headerlink" title="无线局域网"></a>无线局域网</h4><h4 id="广域网技术"><a href="#广域网技术" class="headerlink" title="广域网技术"></a>广域网技术</h4><h4 id="网络接入技术"><a href="#网络接入技术" class="headerlink" title="网络接入技术"></a>网络接入技术</h4><h3 id="网络互连与常用设备"><a href="#网络互连与常用设备" class="headerlink" title="网络互连与常用设备"></a>网络互连与常用设备</h3><h3 id="网络工程"><a href="#网络工程" class="headerlink" title="网络工程"></a>网络工程</h3><h4 id="网络规划"><a href="#网络规划" class="headerlink" title="网络规划"></a>网络规划</h4><h4 id="网络设计"><a href="#网络设计" class="headerlink" title="网络设计"></a>网络设计</h4><h4 id="网络实施"><a href="#网络实施" class="headerlink" title="网络实施"></a>网络实施</h4><h3 id="网络存储技术"><a href="#网络存储技术" class="headerlink" title="网络存储技术"></a>网络存储技术</h3><h3 id="综合布线"><a href="#综合布线" class="headerlink" title="综合布线"></a>综合布线</h3><h2 id="系统性能评价"><a href="#系统性能评价" class="headerlink" title="系统性能评价"></a>系统性能评价</h2><h3 id="性能指标"><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h3><h4 id="计算机"><a href="#计算机" class="headerlink" title="计算机"></a>计算机</h4><h4 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h4><h4 id="操作系统-1"><a href="#操作系统-1" class="headerlink" title="操作系统"></a>操作系统</h4><h4 id="数据库管理系统"><a href="#数据库管理系统" class="headerlink" title="数据库管理系统"></a>数据库管理系统</h4><h4 id="Web服务器"><a href="#Web服务器" class="headerlink" title="Web服务器"></a>Web服务器</h4><h3 id="性能计算"><a href="#性能计算" class="headerlink" title="性能计算"></a>性能计算</h3><h3 id="性能设计"><a href="#性能设计" class="headerlink" title="性能设计"></a>性能设计</h3><h4 id="阿姆达尔解决方案"><a href="#阿姆达尔解决方案" class="headerlink" title="阿姆达尔解决方案"></a>阿姆达尔解决方案</h4><h4 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h4><h3 id="性能评估"><a href="#性能评估" class="headerlink" title="性能评估"></a>性能评估</h3><h4 id="基准测试程序"><a href="#基准测试程序" class="headerlink" title="基准测试程序"></a>基准测试程序</h4><h4 id="Web服务器的性能评估"><a href="#Web服务器的性能评估" class="headerlink" title="Web服务器的性能评估"></a>Web服务器的性能评估</h4><h4 id="系统监视"><a href="#系统监视" class="headerlink" title="系统监视"></a>系统监视</h4><h2 id="开发方法"><a href="#开发方法" class="headerlink" title="开发方法"></a>开发方法</h2><h3 id="软件生命周期"><a href="#软件生命周期" class="headerlink" title="软件生命周期"></a>软件生命周期</h3><h3 id="软件开发模型"><a href="#软件开发模型" class="headerlink" title="软件开发模型"></a>软件开发模型</h3><h4 id="瀑布模型"><a href="#瀑布模型" class="headerlink" title="瀑布模型"></a>瀑布模型</h4><h4 id="演化模型"><a href="#演化模型" class="headerlink" title="演化模型"></a>演化模型</h4><h4 id="螺旋模型"><a href="#螺旋模型" class="headerlink" title="螺旋模型"></a>螺旋模型</h4><h4 id="增量模型"><a href="#增量模型" class="headerlink" title="增量模型"></a>增量模型</h4><h4 id="构件组装模型"><a href="#构件组装模型" class="headerlink" title="构件组装模型"></a>构件组装模型</h4><h3 id="统一过程"><a href="#统一过程" class="headerlink" title="统一过程"></a>统一过程</h3><h3 id="敏捷方法"><a href="#敏捷方法" class="headerlink" title="敏捷方法"></a>敏捷方法</h3><h4 id="极限编程"><a href="#极限编程" class="headerlink" title="极限编程"></a>极限编程</h4><h4 id="特征驱动开发"><a href="#特征驱动开发" class="headerlink" title="特征驱动开发"></a>特征驱动开发</h4><h4 id="Scrum"><a href="#Scrum" class="headerlink" title="Scrum"></a>Scrum</h4><h4 id="水晶方法"><a href="#水晶方法" class="headerlink" title="水晶方法"></a>水晶方法</h4><h4 id="其他敏捷方法"><a href="#其他敏捷方法" class="headerlink" title="其他敏捷方法"></a>其他敏捷方法</h4><h3 id="软件重用"><a href="#软件重用" class="headerlink" title="软件重用"></a>软件重用</h3><h4 id="软件重用-1"><a href="#软件重用-1" class="headerlink" title="软件重用"></a>软件重用</h4><h4 id="构件技术"><a href="#构件技术" class="headerlink" title="构件技术"></a>构件技术</h4><h3 id="基于架构的软件设计"><a href="#基于架构的软件设计" class="headerlink" title="基于架构的软件设计"></a>基于架构的软件设计</h3><h4 id="ABSD方法与生命周期"><a href="#ABSD方法与生命周期" class="headerlink" title="ABSD方法与生命周期"></a>ABSD方法与生命周期</h4><h4 id="基于架构的软件开发模型"><a href="#基于架构的软件开发模型" class="headerlink" title="基于架构的软件开发模型"></a>基于架构的软件开发模型</h4><h3 id="形式化方法"><a href="#形式化方法" class="headerlink" title="形式化方法"></a>形式化方法</h3><h2 id="系统规划"><a href="#系统规划" class="headerlink" title="系统规划"></a>系统规划</h2><h3 id="项目的提出与选择"><a href="#项目的提出与选择" class="headerlink" title="项目的提出与选择"></a>项目的提出与选择</h3><h4 id="项目的立项目标和动机"><a href="#项目的立项目标和动机" class="headerlink" title="项目的立项目标和动机"></a>项目的立项目标和动机</h4><h4 id="项目的选择和确定"><a href="#项目的选择和确定" class="headerlink" title="项目的选择和确定"></a>项目的选择和确定</h4><h4 id="项目提出和选择的结果"><a href="#项目提出和选择的结果" class="headerlink" title="项目提出和选择的结果"></a>项目提出和选择的结果</h4><h3 id="可行性研究与效益分析"><a href="#可行性研究与效益分析" class="headerlink" title="可行性研究与效益分析"></a>可行性研究与效益分析</h3><h4 id="可行性研究的内容"><a href="#可行性研究的内容" class="headerlink" title="可行性研究的内容"></a>可行性研究的内容</h4><h4 id="成本效益分析"><a href="#成本效益分析" class="headerlink" title="成本效益分析"></a>成本效益分析</h4><h4 id="可行性分析报告"><a href="#可行性分析报告" class="headerlink" title="可行性分析报告"></a>可行性分析报告</h4><h3 id="方案的制订和改进"><a href="#方案的制订和改进" class="headerlink" title="方案的制订和改进"></a>方案的制订和改进</h3><h3 id="新旧系统的分析和比较"><a href="#新旧系统的分析和比较" class="headerlink" title="新旧系统的分析和比较"></a>新旧系统的分析和比较</h3><h4 id="遗留系统的评估方法"><a href="#遗留系统的评估方法" class="headerlink" title="遗留系统的评估方法"></a>遗留系统的评估方法</h4><h4 id="遗留系统的演化策略"><a href="#遗留系统的演化策略" class="headerlink" title="遗留系统的演化策略"></a>遗留系统的演化策略</h4><h2 id="系统分析与设计方法"><a href="#系统分析与设计方法" class="headerlink" title="系统分析与设计方法"></a>系统分析与设计方法</h2><h3 id="定义问题与归结模型"><a href="#定义问题与归结模型" class="headerlink" title="定义问题与归结模型"></a>定义问题与归结模型</h3><h4 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h4><h4 id="问题定义"><a href="#问题定义" class="headerlink" title="问题定义"></a>问题定义</h4><h3 id="需求分析与软件设计"><a href="#需求分析与软件设计" class="headerlink" title="需求分析与软件设计"></a>需求分析与软件设计</h3><h4 id="需求分析的任务与过程"><a href="#需求分析的任务与过程" class="headerlink" title="需求分析的任务与过程"></a>需求分析的任务与过程</h4><h4 id="如何进行系统设计"><a href="#如何进行系统设计" class="headerlink" title="如何进行系统设计"></a>如何进行系统设计</h4><h4 id="软件设计的任务与活动"><a href="#软件设计的任务与活动" class="headerlink" title="软件设计的任务与活动"></a>软件设计的任务与活动</h4><h3 id="结构化分析与设计"><a href="#结构化分析与设计" class="headerlink" title="结构化分析与设计"></a>结构化分析与设计</h3><h4 id="结构化分析"><a href="#结构化分析" class="headerlink" title="结构化分析"></a>结构化分析</h4><h4 id="结构化设计"><a href="#结构化设计" class="headerlink" title="结构化设计"></a>结构化设计</h4><h4 id="模块设计"><a href="#模块设计" class="headerlink" title="模块设计"></a>模块设计</h4><h3 id="面向对象的分析与设计"><a href="#面向对象的分析与设计" class="headerlink" title="面向对象的分析与设计"></a>面向对象的分析与设计</h3><h4 id="面向对象的概念"><a href="#面向对象的概念" class="headerlink" title="面向对象的概念"></a>面向对象的概念</h4><h4 id="面向对象分析"><a href="#面向对象分析" class="headerlink" title="面向对象分析"></a>面向对象分析</h4><h4 id="统一建模语言"><a href="#统一建模语言" class="headerlink" title="统一建模语言"></a>统一建模语言</h4><h3 id="用户界面设计"><a href="#用户界面设计" class="headerlink" title="用户界面设计"></a>用户界面设计</h3><h4 id="用户界面设计的原则"><a href="#用户界面设计的原则" class="headerlink" title="用户界面设计的原则"></a>用户界面设计的原则</h4><h4 id="用户界面设计过程"><a href="#用户界面设计过程" class="headerlink" title="用户界面设计过程"></a>用户界面设计过程</h4><h3 id="工作流设计"><a href="#工作流设计" class="headerlink" title="工作流设计"></a>工作流设计</h3><h4 id="工作流设计概述"><a href="#工作流设计概述" class="headerlink" title="工作流设计概述"></a>工作流设计概述</h4><h4 id="工作流管理系统"><a href="#工作流管理系统" class="headerlink" title="工作流管理系统"></a>工作流管理系统</h4><h3 id="简单分布式计算机应用系统的设计"><a href="#简单分布式计算机应用系统的设计" class="headerlink" title="简单分布式计算机应用系统的设计"></a>简单分布式计算机应用系统的设计</h3><h3 id="系统运行环境的集成与设计"><a href="#系统运行环境的集成与设计" class="headerlink" title="系统运行环境的集成与设计"></a>系统运行环境的集成与设计</h3><h3 id="系统过渡计划"><a href="#系统过渡计划" class="headerlink" title="系统过渡计划"></a>系统过渡计划</h3><h2 id="软件架构设计"><a href="#软件架构设计" class="headerlink" title="软件架构设计"></a>软件架构设计</h2><h3 id="软件架构概述"><a href="#软件架构概述" class="headerlink" title="软件架构概述"></a>软件架构概述</h3><h4 id="软件架构的定义"><a href="#软件架构的定义" class="headerlink" title="软件架构的定义"></a>软件架构的定义</h4><h4 id="软件架构的重要性"><a href="#软件架构的重要性" class="headerlink" title="软件架构的重要性"></a>软件架构的重要性</h4><h4 id="架构的模型"><a href="#架构的模型" class="headerlink" title="架构的模型"></a>架构的模型</h4><h3 id="架构需求与软件质量属性"><a href="#架构需求与软件质量属性" class="headerlink" title="架构需求与软件质量属性"></a>架构需求与软件质量属性</h3><h4 id="软件质量属性"><a href="#软件质量属性" class="headerlink" title="软件质量属性"></a>软件质量属性</h4><h4 id="6个质量属性及实现"><a href="#6个质量属性及实现" class="headerlink" title="6个质量属性及实现"></a>6个质量属性及实现</h4><h3 id="软件架构风格"><a href="#软件架构风格" class="headerlink" title="软件架构风格"></a>软件架构风格</h3><h4 id="软件架构风格分类"><a href="#软件架构风格分类" class="headerlink" title="软件架构风格分类"></a>软件架构风格分类</h4><h4 id="数据流风格"><a href="#数据流风格" class="headerlink" title="数据流风格"></a>数据流风格</h4><h4 id="调用-x2F-返回风格"><a href="#调用-x2F-返回风格" class="headerlink" title="调用&#x2F;返回风格"></a>调用&#x2F;返回风格</h4><h4 id="虚拟机风格"><a href="#虚拟机风格" class="headerlink" title="虚拟机风格"></a>虚拟机风格</h4><h4 id="仓库风格"><a href="#仓库风格" class="headerlink" title="仓库风格"></a>仓库风格</h4><h3 id="层次系统架构风格"><a href="#层次系统架构风格" class="headerlink" title="层次系统架构风格"></a>层次系统架构风格</h3><h4 id="二层及三层C-x2F-S架构风格"><a href="#二层及三层C-x2F-S架构风格" class="headerlink" title="二层及三层C&#x2F;S架构风格"></a>二层及三层C&#x2F;S架构风格</h4><h4 id="B-x2F-S架构风格"><a href="#B-x2F-S架构风格" class="headerlink" title="B&#x2F;S架构风格"></a>B&#x2F;S架构风格</h4><h4 id="MVC架构风格"><a href="#MVC架构风格" class="headerlink" title="MVC架构风格"></a>MVC架构风格</h4><h4 id="MVP架构风格"><a href="#MVP架构风格" class="headerlink" title="MVP架构风格"></a>MVP架构风格</h4><h3 id="面向服务的架构"><a href="#面向服务的架构" class="headerlink" title="面向服务的架构"></a>面向服务的架构</h3><h4 id="SOA概述"><a href="#SOA概述" class="headerlink" title="SOA概述"></a>SOA概述</h4><h4 id="SOA的关键技术"><a href="#SOA的关键技术" class="headerlink" title="SOA的关键技术"></a>SOA的关键技术</h4><h4 id="SOA的实现方法"><a href="#SOA的实现方法" class="headerlink" title="SOA的实现方法"></a>SOA的实现方法</h4><h4 id="微服务"><a href="#微服务" class="headerlink" title="微服务"></a>微服务</h4><h3 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h3><h3 id="软件架构文档化"><a href="#软件架构文档化" class="headerlink" title="软件架构文档化"></a>软件架构文档化</h3><h3 id="软件架构评估"><a href="#软件架构评估" class="headerlink" title="软件架构评估"></a>软件架构评估</h3><h4 id="软件架构评估的方法"><a href="#软件架构评估的方法" class="headerlink" title="软件架构评估的方法"></a>软件架构评估的方法</h4><h4 id="架构的权衡分析法"><a href="#架构的权衡分析法" class="headerlink" title="架构的权衡分析法"></a>架构的权衡分析法</h4><h4 id="成本效益分析法"><a href="#成本效益分析法" class="headerlink" title="成本效益分析法"></a>成本效益分析法</h4><h3 id="构件及其复用"><a href="#构件及其复用" class="headerlink" title="构件及其复用"></a>构件及其复用</h3><h4 id="商用构件标准规范"><a href="#商用构件标准规范" class="headerlink" title="商用构件标准规范"></a>商用构件标准规范</h4><h4 id="应用系统簇与构件系统"><a href="#应用系统簇与构件系统" class="headerlink" title="应用系统簇与构件系统"></a>应用系统簇与构件系统</h4><h4 id="基于复用开发的组织结构"><a href="#基于复用开发的组织结构" class="headerlink" title="基于复用开发的组织结构"></a>基于复用开发的组织结构</h4><h3 id="产品线及系统演化"><a href="#产品线及系统演化" class="headerlink" title="产品线及系统演化"></a>产品线及系统演化</h3><h4 id="复用及产品线"><a href="#复用及产品线" class="headerlink" title="复用及产品线"></a>复用及产品线</h4><h4 id="基于产品线的架构"><a href="#基于产品线的架构" class="headerlink" title="基于产品线的架构"></a>基于产品线的架构</h4><h4 id="产品线的开发模型"><a href="#产品线的开发模型" class="headerlink" title="产品线的开发模型"></a>产品线的开发模型</h4><h4 id="特定领域软件架构"><a href="#特定领域软件架构" class="headerlink" title="特定领域软件架构"></a>特定领域软件架构</h4><h4 id="架构及系统演化"><a href="#架构及系统演化" class="headerlink" title="架构及系统演化"></a>架构及系统演化</h4><h3 id="软件架构视图"><a href="#软件架构视图" class="headerlink" title="软件架构视图"></a>软件架构视图</h3><h4 id="软件视图的分类"><a href="#软件视图的分类" class="headerlink" title="软件视图的分类"></a>软件视图的分类</h4><h4 id="模块视图类型及其风格"><a href="#模块视图类型及其风格" class="headerlink" title="模块视图类型及其风格"></a>模块视图类型及其风格</h4><h4 id="C-amp-C视图类型及其风格"><a href="#C-amp-C视图类型及其风格" class="headerlink" title="C&amp;C视图类型及其风格"></a>C&amp;C视图类型及其风格</h4><h4 id="分配视图类型及其风格"><a href="#分配视图类型及其风格" class="headerlink" title="分配视图类型及其风格"></a>分配视图类型及其风格</h4><h4 id="各视图类型间的映射关系"><a href="#各视图类型间的映射关系" class="headerlink" title="各视图类型间的映射关系"></a>各视图类型间的映射关系</h4><h3 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h3><h4 id="设计模式的概念"><a href="#设计模式的概念" class="headerlink" title="设计模式的概念"></a>设计模式的概念</h4><h4 id="设计模式的组成"><a href="#设计模式的组成" class="headerlink" title="设计模式的组成"></a>设计模式的组成</h4><h4 id="GoF设计模式"><a href="#GoF设计模式" class="headerlink" title="GoF设计模式"></a>GoF设计模式</h4><h4 id="其他设计模式"><a href="#其他设计模式" class="headerlink" title="其他设计模式"></a>其他设计模式</h4><h4 id="设计模式与软件架构"><a href="#设计模式与软件架构" class="headerlink" title="设计模式与软件架构"></a>设计模式与软件架构</h4><h4 id="设计模式分类"><a href="#设计模式分类" class="headerlink" title="设计模式分类"></a>设计模式分类</h4><h3 id="设计模式及实现"><a href="#设计模式及实现" class="headerlink" title="设计模式及实现"></a>设计模式及实现</h3><h3 id="设计模式总结"><a href="#设计模式总结" class="headerlink" title="设计模式总结"></a>设计模式总结</h3><h2 id="测试评审方法"><a href="#测试评审方法" class="headerlink" title="测试评审方法"></a>测试评审方法</h2><h3 id="测试方法"><a href="#测试方法" class="headerlink" title="测试方法"></a>测试方法</h3><h4 id="软件测试阶段"><a href="#软件测试阶段" class="headerlink" title="软件测试阶段"></a>软件测试阶段</h4><h4 id="白盒测试和黑盒测试"><a href="#白盒测试和黑盒测试" class="headerlink" title="白盒测试和黑盒测试"></a>白盒测试和黑盒测试</h4><h4 id="缺陷的分类和级别"><a href="#缺陷的分类和级别" class="headerlink" title="缺陷的分类和级别"></a>缺陷的分类和级别</h4><h4 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h4><h3 id="评审方法"><a href="#评审方法" class="headerlink" title="评审方法"></a>评审方法</h3><h3 id="验证与确认"><a href="#验证与确认" class="headerlink" title="验证与确认"></a>验证与确认</h3><h3 id="测试自动化"><a href="#测试自动化" class="headerlink" title="测试自动化"></a>测试自动化</h3><h3 id="面向对象测试"><a href="#面向对象测试" class="headerlink" title="面向对象测试"></a>面向对象测试</h3><h2 id="嵌入式系统设计"><a href="#嵌入式系统设计" class="headerlink" title="嵌入式系统设计"></a>嵌入式系统设计</h2><h3 id="嵌入式系统概论"><a href="#嵌入式系统概论" class="headerlink" title="嵌入式系统概论"></a>嵌入式系统概论</h3><h3 id="嵌入式系统的组成"><a href="#嵌入式系统的组成" class="headerlink" title="嵌入式系统的组成"></a>嵌入式系统的组成</h3><h4 id="硬件架构"><a href="#硬件架构" class="headerlink" title="硬件架构"></a>硬件架构</h4><h4 id="软件架构"><a href="#软件架构" class="headerlink" title="软件架构"></a>软件架构</h4><h3 id="嵌入式开发平台与调试环境"><a href="#嵌入式开发平台与调试环境" class="headerlink" title="嵌入式开发平台与调试环境"></a>嵌入式开发平台与调试环境</h3><h4 id="嵌入式系统软件开发平台"><a href="#嵌入式系统软件开发平台" class="headerlink" title="嵌入式系统软件开发平台"></a>嵌入式系统软件开发平台</h4><h4 id="嵌入式开发调试"><a href="#嵌入式开发调试" class="headerlink" title="嵌入式开发调试"></a>嵌入式开发调试</h4><h3 id="嵌入式网络系统"><a href="#嵌入式网络系统" class="headerlink" title="嵌入式网络系统"></a>嵌入式网络系统</h3><h4 id="现场总线网"><a href="#现场总线网" class="headerlink" title="现场总线网"></a>现场总线网</h4><h4 id="家庭信息网"><a href="#家庭信息网" class="headerlink" title="家庭信息网"></a>家庭信息网</h4><h4 id="无线数据通信网"><a href="#无线数据通信网" class="headerlink" title="无线数据通信网"></a>无线数据通信网</h4><h4 id="嵌入式Internet"><a href="#嵌入式Internet" class="headerlink" title="嵌入式Internet"></a>嵌入式Internet</h4><h3 id="嵌入式数据库管理系统"><a href="#嵌入式数据库管理系统" class="headerlink" title="嵌入式数据库管理系统"></a>嵌入式数据库管理系统</h3><h4 id="使用环境的特点"><a href="#使用环境的特点" class="headerlink" title="使用环境的特点"></a>使用环境的特点</h4><h4 id="系统组成与关键技术"><a href="#系统组成与关键技术" class="headerlink" title="系统组成与关键技术"></a>系统组成与关键技术</h4><h3 id="实时系统与嵌入式操作系统"><a href="#实时系统与嵌入式操作系统" class="headerlink" title="实时系统与嵌入式操作系统"></a>实时系统与嵌入式操作系统</h3><h4 id="嵌入式系统的实时概念"><a href="#嵌入式系统的实时概念" class="headerlink" title="嵌入式系统的实时概念"></a>嵌入式系统的实时概念</h4><h4 id="嵌入式操作系统概述"><a href="#嵌入式操作系统概述" class="headerlink" title="嵌入式操作系统概述"></a>嵌入式操作系统概述</h4><h4 id="实时嵌入式操作系统"><a href="#实时嵌入式操作系统" class="headerlink" title="实时嵌入式操作系统"></a>实时嵌入式操作系统</h4><h4 id="主流嵌入式操作系统介绍"><a href="#主流嵌入式操作系统介绍" class="headerlink" title="主流嵌入式操作系统介绍"></a>主流嵌入式操作系统介绍</h4><h3 id="嵌入式系统开发设计"><a href="#嵌入式系统开发设计" class="headerlink" title="嵌入式系统开发设计"></a>嵌入式系统开发设计</h3><h4 id="嵌入式系统设计概述"><a href="#嵌入式系统设计概述" class="headerlink" title="嵌入式系统设计概述"></a>嵌入式系统设计概述</h4><h4 id="开发模型与设计流程"><a href="#开发模型与设计流程" class="headerlink" title="开发模型与设计流程"></a>开发模型与设计流程</h4><h4 id="嵌入式系统设计和核心技术"><a href="#嵌入式系统设计和核心技术" class="headerlink" title="嵌入式系统设计和核心技术"></a>嵌入式系统设计和核心技术</h4><h4 id="嵌入式开发设计环境"><a href="#嵌入式开发设计环境" class="headerlink" title="嵌入式开发设计环境"></a>嵌入式开发设计环境</h4><h4 id="嵌入式软件设计模型"><a href="#嵌入式软件设计模型" class="headerlink" title="嵌入式软件设计模型"></a>嵌入式软件设计模型</h4><h4 id="需求分析-1"><a href="#需求分析-1" class="headerlink" title="需求分析"></a>需求分析</h4><h4 id="系统设计"><a href="#系统设计" class="headerlink" title="系统设计"></a>系统设计</h4><h4 id="系统集成与测试"><a href="#系统集成与测试" class="headerlink" title="系统集成与测试"></a>系统集成与测试</h4><h2 id="开发管理"><a href="#开发管理" class="headerlink" title="开发管理"></a>开发管理</h2><h3 id="项目的范围、时间和成本"><a href="#项目的范围、时间和成本" class="headerlink" title="项目的范围、时间和成本"></a>项目的范围、时间和成本</h3><h4 id="项目范围管理"><a href="#项目范围管理" class="headerlink" title="项目范围管理"></a>项目范围管理</h4><h4 id="项目成本管理"><a href="#项目成本管理" class="headerlink" title="项目成本管理"></a>项目成本管理</h4><h4 id="项目时间管理"><a href="#项目时间管理" class="headerlink" title="项目时间管理"></a>项目时间管理</h4><h3 id="配置管理与文档管理"><a href="#配置管理与文档管理" class="headerlink" title="配置管理与文档管理"></a>配置管理与文档管理</h3><h4 id="软件配置管理的概念"><a href="#软件配置管理的概念" class="headerlink" title="软件配置管理的概念"></a>软件配置管理的概念</h4><h4 id="软件配置管理的解决方案"><a href="#软件配置管理的解决方案" class="headerlink" title="软件配置管理的解决方案"></a>软件配置管理的解决方案</h4><h4 id="软件文档管理"><a href="#软件文档管理" class="headerlink" title="软件文档管理"></a>软件文档管理</h4><h3 id="软件需求管理"><a href="#软件需求管理" class="headerlink" title="软件需求管理"></a>软件需求管理</h3><h4 id="需求变更"><a href="#需求变更" class="headerlink" title="需求变更"></a>需求变更</h4><h4 id="需求跟踪"><a href="#需求跟踪" class="headerlink" title="需求跟踪"></a>需求跟踪</h4><h3 id="软件开发的质量与风险"><a href="#软件开发的质量与风险" class="headerlink" title="软件开发的质量与风险"></a>软件开发的质量与风险</h3><h4 id="软件质量管理"><a href="#软件质量管理" class="headerlink" title="软件质量管理"></a>软件质量管理</h4><h4 id="项目风险管理"><a href="#项目风险管理" class="headerlink" title="项目风险管理"></a>项目风险管理</h4><h3 id="人力资源管理"><a href="#人力资源管理" class="headerlink" title="人力资源管理"></a>人力资源管理</h3><h4 id="软件的运行与评价"><a href="#软件的运行与评价" class="headerlink" title="软件的运行与评价"></a>软件的运行与评价</h4><h4 id="软件过程改进"><a href="#软件过程改进" class="headerlink" title="软件过程改进"></a>软件过程改进</h4><h2 id="信息系统基础知识"><a href="#信息系统基础知识" class="headerlink" title="信息系统基础知识"></a>信息系统基础知识</h2><h3 id="信息系统概述"><a href="#信息系统概述" class="headerlink" title="信息系统概述"></a>信息系统概述</h3><h4 id="信息系统的组成"><a href="#信息系统的组成" class="headerlink" title="信息系统的组成"></a>信息系统的组成</h4><h4 id="信息系统的生命周期"><a href="#信息系统的生命周期" class="headerlink" title="信息系统的生命周期"></a>信息系统的生命周期</h4><h4 id="信息系统建设的原则"><a href="#信息系统建设的原则" class="headerlink" title="信息系统建设的原则"></a>信息系统建设的原则</h4><h4 id="信息系统开发方法"><a href="#信息系统开发方法" class="headerlink" title="信息系统开发方法"></a>信息系统开发方法</h4><h3 id="信息系统工程"><a href="#信息系统工程" class="headerlink" title="信息系统工程"></a>信息系统工程</h3><h4 id="信息系统工程的概念"><a href="#信息系统工程的概念" class="headerlink" title="信息系统工程的概念"></a>信息系统工程的概念</h4><h4 id="信息系统工程的内容"><a href="#信息系统工程的内容" class="headerlink" title="信息系统工程的内容"></a>信息系统工程的内容</h4><h4 id="信息系统工程的总体规划"><a href="#信息系统工程的总体规划" class="headerlink" title="信息系统工程的总体规划"></a>信息系统工程的总体规划</h4><h4 id="总体规划的方法论"><a href="#总体规划的方法论" class="headerlink" title="总体规划的方法论"></a>总体规划的方法论</h4><h3 id="政府信息化与电子政务"><a href="#政府信息化与电子政务" class="headerlink" title="政府信息化与电子政务"></a>政府信息化与电子政务</h3><h4 id="我国政府信息化的历程和策略"><a href="#我国政府信息化的历程和策略" class="headerlink" title="我国政府信息化的历程和策略"></a>我国政府信息化的历程和策略</h4><h4 id="电子政务的内容"><a href="#电子政务的内容" class="headerlink" title="电子政务的内容"></a>电子政务的内容</h4><h4 id="电子政务建设的过程模式和技术模式"><a href="#电子政务建设的过程模式和技术模式" class="headerlink" title="电子政务建设的过程模式和技术模式"></a>电子政务建设的过程模式和技术模式</h4><h3 id="企业信息化与电子商务"><a href="#企业信息化与电子商务" class="headerlink" title="企业信息化与电子商务"></a>企业信息化与电子商务</h3><h4 id="企业信息化概述"><a href="#企业信息化概述" class="headerlink" title="企业信息化概述"></a>企业信息化概述</h4><h4 id="企业资源规划"><a href="#企业资源规划" class="headerlink" title="企业资源规划"></a>企业资源规划</h4><h4 id="客户关系管理"><a href="#客户关系管理" class="headerlink" title="客户关系管理"></a>客户关系管理</h4><h4 id="产品数据管理"><a href="#产品数据管理" class="headerlink" title="产品数据管理"></a>产品数据管理</h4><h4 id="企业门户"><a href="#企业门户" class="headerlink" title="企业门户"></a>企业门户</h4><h4 id="企业应用集成"><a href="#企业应用集成" class="headerlink" title="企业应用集成"></a>企业应用集成</h4><h4 id="供应链管理"><a href="#供应链管理" class="headerlink" title="供应链管理"></a>供应链管理</h4><h4 id="电子商务概述"><a href="#电子商务概述" class="headerlink" title="电子商务概述"></a>电子商务概述</h4><h3 id="知识管理与商业智能"><a href="#知识管理与商业智能" class="headerlink" title="知识管理与商业智能"></a>知识管理与商业智能</h3><h4 id="知识管理"><a href="#知识管理" class="headerlink" title="知识管理"></a>知识管理</h4><h4 id="商业智能"><a href="#商业智能" class="headerlink" title="商业智能"></a>商业智能</h4><h3 id="业务流程重组"><a href="#业务流程重组" class="headerlink" title="业务流程重组"></a>业务流程重组</h3><h2 id="基于中间件的开发"><a href="#基于中间件的开发" class="headerlink" title="基于中间件的开发"></a>基于中间件的开发</h2><h3 id="中间件技术"><a href="#中间件技术" class="headerlink" title="中间件技术"></a>中间件技术</h3><h4 id="中间件的概述"><a href="#中间件的概述" class="headerlink" title="中间件的概述"></a>中间件的概述</h4><h4 id="中间件的分类"><a href="#中间件的分类" class="headerlink" title="中间件的分类"></a>中间件的分类</h4><h4 id="中间件产品介绍"><a href="#中间件产品介绍" class="headerlink" title="中间件产品介绍"></a>中间件产品介绍</h4><h3 id="应用服务器技术"><a href="#应用服务器技术" class="headerlink" title="应用服务器技术"></a>应用服务器技术</h3><h4 id="应用服务器的概念"><a href="#应用服务器的概念" class="headerlink" title="应用服务器的概念"></a>应用服务器的概念</h4><h4 id="主要的应用服务器"><a href="#主要的应用服务器" class="headerlink" title="主要的应用服务器"></a>主要的应用服务器</h4><h3 id="J2EE"><a href="#J2EE" class="headerlink" title="J2EE"></a>J2EE</h3><h4 id="表示层"><a href="#表示层" class="headerlink" title="表示层"></a>表示层</h4><h4 id="应用服务层"><a href="#应用服务层" class="headerlink" title="应用服务层"></a>应用服务层</h4><h3 id="NET"><a href="#NET" class="headerlink" title=".NET"></a>.NET</h3><h3 id="企业应用集成-1"><a href="#企业应用集成-1" class="headerlink" title="企业应用集成"></a>企业应用集成</h3><h3 id="轻量级架构和重量级架构"><a href="#轻量级架构和重量级架构" class="headerlink" title="轻量级架构和重量级架构"></a>轻量级架构和重量级架构</h3><h2 id="安全性和保密性设计"><a href="#安全性和保密性设计" class="headerlink" title="安全性和保密性设计"></a>安全性和保密性设计</h2><h3 id="加密和解密"><a href="#加密和解密" class="headerlink" title="加密和解密"></a>加密和解密</h3><h4 id="对称密钥加密算法"><a href="#对称密钥加密算法" class="headerlink" title="对称密钥加密算法"></a>对称密钥加密算法</h4><h4 id="非对称密钥加密算法"><a href="#非对称密钥加密算法" class="headerlink" title="非对称密钥加密算法"></a>非对称密钥加密算法</h4><h3 id="数字签名和数字水印"><a href="#数字签名和数字水印" class="headerlink" title="数字签名和数字水印"></a>数字签名和数字水印</h3><h3 id="数字证书和密钥管理"><a href="#数字证书和密钥管理" class="headerlink" title="数字证书和密钥管理"></a>数字证书和密钥管理</h3><h3 id="安全协议"><a href="#安全协议" class="headerlink" title="安全协议"></a>安全协议</h3><h3 id="计算机病毒与防治"><a href="#计算机病毒与防治" class="headerlink" title="计算机病毒与防治"></a>计算机病毒与防治</h3><h3 id="身份认证与访问控制"><a href="#身份认证与访问控制" class="headerlink" title="身份认证与访问控制"></a>身份认证与访问控制</h3><h3 id="网络安全体系"><a href="#网络安全体系" class="headerlink" title="网络安全体系"></a>网络安全体系</h3><h4 id="OSI安全架构"><a href="#OSI安全架构" class="headerlink" title="OSI安全架构"></a>OSI安全架构</h4><h4 id="VPN在网络安全中的应用"><a href="#VPN在网络安全中的应用" class="headerlink" title="VPN在网络安全中的应用"></a>VPN在网络安全中的应用</h4><h3 id="系统的安全性设计"><a href="#系统的安全性设计" class="headerlink" title="系统的安全性设计"></a>系统的安全性设计</h3><h4 id="物理安全问题与设计"><a href="#物理安全问题与设计" class="headerlink" title="物理安全问题与设计"></a>物理安全问题与设计</h4><h4 id="防火墙及其在系统安全中的应用"><a href="#防火墙及其在系统安全中的应用" class="headerlink" title="防火墙及其在系统安全中的应用"></a>防火墙及其在系统安全中的应用</h4><h4 id="入侵检测系统"><a href="#入侵检测系统" class="headerlink" title="入侵检测系统"></a>入侵检测系统</h4><h3 id="安全性规章"><a href="#安全性规章" class="headerlink" title="安全性规章"></a>安全性规章</h3><h2 id="系统的可靠性分析与设计"><a href="#系统的可靠性分析与设计" class="headerlink" title="系统的可靠性分析与设计"></a>系统的可靠性分析与设计</h2><h3 id="可靠性概述"><a href="#可靠性概述" class="headerlink" title="可靠性概述"></a>可靠性概述</h3><h3 id="系统故障模型"><a href="#系统故障模型" class="headerlink" title="系统故障模型"></a>系统故障模型</h3><h4 id="故障的来源以及表现"><a href="#故障的来源以及表现" class="headerlink" title="故障的来源以及表现"></a>故障的来源以及表现</h4><h4 id="几种常见的故障模型"><a href="#几种常见的故障模型" class="headerlink" title="几种常见的故障模型"></a>几种常见的故障模型</h4><h3 id="系统配置方法"><a href="#系统配置方法" class="headerlink" title="系统配置方法"></a>系统配置方法</h3><h4 id="单机容错技术"><a href="#单机容错技术" class="headerlink" title="单机容错技术"></a>单机容错技术</h4><h4 id="双机热备份技术"><a href="#双机热备份技术" class="headerlink" title="双机热备份技术"></a>双机热备份技术</h4><h4 id="服务器集群技术"><a href="#服务器集群技术" class="headerlink" title="服务器集群技术"></a>服务器集群技术</h4><h3 id="系统可靠性模型"><a href="#系统可靠性模型" class="headerlink" title="系统可靠性模型"></a>系统可靠性模型</h3><h4 id="时间模型"><a href="#时间模型" class="headerlink" title="时间模型"></a>时间模型</h4><h4 id="故障植入模型"><a href="#故障植入模型" class="headerlink" title="故障植入模型"></a>故障植入模型</h4><h4 id="数据模型-1"><a href="#数据模型-1" class="headerlink" title="数据模型"></a>数据模型</h4><h3 id="系统的可靠性分析和可靠度计算"><a href="#系统的可靠性分析和可靠度计算" class="headerlink" title="系统的可靠性分析和可靠度计算"></a>系统的可靠性分析和可靠度计算</h3><h4 id="组合模型"><a href="#组合模型" class="headerlink" title="组合模型"></a>组合模型</h4><h4 id="马尔柯夫模型"><a href="#马尔柯夫模型" class="headerlink" title="马尔柯夫模型"></a>马尔柯夫模型</h4><h3 id="提高系统可靠性的措施"><a href="#提高系统可靠性的措施" class="headerlink" title="提高系统可靠性的措施"></a>提高系统可靠性的措施</h3><h4 id="硬件冗余"><a href="#硬件冗余" class="headerlink" title="硬件冗余"></a>硬件冗余</h4><h4 id="信息冗余"><a href="#信息冗余" class="headerlink" title="信息冗余"></a>信息冗余</h4><h3 id="备份与恢复-1"><a href="#备份与恢复-1" class="headerlink" title="备份与恢复"></a>备份与恢复</h3><h2 id="软件的知识产权保护"><a href="#软件的知识产权保护" class="headerlink" title="软件的知识产权保护"></a>软件的知识产权保护</h2><h3 id="著作权法及实施条例"><a href="#著作权法及实施条例" class="headerlink" title="著作权法及实施条例"></a>著作权法及实施条例</h3><h4 id="著作权法客体"><a href="#著作权法客体" class="headerlink" title="著作权法客体"></a>著作权法客体</h4><h4 id="著作权法的主体"><a href="#著作权法的主体" class="headerlink" title="著作权法的主体"></a>著作权法的主体</h4><h4 id="著作权"><a href="#著作权" class="headerlink" title="著作权"></a>著作权</h4><h3 id="计算机软件保护条例"><a href="#计算机软件保护条例" class="headerlink" title="计算机软件保护条例"></a>计算机软件保护条例</h3><h3 id="商标法及实施条例"><a href="#商标法及实施条例" class="headerlink" title="商标法及实施条例"></a>商标法及实施条例</h3><h3 id="专利法及实施细则"><a href="#专利法及实施细则" class="headerlink" title="专利法及实施细则"></a>专利法及实施细则</h3><h3 id="反不正当竞争法"><a href="#反不正当竞争法" class="headerlink" title="反不正当竞争法"></a>反不正当竞争法</h3><h2 id="标准化知识"><a href="#标准化知识" class="headerlink" title="标准化知识"></a>标准化知识</h2><h3 id="标准化概论"><a href="#标准化概论" class="headerlink" title="标准化概论"></a>标准化概论</h3><h3 id="标准分级与标准类型"><a href="#标准分级与标准类型" class="headerlink" title="标准分级与标准类型"></a>标准分级与标准类型</h3><h4 id="标准分级"><a href="#标准分级" class="headerlink" title="标准分级"></a>标准分级</h4><h4 id="强制性标准与推荐性标准"><a href="#强制性标准与推荐性标准" class="headerlink" title="强制性标准与推荐性标准"></a>强制性标准与推荐性标准</h4><h2 id="应用数学"><a href="#应用数学" class="headerlink" title="应用数学"></a>应用数学</h2><h3 id="运筹方法"><a href="#运筹方法" class="headerlink" title="运筹方法"></a>运筹方法</h3><h4 id="网络计划技术"><a href="#网络计划技术" class="headerlink" title="网络计划技术"></a>网络计划技术</h4><h4 id="线性规划"><a href="#线性规划" class="headerlink" title="线性规划"></a>线性规划</h4><h4 id="决策论"><a href="#决策论" class="headerlink" title="决策论"></a>决策论</h4><h4 id="对策论"><a href="#对策论" class="headerlink" title="对策论"></a>对策论</h4><h3 id="数学建模"><a href="#数学建模" class="headerlink" title="数学建模"></a>数学建模</h3><h2 id="虚拟化、云计算和物联网"><a href="#虚拟化、云计算和物联网" class="headerlink" title="虚拟化、云计算和物联网"></a>虚拟化、云计算和物联网</h2><h3 id="虚拟化"><a href="#虚拟化" class="headerlink" title="虚拟化"></a>虚拟化</h3><h3 id="云计算"><a href="#云计算" class="headerlink" title="云计算"></a>云计算</h3><h3 id="物联网"><a href="#物联网" class="headerlink" title="物联网"></a>物联网</h3>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1545,14 +1317,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">147</span>
+          <span class="site-state-item-count">153</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-count">32</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="监控MySQL数据并在控制台打印 运行 maxwell 来监控 mysql 数据更新 1(base) [root@node1 maxwell]# .&#x2F;bin&#x2F;maxwell --user&#x3D;maxwell --password&#x3D;123456 --host&#x3D;node1 --producer&#x3D;stdout    向 mysql 的 test_maxwell 库的 test 表插入一条数据，查看 maxw">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Maxwell案例">
+<meta property="og:url" content="http://fhclk.github.io/2022/04/25/Maxwell%E6%A1%88%E4%BE%8B/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="监控MySQL数据并在控制台打印 运行 maxwell 来监控 mysql 数据更新 1(base) [root@node1 maxwell]# .&#x2F;bin&#x2F;maxwell --user&#x3D;maxwell --password&#x3D;123456 --host&#x3D;node1 --producer&#x3D;stdout    向 mysql 的 test_maxwell 库的 test 表插入一条数据，查看 maxw">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-25T11:17:37.000Z">
+<meta property="article:modified_time" content="2023-03-23T09:49:42.632Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="大数据">
+<meta property="article:tag" content="Maxwell">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://fhclk.github.io/2022/04/25/Maxwell%E6%A1%88%E4%BE%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Maxwell案例 | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/04/25/Maxwell%E6%A1%88%E4%BE%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Maxwell案例
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-25 19:17:37" itemprop="dateCreated datePublished" datetime="2022-04-25T19:17:37+08:00">2022-04-25</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="监控MySQL数据并在控制台打印"><a href="#监控MySQL数据并在控制台打印" class="headerlink" title="监控MySQL数据并在控制台打印"></a>监控MySQL数据并在控制台打印</h1><ol>
+<li><p>运行 maxwell 来监控 mysql 数据更新</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 maxwell]# ./bin/maxwell --user=maxwell --password=123456 --host=node1 --producer=stdout</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>向 mysql 的 test_maxwell 库的 test 表插入一条数据，查看 maxwell 的控制台输出</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">insert</span> <span class="keyword">into</span> test <span class="keyword">values</span>(<span class="number">1</span>,<span class="string">&#x27;aaa&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">--maxwell控制台输出</span></span><br><span class="line">&#123;</span><br><span class="line">    &quot;database&quot;:&quot;test_maxwell&quot;, <span class="comment">--库名</span></span><br><span class="line">    &quot;table&quot;:&quot;test&quot;, <span class="comment">--表名</span></span><br><span class="line">    &quot;type&quot;:&quot;insert&quot;, <span class="comment">--数据更新类型</span></span><br><span class="line">    &quot;ts&quot;:<span class="number">1679562469</span>, <span class="comment">--操作时间</span></span><br><span class="line">    &quot;xid&quot;:<span class="number">620</span>,  <span class="comment">--操作id</span></span><br><span class="line">    &quot;commit&quot;:<span class="literal">true</span>,   <span class="comment">--提交成功</span></span><br><span class="line">    &quot;data&quot;:&#123;  <span class="comment">--数据</span></span><br><span class="line">        &quot;id&quot;:<span class="number">1</span>,</span><br><span class="line">        &quot;name&quot;:&quot;aaa&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>向 mysql 的 test_maxwell 库的 test 表同时插入 3 条数据，控制台出现了 3 条 json日志，说明 maxwell 是以数据行为单位进行日志的采集的。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">INSERT</span> <span class="keyword">INTO</span> test <span class="keyword">VALUES</span>(<span class="number">2</span>,<span class="string">&#x27;bbb&#x27;</span>),(<span class="number">3</span>,<span class="string">&#x27;ccc&#x27;</span>),(<span class="number">4</span>,<span class="string">&#x27;ddd&#x27;</span>);</span><br><span class="line"></span><br><span class="line">&#123;&quot;database&quot;:&quot;test_maxwell&quot;,&quot;table&quot;:&quot;test&quot;,&quot;type&quot;:&quot;insert&quot;,&quot;ts&quot;:<span class="number">1679562617</span>,&quot;xid&quot;:<span class="number">950</span>,&quot;xoffset&quot;:<span class="number">0</span>,&quot;data&quot;:&#123;&quot;id&quot;:<span class="number">2</span>,&quot;name&quot;:&quot;bbb&quot;&#125;&#125;</span><br><span class="line">&#123;&quot;database&quot;:&quot;test_maxwell&quot;,&quot;table&quot;:&quot;test&quot;,&quot;type&quot;:&quot;insert&quot;,&quot;ts&quot;:<span class="number">1679562617</span>,&quot;xid&quot;:<span class="number">950</span>,&quot;xoffset&quot;:<span class="number">1</span>,&quot;data&quot;:&#123;&quot;id&quot;:<span class="number">3</span>,&quot;name&quot;:&quot;ccc&quot;&#125;&#125;</span><br><span class="line">&#123;&quot;database&quot;:&quot;test_maxwell&quot;,&quot;table&quot;:&quot;test&quot;,&quot;type&quot;:&quot;insert&quot;,&quot;ts&quot;:<span class="number">1679562617</span>,&quot;xid&quot;:<span class="number">950</span>,&quot;commit&quot;:<span class="literal">true</span>,&quot;data&quot;:&#123;&quot;id&quot;:<span class="number">4</span>,&quot;name&quot;:&quot;ddd&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>修改 test_maxwell 库的 test 表的一条数据，查看 maxwell 的控制台输出</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">update</span> test <span class="keyword">set</span> name<span class="operator">=</span><span class="string">&#x27;abc&#x27;</span> <span class="keyword">where</span> id <span class="operator">=</span><span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">&#123;&quot;database&quot;:&quot;test_maxwell&quot;,&quot;table&quot;:&quot;test&quot;,&quot;type&quot;:&quot;update&quot;,&quot;ts&quot;:<span class="number">1679562676</span>,&quot;xid&quot;:<span class="number">1083</span>,&quot;commit&quot;:<span class="literal">true</span>,&quot;data&quot;:&#123;&quot;id&quot;:<span class="number">1</span>,&quot;name&quot;:&quot;abc&quot;&#125;,&quot;old&quot;:&#123;&quot;name&quot;:&quot;aaa&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>删除 test_maxwell 库的 test 表的一条数据，查看 maxwell 的控制台输出</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">DELETE</span> <span class="keyword">FROM</span> test <span class="keyword">WHERE</span> id <span class="operator">=</span><span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">&#123;&quot;database&quot;:&quot;test_maxwell&quot;,&quot;table&quot;:&quot;test&quot;,&quot;type&quot;:&quot;delete&quot;,&quot;ts&quot;:<span class="number">1679562746</span>,&quot;xid&quot;:<span class="number">1243</span>,&quot;commit&quot;:<span class="literal">true</span>,&quot;data&quot;:&#123;&quot;id&quot;:<span class="number">1</span>,&quot;name&quot;:&quot;abc&quot;&#125;&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h1 id="监控MySQL数据输出到Kafka"><a href="#监控MySQL数据输出到Kafka" class="headerlink" title="监控MySQL数据输出到Kafka"></a>监控MySQL数据输出到Kafka</h1><h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><ol>
+<li><p>启动 zookeeper 和 kafka</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# ./bin/zk.sh start</span><br><span class="line">(base) [root@node1 ~]# ./bin/kf.sh start</span><br><span class="line">(base) [root@node1 ~]# jps</span><br><span class="line">24642 QuorumPeerMain</span><br><span class="line">25603 Jps</span><br><span class="line">25060 Kafka</span><br><span class="line">23741 Maxwell</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>启动 Maxwell 监控 binlog</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 maxwell]# ./bin/maxwell --user=maxwell --password=123456 --host=node1 --producer=kafka --kafka.bootstrap.servers=node1:9092 --kafka_topic=maxwell</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>打开 kafka 的控制台的消费者消费 maxwell 主题</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# kafka-console-consumer.sh --bootstrap-server node1:9092 --topic maxwell</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>向 test_maxwell 库的 test 表再次插入一条数据</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">insert</span> <span class="keyword">into</span> test <span class="keyword">values</span> (<span class="number">5</span>,<span class="string">&#x27;eee&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>通过 kafka 消费者来查看到了数据，说明数据成功传入 kafka</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;database&quot;:&quot;test_maxwell&quot;,&quot;table&quot;:&quot;test&quot;,&quot;type&quot;:&quot;insert&quot;,&quot;ts&quot;:1679563310,&quot;xid&quot;:2486,&quot;commit&quot;:true,&quot;data&quot;:&#123;&quot;id&quot;:5,&quot;name&quot;:&quot;eee&quot;&#125;&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="kafka-主题数据的分区控制"><a href="#kafka-主题数据的分区控制" class="headerlink" title="kafka 主题数据的分区控制"></a>kafka 主题数据的分区控制</h2><p>在生产环境中，我们一般都会用 maxwell 监控多个 mysql 库的数据，然后将这些数据发往 kafka 的一个主题 Topic，并且这个主题也肯定是多分区的，为了提高并发度。那么如何控制这些数据的分区问题，就变得至关重要，实现步骤如下：</p>
+<ol>
+<li><p>修改 maxwell 的配置文件，定制化启动 maxwell 进程</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 maxwell]# vim config.properties</span><br><span class="line"></span><br><span class="line">producer=kafka</span><br><span class="line">kafka.bootstrap.servers=hadoop102:9092</span><br><span class="line"></span><br><span class="line">host=node1</span><br><span class="line">user=maxwell</span><br><span class="line">password=123456</span><br><span class="line"></span><br><span class="line">kafka_topic=maxwell3</span><br><span class="line"></span><br><span class="line">producer_partition_by=database</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">控制数据分区模式，可选模式有 库名，表名，主键，列名</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>手动创建一个 3 个分区的 topic，名字就叫做 maxwell3</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 maxwell]# kafka-topics.sh --zookeeper node1:2181,node2:2181,node3:2181/kafka --create --replication-factor 2 --partitions 3 --topic maxwell3</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>利用配置文件启动 Maxwell 进程</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 maxwell]# ./bin/maxwell --config ./config.properties</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>向 test_maxwell 库的 test 表再次插入一条数据</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">insert</span> <span class="keyword">into</span> test_maxwell.test <span class="keyword">values</span> (<span class="number">6</span>,<span class="string">&#x27;fff&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>通过 kafka tool 工具查看，此条数据进入了 maxwell3 主题的 1 号分区</p>
+</li>
+<li><p>向 test_maxwell2库的 test表插入一条数据</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">insert</span> <span class="keyword">into</span> test_maxwell2.test <span class="keyword">values</span> (<span class="number">23</span>,<span class="string">&#x27;dd&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>通过 kafka tool 工具查看，此条数据进入了 maxwell3 主题的 0 号分区,说明库名会对数据进入的分区造成影响。</p>
+</li>
+</ol>
+<h1 id="监控MySQL指定表输出到控制台"><a href="#监控MySQL指定表输出到控制台" class="headerlink" title="监控MySQL指定表输出到控制台"></a>监控MySQL指定表输出到控制台</h1><ol>
+<li><p>运行 maxwell 来监控 mysql 指定表数据更新</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 maxwell]# ./bin/maxwell --user=maxwell --password=123456 --host=node1 --producer=stdout --filter &#x27;exclude: *.*, include:test_maxwell.test&#x27; --producer=stdout</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>向 test_maxwell.test 表插入一条数据，查看 maxwell 的监控</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">insert</span> <span class="keyword">into</span> test_maxwell.test <span class="keyword">values</span>(<span class="number">7</span>,<span class="string">&#x27;ggg&#x27;</span>);</span><br><span class="line"></span><br><span class="line">&#123;&quot;database&quot;:&quot;test_maxwell&quot;,&quot;table&quot;:&quot;test&quot;,&quot;type&quot;:&quot;insert&quot;,&quot;ts&quot;:<span class="number">1637247760</span>,&quot;xid&quot;:<span class="number">11818</span>,&quot;commit&quot;:<span class="literal">true</span>,&quot;data&quot;:&#123;&quot;id&quot;:<span class="number">7</span>,&quot;name&quot;:&quot;ggg&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>向 test_maxwell.test2 表插入一条数据，查看 maxwell 的监控</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">insert</span> <span class="keyword">into</span> test1 <span class="keyword">values</span>(<span class="number">1</span>,<span class="string">&#x27;nihao&#x27;</span>);</span><br><span class="line">本次没有收到任何信息</span><br><span class="line">说明 include 参数生效，只能监控指定的 mysql 表的信息</span><br></pre></td></tr></table></figure>
+
+<p>注：还可以设置 include:test_maxwell.*，通过此种方式来监控 mysql 某个库的所有表，也就是说过滤整个库。</p>
+</li>
+</ol>
+<h1 id="监控MySQL指定表全量数据输出到控制台"><a href="#监控MySQL指定表全量数据输出到控制台" class="headerlink" title="监控MySQL指定表全量数据输出到控制台"></a>监控MySQL指定表全量数据输出到控制台</h1><p>Maxwell 进程默认只能监控 mysql 的 binlog 日志的新增及变化的数据，但是Maxwell 是支持数据初始化的，可以通过修改 Maxwell 的元数据，来对 MySQL 的某张表进行数据初始化，也就是我们常说的全量同步。具体操作步骤如下：</p>
+<p>需求：将 test_maxwell 库下的 test2 表的四条数据，全量导入到 maxwell 控制台进行打印。</p>
+<ol>
+<li><p>修改 Maxwell 的元数据，触发数据初始化机制，在 mysql 的 maxwell 库中 bootstrap表中插入一条数据，写明需要全量数据的库名和表名。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">insert</span> <span class="keyword">into</span> maxwell.bootstrap(database_name,table_name) <span class="keyword">values</span>(<span class="string">&#x27;test_maxwell&#x27;</span>,<span class="string">&#x27;test2&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>启动 maxwell 进程，此时初始化程序会直接打印 test2 表的所有数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 maxwell]# ./bin/maxwell --user=maxwell --password=123456 --host=node1 --producer=stdout</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>当数据全部初始化完成以后，Maxwell 的元数据会变化</p>
+<p>is_complete 字段从 0 变为 1</p>
+<p>start_at 字段从 null 变为具体时间(数据同步开始时间)</p>
+<p>complete_at 字段从 null 变为具体时间(数据同步结束时间)</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a> -->
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"><i class="fa fa-tag"></i>  大数据</a>
+              <!-- <a href="/tags/Maxwell/" rel="tag"># Maxwell</a> -->
+              <a href="/tags/Maxwell/" rel="tag"><i class="fa fa-tag"></i>  Maxwell</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/04/24/Maxwell%E4%BD%BF%E7%94%A8/" rel="prev" title="Maxwell使用">
+      <i class="fa fa-chevron-left"></i> Maxwell使用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/06/02/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%A6%BB%E7%BA%BF%E6%9E%B6%E6%9E%84/" rel="next" title="大数据离线架构">
+      大数据离线架构 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:1rem;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7MySQL%E6%95%B0%E6%8D%AE%E5%B9%B6%E5%9C%A8%E6%8E%A7%E5%88%B6%E5%8F%B0%E6%89%93%E5%8D%B0"><span class="nav-number">1.</span> <span class="nav-text">监控MySQL数据并在控制台打印</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7MySQL%E6%95%B0%E6%8D%AE%E8%BE%93%E5%87%BA%E5%88%B0Kafka"><span class="nav-number">2.</span> <span class="nav-text">监控MySQL数据输出到Kafka</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.1.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kafka-%E4%B8%BB%E9%A2%98%E6%95%B0%E6%8D%AE%E7%9A%84%E5%88%86%E5%8C%BA%E6%8E%A7%E5%88%B6"><span class="nav-number">2.2.</span> <span class="nav-text">kafka 主题数据的分区控制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7MySQL%E6%8C%87%E5%AE%9A%E8%A1%A8%E8%BE%93%E5%87%BA%E5%88%B0%E6%8E%A7%E5%88%B6%E5%8F%B0"><span class="nav-number">3.</span> <span class="nav-text">监控MySQL指定表输出到控制台</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7MySQL%E6%8C%87%E5%AE%9A%E8%A1%A8%E5%85%A8%E9%87%8F%E6%95%B0%E6%8D%AE%E8%BE%93%E5%87%BA%E5%88%B0%E6%8E%A7%E5%88%B6%E5%8F%B0"><span class="nav-number">4.</span> <span class="nav-text">监控MySQL指定表全量数据输出到控制台</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">153</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>

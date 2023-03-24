@@ -151,6 +151,1183 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/12/23/kotlin%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/23/kotlin%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">Kotlin基础</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-23 18:13:33" itemprop="dateCreated datePublished" datetime="2021-12-23T18:13:33+08:00">2021-12-23</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h3><h4 id="包的定义和导入"><a href="#包的定义和导入" class="headerlink" title="包的定义和导入"></a>包的定义和导入</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.demo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> kotlin.text.*</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="程序入口"><a href="#程序入口" class="headerlink" title="程序入口"></a>程序入口</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">&quot;hello world&quot;</span>) <span class="comment">//将其参数打到标准输出</span></span><br><span class="line">println(<span class="string">&quot;hello world&quot;</span>) <span class="comment">//输出其参数并添加换行符</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">add</span><span class="params">(a: <span class="type">Int</span>, b: <span class="type">Int</span>)</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a + b</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//函数体可以是表达式。其返回类型可以推断出来。</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">add2</span><span class="params">(a: <span class="type">Int</span>, b: <span class="type">Int</span>)</span></span> = a + b</span><br><span class="line"></span><br><span class="line"><span class="comment">//返回无意义的值, Unit 返回类型可以省略</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">printSum</span><span class="params">(a: <span class="type">Int</span>, b: <span class="type">Int</span>)</span></span>: <span class="built_in">Unit</span> &#123;</span><br><span class="line">    println(<span class="string">&quot;sum of <span class="variable">$a</span> and <span class="variable">$b</span> is <span class="subst">$&#123;a + b&#125;</span>&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    add(<span class="number">3</span>, <span class="number">5</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a: <span class="built_in">Int</span> = <span class="number">10</span> <span class="comment">// var 变量</span></span><br><span class="line"><span class="keyword">val</span> b: <span class="built_in">Int</span> = <span class="number">5</span>  <span class="comment">// val 常量</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="类"><a href="#类" class="headerlink" title="类"></a>类</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// class定义类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Shape</span></span><br><span class="line"><span class="comment">//类的属性可以在其声明或主体中列出</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Rectangle</span>(<span class="keyword">var</span> height: <span class="built_in">Double</span>, <span class="keyword">var</span> length: <span class="built_in">Double</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> perimeter = (height + length) * <span class="number">2</span> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具有类声明中所列参数的默认构造函数会自动可用。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Rectangle</span>(<span class="keyword">var</span> height: <span class="built_in">Double</span>, <span class="keyword">var</span> length: <span class="built_in">Double</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> perimeter = (height + length) * <span class="number">2</span> </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> rectangle = Rectangle(<span class="number">5.0</span>, <span class="number">2.0</span>)</span><br><span class="line">    println(<span class="string">&quot;The perimeter is <span class="subst">$&#123;rectangle.perimeter&#125;</span>&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>类之间继承由冒号（<code>:</code>）声明。默认情况下类都是 final 的；如需让一个类可继承， 请将其标记为 <code>open</code></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> <span class="keyword">class</span> <span class="title class_">Shape</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Rectangle</span>(<span class="keyword">var</span> height: <span class="built_in">Double</span>, <span class="keyword">var</span> length: <span class="built_in">Double</span>): Shape() &#123;</span><br><span class="line">    <span class="keyword">var</span> perimeter = (height + length) * <span class="number">2</span> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="习惯用法"><a href="#习惯用法" class="headerlink" title="习惯用法"></a>习惯用法</h3><h4 id="函数默认参数"><a href="#函数默认参数" class="headerlink" title="函数默认参数"></a>函数默认参数</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">foo</span><span class="params">(a: <span class="type">Int</span> = <span class="number">0</span>, b: <span class="type">String</span> = <span class="string">&quot;&quot;</span>)</span></span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="过滤list"><a href="#过滤list" class="headerlink" title="过滤list"></a>过滤list</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> positives = list.filter&#123; x -&gt; x &gt; <span class="number">0</span>&#125;</span><br><span class="line"><span class="comment">//或者</span></span><br><span class="line"><span class="keyword">val</span> positives = list.filter&#123; it &gt; <span class="number">0</span>&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="检测元素是否在集合中"><a href="#检测元素是否在集合中" class="headerlink" title="检测元素是否在集合中"></a>检测元素是否在集合中</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="string">&quot;abc&quot;</span> <span class="keyword">in</span> list)</span><br><span class="line"><span class="keyword">if</span> (<span class="string">&quot;abc&quot;</span> !<span class="keyword">in</span> list)</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="字符串内插"><a href="#字符串内插" class="headerlink" title="字符串内插"></a>字符串内插</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> name = <span class="string">&quot;zhangsan&quot;</span></span><br><span class="line">println(<span class="string">&quot;name is <span class="variable">$name</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="when"><a href="#when" class="headerlink" title="when"></a>when</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">when</span>(x) &#123;</span><br><span class="line">    <span class="keyword">is</span> A -&gt; ...</span><br><span class="line">    <span class="keyword">is</span> B -&gt; ...</span><br><span class="line">    <span class="keyword">else</span> -&gt; ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="快速生成List"><a href="#快速生成List" class="headerlink" title="快速生成List"></a>快速生成List</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> list = listOf(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="快速生成map"><a href="#快速生成map" class="headerlink" title="快速生成map"></a>快速生成map</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> map = mapOf(<span class="string">&quot;a&quot;</span> to <span class="number">1</span>, <span class="string">&quot;b&quot;</span> to <span class="number">2</span>, <span class="string">&quot;c&quot;</span> to <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="访问map"><a href="#访问map" class="headerlink" title="访问map"></a>访问map</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">println(map[<span class="string">&quot;key&quot;</span>])</span><br><span class="line">map[<span class="string">&quot;key&quot;</span>] = value</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="遍历map或pair型list"><a href="#遍历map或pair型list" class="headerlink" title="遍历map或pair型list"></a>遍历map或pair型list</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> ((k, v) <span class="keyword">in</span> map) &#123;</span><br><span class="line">    println(<span class="string">&quot;<span class="variable">$k</span> is <span class="variable">$v</span>&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="区间迭代"><a href="#区间迭代" class="headerlink" title="区间迭代"></a>区间迭代</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1.</span><span class="number">.100</span>) &#123; ... &#125; <span class="comment">//闭区间 1到100 含100</span></span><br><span class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1</span> until <span class="number">100</span>) &#123; ... &#125; <span class="comment">//半开区间， 不包含100</span></span><br><span class="line"><span class="keyword">for</span> (x <span class="keyword">in</span> <span class="number">2.</span><span class="number">.10</span> step <span class="number">2</span>) &#123; ... &#125;</span><br><span class="line"><span class="keyword">for</span> (x <span class="keyword">in</span> <span class="number">10</span> downTo <span class="number">1</span>) &#123; ... &#125;</span><br><span class="line">(<span class="number">1.</span><span class="number">.10</span>).forEach &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="延迟属性"><a href="#延迟属性" class="headerlink" title="延迟属性"></a>延迟属性</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> p: String <span class="keyword">by</span> lazy &#123;</span><br><span class="line">    <span class="comment">// 计算该字符串</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="扩展函数"><a href="#扩展函数" class="headerlink" title="扩展函数"></a>扩展函数</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> String.<span class="title">spaceToCamelCase</span><span class="params">()</span></span> &#123; ... &#125;</span><br><span class="line"><span class="string">&quot;Convert this to camelcase&quot;</span>.spaceToCamelCase()</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="静态类"><a href="#静态类" class="headerlink" title="静态类"></a>静态类</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">object</span> Resource &#123;</span><br><span class="line">    <span class="keyword">val</span> name = <span class="string">&quot;Name&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="实例化一个抽象类"><a href="#实例化一个抽象类" class="headerlink" title="实例化一个抽象类"></a>实例化一个抽象类</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">AbstractClass</span> &#123;</span><br><span class="line">    <span class="keyword">abstract</span> <span class="function"><span class="keyword">fun</span> <span class="title">doSomething</span><span class="params">()</span></span></span><br><span class="line">    <span class="keyword">abstract</span> <span class="function"><span class="keyword">fun</span> <span class="title">sleep</span><span class="params">()</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> myObject = <span class="keyword">object</span>: AbstractClass() &#123;</span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">doSomething</span><span class="params">()</span></span> &#123; ... &#125;</span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">sleep</span><span class="params">()</span></span> &#123; ... &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    myObject.doSomething()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="if-not-null-缩写"><a href="#if-not-null-缩写" class="headerlink" title="if-not-null 缩写"></a>if-not-null 缩写</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> files = File(<span class="string">&quot;Test&quot;</span>).listFiles()</span><br><span class="line">println(files?.size) <span class="comment">//如果 files 不是 null，那么输出其大小</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="if-not-null-else-缩写"><a href="#if-not-null-else-缩写" class="headerlink" title="if-not-null-else 缩写"></a>if-not-null-else 缩写</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> files = File(<span class="string">&quot;Test&quot;</span>).listFiles()</span><br><span class="line">println(file?.size ?: <span class="string">&quot;empty&quot;</span>) <span class="comment">//如果 files 为 null，那么输出“empty”</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="if-null-执行一个语句"><a href="#if-null-执行一个语句" class="headerlink" title="if null 执行一个语句"></a>if null 执行一个语句</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> values = ...</span><br><span class="line"><span class="keyword">val</span> email = values[<span class="string">&quot;email&quot;</span>] ?: <span class="keyword">throw</span> IllegalStateException(<span class="string">&quot;Email is missing!&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="在可能会空的集合中取第一元素"><a href="#在可能会空的集合中取第一元素" class="headerlink" title="在可能会空的集合中取第一元素"></a>在可能会空的集合中取第一元素</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> emails = …… <span class="comment">// 可能会是空集合</span></span><br><span class="line"><span class="keyword">val</span> mainEmail = emails.firstOrNull() ?: <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="if-not-null-执行语句"><a href="#if-not-null-执行语句" class="headerlink" title="if not null 执行语句"></a>if not null 执行语句</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> value = ...</span><br><span class="line">value?.let &#123;</span><br><span class="line">    ... <span class="comment">// 代码会执行到此处, 假如data不为null</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="映射可空值（如果非空的话）"><a href="#映射可空值（如果非空的话）" class="headerlink" title="映射可空值（如果非空的话）"></a>映射可空值（如果非空的话）</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> value = ...</span><br><span class="line"><span class="keyword">val</span> mapped = value?.let &#123; transformValue(it) &#125; ?: defaultValue</span><br><span class="line"><span class="comment">//如果该值或其转换结果为空，那么返回 defaultValue。</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="返回when表达式"><a href="#返回when表达式" class="headerlink" title="返回when表达式"></a>返回when表达式</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">transform</span><span class="params">(color: <span class="type">String</span>)</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">when</span>(color) &#123;</span><br><span class="line">        <span class="string">&quot;red&quot;</span> -&gt; <span class="number">0</span></span><br><span class="line">        <span class="string">&quot;green&quot;</span> -&gt; <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span> -&gt; <span class="keyword">throw</span> IllegalArgumentException(<span class="string">&quot;Invalid color param value&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="try-catch-表达式"><a href="#try-catch-表达式" class="headerlink" title="try-catch 表达式"></a>try-catch 表达式</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">test</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> result = <span class="keyword">try</span> &#123;</span><br><span class="line">        count()</span><br><span class="line">    &#125; <span class="keyword">catch</span> (e: ArithmeticException) &#123;</span><br><span class="line">        <span class="keyword">throw</span> IllegalStateException(e)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//使用result</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="if-表达式"><a href="#if-表达式" class="headerlink" title="if 表达式"></a>if 表达式</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> y = <span class="keyword">if</span> (x == <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="string">&quot;one&quot;</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (x == <span class="number">2</span>) &#123;</span><br><span class="line">    <span class="string">&quot;two&quot;</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="string">&quot;other&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="返回类型为-Unit-的方法的构建器风格用法"><a href="#返回类型为-Unit-的方法的构建器风格用法" class="headerlink" title="返回类型为 Unit 的方法的构建器风格用法"></a>返回类型为 Unit 的方法的构建器风格用法</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">arrayOfMinusOnes</span><span class="params">(size: <span class="type">Int</span>)</span></span>: IntArray &#123;</span><br><span class="line">    <span class="keyword">return</span> IntArray(size).apply &#123; fill(-<span class="number">1</span>) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="但表达式函数"><a href="#但表达式函数" class="headerlink" title="但表达式函数"></a>但表达式函数</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">theAnswer</span><span class="params">()</span></span> = <span class="number">42</span></span><br><span class="line"><span class="comment">//等价于</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">theAnswer</span><span class="params">()</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">42</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>单表达式函数与其它惯用法一起使用能简化代码，例如和 <code>when</code> 表达式一起使用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">transform</span><span class="params">(color: <span class="type">String</span>)</span></span>: <span class="built_in">Int</span> = <span class="keyword">when</span> (color) &#123;</span><br><span class="line">    <span class="string">&quot;Red&quot;</span> -&gt; <span class="number">0</span></span><br><span class="line">    <span class="string">&quot;Green&quot;</span> -&gt; <span class="number">1</span></span><br><span class="line">    <span class="string">&quot;Blue&quot;</span> -&gt; <span class="number">2</span></span><br><span class="line">    <span class="keyword">else</span> -&gt; <span class="keyword">throw</span> IllegalArgumentException(<span class="string">&quot;Invalid color param value&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="对一个对象实例调用多个方法-（with）"><a href="#对一个对象实例调用多个方法-（with）" class="headerlink" title="对一个对象实例调用多个方法 （with）"></a>对一个对象实例调用多个方法 （with）</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Turtle</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">penDown</span><span class="params">()</span></span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">penUp</span><span class="params">()</span></span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">turn</span><span class="params">(degrees: <span class="type">Double</span>)</span></span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">forward</span><span class="params">(pixels: <span class="type">Double</span>)</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> myTurtle = Turtle()</span><br><span class="line">with(myTurtle) &#123; <span class="comment">// 画一个 100 像素的正方形</span></span><br><span class="line">    penDown()</span><br><span class="line">    <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1.</span><span class="number">.4</span>) &#123;</span><br><span class="line">        forward(<span class="number">100.0</span>)</span><br><span class="line">        turn(<span class="number">90.0</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    penUp()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="配置对象的属性（apply）"><a href="#配置对象的属性（apply）" class="headerlink" title="配置对象的属性（apply）"></a>配置对象的属性（apply）</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> myRectangle = Rectangle().apply &#123;</span><br><span class="line">    length = <span class="number">4</span></span><br><span class="line">    breadth = <span class="number">5</span></span><br><span class="line">    color = <span class="number">0xFAFAFA</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这对于配置未出现在对象构造函数中的属性非常有用</p>
+<h4 id="Java-7-的-try-with-resources"><a href="#Java-7-的-try-with-resources" class="headerlink" title="Java 7 的 try-with-resources"></a>Java 7 的 try-with-resources</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> stream = Files.newInputStream(Paths.<span class="keyword">get</span>(<span class="string">&quot;/some/file.txt&quot;</span>))</span><br><span class="line">stream.buffered().reader().use &#123; reader -&gt;</span><br><span class="line">    println(reader.readText())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="需要泛型信息的泛型函数"><a href="#需要泛型信息的泛型函数" class="headerlink" title="需要泛型信息的泛型函数"></a>需要泛型信息的泛型函数</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  public final class Gson &#123;</span></span><br><span class="line"><span class="comment">//     ……</span></span><br><span class="line"><span class="comment">//     public &lt;T&gt; T fromJson(JsonElement json, Class&lt;T&gt; classOfT) throws JsonSyntaxException &#123;</span></span><br><span class="line"><span class="comment">//     ……</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">inline</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;<span class="keyword">reified</span> T: Any&gt;</span> Gson.<span class="title">fromJson</span><span class="params">(json: <span class="type">JsonElement</span>)</span></span>: T = <span class="keyword">this</span>.fromJson(json, T::<span class="keyword">class</span>.java)</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="可空布尔"><a href="#可空布尔" class="headerlink" title="可空布尔"></a>可空布尔</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> b: <span class="built_in">Boolean</span>? = ……</span><br><span class="line"><span class="keyword">if</span> (b == <span class="literal">true</span>) &#123;</span><br><span class="line">    ……</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// `b` 是 false 或者 null</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="交换两个变量"><a href="#交换两个变量" class="headerlink" title="交换两个变量"></a>交换两个变量</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span></span><br><span class="line"><span class="keyword">var</span> b = <span class="number">2</span></span><br><span class="line">a = b.also &#123; b = a &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="将代码标记为不完整（TODO）"><a href="#将代码标记为不完整（TODO）" class="headerlink" title="将代码标记为不完整（TODO）"></a>将代码标记为不完整（TODO）</h4><p>Kotlin 的标准库有一个 <code>TODO()</code> 函数，该函数总是抛出一个 <code>NotImplementedError</code>。 其返回类型为 <code>Nothing</code>，因此无论预期类型是什么都可以使用它。 还有一个接受原因参数的重载：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">calcTaxes</span><span class="params">()</span></span>: BigDecimal = TODO(<span class="string">&quot;Waiting for feedback from accounting&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>IntelliJ IDEA 的 kotlin 插件理解 <code>TODO()</code> 的语言，并且会自动在 TODO 工具窗口中添加代码指示。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/11/30/CentOS%E5%90%AF%E5%8A%A8%E6%8A%A5%E9%94%99-kernel-panic-not-syncing-VFS-Unable-to-mount-root-fs-on-unknown-block/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/30/CentOS%E5%90%AF%E5%8A%A8%E6%8A%A5%E9%94%99-kernel-panic-not-syncing-VFS-Unable-to-mount-root-fs-on-unknown-block/" class="post-title-link" itemprop="url">CentOS启动报错:kernel panic-not syncing:VFS:Unable to mount root fs on unknown block</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-30 15:28:20" itemprop="dateCreated datePublished" datetime="2021-11-30T15:28:20+08:00">2021-11-30</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>这是更新内核出现的问题。</p>
+<p>解决方法，在开机启动时，选择下面的旧版本的内核启动，正常进入后，需要设置内核启动项来改变默认启动内核。</p>
+<p>以下操作需要root权限。</p>
+<p>1.查看当前默认内核启动项 </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grub2-editenv list</span><br></pre></td></tr></table></figure>
+
+
+
+<p>2.查看当前系统使用内核</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -r</span><br></pre></td></tr></table></figure>
+
+
+
+<p>3.查看可以使用的内核项</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F\&#x27; &#x27;$1==&quot;menuentry &quot; &#123;print i++ &quot; : &quot; $2&#125;&#x27; /etc/grub2.cfg</span><br></pre></td></tr></table></figure>
+
+
+
+<p>4.更改默认启动内核项</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grub2-set-default 1</span><br></pre></td></tr></table></figure>
+
+
+
+<p>5.重启系统</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/11/06/Sqoop%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/06/Sqoop%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="post-title-link" itemprop="url">Sqoop常用命令</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-06 21:12:45" itemprop="dateCreated datePublished" datetime="2021-11-06T21:12:45+08:00">2021-11-06</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>命令</strong></th>
+<th><strong>类</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>import</td>
+<td>ImportTool</td>
+<td>将数据导入到集群</td>
+</tr>
+<tr>
+<td>2</td>
+<td>export</td>
+<td>ExportTool</td>
+<td>将集群数据导出</td>
+</tr>
+<tr>
+<td>3</td>
+<td>codegen</td>
+<td>CodeGenTool</td>
+<td>获取数据库中某张表数据生成Java并打包Jar</td>
+</tr>
+<tr>
+<td>4</td>
+<td>create-hive-table</td>
+<td>CreateHiveTableTool</td>
+<td>创建Hive表</td>
+</tr>
+<tr>
+<td>5</td>
+<td>eval</td>
+<td>EvalSqlTool</td>
+<td>查看SQL执行结果</td>
+</tr>
+<tr>
+<td>6</td>
+<td>import-all-tables</td>
+<td>ImportAllTablesTool</td>
+<td>导入某个数据库下所有表到HDFS中</td>
+</tr>
+<tr>
+<td>7</td>
+<td>job</td>
+<td>JobTool</td>
+<td>用来生成一个sqoop的任务，生成后，该任务并不执行，除非使用命令执行该任务。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>list-databases</td>
+<td>ListDatabasesTool</td>
+<td>列出所有数据库名</td>
+</tr>
+<tr>
+<td>9</td>
+<td>list-tables</td>
+<td>ListTablesTool</td>
+<td>列出某个数据库下所有表</td>
+</tr>
+<tr>
+<td>10</td>
+<td>merge</td>
+<td>MergeTool</td>
+<td>将HDFS中不同目录下面的数据合在一起，并存放在指定的目录中</td>
+</tr>
+<tr>
+<td>11</td>
+<td>metastore</td>
+<td>MetastoreTool</td>
+<td>记录sqoop job的元数据信息，如果不启动metastore实例，则默认的元数据存储目录为：~&#x2F;.sqoop，如果要更改存储目录，可以在配置文件sqoop-site.xml中进行更改。</td>
+</tr>
+<tr>
+<td>12</td>
+<td>help</td>
+<td>HelpTool</td>
+<td>打印sqoop帮助信息</td>
+</tr>
+<tr>
+<td>13</td>
+<td>version</td>
+<td>VersionTool</td>
+<td>打印sqoop版本信息</td>
+</tr>
+</tbody></table>
+<h1 id="命令-amp-参数详解"><a href="#命令-amp-参数详解" class="headerlink" title="命令&amp;参数详解"></a>命令&amp;参数详解</h1><h2 id="公用参数"><a href="#公用参数" class="headerlink" title="公用参数"></a>公用参数</h2><h3 id="数据库连接"><a href="#数据库连接" class="headerlink" title="数据库连接"></a>数据库连接</h3><table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>–connect</td>
+<td>连接关系型数据库的URL</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–connection-manager</td>
+<td>指定要使用的连接管理类</td>
+</tr>
+<tr>
+<td>3</td>
+<td>–driver</td>
+<td>Hadoop根目录</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–help</td>
+<td>打印帮助信息</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–password</td>
+<td>连接数据库的密码</td>
+</tr>
+<tr>
+<td>6</td>
+<td>–username</td>
+<td>连接数据库的用户名</td>
+</tr>
+<tr>
+<td>7</td>
+<td>–verbose</td>
+<td>在控制台打印出详细信息</td>
+</tr>
+</tbody></table>
+<h3 id="import"><a href="#import" class="headerlink" title="import"></a>import</h3><table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>–enclosed-by <char></char></td>
+<td>给字段值前加上指定的字符</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–escaped-by <char></char></td>
+<td>对字段中的双引号加转义符</td>
+</tr>
+<tr>
+<td>3</td>
+<td>–fields-terminated-by <char></char></td>
+<td>设定每个字段是以什么符号作为结束，默认为逗号</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–lines-terminated-by <char></char></td>
+<td>设定每行记录之间的分隔符，默认是\n</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–mysql-delimiters</td>
+<td>Mysql默认的分隔符设置，字段之间以逗号分隔，行之间以\n分隔，默认转义符是\，字段值以单引号包裹。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>–optionally-enclosed-by <char></char></td>
+<td>给带有双引号或单引号的字段值前后加上指定字符。</td>
+</tr>
+</tbody></table>
+<h3 id="export"><a href="#export" class="headerlink" title="export"></a>export</h3><table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>–input-enclosed-by <char></char></td>
+<td>对字段值前后加上指定字符</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–input-escaped-by <char></char></td>
+<td>对含有转移符的字段做转义处理</td>
+</tr>
+<tr>
+<td>3</td>
+<td>–input-fields-terminated-by <char></char></td>
+<td>字段之间的分隔符</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–input-lines-terminated-by <char></char></td>
+<td>行之间的分隔符</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–input-optionally-enclosed-by <char></char></td>
+<td>给带有双引号或单引号的字段前后加上指定字符</td>
+</tr>
+</tbody></table>
+<h3 id="hive"><a href="#hive" class="headerlink" title="hive"></a>hive</h3><table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>–hive-delims-replacement <arg></arg></td>
+<td>用自定义的字符串替换掉数据中的\r\n和\013 \010等字符</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–hive-drop-import-delims</td>
+<td>在导入数据到hive时，去掉数据中的\r\n\013\010这样的字符</td>
+</tr>
+<tr>
+<td>3</td>
+<td>–map-column-hive <arg></arg></td>
+<td>生成hive表时，可以更改生成字段的数据类型</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–hive-partition-key</td>
+<td>创建分区，后面直接跟分区名，分区字段的默认类型为string</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–hive-partition-value <v></v></td>
+<td>导入数据时，指定某个分区的值</td>
+</tr>
+<tr>
+<td>6</td>
+<td>–hive-home <dir></dir></td>
+<td>hive的安装目录，可以通过该参数覆盖之前默认配置的目录</td>
+</tr>
+<tr>
+<td>7</td>
+<td>–hive-import</td>
+<td>将数据从关系数据库中导入到hive表中</td>
+</tr>
+<tr>
+<td>8</td>
+<td>–hive-overwrite</td>
+<td>覆盖掉在hive表中已经存在的数据</td>
+</tr>
+<tr>
+<td>9</td>
+<td>–create-hive-table</td>
+<td>默认是false，即，如果目标表已经存在了，那么创建任务失败。</td>
+</tr>
+<tr>
+<td>10</td>
+<td>–hive-table</td>
+<td>后面接要创建的hive表,默认使用MySQL的表名</td>
+</tr>
+<tr>
+<td>11</td>
+<td>–table</td>
+<td>指定关系数据库的表名</td>
+</tr>
+</tbody></table>
+<h2 id="命令-amp-参数"><a href="#命令-amp-参数" class="headerlink" title="命令&amp;参数"></a>命令&amp;参数</h2><h3 id="import-1"><a href="#import-1" class="headerlink" title="import"></a>import</h3><p>将关系型数据库中的数据导入到HDFS（包括Hive，HBase）中，如果导入的是Hive，那么当Hive中没有对应表时，则自动创建。</p>
+<h4 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h4><p><strong>如：导入数据到hive中</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">bin/sqoop import \</span></span><br><span class="line"><span class="language-bash">--connect jdbc:mysql://node1:3306/company \</span></span><br><span class="line"><span class="language-bash">--username root \</span></span><br><span class="line"><span class="language-bash">--password 000000 \</span></span><br><span class="line"><span class="language-bash">--table staff \</span></span><br><span class="line"><span class="language-bash">--hive-import</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>如：增量导入数据到hive中，mode&#x3D;append</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">bin/sqoop import \</span></span><br><span class="line"><span class="language-bash">--connect jdbc:mysql://node1:3306/company \</span></span><br><span class="line"><span class="language-bash">--username root \</span></span><br><span class="line"><span class="language-bash">--password 000000 \</span></span><br><span class="line"><span class="language-bash">--table staff \</span></span><br><span class="line"><span class="language-bash">--num-mappers 1 \</span></span><br><span class="line"><span class="language-bash">--fields-terminated-by <span class="string">&quot;\t&quot;</span> \</span></span><br><span class="line"><span class="language-bash">--target-dir /user/hive/warehouse/staff_hive \</span></span><br><span class="line"><span class="language-bash">--check-column <span class="built_in">id</span> \</span></span><br><span class="line"><span class="language-bash">--incremental append \</span></span><br><span class="line"><span class="language-bash">--last-value 3</span></span><br></pre></td></tr></table></figure>
+
+<p>提示：append不能与–hive-等参数同时使用（Append mode for hive imports is not yet supported. Please remove the parameter –append-mode）</p>
+<p><strong>如：增量导入数据到hdfs中，mode&#x3D;lastmodified</strong></p>
+<p>先在mysql中建表并插入几条数据：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">create table company.staff_timestamp(<span class="built_in">id</span> int(4), name varchar(255), sex varchar(255), last_modified timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP);</span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">insert into company.staff_timestamp (<span class="built_in">id</span>, name, sex) values(1, <span class="string">&#x27;刘三&#x27;</span>, <span class="string">&#x27;男&#x27;</span>);</span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">insert into company.staff_timestamp (<span class="built_in">id</span>, name, sex) values(2, <span class="string">&#x27;王娟&#x27;</span>, <span class="string">&#x27;女&#x27;</span>);</span></span><br></pre></td></tr></table></figure>
+
+<p>先导入一部分数据：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">bin/sqoop import \</span></span><br><span class="line"><span class="language-bash">--connect jdbc:mysql://node1:3306/company \</span></span><br><span class="line"><span class="language-bash">--username root \</span></span><br><span class="line"><span class="language-bash">--password 000000 \</span></span><br><span class="line"><span class="language-bash">--table staff_timestamp \</span></span><br><span class="line"><span class="language-bash">--delete-target-dir \</span></span><br><span class="line"><span class="language-bash">--m 1</span></span><br></pre></td></tr></table></figure>
+
+<p>再增量导入一部分数据：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">insert into company.staff_timestamp (<span class="built_in">id</span>, name, sex) values(3, <span class="string">&#x27;李兰&#x27;</span>, <span class="string">&#x27;女&#x27;</span>);</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">bin/sqoop import \</span></span><br><span class="line"><span class="language-bash">--connect jdbc:mysql://node1:3306/company \</span></span><br><span class="line"><span class="language-bash">--username root \</span></span><br><span class="line"><span class="language-bash">--password 000000 \</span></span><br><span class="line"><span class="language-bash">--table staff_timestamp \</span></span><br><span class="line"><span class="language-bash">--check-column last_modified \</span></span><br><span class="line"><span class="language-bash">--incremental lastmodified \</span></span><br><span class="line"><span class="language-bash">--last-value <span class="string">&quot;2021-11-01 22:000:00&quot;</span> \</span></span><br><span class="line"><span class="language-bash">--m 1 \</span></span><br><span class="line"><span class="language-bash">--append</span></span><br></pre></td></tr></table></figure>
+
+<p>提示：使用lastmodified方式导入数据要指定增量数据是要–append（追加）还是要–merge-key（合并）</p>
+<p>提示：last-value指定的值是会包含于增量导入的数据中</p>
+<h4 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h4><table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>–append</td>
+<td>将数据追加到HDFS中已经存在的DataSet中，如果使用该参数，sqoop会把数据先导入到临时文件目录，再合并。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–as-avrodatafile</td>
+<td>将数据导入到一个Avro数据文件中</td>
+</tr>
+<tr>
+<td>3</td>
+<td>–as-sequencefile</td>
+<td>将数据导入到一个sequence文件中</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–as-textfile</td>
+<td>将数据导入到一个普通文本文件中</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–boundary-query <statement></statement></td>
+<td>边界查询，导入的数据为该参数的值（一条sql语句）所执行的结果区间内的数据。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>–columns &lt;col1, col2, col3&gt;</td>
+<td>指定要导入的字段</td>
+</tr>
+<tr>
+<td>7</td>
+<td>–direct</td>
+<td>直接导入模式，使用的是关系数据库自带的导入导出工具，以便加快导入导出过程。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>–direct-split-size</td>
+<td>在使用上面direct直接导入的基础上，对导入的流按字节分块，即达到该阈值就产生一个新的文件</td>
+</tr>
+<tr>
+<td>9</td>
+<td>–inline-lob-limit</td>
+<td>设定大对象数据类型的最大值</td>
+</tr>
+<tr>
+<td>10</td>
+<td>–m或–num-mappers</td>
+<td>启动N个map来并行导入数据，默认4个。</td>
+</tr>
+<tr>
+<td>11</td>
+<td>–query或–e <statement></statement></td>
+<td>将查询结果的数据导入，使用时必须伴随参–target-dir，–hive-table，如果查询中有where条件，则条件后必须加上$CONDITIONS关键字</td>
+</tr>
+<tr>
+<td>12</td>
+<td>–split-by <column-name></column-name></td>
+<td>按照某一列来切分表的工作单元，不能与–autoreset-to-one-mapper连用（请参考官方文档）</td>
+</tr>
+<tr>
+<td>13</td>
+<td>–table <table-name></table-name></td>
+<td>关系数据库的表名</td>
+</tr>
+<tr>
+<td>14</td>
+<td>–target-dir <dir></dir></td>
+<td>指定HDFS路径</td>
+</tr>
+<tr>
+<td>15</td>
+<td>–warehouse-dir <dir></dir></td>
+<td>与14参数不能同时使用，导入数据到HDFS时指定的目录</td>
+</tr>
+<tr>
+<td>16</td>
+<td>–where</td>
+<td>从关系数据库导入数据时的查询条件</td>
+</tr>
+<tr>
+<td>17</td>
+<td>–z或–compress</td>
+<td>允许压缩</td>
+</tr>
+<tr>
+<td>18</td>
+<td>–compression-codec</td>
+<td>指定hadoop压缩编码类，默认为gzip(Use Hadoop codec default gzip)</td>
+</tr>
+<tr>
+<td>19</td>
+<td>–null-string <null-string></null-string></td>
+<td>string类型的列如果null，替换为指定字符串</td>
+</tr>
+<tr>
+<td>20</td>
+<td>–null-non-string <null-string></null-string></td>
+<td>非string类型的列如果null，替换为指定字符串</td>
+</tr>
+<tr>
+<td>21</td>
+<td>–check-column <col></td>
+<td>作为增量导入判断的列名</td>
+</tr>
+<tr>
+<td>22</td>
+<td>–incremental <mode></mode></td>
+<td>mode：append或lastmodified</td>
+</tr>
+<tr>
+<td>23</td>
+<td>–last-value <value></value></td>
+<td>指定某一个值，用于标记增量导入的位置</td>
+</tr>
+</tbody></table>
+<h3 id="export-1"><a href="#export-1" class="headerlink" title="export"></a>export</h3><p>从HDFS（包括Hive和HBase）中奖数据导出到关系型数据库中。</p>
+<h4 id="命令-1"><a href="#命令-1" class="headerlink" title="命令"></a>命令</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">bin/sqoop <span class="built_in">export</span> \</span></span><br><span class="line"><span class="language-bash">--connect jdbc:mysql://node1:3306/company \</span></span><br><span class="line"><span class="language-bash">--username root \</span></span><br><span class="line"><span class="language-bash">--password 000000 \</span></span><br><span class="line"><span class="language-bash">--table staff \</span></span><br><span class="line"><span class="language-bash">--export-dir /user/company \</span></span><br><span class="line"><span class="language-bash">--input-fields-terminated-by <span class="string">&quot;\t&quot;</span> \</span></span><br><span class="line"><span class="language-bash">--num-mappers 1</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="参数-1"><a href="#参数-1" class="headerlink" title="参数"></a>参数</h4><table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>–direct</td>
+<td>利用数据库自带的导入导出工具，以便于提高效率</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–export-dir <dir></dir></td>
+<td>存放数据的HDFS的源目录</td>
+</tr>
+<tr>
+<td>3</td>
+<td>-m或–num-mappers <n></n></td>
+<td>启动N个map来并行导入数据，默认4个</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–table <table-name></table-name></td>
+<td>指定导出到哪个RDBMS中的表</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–update-key <col-name></col-name></td>
+<td>对某一列的字段进行更新操作</td>
+</tr>
+<tr>
+<td>6</td>
+<td>–update-mode <mode></mode></td>
+<td>updateonlyallowinsert(默认)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>–input-null-string <null-string></null-string></td>
+<td>请参考import该类似参数说明</td>
+</tr>
+<tr>
+<td>8</td>
+<td>–input-null-non-string <null-string></null-string></td>
+<td>请参考import该类似参数说明</td>
+</tr>
+<tr>
+<td>9</td>
+<td>–staging-table <staging-table-name></staging-table-name></td>
+<td>创建一张临时表，用于存放所有事务的结果，然后将所有事务结果一次性导入到目标表中，防止错误。</td>
+</tr>
+<tr>
+<td>10</td>
+<td>–clear-staging-table</td>
+<td>如果第9个参数非空，则可以在导出操作执行前，清空临时事务结果表</td>
+</tr>
+</tbody></table>
+<h3 id="codegen"><a href="#codegen" class="headerlink" title="codegen"></a>codegen</h3><p>将关系型数据库中的表映射为一个Java类，在该类中有各列对应的各个字段。</p>
+<h4 id="命令-2"><a href="#命令-2" class="headerlink" title="命令"></a>命令</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">bin/sqoop codegen \</span></span><br><span class="line"><span class="language-bash">--connect jdbc:mysql://node1:3306/company \</span></span><br><span class="line"><span class="language-bash">--username root \</span></span><br><span class="line"><span class="language-bash">--password 000000 \</span></span><br><span class="line"><span class="language-bash">--table staff \</span></span><br><span class="line"><span class="language-bash">--bindir /home/admin/Desktop/staff \</span></span><br><span class="line"><span class="language-bash">--class-name Staff \</span></span><br><span class="line"><span class="language-bash">--fields-terminated-by <span class="string">&quot;\t&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="参数-2"><a href="#参数-2" class="headerlink" title="参数"></a>参数</h4><table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>–bindir <dir></dir></td>
+<td>指定生成的Java文件、编译成的class文件及将生成文件打包为jar的文件输出路径</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–class-name <name></name></td>
+<td>设定生成的Java文件指定的名称</td>
+</tr>
+<tr>
+<td>3</td>
+<td>–outdir <dir></dir></td>
+<td>生成Java文件存放的路径</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–package-name <name></name></td>
+<td>包名，如com.z，就会生成com和z两级目录</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–input-null-non-string <null-str></null-str></td>
+<td>在生成的Java文件中，可以将null字符串或者不存在的字符串设置为想要设定的值（例如空字符串）</td>
+</tr>
+<tr>
+<td>6</td>
+<td>–input-null-string <null-str></null-str></td>
+<td>将null字符串替换成想要替换的值（一般与5同时使用）</td>
+</tr>
+<tr>
+<td>7</td>
+<td>–map-column-java <arg></arg></td>
+<td>数据库字段在生成的Java文件中会映射成各种属性，且默认的数据类型与数据库类型保持对应关系。该参数可以改变默认类型，例如：–map-column-java id&#x3D;long, name&#x3D;String</td>
+</tr>
+<tr>
+<td>8</td>
+<td>–null-non-string <null-str></null-str></td>
+<td>在生成Java文件时，可以将不存在或者null的字符串设置为其他值</td>
+</tr>
+<tr>
+<td>9</td>
+<td>–null-string <null-str></null-str></td>
+<td>在生成Java文件时，将null字符串设置为其他值（一般与8同时使用）</td>
+</tr>
+<tr>
+<td>10</td>
+<td>–table <table-name></table-name></td>
+<td>对应关系数据库中的表名，生成的Java文件中的各个属性与该表的各个字段一一对应</td>
+</tr>
+</tbody></table>
+<h3 id="create-hive-table"><a href="#create-hive-table" class="headerlink" title="create-hive-table"></a>create-hive-table</h3><p>生成与关系数据库表结构对应的hive表结构。</p>
+<h4 id="命令-3"><a href="#命令-3" class="headerlink" title="命令"></a>命令</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">bin/sqoop create-hive-table \</span></span><br><span class="line"><span class="language-bash">--connect jdbc:mysql://node1:3306/company \</span></span><br><span class="line"><span class="language-bash">--username root \</span></span><br><span class="line"><span class="language-bash">--password 000000 \</span></span><br><span class="line"><span class="language-bash">--table staff \</span></span><br><span class="line"><span class="language-bash">--hive-table hive_staff</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="参数-3"><a href="#参数-3" class="headerlink" title="参数"></a>参数</h4><table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>–hive-home <dir></dir></td>
+<td>Hive的安装目录，可以通过该参数覆盖掉默认的Hive目录</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–hive-overwrite</td>
+<td>覆盖掉在Hive表中已经存在的数据</td>
+</tr>
+<tr>
+<td>3</td>
+<td>–create-hive-table</td>
+<td>默认是false，如果目标表已经存在了，那么创建任务会失败</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–hive-table</td>
+<td>后面接要创建的hive表</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–table</td>
+<td>指定关系数据库的表名</td>
+</tr>
+</tbody></table>
+<h3 id="eval"><a href="#eval" class="headerlink" title="eval"></a>eval</h3><p>可以快速的使用SQL语句对关系型数据库进行操作，经常用于在import数据之前，了解一下SQL语句是否正确，数据是否正常，并可以将结果显示在控制台。</p>
+<h4 id="命令-4"><a href="#命令-4" class="headerlink" title="命令"></a>命令</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">bin/sqoop <span class="built_in">eval</span> \</span></span><br><span class="line"><span class="language-bash">--connect jdbc:mysql://node1:3306/company \</span></span><br><span class="line"><span class="language-bash">--username root \</span></span><br><span class="line"><span class="language-bash">--password 000000 \</span></span><br><span class="line"><span class="language-bash">--query <span class="string">&quot;SELECT * FROM staff&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="参数-4"><a href="#参数-4" class="headerlink" title="参数"></a>参数</h4><table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>–query或–e</td>
+<td>后跟查询的SQL语句</td>
+</tr>
+</tbody></table>
+<h3 id="import-all-tables"><a href="#import-all-tables" class="headerlink" title="import-all-tables"></a>import-all-tables</h3><p>可以将RDBMS中的所有表导入到HDFS中，每一个表都对应一个HDFS目录</p>
+<h4 id="命令-5"><a href="#命令-5" class="headerlink" title="命令"></a>命令</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">bin/sqoop import-all-tables \</span></span><br><span class="line"><span class="language-bash">--connect jdbc:mysql://node1:3306/company \</span></span><br><span class="line"><span class="language-bash">--username root \</span></span><br><span class="line"><span class="language-bash">--password 000000 \</span></span><br><span class="line"><span class="language-bash">--warehouse-dir /all_tables</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="参数-5"><a href="#参数-5" class="headerlink" title="参数"></a>参数</h4><table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>–as-avrodatafile</td>
+<td>这些参数的含义均和import对应的含义一致</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–as-sequencefile</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>–as-textfile</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>–direct</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>–direct-split-size <n></n></td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>–inline-lob-limit <n></n></td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>–m或—num-mappers <n></n></td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td>–warehouse-dir <dir></dir></td>
+<td></td>
+</tr>
+<tr>
+<td>9</td>
+<td>-z或–compress</td>
+<td></td>
+</tr>
+<tr>
+<td>10</td>
+<td>–compression-codec</td>
+<td></td>
+</tr>
+</tbody></table>
+<h4 id="job"><a href="#job" class="headerlink" title="job"></a>job</h4><p>用来生成一个sqoop任务，生成后不会立即执行，需要手动执行。</p>
+<h4 id="命令-6"><a href="#命令-6" class="headerlink" title="命令"></a>命令</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">bin/sqoop job \</span></span><br><span class="line"><span class="language-bash"> --create myjob -- import-all-tables \</span></span><br><span class="line"><span class="language-bash"> --connect jdbc:mysql://node1:3306/company \</span></span><br><span class="line"><span class="language-bash"> --username root \</span></span><br><span class="line"><span class="language-bash"> --password 000000</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">bin/sqoop job \</span></span><br><span class="line"><span class="language-bash">--list</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">bin/sqoop job \</span></span><br><span class="line"><span class="language-bash">--<span class="built_in">exec</span> myjob</span></span><br></pre></td></tr></table></figure>
+
+<p>提示：注意import-all-tables和它左边的–之间有一个空格</p>
+<p>提示：如果需要连接metastore，则–meta-connect jdbc:hsqldb:hsql:&#x2F;&#x2F;linux01:16000&#x2F;sqoop</p>
+<h4 id="参数-6"><a href="#参数-6" class="headerlink" title="参数"></a>参数</h4><table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>–create <job-id></job-id></td>
+<td>创建job参数</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–delete <job-id></job-id></td>
+<td>删除一个job</td>
+</tr>
+<tr>
+<td>3</td>
+<td>–exec <job-id></job-id></td>
+<td>执行一个job</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–help</td>
+<td>显示job帮助</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–list</td>
+<td>显示job列表</td>
+</tr>
+<tr>
+<td>6</td>
+<td>–meta-connect <jdbc-uri></jdbc-uri></td>
+<td>用来连接metastore服务</td>
+</tr>
+<tr>
+<td>7</td>
+<td>–show <job-id></job-id></td>
+<td>显示一个job的信息</td>
+</tr>
+<tr>
+<td>8</td>
+<td>–verbose</td>
+<td>打印命令运行时的详细信息</td>
+</tr>
+</tbody></table>
+<p>提示：在执行一个job时，如果需要手动输入数据库密码，可以做如下优化</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>sqoop.metastore.client.record.password<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">description</span>&gt;</span>If true, allow saved passwords in the metastore.<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="list-databases"><a href="#list-databases" class="headerlink" title="list-databases"></a>list-databases</h3><h4 id="命令-7"><a href="#命令-7" class="headerlink" title="命令"></a>命令</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">bin/sqoop list-databases \</span></span><br><span class="line"><span class="language-bash">--connect jdbc:mysql://node1:3306/ \</span></span><br><span class="line"><span class="language-bash">--username root \</span></span><br><span class="line"><span class="language-bash">--password 000000</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="参数-7"><a href="#参数-7" class="headerlink" title="参数"></a>参数</h4><p>与公用参数一样</p>
+<h3 id="list-tables"><a href="#list-tables" class="headerlink" title="list-tables"></a>list-tables</h3><h4 id="命令-8"><a href="#命令-8" class="headerlink" title="命令"></a>命令</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">bin/sqoop list-tables \</span></span><br><span class="line"><span class="language-bash">--connect jdbc:mysql://node1:3306/company \</span></span><br><span class="line"><span class="language-bash">--username root \</span></span><br><span class="line"><span class="language-bash">--password 000000</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="参数-8"><a href="#参数-8" class="headerlink" title="参数"></a>参数</h4><p>与公用参数一样</p>
+<h3 id="merge"><a href="#merge" class="headerlink" title="merge"></a>merge</h3><p>将HDFS中不同目录下面的数据合并在一起并放入指定目录中</p>
+<p>数据环境：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">new_staff</span><br><span class="line">1       AAA     male</span><br><span class="line">2       BBB     male</span><br><span class="line">3       CCC     male</span><br><span class="line">4       DDD     male</span><br><span class="line">old_staff</span><br><span class="line">1       AAA     female</span><br><span class="line">2       CCC     female</span><br><span class="line">3       BBB     female</span><br><span class="line">6       DDD     female</span><br></pre></td></tr></table></figure>
+
+
+
+<p>提示：上边数据的列之间的分隔符应该为\t，行与行之间的分割符为\n，如果直接复制，请检查之。</p>
+<h4 id="命令-9"><a href="#命令-9" class="headerlink" title="命令"></a>命令</h4><p>创建JavaBean：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">bin/sqoop codegen \</span></span><br><span class="line"><span class="language-bash">--connect jdbc:mysql://node1:3306/company \</span></span><br><span class="line"><span class="language-bash">--username root \</span></span><br><span class="line"><span class="language-bash">--password 000000 \</span></span><br><span class="line"><span class="language-bash">--table staff \</span></span><br><span class="line"><span class="language-bash">--bindir /home/admin/Desktop/staff \</span></span><br><span class="line"><span class="language-bash">--class-name Staff \</span></span><br><span class="line"><span class="language-bash">--fields-terminated-by <span class="string">&quot;\t&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>合并</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">bin/sqoop merge \</span></span><br><span class="line"><span class="language-bash">--new-data /test/new/ \</span></span><br><span class="line"><span class="language-bash">--onto /test/old/ \</span></span><br><span class="line"><span class="language-bash">--target-dir /test/merged \</span></span><br><span class="line"><span class="language-bash">--jar-file /home/admin/Desktop/staff/Staff.jar \</span></span><br><span class="line"><span class="language-bash">--class-name Staff \</span></span><br><span class="line"><span class="language-bash">--merge-key <span class="built_in">id</span></span></span><br></pre></td></tr></table></figure>
+
+<p>结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1	AAA	MALE</span><br><span class="line">2	BBB	MALE</span><br><span class="line">3	CCC	MALE</span><br><span class="line">4	DDD	MALE</span><br><span class="line">6	DDD	FEMALE</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="参数-9"><a href="#参数-9" class="headerlink" title="参数"></a>参数</h4><table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>–new-data <path></path></td>
+<td>HDFS 待合并的数据目录，合并后在新的数据集中保留</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–onto <path></path></td>
+<td>HDFS合并后，重复的部分在新的数据集中被覆盖</td>
+</tr>
+<tr>
+<td>3</td>
+<td>–merge-key <col></td>
+<td>合并键，一般是主键ID</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–jar-file <file></file></td>
+<td>合并时引入的jar包，该jar包是通过Codegen工具生成的jar包</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–class-name <class></class></td>
+<td>对应的表名或对象名，该class类是包含在jar包中的</td>
+</tr>
+<tr>
+<td>6</td>
+<td>–target-dir <path></path></td>
+<td>合并后的数据在HDFS里存放的目录</td>
+</tr>
+</tbody></table>
+<h3 id="metastore"><a href="#metastore" class="headerlink" title="metastore"></a>metastore</h3><p>记录了Sqoop job的元数据信息，如果不启动该服务，那么默认job元数据的存储目录为~&#x2F;.sqoop，可在sqoop-site.xml中修改。</p>
+<h4 id="命令-10"><a href="#命令-10" class="headerlink" title="命令"></a>命令</h4><p>如：启动sqoop的metastore服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">bin/sqoop metastore</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="参数-10"><a href="#参数-10" class="headerlink" title="参数"></a>参数</h4><table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>–shutdown</td>
+<td>关闭metastore</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/11/04/Sqoop%E7%AE%80%E5%8D%95%E6%A1%88%E4%BE%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1961,417 +3138,10 @@ RxJava 的每个操作符都需要换新行，并且把换行符插入在 `.` �
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/09/17/Flume%E9%83%A8%E7%BD%B2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/17/Flume%E9%83%A8%E7%BD%B2/" class="post-title-link" itemprop="url">Flume部署</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-17 19:22:03" itemprop="dateCreated datePublished" datetime="2021-09-17T19:22:03+08:00">2021-09-17</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Flume部署"><a href="#Flume部署" class="headerlink" title="Flume部署"></a>Flume部署</h1><h2 id="地址"><a href="#地址" class="headerlink" title="地址"></a>地址</h2><ol>
-<li><p>Flume官网 </p>
-<p><a target="_blank" rel="noopener" href="https://flume.apache.org/">https://flume.apache.org/</a></p>
-</li>
-<li><p>文档地址</p>
-<p><a target="_blank" rel="noopener" href="https://flume.apache.org/FlumeUserGuide.html">https://flume.apache.org/FlumeUserGuide.html</a></p>
-</li>
-<li><p>下载地址</p>
-<p><a target="_blank" rel="noopener" href="http://archive.apache.org/dist/flume/">http://archive.apache.org/dist/flume/</a></p>
-</li>
-</ol>
-<h2 id="Flume安装部署"><a href="#Flume安装部署" class="headerlink" title="Flume安装部署"></a>Flume安装部署</h2><ol>
-<li><p>下载apache-flume-1.9.0-bin.tar.gz并上传至node1节点的&#x2F;export&#x2F;software目录下</p>
-</li>
-<li><p>解压文件，并修改名称为flume</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@node1 software]# tar -zxvf apache-flume-1.9.0-bin.tar.gz -C ../server/</span><br><span class="line">(base) [root@node1 software]# cd ../server/</span><br><span class="line">(base) [root@node1 server]# mv apache-flume-1.9.0-bin flume</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>将lib文件夹下的guava-11.0.2.jar删除以兼容Hadoop3.1.3</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# rm /export/server/flume/lib/guava-11.0.2.jar</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h1 id="入门案例"><a href="#入门案例" class="headerlink" title="入门案例"></a>入门案例</h1><h2 id="监控端口数据官方案例"><a href="#监控端口数据官方案例" class="headerlink" title="监控端口数据官方案例"></a>监控端口数据官方案例</h2><h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>使用Flume监听一个端口，收集该端口数据，并打印到控制台。</p>
-<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p><img src="/2021/09/17/Flume%E9%83%A8%E7%BD%B2/image-20230130233526804.png" alt="image-20230130233526804"></p>
-<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><ol>
-<li><p>创建Flume Agent配置文件flume-netcat-logger.conf</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# mkdir job</span><br><span class="line">(base) [root@node1 flume]# vim job/flume-netcat-logger.conf</span><br></pre></td></tr></table></figure>
-
-<p>内容</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># example.conf: A single-node Flume configuration</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Name the components on this agent</span></span><br><span class="line"><span class="attr">a1.sources</span> = <span class="string">r1</span></span><br><span class="line"><span class="attr">a1.sinks</span> = <span class="string">k1</span></span><br><span class="line"><span class="attr">a1.channels</span> = <span class="string">c1</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Describe/configure the source</span></span><br><span class="line"><span class="attr">a1.sources.r1.type</span> = <span class="string">netcat</span></span><br><span class="line"><span class="attr">a1.sources.r1.bind</span> = <span class="string">localhost</span></span><br><span class="line"><span class="attr">a1.sources.r1.port</span> = <span class="string">44444</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Describe the sink</span></span><br><span class="line"><span class="attr">a1.sinks.k1.type</span> = <span class="string">logger</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Use a channel which buffers events in memory</span></span><br><span class="line"><span class="attr">a1.channels.c1.type</span> = <span class="string">memory</span></span><br><span class="line"><span class="attr">a1.channels.c1.capacity</span> = <span class="string">1000</span></span><br><span class="line"><span class="attr">a1.channels.c1.transactionCapacity</span> = <span class="string">100</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Bind the source and sink to the channel</span></span><br><span class="line"><span class="attr">a1.sources.r1.channels</span> = <span class="string">c1</span></span><br><span class="line"><span class="attr">a1.sinks.k1.channel</span> = <span class="string">c1</span></span><br></pre></td></tr></table></figure>
-
-<p>配置文件解析</p>
-<p><img src="/2021/09/17/Flume%E9%83%A8%E7%BD%B2/image-20230130234225960.png" alt="image-20230130234225960"></p>
-</li>
-<li><p>开启flume监听端口</p>
-<p>写法1：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# ./bin/flume-ng agent --conf conf/ --name a1 --conf-file job/flume-netcat-logger.conf -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure>
-
-<p>写法2：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# ./bin/flume-ng agent -c conf/ -n a1 -f job/flume-netcat-logger.conf -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure>
-
-<p>参数说明：</p>
-<p>–conf&#x2F;-c：表示配置文件存储在conf&#x2F;目录。</p>
-<p>–name&#x2F;-n：表示给agent起名为a1。</p>
-<p>–conf-file&#x2F;-f：flume本次启动读取的配置文件是在job文件夹下的flume-telnet.conf文件。</p>
-<p>-Dflume.root.logger&#x3D;INFO,console ：-D表示flume运行时动态修改flume.root.logger参数属性值，并将控制台日志打印级别设置为INFO级别。日志级别包括:log、info、warn、error。</p>
-</li>
-<li><p>使用netcat工具向本机的44444端口发送内容</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# nc localhost 44444</span><br><span class="line">hello</span><br><span class="line">flume</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>在Flume监听页面观察接收数据情况</p>
-<p><img src="/2021/09/17/Flume%E9%83%A8%E7%BD%B2/image-20230130235102794.png" alt="image-20230130235102794"></p>
-</li>
-</ol>
-<h2 id="实时监控单个追加文件"><a href="#实时监控单个追加文件" class="headerlink" title="实时监控单个追加文件"></a>实时监控单个追加文件</h2><h3 id="需求-1"><a href="#需求-1" class="headerlink" title="需求"></a>需求</h3><p>实时监控 Hive 日志，并上传到 HDFS 中</p>
-<h3 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h3><p><img src="/2021/09/17/Flume%E9%83%A8%E7%BD%B2/image-20230130235102795.png" alt="image-20230130235102795"></p>
-<h3 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h3><ol>
-<li><p>Flume 要想将数据输出到 HDFS，依赖 Hadoop 相关 jar 包</p>
-<p>检查&#x2F;etc&#x2F;profile中Hadoop和Java环境变量配置是否正确</p>
-</li>
-<li><p>创建 flume-file-hdfs.conf 文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# vim job/flume-file-hdfs.conf</span><br></pre></td></tr></table></figure>
-
-<p>内容</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Name the components on this agent</span></span><br><span class="line"><span class="attr">a2.sources</span> = <span class="string">r2</span></span><br><span class="line"><span class="attr">a2.sinks</span> = <span class="string">k2</span></span><br><span class="line"><span class="attr">a2.channels</span> = <span class="string">c2</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Describe/configure the source</span></span><br><span class="line"><span class="attr">a2.sources.r2.type</span> = <span class="string">exec</span></span><br><span class="line"><span class="attr">a2.sources.r2.command</span> = <span class="string">tail -F /tmp/root/hive.log</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Describe the sink</span></span><br><span class="line"><span class="attr">a2.sinks.k2.type</span> = <span class="string">hdfs</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.path</span> = <span class="string">hdfs://node1:9820/flume/%Y%m%d/%H</span></span><br><span class="line"><span class="comment">#上传文件的前缀</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.filePrefix</span> = <span class="string">logs-</span></span><br><span class="line"><span class="comment">#是否按照时间滚动文件夹</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.round</span> = <span class="string">true</span></span><br><span class="line"><span class="comment">#多少时间单位创建一个新的文件夹</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.roundValue</span> = <span class="string">1</span></span><br><span class="line"><span class="comment">#重新定义时间单位</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.roundUnit</span> = <span class="string">hour</span></span><br><span class="line"><span class="comment">#是否使用本地时间戳</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.useLocalTimeStamp</span> = <span class="string">true</span></span><br><span class="line"><span class="comment">#积攒多少个 Event 才 flush 到 HDFS 一次</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.batchSize</span> = <span class="string">100</span></span><br><span class="line"><span class="comment">#设置文件类型，可支持压缩</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.fileType</span> = <span class="string">DataStream</span></span><br><span class="line"><span class="comment">#多久生成一个新的文件</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.rollInterval</span> = <span class="string">60</span></span><br><span class="line"><span class="comment">#设置每个文件的滚动大小</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.rollSize</span> = <span class="string">134217700</span></span><br><span class="line"><span class="comment">#文件的滚动与 Event 数量无关</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.rollCount</span> = <span class="string">0</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Use a channel which buffers events in memory</span></span><br><span class="line"><span class="attr">a2.channels.c2.type</span> = <span class="string">memory</span></span><br><span class="line"><span class="attr">a2.channels.c2.capacity</span> = <span class="string">1000</span></span><br><span class="line"><span class="attr">a2.channels.c2.transactionCapacity</span> = <span class="string">100</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Bind the source and sink to the channel</span></span><br><span class="line"><span class="attr">a2.sources.r2.channels</span> = <span class="string">c2</span></span><br><span class="line"><span class="attr">a2.sinks.k2.channel</span> = <span class="string">c2</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>注意</strong>：对于所有与时间相关的转义序列，Event Header 中必须存在以 “timestamp”的key（除非 hdfs.useLocalTimeStamp 设置为 true，此方法会使用 TimestampInterceptor 自动添加 timestamp）。</p>
-<p><img src="/2021/09/17/Flume%E9%83%A8%E7%BD%B2/image-20230131133236725.png" alt="image-20230131133236725"></p>
-</li>
-<li><p>运行 Flume</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# ./bin/flume-ng agent --conf conf/ --name a2 --conf-file job/flume-file-hdfs.conf </span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>开启 Hadoop 和 Hive 并操作 Hive 产生日志</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# start-dfs.sh </span><br><span class="line">(base) [root@node1 ~]# start-yarn.sh</span><br><span class="line">(base) [root@node1 ~]# cd /export/server/apache-hive-3.1.2-bin/</span><br><span class="line">(base) [root@node1 apache-hive-3.1.2-bin]# bin/hive --service metastore &amp;</span><br><span class="line">(base) [root@node1 apache-hive-3.1.2-bin]# bin/hive</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>在 HDFS 上查看文件。</p>
-</li>
-</ol>
-<h2 id="实时监控目录下多个新文件"><a href="#实时监控目录下多个新文件" class="headerlink" title="实时监控目录下多个新文件"></a>实时监控目录下多个新文件</h2><h3 id="需求-2"><a href="#需求-2" class="headerlink" title="需求"></a>需求</h3><p>使用 Flume 监听整个目录的文件，并上传至 HDFS</p>
-<h3 id="分析-2"><a href="#分析-2" class="headerlink" title="分析"></a>分析</h3><p><img src="/2021/09/17/Flume%E9%83%A8%E7%BD%B2/image-20230130235102796.png" alt="image-20230130235102796"></p>
-<h3 id="实现-2"><a href="#实现-2" class="headerlink" title="实现"></a>实现</h3><ol>
-<li><p>创建配置文件 flume-dir-hdfs.conf</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# vim job/flume-dir-hdfs.conf</span><br></pre></td></tr></table></figure>
-
-<p>内容</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">a3.sources</span> = <span class="string">r3</span></span><br><span class="line"><span class="attr">a3.sinks</span> = <span class="string">k3</span></span><br><span class="line"><span class="attr">a3.channels</span> = <span class="string">c3</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Describe/configure the source</span></span><br><span class="line"><span class="attr">a3.sources.r3.type</span> = <span class="string">spooldir</span></span><br><span class="line"><span class="attr">a3.sources.r3.spoolDir</span> = <span class="string">~/data/flume/upload</span></span><br><span class="line"><span class="attr">a3.sources.r3.fileSuffix</span> = <span class="string">.COMPLETED</span></span><br><span class="line"><span class="attr">a3.sources.r3.fileHeader</span> = <span class="string">true</span></span><br><span class="line"><span class="comment">#忽略所有以.tmp 结尾的文件，不上传</span></span><br><span class="line"><span class="attr">a3.sources.r3.ignorePattern</span> = <span class="string">([^ ]*\.tmp)</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Describe the sink</span></span><br><span class="line"><span class="attr">a3.sinks.k3.type</span> = <span class="string">hdfs</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.path</span> = <span class="string">hdfs://node1:9820/flume/upload/%Y%m%d/%H</span></span><br><span class="line"><span class="comment">#上传文件的前缀</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.filePrefix</span> = <span class="string">upload-</span></span><br><span class="line"><span class="comment">#是否按照时间滚动文件夹</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.round</span> = <span class="string">true</span></span><br><span class="line"><span class="comment">#多少时间单位创建一个新的文件夹</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.roundValue</span> = <span class="string">1</span></span><br><span class="line"><span class="comment">#重新定义时间单位</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.roundUnit</span> = <span class="string">hour</span></span><br><span class="line"><span class="comment">#是否使用本地时间戳</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.useLocalTimeStamp</span> = <span class="string">true</span></span><br><span class="line"><span class="comment">#积攒多少个 Event 才 flush 到 HDFS 一次</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.batchSize</span> = <span class="string">100</span></span><br><span class="line"><span class="comment">#设置文件类型，可支持压缩</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.fileType</span> = <span class="string">DataStream</span></span><br><span class="line"><span class="comment">#多久生成一个新的文件</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.rollInterval</span> = <span class="string">60</span></span><br><span class="line"><span class="comment">#设置每个文件的滚动大小大概是 128M</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.rollSize</span> = <span class="string">134217700</span></span><br><span class="line"><span class="comment">#文件的滚动与 Event 数量无关</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.rollCount</span> = <span class="string">0</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Use a channel which buffers events in memory</span></span><br><span class="line"><span class="attr">a3.channels.c3.type</span> = <span class="string">memory</span></span><br><span class="line"><span class="attr">a3.channels.c3.capacity</span> = <span class="string">1000</span></span><br><span class="line"><span class="attr">a3.channels.c3.transactionCapacity</span> = <span class="string">100</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Bind the source and sink to the channel</span></span><br><span class="line"><span class="attr">a3.sources.r3.channels</span> = <span class="string">c3</span></span><br><span class="line"><span class="attr">a3.sinks.k3.channel</span> = <span class="string">c3</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2021/09/17/Flume%E9%83%A8%E7%BD%B2/image-20230131133325195.png" alt="image-20230131133325195"></p>
-</li>
-<li><p>启动监控文件夹命令</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# ./bin/flume-ng agent --conf conf/ --name a3 --conf-file job/flume-dir-hdfs.conf </span><br></pre></td></tr></table></figure>
-
-<p>说明：在使用 Spooling Directory Source 时，不要在监控目录中创建并持续修改文件；上传完成的文件会以.COMPLETED 结尾；被监控文件夹每 500 毫秒扫描一次文件变动。</p>
-</li>
-<li><p>向 upload 文件夹中添加文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# mkdir ~/data/upload</span><br><span class="line">(base) [root@node1 ~]# cd ~/data/upload</span><br><span class="line">(base) [root@node1 ~]# touch test.txt</span><br><span class="line">(base) [root@node1 ~]# touch test.tmp</span><br><span class="line">(base) [root@node1 ~]# touch test.t</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>查看 HDFS 上的数据</p>
-</li>
-</ol>
-<h2 id="实时监控目录下的多个追加文件"><a href="#实时监控目录下的多个追加文件" class="headerlink" title="实时监控目录下的多个追加文件"></a>实时监控目录下的多个追加文件</h2><h3 id="需求-3"><a href="#需求-3" class="headerlink" title="需求"></a>需求</h3><p>Exec source 适用于监控一个实时追加的文件，不能实现断点续传；Spooldir Source适合用于同步新文件，但不适合对实时追加日志的文件进行监听并同步；而 Taildir Source适合用于监听多个实时追加的文件，并且能够实现断点续传。<br>使用 Flume 监听整个目录的实时追加文件，并上传至 HDFS。</p>
-<p><strong>Taildir 说明</strong></p>
-<p>Taildir Source 维护了一个 json 格式的 position File，其会定期的往 position File中更新每个文件读取到的最新的位置，因此能够实现断点续传。Position File 的格式如下：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span><span class="attr">&quot;inode&quot;</span><span class="punctuation">:</span><span class="number">2496272</span><span class="punctuation">,</span><span class="attr">&quot;pos&quot;</span><span class="punctuation">:</span><span class="number">12</span><span class="punctuation">,</span><span class="attr">&quot;file&quot;</span><span class="punctuation">:</span><span class="string">&quot;/export/server/flume/files/file1.txt&quot;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">&#123;</span><span class="attr">&quot;inode&quot;</span><span class="punctuation">:</span><span class="number">2496275</span><span class="punctuation">,</span><span class="attr">&quot;pos&quot;</span><span class="punctuation">:</span><span class="number">12</span><span class="punctuation">,</span><span class="attr">&quot;file&quot;</span><span class="punctuation">:</span><span class="string">&quot;/export/server/flume/files/file2.txt&quot;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
-
-<p>注：Linux 中储存文件元数据的区域就叫做 inode，每个 inode 都有一个号码，操作系统用 inode 号码来识别不同的文件，Unix&#x2F;Linux 系统内部不使用文件名，而使用 inode 号码来识别文件。</p>
-<h3 id="分析-3"><a href="#分析-3" class="headerlink" title="分析"></a>分析</h3><p><img src="/2021/09/17/Flume%E9%83%A8%E7%BD%B2/image-20230130235102797.png" alt="image-20230130235102797"></p>
-<h3 id="实现-3"><a href="#实现-3" class="headerlink" title="实现"></a>实现</h3><ol>
-<li><p>创建配置文件 flume-taildir-hdfs.conf</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# vim job/flume-taildir-hdfs.conf</span><br></pre></td></tr></table></figure>
-
-<p>内容</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">a3.sources = r3</span><br><span class="line">a3.sinks = k3</span><br><span class="line">a3.channels = c3</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Describe/configure the <span class="built_in">source</span></span></span><br><span class="line">a3.sources.r3.type = TAILDIR</span><br><span class="line">a3.sources.r3.positionFile = /root/data/tail_dir.json</span><br><span class="line">a3.sources.r3.filegroups = f1 f2</span><br><span class="line">a3.sources.r3.filegroups.f1 = /export/server/flume/files/.*file.*</span><br><span class="line">a3.sources.r3.filegroups.f2 = /export/server/flume/files2/.*log.*</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Describe the sink</span></span><br><span class="line">a3.sinks.k3.type = hdfs</span><br><span class="line">a3.sinks.k3.hdfs.path = </span><br><span class="line">hdfs://node1:8020/flume/upload2/%Y%m%d/%H</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">上传文件的前缀</span></span><br><span class="line">a3.sinks.k3.hdfs.filePrefix = upload-</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">是否按照时间滚动文件夹</span></span><br><span class="line">a3.sinks.k3.hdfs.round = true</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">多少时间单位创建一个新的文件夹</span></span><br><span class="line">a3.sinks.k3.hdfs.roundValue = 1</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">重新定义时间单位</span></span><br><span class="line">a3.sinks.k3.hdfs.roundUnit = hour</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">是否使用本地时间戳</span></span><br><span class="line">a3.sinks.k3.hdfs.useLocalTimeStamp = true</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">积攒多少个 Event 才 flush 到 HDFS 一次</span></span><br><span class="line">a3.sinks.k3.hdfs.batchSize = 100</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">设置文件类型，可支持压缩</span></span><br><span class="line">a3.sinks.k3.hdfs.fileType = DataStream</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">多久生成一个新的文件</span></span><br><span class="line">a3.sinks.k3.hdfs.rollInterval = 60</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">设置每个文件的滚动大小大概是 128M</span></span><br><span class="line">a3.sinks.k3.hdfs.rollSize = 134217700</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">文件的滚动与 Event 数量无关</span></span><br><span class="line">a3.sinks.k3.hdfs.rollCount = 0</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Use a channel <span class="built_in">which</span> buffers events <span class="keyword">in</span> memory</span></span><br><span class="line">a3.channels.c3.type = memory</span><br><span class="line">a3.channels.c3.capacity = 1000</span><br><span class="line">a3.channels.c3.transactionCapacity = 100</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Bind the <span class="built_in">source</span> and sink to the channel</span></span><br><span class="line">a3.sources.r3.channels = c3</span><br><span class="line">a3.sinks.k3.channel = c3</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>启动监控文件夹命令</p>
-<p>创建文件夹</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# mkdir files files2</span><br></pre></td></tr></table></figure>
-
-<p>创建文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]#vim /root/data/tail_dir.json</span><br></pre></td></tr></table></figure>
-
-<p>内容：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;&quot;inode&quot;:2496272,&quot;pos&quot;:12,&quot;file&quot;:&quot;/export/server/flume/files/file1.txt&quot;&#125;,</span><br><span class="line">	&#123;&quot;inode&quot;:2496275,&quot;pos&quot;:12,&quot;file&quot;:&quot;/export/server/flume/files/file2.txt&quot;&#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
-<p>启动监控</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# bin/flume-ng agent -c ./conf -f ./job/flume-taildir-hdfs.conf -n a3 -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>向 files 文件夹中追加内容</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 files]# echo hello &gt;&gt; file1.txt</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>查看 HDFS 上的数据</p>
-</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/09/16/Flume%E6%A6%82%E8%BF%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/16/Flume%E6%A6%82%E8%BF%B0/" class="post-title-link" itemprop="url">Flume概述</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-16 19:52:35" itemprop="dateCreated datePublished" datetime="2021-09-16T19:52:35+08:00">2021-09-16</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Flume定义"><a href="#Flume定义" class="headerlink" title="Flume定义"></a>Flume定义</h1><p>Flume 是 Cloudera 提供的一个高可用的，高可靠的，分布式的海量日志采集、聚合和传输的系统。Flume 基于流式架构，灵活简单。</p>
-<p><img src="/2021/09/16/Flume%E6%A6%82%E8%BF%B0/image-20230130231210711.png" alt="image-20230130231210711"></p>
-<p>Flume最主要的作用就是，实时读取服务器本地磁盘的数据，将数据写入到HDFS。</p>
-<h1 id="Flume基础架构"><a href="#Flume基础架构" class="headerlink" title="Flume基础架构"></a>Flume基础架构</h1><p><img src="/2021/09/16/Flume%E6%A6%82%E8%BF%B0/image-20230130231305720.png" alt="image-20230130231305720"></p>
-<h2 id="Agent"><a href="#Agent" class="headerlink" title="Agent"></a>Agent</h2><p>Agent 是一个 JVM 进程，它以事件的形式将数据从源头送至目的。</p>
-<p>Agent 主要有 3 个部分组成，Source、Channel、Sink。</p>
-<h2 id="Source"><a href="#Source" class="headerlink" title="Source"></a>Source</h2><p>Source 是负责接收数据到 Flume Agent 的组件。Source 组件可以处理各种类型、各种格式的日志数据，包括 avro、thrift、exec、jms、spooling directory、netcat、taildir、sequence generator、syslog、http、legacy。</p>
-<h2 id="Sink"><a href="#Sink" class="headerlink" title="Sink"></a>Sink</h2><p>Sink 不断地轮询 Channel 中的事件且批量地移除它们，并将这些事件批量写入到存储或索引系统、或者被发送到另一个 Flume Agent。</p>
-<p>Sink 组件目的地包括 hdfs、logger、avro、thrift、ipc、file、HBase、solr、自定义。</p>
-<h2 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h2><p>Channel 是位于 Source 和 Sink 之间的缓冲区。因此，Channel 允许 Source 和 Sink 运作在不同的速率上。Channel 是线程安全的，可以同时处理几个 Source 的写入操作和几个Sink 的读取操作。</p>
-<p>Flume 自带两种 Channel：Memory Channel 和 File Channel。</p>
-<p>Memory Channel 是内存中的队列。Memory Channel 在不需要关心数据丢失的情景下适用。如果需要关心数据丢失，那么 Memory Channel 就不应该使用，因为程序死亡、机器宕机或者重启都会导致数据丢失。</p>
-<p>File Channel 将所有事件写到磁盘。因此在程序关闭或机器宕机的情况下不会丢失数据。</p>
-<h2 id="Event"><a href="#Event" class="headerlink" title="Event"></a>Event</h2><p>传输单元，Flume 数据传输的基本单元，以 Event 的形式将数据从源头送至目的地。</p>
-<p>Event 由 <strong>Header</strong> 和 <strong>Body</strong> 两部分组成，Header 用来存放该 event 的一些属性，为 K-V 结构，Body 用来存放该条数据，形式为字节数组。</p>
-<p><img src="/2021/09/16/Flume%E6%A6%82%E8%BF%B0/image-20230130231752801.png" alt="image-20230130231752801"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/09/10/Zookeeper%E6%A1%88%E4%BE%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/10/Zookeeper%E6%A1%88%E4%BE%8B/" class="post-title-link" itemprop="url">Zookeeper案例</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-10 20:02:19" itemprop="dateCreated datePublished" datetime="2021-09-10T20:02:19+08:00">2021-09-10</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="服务器动态上下线监听案例"><a href="#服务器动态上下线监听案例" class="headerlink" title="服务器动态上下线监听案例"></a>服务器动态上下线监听案例</h1><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>某分布式系统中，主节点可以有多台，可以动态上下线，任意一台客户端都能实时感知到主节点服务器的上下线。</p>
-<h2 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h2><p>服务器动态上下线</p>
-<p><img src="/2021/09/10/Zookeeper%E6%A1%88%E4%BE%8B/image-20221223142745247.png" alt="image-20221223142745247"></p>
-<h2 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h2><h3 id="在集群上创建-x2F-servers-节点"><a href="#在集群上创建-x2F-servers-节点" class="headerlink" title="在集群上创建&#x2F;servers 节点"></a>在集群上创建&#x2F;servers 节点</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 0] create /servers &quot;servers&quot;</span><br><span class="line">Created /servers</span><br></pre></td></tr></table></figure>
-
-<h3 id="Idea创建项目"><a href="#Idea创建项目" class="headerlink" title="Idea创建项目"></a>Idea创建项目</h3><p>pom.xml</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.logging.log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.13.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.zookeeper<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>zookeeper<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.11<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>compile<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="服务器端向Zookeeper注册代码"><a href="#服务器端向Zookeeper注册代码" class="headerlink" title="服务器端向Zookeeper注册代码"></a>服务器端向Zookeeper注册代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.zkcase1;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DistributeServer</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">connectString</span> <span class="operator">=</span> <span class="string">&quot;node1:2181,node2:2181,node3:2181&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">sessionTimeout</span> <span class="operator">=</span> <span class="number">2000</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">ZooKeeper</span> <span class="variable">zk</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">parentNode</span> <span class="operator">=</span> <span class="string">&quot;/servers&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//创建到 zk 的客户端连接</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">getConnect</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        zk = <span class="keyword">new</span> <span class="title class_">ZooKeeper</span>(connectString, sessionTimeout, <span class="keyword">new</span> <span class="title class_">Watcher</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">process</span><span class="params">(WatchedEvent watchedEvent)</span> &#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//注册服务器</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">registServer</span><span class="params">(String hostname)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">create</span> <span class="operator">=</span> zk.create(parentNode + <span class="string">&quot;/server&quot;</span>, hostname.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);</span><br><span class="line">        System.out.println(hostname + <span class="string">&quot; is online &quot;</span> + create);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">business</span><span class="params">(String hostname)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        System.out.println(hostname + <span class="string">&quot; is working &quot;</span>);</span><br><span class="line">        Thread.sleep(Long.MAX_VALUE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">DistributeServer</span> <span class="variable">server</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DistributeServer</span>();</span><br><span class="line">        server.getConnect();</span><br><span class="line"></span><br><span class="line">        server.registServer(args[<span class="number">0</span>]);</span><br><span class="line">        server.business(args[<span class="number">0</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="客户端代码"><a href="#客户端代码" class="headerlink" title="客户端代码"></a>客户端代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.zkcase1;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.WatchedEvent;</span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher;</span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooKeeper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DistributeClient</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">connectString</span> <span class="operator">=</span> <span class="string">&quot;node1:2181,node2:2181,node3:2181&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">sessionTimeout</span> <span class="operator">=</span> <span class="number">2000</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">ZooKeeper</span> <span class="variable">zk</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">parentNode</span> <span class="operator">=</span> <span class="string">&quot;/servers&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//创建到 zk 的客户端连接</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">getConnect</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        zk = <span class="keyword">new</span> <span class="title class_">ZooKeeper</span>(connectString, sessionTimeout, <span class="keyword">new</span> <span class="title class_">Watcher</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">process</span><span class="params">(WatchedEvent watchedEvent)</span> &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    getServerList();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">getServerList</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 1 获取服务器子节点信息，并且对父节点进行监听</span></span><br><span class="line">        List&lt;String&gt; chidren = zk.getChildren(parentNode, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2 存储服务器信息列表</span></span><br><span class="line">        ArrayList&lt;String&gt; servers = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3 遍历所有节点，获取节点中的主机名称信息</span></span><br><span class="line">        <span class="keyword">for</span> (String child : chidren) &#123;</span><br><span class="line">            <span class="type">byte</span>[] data = zk.getData(parentNode + <span class="string">&quot;/&quot;</span> + child, <span class="literal">false</span>, <span class="literal">null</span>);</span><br><span class="line">            servers.add(<span class="keyword">new</span> <span class="title class_">String</span>(data));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4 打印服务器列表信息</span></span><br><span class="line">        System.out.println(servers);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">business</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;client is working ...&quot;</span>);</span><br><span class="line">        Thread.sleep(Long.MAX_VALUE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 1 获取 zk 连接</span></span><br><span class="line">        <span class="type">DistributeClient</span> <span class="variable">client</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DistributeClient</span>();</span><br><span class="line">        client.getConnect();</span><br><span class="line">        <span class="comment">// 2 获取 servers 的子节点信息，从中获取服务器信息列表</span></span><br><span class="line">        client.getServerList();</span><br><span class="line">        <span class="comment">// 3 业务进程启动</span></span><br><span class="line">        client.business();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><h4 id="在linux服务器命令行上增加减少服务器"><a href="#在linux服务器命令行上增加减少服务器" class="headerlink" title="在linux服务器命令行上增加减少服务器"></a>在linux服务器命令行上增加减少服务器</h4><p>（1）启动 DistributeClient 客户端</p>
-<p>（2）在 node1上 zk 的客户端&#x2F;servers 目录上创建临时带序号节点</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 9] create -e -s /servers/node &quot;node1&quot;</span><br><span class="line">Created /servers/node0000000000</span><br><span class="line">[zk: localhost:2181(CONNECTED) 10] create -e -s /servers/node &quot;node2&quot;</span><br><span class="line">Created /servers/node0000000001</span><br></pre></td></tr></table></figure>
-
-<p>（3）观察 Idea 控制台变化</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[node1, node2]</span><br></pre></td></tr></table></figure>
-
-<p>（4）执行删除操作</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 11] delete /servers/node0000000000</span><br></pre></td></tr></table></figure>
-
-<p>（5）观察 Idea 控制台变化</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[node2]</span><br></pre></td></tr></table></figure>
-
-<h4 id="在-Idea-上操作增加减少服务器"><a href="#在-Idea-上操作增加减少服务器" class="headerlink" title="在 Idea 上操作增加减少服务器"></a>在 Idea 上操作增加减少服务器</h4><p>（1）启动 DistributeClient 客户端</p>
-<p>（2）启动 DistributeServer 服务</p>
-<p>​		Edit Configurations配置DistributeServer 的Program arguments，如node2</p>
-<p>（3）DistributeServer 控制台输出</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node2 is online /servers/server0000000002</span><br><span class="line">node2 is working </span><br></pre></td></tr></table></figure>
-
-<p>（4）DistributeClient控制台输出</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[node2]</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="ZooKeeper-分布式锁案例"><a href="#ZooKeeper-分布式锁案例" class="headerlink" title="ZooKeeper 分布式锁案例"></a>ZooKeeper 分布式锁案例</h1><p>什么叫做分布式锁？</p>
-<p>比如说”进程 1”在使用该资源的时候，会先去获得锁，”进程 1”获得锁以后会对该资源保持独占，这样其他进程就无法访问该资源，”进程 1”用完该资源以后就将锁释放掉，让其他进程来获得锁，那么通过这个锁机制，我们就能保证了分布式系统中多个进程能够有序的访问该临界资源。那么我们把这个分布式环境下的这个锁叫作分布式锁。</p>
-<h2 id="原生-Zookeeper-实现分布式锁案例"><a href="#原生-Zookeeper-实现分布式锁案例" class="headerlink" title="原生 Zookeeper 实现分布式锁案例"></a>原生 Zookeeper 实现分布式锁案例</h2><p><img src="/2021/09/10/Zookeeper%E6%A1%88%E4%BE%8B/image-20221223173024339.png" alt="image-20221223173024339"></p>
-<h3 id="分布式锁实现"><a href="#分布式锁实现" class="headerlink" title="分布式锁实现"></a>分布式锁实现</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.zkcase2;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.data.Stat;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.Collections;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.CountDownLatch;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DistributedLock</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">connectString</span> <span class="operator">=</span> <span class="string">&quot;node1:2181,node2:2181,node3:2181&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">sessionTimeout</span> <span class="operator">=</span> <span class="number">2000</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">ZooKeeper</span> <span class="variable">zk</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">rootNode</span> <span class="operator">=</span> <span class="string">&quot;locks&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">subNode</span> <span class="operator">=</span> <span class="string">&quot;seq-&quot;</span>;</span><br><span class="line">    <span class="comment">// 当前 client 等待的子节点</span></span><br><span class="line">    <span class="keyword">private</span> String waitPath;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">CountDownLatch</span> <span class="variable">connectLatch</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CountDownLatch</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="comment">//ZooKeeper 节点等待</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">CountDownLatch</span> <span class="variable">waitLatch</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CountDownLatch</span>(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String currentNode;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 和 zk 服务建立连接，并创建根节点</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DistributedLock</span><span class="params">()</span> <span class="keyword">throws</span> IOException, InterruptedException, KeeperException &#123;</span><br><span class="line">        zk = <span class="keyword">new</span> <span class="title class_">ZooKeeper</span>(connectString, sessionTimeout, <span class="keyword">new</span> <span class="title class_">Watcher</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">process</span><span class="params">(WatchedEvent watchedEvent)</span> &#123;</span><br><span class="line">                <span class="comment">// 连接建立时, 打开 latch, 唤醒 wait 在该 latch 上的线程</span></span><br><span class="line">                <span class="keyword">if</span> (watchedEvent.getState() == Event.KeeperState.SyncConnected) &#123;</span><br><span class="line">                    connectLatch.countDown();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 发生了 waitPath 的删除事件</span></span><br><span class="line">                <span class="keyword">if</span> (watchedEvent.getType() == Event.EventType.NodeDeleted &amp;&amp; watchedEvent.getPath().equals(waitPath)) &#123;</span><br><span class="line">                    waitLatch.countDown();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//等待连接建立</span></span><br><span class="line">        connectLatch.await();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取根节点状态</span></span><br><span class="line">        <span class="type">Stat</span> <span class="variable">stat</span> <span class="operator">=</span> zk.exists(<span class="string">&quot;/&quot;</span> + rootNode, <span class="literal">false</span>);</span><br><span class="line">        <span class="comment">//如果根节点不存在，则创建根节点，根节点类型为永久节点</span></span><br><span class="line">        <span class="keyword">if</span> (stat == <span class="literal">null</span>) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;根节点不存在&quot;</span>);</span><br><span class="line">            zk.create(<span class="string">&quot;/&quot;</span> + rootNode, <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">0</span>], ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//加锁</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">zkLock</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//在根节点下创建临时顺序节点，返回值为创建的节点路径</span></span><br><span class="line">            currentNode = zk.create(<span class="string">&quot;/&quot;</span> + rootNode + <span class="string">&quot;/&quot;</span> + subNode, <span class="literal">null</span>, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);</span><br><span class="line">            <span class="comment">// wait 一小会, 让结果更清晰一些</span></span><br><span class="line">            Thread.sleep(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 注意, 没有必要监听&quot;/locks&quot;的子节点的变化情况</span></span><br><span class="line">            List&lt;String&gt; childrenNodes = zk.getChildren(<span class="string">&quot;/&quot;</span> + rootNode, <span class="literal">false</span>);</span><br><span class="line">            <span class="comment">//列表中只有一个子节点, 那肯定就是 currentNode , 说明client 获得锁</span></span><br><span class="line">            <span class="keyword">if</span> (childrenNodes.size() == <span class="number">1</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//对根节点下的所有临时顺序节点进行从小到大排序</span></span><br><span class="line">                Collections.sort(childrenNodes);</span><br><span class="line">                <span class="comment">//当前节点名称</span></span><br><span class="line">                <span class="type">String</span> <span class="variable">thisNode</span> <span class="operator">=</span> currentNode.substring((<span class="string">&quot;/&quot;</span> + rootNode + <span class="string">&quot;/&quot;</span>).length());</span><br><span class="line">                <span class="comment">//获取当前节点的位置</span></span><br><span class="line">                <span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> childrenNodes.indexOf(thisNode);</span><br><span class="line">                <span class="keyword">if</span> (index == -<span class="number">1</span>) &#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;数据异常&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (index == <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="comment">// index == 0, 说明 thisNode 在列表中最小, 当前client 获得锁</span></span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">//  获得排名比 currentNode 前 1 位的节点</span></span><br><span class="line">                    <span class="built_in">this</span>.waitPath = <span class="string">&quot;/&quot;</span> + rootNode + <span class="string">&quot;/&quot;</span> + childrenNodes.get(index - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">                    <span class="comment">//在 waitPath 上注册监听器, 当 waitPath 被删除时, zookeeper 会回调监听器的 process 方法</span></span><br><span class="line">                    zk.getData(waitPath, <span class="literal">true</span>, <span class="keyword">new</span> <span class="title class_">Stat</span>());</span><br><span class="line">                    <span class="comment">//进入等待锁状态</span></span><br><span class="line">                    waitLatch.await();</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (KeeperException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">zkUnlock</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            zk.delete(<span class="built_in">this</span>.currentNode, -<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (InterruptedException | KeeperException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="分布式锁测试"><a href="#分布式锁测试" class="headerlink" title="分布式锁测试"></a>分布式锁测试</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.zkcase2;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.KeeperException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DistributedLockTest</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException, IOException, KeeperException &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">DistributedLock</span> <span class="variable">lock1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DistributedLock</span>();</span><br><span class="line">        <span class="keyword">final</span> <span class="type">DistributedLock</span> <span class="variable">lock2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DistributedLock</span>();</span><br><span class="line">        <span class="comment">//创建两个线程</span></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    lock1.zkLock();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程1获取锁&quot;</span>);</span><br><span class="line">                    Thread.sleep(<span class="number">5</span> * <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">                    lock1.zkUnlock();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程1释放锁&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    lock2.zkLock();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程2获取锁&quot;</span>);</span><br><span class="line">                    Thread.sleep(<span class="number">5</span> * <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">                    lock2.zkUnlock();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程2释放锁&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>输出</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">线程2获取锁</span><br><span class="line">线程2释放锁</span><br><span class="line">线程1获取锁</span><br><span class="line">线程1释放锁</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Curator-框架实现分布式锁案例"><a href="#Curator-框架实现分布式锁案例" class="headerlink" title="Curator 框架实现分布式锁案例"></a>Curator 框架实现分布式锁案例</h2><h3 id="原生的Zookeeper-Java-API-开发存在的问题"><a href="#原生的Zookeeper-Java-API-开发存在的问题" class="headerlink" title="原生的Zookeeper Java API 开发存在的问题"></a>原生的Zookeeper Java API 开发存在的问题</h3><p>（1）会话连接是异步的，需要自己去处理。比如使用 CountDownLatch</p>
-<p>（2）Watch 需要重复注册，不然就不能生效</p>
-<p>（3）开发的复杂性还是比较高的</p>
-<p>（4）不支持多节点删除和创建。需要自己去递归</p>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>Curator 是一个专门解决分布式锁的框架，解决了原生Zookeeper JavaAPI 开发分布式遇到的问题。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.zkcase3;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.curator.RetryPolicy;</span><br><span class="line"><span class="keyword">import</span> org.apache.curator.framework.CuratorFramework;</span><br><span class="line"><span class="keyword">import</span> org.apache.curator.framework.CuratorFrameworkFactory;</span><br><span class="line"><span class="keyword">import</span> org.apache.curator.framework.recipes.locks.InterProcessLock;</span><br><span class="line"><span class="keyword">import</span> org.apache.curator.framework.recipes.locks.InterProcessMutex;</span><br><span class="line"><span class="keyword">import</span> org.apache.curator.retry.ExponentialBackoffRetry;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CuratorLockTest</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">rootNode</span> <span class="operator">=</span> <span class="string">&quot;/locks&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">connectString</span> <span class="operator">=</span> <span class="string">&quot;node1:2181,node2:2181,node3:2181&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">connectionTimeout</span> <span class="operator">=</span> <span class="number">2000</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">sessionTimeout</span> <span class="operator">=</span> <span class="number">2000</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">CuratorLockTest</span>().test();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">InterProcessLock</span> <span class="variable">lock1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InterProcessMutex</span>(getCuratorFramework(), rootNode);</span><br><span class="line">        <span class="keyword">final</span> <span class="type">InterProcessLock</span> <span class="variable">lock2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InterProcessMutex</span>(getCuratorFramework(), rootNode);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    lock1.acquire();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程 1 获取锁&quot;</span>);</span><br><span class="line">                    lock1.acquire();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程 1 再次获取锁&quot;</span>);</span><br><span class="line">                    Thread.sleep(<span class="number">5</span> * <span class="number">1000</span>);</span><br><span class="line">                    lock1.release();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程 1 释放锁&quot;</span>);</span><br><span class="line">                    lock1.release();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程 1 再次释放锁&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    lock2.acquire();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程 2 获取锁&quot;</span>);</span><br><span class="line">                    lock2.acquire();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程 2 再次获取锁&quot;</span>);</span><br><span class="line">                    Thread.sleep(<span class="number">5</span> * <span class="number">1000</span>);</span><br><span class="line">                    lock2.release();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程 2 释放锁&quot;</span>);</span><br><span class="line">                    lock2.release();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程 2 再次释放锁&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> CuratorFramework <span class="title function_">getCuratorFramework</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">//重试策略，初试时间 3 秒，重试 3 次</span></span><br><span class="line">        <span class="type">RetryPolicy</span> <span class="variable">policy</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ExponentialBackoffRetry</span>(<span class="number">3000</span>, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">CuratorFramework</span> <span class="variable">client</span> <span class="operator">=</span> CuratorFrameworkFactory.builder()</span><br><span class="line">                .connectString(connectString)</span><br><span class="line">                .connectionTimeoutMs(connectionTimeout)</span><br><span class="line">                .sessionTimeoutMs(sessionTimeout)</span><br><span class="line">                .retryPolicy(policy).build();</span><br><span class="line"></span><br><span class="line">        client.start();</span><br><span class="line">        System.out.println(<span class="string">&quot;zookeeper 初始化完成...&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> client;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>输出</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">zookeeper 初始化完成...</span><br><span class="line">zookeeper 初始化完成...</span><br><span class="line">线程 1 获取锁</span><br><span class="line">线程 1 再次获取锁</span><br><span class="line">线程 1 释放锁</span><br><span class="line">线程 1 再次释放锁</span><br><span class="line">线程 2 获取锁</span><br><span class="line">线程 2 再次获取锁</span><br><span class="line">线程 2 释放锁</span><br><span class="line">线程 2 再次释放锁</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2439,14 +3209,14 @@ RxJava 的每个操作符都需要换新行，并且把换行符插入在 `.` �
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">147</span>
+          <span class="site-state-item-count">153</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-count">32</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

@@ -151,6 +151,413 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/09/17/Flume%E9%83%A8%E7%BD%B2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/17/Flume%E9%83%A8%E7%BD%B2/" class="post-title-link" itemprop="url">Flume部署</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-17 19:22:03" itemprop="dateCreated datePublished" datetime="2021-09-17T19:22:03+08:00">2021-09-17</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Flume部署"><a href="#Flume部署" class="headerlink" title="Flume部署"></a>Flume部署</h1><h2 id="地址"><a href="#地址" class="headerlink" title="地址"></a>地址</h2><ol>
+<li><p>Flume官网 </p>
+<p><a target="_blank" rel="noopener" href="https://flume.apache.org/">https://flume.apache.org/</a></p>
+</li>
+<li><p>文档地址</p>
+<p><a target="_blank" rel="noopener" href="https://flume.apache.org/FlumeUserGuide.html">https://flume.apache.org/FlumeUserGuide.html</a></p>
+</li>
+<li><p>下载地址</p>
+<p><a target="_blank" rel="noopener" href="http://archive.apache.org/dist/flume/">http://archive.apache.org/dist/flume/</a></p>
+</li>
+</ol>
+<h2 id="Flume安装部署"><a href="#Flume安装部署" class="headerlink" title="Flume安装部署"></a>Flume安装部署</h2><ol>
+<li><p>下载apache-flume-1.9.0-bin.tar.gz并上传至node1节点的&#x2F;export&#x2F;software目录下</p>
+</li>
+<li><p>解压文件，并修改名称为flume</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@node1 software]# tar -zxvf apache-flume-1.9.0-bin.tar.gz -C ../server/</span><br><span class="line">(base) [root@node1 software]# cd ../server/</span><br><span class="line">(base) [root@node1 server]# mv apache-flume-1.9.0-bin flume</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>将lib文件夹下的guava-11.0.2.jar删除以兼容Hadoop3.1.3</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# rm /export/server/flume/lib/guava-11.0.2.jar</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h1 id="入门案例"><a href="#入门案例" class="headerlink" title="入门案例"></a>入门案例</h1><h2 id="监控端口数据官方案例"><a href="#监控端口数据官方案例" class="headerlink" title="监控端口数据官方案例"></a>监控端口数据官方案例</h2><h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>使用Flume监听一个端口，收集该端口数据，并打印到控制台。</p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p><img src="/2021/09/17/Flume%E9%83%A8%E7%BD%B2/image-20230130233526804.png" alt="image-20230130233526804"></p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><ol>
+<li><p>创建Flume Agent配置文件flume-netcat-logger.conf</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# mkdir job</span><br><span class="line">(base) [root@node1 flume]# vim job/flume-netcat-logger.conf</span><br></pre></td></tr></table></figure>
+
+<p>内容</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># example.conf: A single-node Flume configuration</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Name the components on this agent</span></span><br><span class="line"><span class="attr">a1.sources</span> = <span class="string">r1</span></span><br><span class="line"><span class="attr">a1.sinks</span> = <span class="string">k1</span></span><br><span class="line"><span class="attr">a1.channels</span> = <span class="string">c1</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Describe/configure the source</span></span><br><span class="line"><span class="attr">a1.sources.r1.type</span> = <span class="string">netcat</span></span><br><span class="line"><span class="attr">a1.sources.r1.bind</span> = <span class="string">localhost</span></span><br><span class="line"><span class="attr">a1.sources.r1.port</span> = <span class="string">44444</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Describe the sink</span></span><br><span class="line"><span class="attr">a1.sinks.k1.type</span> = <span class="string">logger</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Use a channel which buffers events in memory</span></span><br><span class="line"><span class="attr">a1.channels.c1.type</span> = <span class="string">memory</span></span><br><span class="line"><span class="attr">a1.channels.c1.capacity</span> = <span class="string">1000</span></span><br><span class="line"><span class="attr">a1.channels.c1.transactionCapacity</span> = <span class="string">100</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Bind the source and sink to the channel</span></span><br><span class="line"><span class="attr">a1.sources.r1.channels</span> = <span class="string">c1</span></span><br><span class="line"><span class="attr">a1.sinks.k1.channel</span> = <span class="string">c1</span></span><br></pre></td></tr></table></figure>
+
+<p>配置文件解析</p>
+<p><img src="/2021/09/17/Flume%E9%83%A8%E7%BD%B2/image-20230130234225960.png" alt="image-20230130234225960"></p>
+</li>
+<li><p>开启flume监听端口</p>
+<p>写法1：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# ./bin/flume-ng agent --conf conf/ --name a1 --conf-file job/flume-netcat-logger.conf -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure>
+
+<p>写法2：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# ./bin/flume-ng agent -c conf/ -n a1 -f job/flume-netcat-logger.conf -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure>
+
+<p>参数说明：</p>
+<p>–conf&#x2F;-c：表示配置文件存储在conf&#x2F;目录。</p>
+<p>–name&#x2F;-n：表示给agent起名为a1。</p>
+<p>–conf-file&#x2F;-f：flume本次启动读取的配置文件是在job文件夹下的flume-telnet.conf文件。</p>
+<p>-Dflume.root.logger&#x3D;INFO,console ：-D表示flume运行时动态修改flume.root.logger参数属性值，并将控制台日志打印级别设置为INFO级别。日志级别包括:log、info、warn、error。</p>
+</li>
+<li><p>使用netcat工具向本机的44444端口发送内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# nc localhost 44444</span><br><span class="line">hello</span><br><span class="line">flume</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>在Flume监听页面观察接收数据情况</p>
+<p><img src="/2021/09/17/Flume%E9%83%A8%E7%BD%B2/image-20230130235102794.png" alt="image-20230130235102794"></p>
+</li>
+</ol>
+<h2 id="实时监控单个追加文件"><a href="#实时监控单个追加文件" class="headerlink" title="实时监控单个追加文件"></a>实时监控单个追加文件</h2><h3 id="需求-1"><a href="#需求-1" class="headerlink" title="需求"></a>需求</h3><p>实时监控 Hive 日志，并上传到 HDFS 中</p>
+<h3 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h3><p><img src="/2021/09/17/Flume%E9%83%A8%E7%BD%B2/image-20230130235102795.png" alt="image-20230130235102795"></p>
+<h3 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h3><ol>
+<li><p>Flume 要想将数据输出到 HDFS，依赖 Hadoop 相关 jar 包</p>
+<p>检查&#x2F;etc&#x2F;profile中Hadoop和Java环境变量配置是否正确</p>
+</li>
+<li><p>创建 flume-file-hdfs.conf 文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# vim job/flume-file-hdfs.conf</span><br></pre></td></tr></table></figure>
+
+<p>内容</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Name the components on this agent</span></span><br><span class="line"><span class="attr">a2.sources</span> = <span class="string">r2</span></span><br><span class="line"><span class="attr">a2.sinks</span> = <span class="string">k2</span></span><br><span class="line"><span class="attr">a2.channels</span> = <span class="string">c2</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Describe/configure the source</span></span><br><span class="line"><span class="attr">a2.sources.r2.type</span> = <span class="string">exec</span></span><br><span class="line"><span class="attr">a2.sources.r2.command</span> = <span class="string">tail -F /tmp/root/hive.log</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Describe the sink</span></span><br><span class="line"><span class="attr">a2.sinks.k2.type</span> = <span class="string">hdfs</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.path</span> = <span class="string">hdfs://node1:9820/flume/%Y%m%d/%H</span></span><br><span class="line"><span class="comment">#上传文件的前缀</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.filePrefix</span> = <span class="string">logs-</span></span><br><span class="line"><span class="comment">#是否按照时间滚动文件夹</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.round</span> = <span class="string">true</span></span><br><span class="line"><span class="comment">#多少时间单位创建一个新的文件夹</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.roundValue</span> = <span class="string">1</span></span><br><span class="line"><span class="comment">#重新定义时间单位</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.roundUnit</span> = <span class="string">hour</span></span><br><span class="line"><span class="comment">#是否使用本地时间戳</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.useLocalTimeStamp</span> = <span class="string">true</span></span><br><span class="line"><span class="comment">#积攒多少个 Event 才 flush 到 HDFS 一次</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.batchSize</span> = <span class="string">100</span></span><br><span class="line"><span class="comment">#设置文件类型，可支持压缩</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.fileType</span> = <span class="string">DataStream</span></span><br><span class="line"><span class="comment">#多久生成一个新的文件</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.rollInterval</span> = <span class="string">60</span></span><br><span class="line"><span class="comment">#设置每个文件的滚动大小</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.rollSize</span> = <span class="string">134217700</span></span><br><span class="line"><span class="comment">#文件的滚动与 Event 数量无关</span></span><br><span class="line"><span class="attr">a2.sinks.k2.hdfs.rollCount</span> = <span class="string">0</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Use a channel which buffers events in memory</span></span><br><span class="line"><span class="attr">a2.channels.c2.type</span> = <span class="string">memory</span></span><br><span class="line"><span class="attr">a2.channels.c2.capacity</span> = <span class="string">1000</span></span><br><span class="line"><span class="attr">a2.channels.c2.transactionCapacity</span> = <span class="string">100</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Bind the source and sink to the channel</span></span><br><span class="line"><span class="attr">a2.sources.r2.channels</span> = <span class="string">c2</span></span><br><span class="line"><span class="attr">a2.sinks.k2.channel</span> = <span class="string">c2</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>：对于所有与时间相关的转义序列，Event Header 中必须存在以 “timestamp”的key（除非 hdfs.useLocalTimeStamp 设置为 true，此方法会使用 TimestampInterceptor 自动添加 timestamp）。</p>
+<p><img src="/2021/09/17/Flume%E9%83%A8%E7%BD%B2/image-20230131133236725.png" alt="image-20230131133236725"></p>
+</li>
+<li><p>运行 Flume</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# ./bin/flume-ng agent --conf conf/ --name a2 --conf-file job/flume-file-hdfs.conf </span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>开启 Hadoop 和 Hive 并操作 Hive 产生日志</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# start-dfs.sh </span><br><span class="line">(base) [root@node1 ~]# start-yarn.sh</span><br><span class="line">(base) [root@node1 ~]# cd /export/server/apache-hive-3.1.2-bin/</span><br><span class="line">(base) [root@node1 apache-hive-3.1.2-bin]# bin/hive --service metastore &amp;</span><br><span class="line">(base) [root@node1 apache-hive-3.1.2-bin]# bin/hive</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>在 HDFS 上查看文件。</p>
+</li>
+</ol>
+<h2 id="实时监控目录下多个新文件"><a href="#实时监控目录下多个新文件" class="headerlink" title="实时监控目录下多个新文件"></a>实时监控目录下多个新文件</h2><h3 id="需求-2"><a href="#需求-2" class="headerlink" title="需求"></a>需求</h3><p>使用 Flume 监听整个目录的文件，并上传至 HDFS</p>
+<h3 id="分析-2"><a href="#分析-2" class="headerlink" title="分析"></a>分析</h3><p><img src="/2021/09/17/Flume%E9%83%A8%E7%BD%B2/image-20230130235102796.png" alt="image-20230130235102796"></p>
+<h3 id="实现-2"><a href="#实现-2" class="headerlink" title="实现"></a>实现</h3><ol>
+<li><p>创建配置文件 flume-dir-hdfs.conf</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# vim job/flume-dir-hdfs.conf</span><br></pre></td></tr></table></figure>
+
+<p>内容</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">a3.sources</span> = <span class="string">r3</span></span><br><span class="line"><span class="attr">a3.sinks</span> = <span class="string">k3</span></span><br><span class="line"><span class="attr">a3.channels</span> = <span class="string">c3</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Describe/configure the source</span></span><br><span class="line"><span class="attr">a3.sources.r3.type</span> = <span class="string">spooldir</span></span><br><span class="line"><span class="attr">a3.sources.r3.spoolDir</span> = <span class="string">~/data/flume/upload</span></span><br><span class="line"><span class="attr">a3.sources.r3.fileSuffix</span> = <span class="string">.COMPLETED</span></span><br><span class="line"><span class="attr">a3.sources.r3.fileHeader</span> = <span class="string">true</span></span><br><span class="line"><span class="comment">#忽略所有以.tmp 结尾的文件，不上传</span></span><br><span class="line"><span class="attr">a3.sources.r3.ignorePattern</span> = <span class="string">([^ ]*\.tmp)</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Describe the sink</span></span><br><span class="line"><span class="attr">a3.sinks.k3.type</span> = <span class="string">hdfs</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.path</span> = <span class="string">hdfs://node1:9820/flume/upload/%Y%m%d/%H</span></span><br><span class="line"><span class="comment">#上传文件的前缀</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.filePrefix</span> = <span class="string">upload-</span></span><br><span class="line"><span class="comment">#是否按照时间滚动文件夹</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.round</span> = <span class="string">true</span></span><br><span class="line"><span class="comment">#多少时间单位创建一个新的文件夹</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.roundValue</span> = <span class="string">1</span></span><br><span class="line"><span class="comment">#重新定义时间单位</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.roundUnit</span> = <span class="string">hour</span></span><br><span class="line"><span class="comment">#是否使用本地时间戳</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.useLocalTimeStamp</span> = <span class="string">true</span></span><br><span class="line"><span class="comment">#积攒多少个 Event 才 flush 到 HDFS 一次</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.batchSize</span> = <span class="string">100</span></span><br><span class="line"><span class="comment">#设置文件类型，可支持压缩</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.fileType</span> = <span class="string">DataStream</span></span><br><span class="line"><span class="comment">#多久生成一个新的文件</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.rollInterval</span> = <span class="string">60</span></span><br><span class="line"><span class="comment">#设置每个文件的滚动大小大概是 128M</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.rollSize</span> = <span class="string">134217700</span></span><br><span class="line"><span class="comment">#文件的滚动与 Event 数量无关</span></span><br><span class="line"><span class="attr">a3.sinks.k3.hdfs.rollCount</span> = <span class="string">0</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Use a channel which buffers events in memory</span></span><br><span class="line"><span class="attr">a3.channels.c3.type</span> = <span class="string">memory</span></span><br><span class="line"><span class="attr">a3.channels.c3.capacity</span> = <span class="string">1000</span></span><br><span class="line"><span class="attr">a3.channels.c3.transactionCapacity</span> = <span class="string">100</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Bind the source and sink to the channel</span></span><br><span class="line"><span class="attr">a3.sources.r3.channels</span> = <span class="string">c3</span></span><br><span class="line"><span class="attr">a3.sinks.k3.channel</span> = <span class="string">c3</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/09/17/Flume%E9%83%A8%E7%BD%B2/image-20230131133325195.png" alt="image-20230131133325195"></p>
+</li>
+<li><p>启动监控文件夹命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# ./bin/flume-ng agent --conf conf/ --name a3 --conf-file job/flume-dir-hdfs.conf </span><br></pre></td></tr></table></figure>
+
+<p>说明：在使用 Spooling Directory Source 时，不要在监控目录中创建并持续修改文件；上传完成的文件会以.COMPLETED 结尾；被监控文件夹每 500 毫秒扫描一次文件变动。</p>
+</li>
+<li><p>向 upload 文件夹中添加文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 ~]# mkdir ~/data/upload</span><br><span class="line">(base) [root@node1 ~]# cd ~/data/upload</span><br><span class="line">(base) [root@node1 ~]# touch test.txt</span><br><span class="line">(base) [root@node1 ~]# touch test.tmp</span><br><span class="line">(base) [root@node1 ~]# touch test.t</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>查看 HDFS 上的数据</p>
+</li>
+</ol>
+<h2 id="实时监控目录下的多个追加文件"><a href="#实时监控目录下的多个追加文件" class="headerlink" title="实时监控目录下的多个追加文件"></a>实时监控目录下的多个追加文件</h2><h3 id="需求-3"><a href="#需求-3" class="headerlink" title="需求"></a>需求</h3><p>Exec source 适用于监控一个实时追加的文件，不能实现断点续传；Spooldir Source适合用于同步新文件，但不适合对实时追加日志的文件进行监听并同步；而 Taildir Source适合用于监听多个实时追加的文件，并且能够实现断点续传。<br>使用 Flume 监听整个目录的实时追加文件，并上传至 HDFS。</p>
+<p><strong>Taildir 说明</strong></p>
+<p>Taildir Source 维护了一个 json 格式的 position File，其会定期的往 position File中更新每个文件读取到的最新的位置，因此能够实现断点续传。Position File 的格式如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span><span class="attr">&quot;inode&quot;</span><span class="punctuation">:</span><span class="number">2496272</span><span class="punctuation">,</span><span class="attr">&quot;pos&quot;</span><span class="punctuation">:</span><span class="number">12</span><span class="punctuation">,</span><span class="attr">&quot;file&quot;</span><span class="punctuation">:</span><span class="string">&quot;/export/server/flume/files/file1.txt&quot;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">&#123;</span><span class="attr">&quot;inode&quot;</span><span class="punctuation">:</span><span class="number">2496275</span><span class="punctuation">,</span><span class="attr">&quot;pos&quot;</span><span class="punctuation">:</span><span class="number">12</span><span class="punctuation">,</span><span class="attr">&quot;file&quot;</span><span class="punctuation">:</span><span class="string">&quot;/export/server/flume/files/file2.txt&quot;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<p>注：Linux 中储存文件元数据的区域就叫做 inode，每个 inode 都有一个号码，操作系统用 inode 号码来识别不同的文件，Unix&#x2F;Linux 系统内部不使用文件名，而使用 inode 号码来识别文件。</p>
+<h3 id="分析-3"><a href="#分析-3" class="headerlink" title="分析"></a>分析</h3><p><img src="/2021/09/17/Flume%E9%83%A8%E7%BD%B2/image-20230130235102797.png" alt="image-20230130235102797"></p>
+<h3 id="实现-3"><a href="#实现-3" class="headerlink" title="实现"></a>实现</h3><ol>
+<li><p>创建配置文件 flume-taildir-hdfs.conf</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# vim job/flume-taildir-hdfs.conf</span><br></pre></td></tr></table></figure>
+
+<p>内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">a3.sources = r3</span><br><span class="line">a3.sinks = k3</span><br><span class="line">a3.channels = c3</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Describe/configure the <span class="built_in">source</span></span></span><br><span class="line">a3.sources.r3.type = TAILDIR</span><br><span class="line">a3.sources.r3.positionFile = /root/data/tail_dir.json</span><br><span class="line">a3.sources.r3.filegroups = f1 f2</span><br><span class="line">a3.sources.r3.filegroups.f1 = /export/server/flume/files/.*file.*</span><br><span class="line">a3.sources.r3.filegroups.f2 = /export/server/flume/files2/.*log.*</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Describe the sink</span></span><br><span class="line">a3.sinks.k3.type = hdfs</span><br><span class="line">a3.sinks.k3.hdfs.path = </span><br><span class="line">hdfs://node1:8020/flume/upload2/%Y%m%d/%H</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">上传文件的前缀</span></span><br><span class="line">a3.sinks.k3.hdfs.filePrefix = upload-</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">是否按照时间滚动文件夹</span></span><br><span class="line">a3.sinks.k3.hdfs.round = true</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">多少时间单位创建一个新的文件夹</span></span><br><span class="line">a3.sinks.k3.hdfs.roundValue = 1</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">重新定义时间单位</span></span><br><span class="line">a3.sinks.k3.hdfs.roundUnit = hour</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">是否使用本地时间戳</span></span><br><span class="line">a3.sinks.k3.hdfs.useLocalTimeStamp = true</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">积攒多少个 Event 才 flush 到 HDFS 一次</span></span><br><span class="line">a3.sinks.k3.hdfs.batchSize = 100</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">设置文件类型，可支持压缩</span></span><br><span class="line">a3.sinks.k3.hdfs.fileType = DataStream</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">多久生成一个新的文件</span></span><br><span class="line">a3.sinks.k3.hdfs.rollInterval = 60</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">设置每个文件的滚动大小大概是 128M</span></span><br><span class="line">a3.sinks.k3.hdfs.rollSize = 134217700</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">文件的滚动与 Event 数量无关</span></span><br><span class="line">a3.sinks.k3.hdfs.rollCount = 0</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Use a channel <span class="built_in">which</span> buffers events <span class="keyword">in</span> memory</span></span><br><span class="line">a3.channels.c3.type = memory</span><br><span class="line">a3.channels.c3.capacity = 1000</span><br><span class="line">a3.channels.c3.transactionCapacity = 100</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Bind the <span class="built_in">source</span> and sink to the channel</span></span><br><span class="line">a3.sources.r3.channels = c3</span><br><span class="line">a3.sinks.k3.channel = c3</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>启动监控文件夹命令</p>
+<p>创建文件夹</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# mkdir files files2</span><br></pre></td></tr></table></figure>
+
+<p>创建文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]#vim /root/data/tail_dir.json</span><br></pre></td></tr></table></figure>
+
+<p>内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;&quot;inode&quot;:2496272,&quot;pos&quot;:12,&quot;file&quot;:&quot;/export/server/flume/files/file1.txt&quot;&#125;,</span><br><span class="line">	&#123;&quot;inode&quot;:2496275,&quot;pos&quot;:12,&quot;file&quot;:&quot;/export/server/flume/files/file2.txt&quot;&#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>启动监控</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 flume]# bin/flume-ng agent -c ./conf -f ./job/flume-taildir-hdfs.conf -n a3 -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>向 files 文件夹中追加内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 files]# echo hello &gt;&gt; file1.txt</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>查看 HDFS 上的数据</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/09/16/Flume%E6%A6%82%E8%BF%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/16/Flume%E6%A6%82%E8%BF%B0/" class="post-title-link" itemprop="url">Flume概述</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-16 19:52:35" itemprop="dateCreated datePublished" datetime="2021-09-16T19:52:35+08:00">2021-09-16</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Flume定义"><a href="#Flume定义" class="headerlink" title="Flume定义"></a>Flume定义</h1><p>Flume 是 Cloudera 提供的一个高可用的，高可靠的，分布式的海量日志采集、聚合和传输的系统。Flume 基于流式架构，灵活简单。</p>
+<p><img src="/2021/09/16/Flume%E6%A6%82%E8%BF%B0/image-20230130231210711.png" alt="image-20230130231210711"></p>
+<p>Flume最主要的作用就是，实时读取服务器本地磁盘的数据，将数据写入到HDFS。</p>
+<h1 id="Flume基础架构"><a href="#Flume基础架构" class="headerlink" title="Flume基础架构"></a>Flume基础架构</h1><p><img src="/2021/09/16/Flume%E6%A6%82%E8%BF%B0/image-20230130231305720.png" alt="image-20230130231305720"></p>
+<h2 id="Agent"><a href="#Agent" class="headerlink" title="Agent"></a>Agent</h2><p>Agent 是一个 JVM 进程，它以事件的形式将数据从源头送至目的。</p>
+<p>Agent 主要有 3 个部分组成，Source、Channel、Sink。</p>
+<h2 id="Source"><a href="#Source" class="headerlink" title="Source"></a>Source</h2><p>Source 是负责接收数据到 Flume Agent 的组件。Source 组件可以处理各种类型、各种格式的日志数据，包括 avro、thrift、exec、jms、spooling directory、netcat、taildir、sequence generator、syslog、http、legacy。</p>
+<h2 id="Sink"><a href="#Sink" class="headerlink" title="Sink"></a>Sink</h2><p>Sink 不断地轮询 Channel 中的事件且批量地移除它们，并将这些事件批量写入到存储或索引系统、或者被发送到另一个 Flume Agent。</p>
+<p>Sink 组件目的地包括 hdfs、logger、avro、thrift、ipc、file、HBase、solr、自定义。</p>
+<h2 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h2><p>Channel 是位于 Source 和 Sink 之间的缓冲区。因此，Channel 允许 Source 和 Sink 运作在不同的速率上。Channel 是线程安全的，可以同时处理几个 Source 的写入操作和几个Sink 的读取操作。</p>
+<p>Flume 自带两种 Channel：Memory Channel 和 File Channel。</p>
+<p>Memory Channel 是内存中的队列。Memory Channel 在不需要关心数据丢失的情景下适用。如果需要关心数据丢失，那么 Memory Channel 就不应该使用，因为程序死亡、机器宕机或者重启都会导致数据丢失。</p>
+<p>File Channel 将所有事件写到磁盘。因此在程序关闭或机器宕机的情况下不会丢失数据。</p>
+<h2 id="Event"><a href="#Event" class="headerlink" title="Event"></a>Event</h2><p>传输单元，Flume 数据传输的基本单元，以 Event 的形式将数据从源头送至目的地。</p>
+<p>Event 由 <strong>Header</strong> 和 <strong>Body</strong> 两部分组成，Header 用来存放该 event 的一些属性，为 K-V 结构，Body 用来存放该条数据，形式为字节数组。</p>
+<p><img src="/2021/09/16/Flume%E6%A6%82%E8%BF%B0/image-20230130231752801.png" alt="image-20230130231752801"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/09/10/Zookeeper%E6%A1%88%E4%BE%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/10/Zookeeper%E6%A1%88%E4%BE%8B/" class="post-title-link" itemprop="url">Zookeeper案例</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-10 20:02:19" itemprop="dateCreated datePublished" datetime="2021-09-10T20:02:19+08:00">2021-09-10</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="服务器动态上下线监听案例"><a href="#服务器动态上下线监听案例" class="headerlink" title="服务器动态上下线监听案例"></a>服务器动态上下线监听案例</h1><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>某分布式系统中，主节点可以有多台，可以动态上下线，任意一台客户端都能实时感知到主节点服务器的上下线。</p>
+<h2 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h2><p>服务器动态上下线</p>
+<p><img src="/2021/09/10/Zookeeper%E6%A1%88%E4%BE%8B/image-20221223142745247.png" alt="image-20221223142745247"></p>
+<h2 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h2><h3 id="在集群上创建-x2F-servers-节点"><a href="#在集群上创建-x2F-servers-节点" class="headerlink" title="在集群上创建&#x2F;servers 节点"></a>在集群上创建&#x2F;servers 节点</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 0] create /servers &quot;servers&quot;</span><br><span class="line">Created /servers</span><br></pre></td></tr></table></figure>
+
+<h3 id="Idea创建项目"><a href="#Idea创建项目" class="headerlink" title="Idea创建项目"></a>Idea创建项目</h3><p>pom.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.logging.log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.13.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.zookeeper<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>zookeeper<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.11<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>compile<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="服务器端向Zookeeper注册代码"><a href="#服务器端向Zookeeper注册代码" class="headerlink" title="服务器端向Zookeeper注册代码"></a>服务器端向Zookeeper注册代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.zkcase1;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DistributeServer</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">connectString</span> <span class="operator">=</span> <span class="string">&quot;node1:2181,node2:2181,node3:2181&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">sessionTimeout</span> <span class="operator">=</span> <span class="number">2000</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">ZooKeeper</span> <span class="variable">zk</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">parentNode</span> <span class="operator">=</span> <span class="string">&quot;/servers&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//创建到 zk 的客户端连接</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">getConnect</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        zk = <span class="keyword">new</span> <span class="title class_">ZooKeeper</span>(connectString, sessionTimeout, <span class="keyword">new</span> <span class="title class_">Watcher</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">process</span><span class="params">(WatchedEvent watchedEvent)</span> &#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//注册服务器</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">registServer</span><span class="params">(String hostname)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">create</span> <span class="operator">=</span> zk.create(parentNode + <span class="string">&quot;/server&quot;</span>, hostname.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);</span><br><span class="line">        System.out.println(hostname + <span class="string">&quot; is online &quot;</span> + create);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">business</span><span class="params">(String hostname)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        System.out.println(hostname + <span class="string">&quot; is working &quot;</span>);</span><br><span class="line">        Thread.sleep(Long.MAX_VALUE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">DistributeServer</span> <span class="variable">server</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DistributeServer</span>();</span><br><span class="line">        server.getConnect();</span><br><span class="line"></span><br><span class="line">        server.registServer(args[<span class="number">0</span>]);</span><br><span class="line">        server.business(args[<span class="number">0</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="客户端代码"><a href="#客户端代码" class="headerlink" title="客户端代码"></a>客户端代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.zkcase1;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.WatchedEvent;</span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher;</span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooKeeper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DistributeClient</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">connectString</span> <span class="operator">=</span> <span class="string">&quot;node1:2181,node2:2181,node3:2181&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">sessionTimeout</span> <span class="operator">=</span> <span class="number">2000</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">ZooKeeper</span> <span class="variable">zk</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">parentNode</span> <span class="operator">=</span> <span class="string">&quot;/servers&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//创建到 zk 的客户端连接</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">getConnect</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        zk = <span class="keyword">new</span> <span class="title class_">ZooKeeper</span>(connectString, sessionTimeout, <span class="keyword">new</span> <span class="title class_">Watcher</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">process</span><span class="params">(WatchedEvent watchedEvent)</span> &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    getServerList();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">getServerList</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 1 获取服务器子节点信息，并且对父节点进行监听</span></span><br><span class="line">        List&lt;String&gt; chidren = zk.getChildren(parentNode, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2 存储服务器信息列表</span></span><br><span class="line">        ArrayList&lt;String&gt; servers = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3 遍历所有节点，获取节点中的主机名称信息</span></span><br><span class="line">        <span class="keyword">for</span> (String child : chidren) &#123;</span><br><span class="line">            <span class="type">byte</span>[] data = zk.getData(parentNode + <span class="string">&quot;/&quot;</span> + child, <span class="literal">false</span>, <span class="literal">null</span>);</span><br><span class="line">            servers.add(<span class="keyword">new</span> <span class="title class_">String</span>(data));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4 打印服务器列表信息</span></span><br><span class="line">        System.out.println(servers);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">business</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;client is working ...&quot;</span>);</span><br><span class="line">        Thread.sleep(Long.MAX_VALUE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 1 获取 zk 连接</span></span><br><span class="line">        <span class="type">DistributeClient</span> <span class="variable">client</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DistributeClient</span>();</span><br><span class="line">        client.getConnect();</span><br><span class="line">        <span class="comment">// 2 获取 servers 的子节点信息，从中获取服务器信息列表</span></span><br><span class="line">        client.getServerList();</span><br><span class="line">        <span class="comment">// 3 业务进程启动</span></span><br><span class="line">        client.business();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><h4 id="在linux服务器命令行上增加减少服务器"><a href="#在linux服务器命令行上增加减少服务器" class="headerlink" title="在linux服务器命令行上增加减少服务器"></a>在linux服务器命令行上增加减少服务器</h4><p>（1）启动 DistributeClient 客户端</p>
+<p>（2）在 node1上 zk 的客户端&#x2F;servers 目录上创建临时带序号节点</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 9] create -e -s /servers/node &quot;node1&quot;</span><br><span class="line">Created /servers/node0000000000</span><br><span class="line">[zk: localhost:2181(CONNECTED) 10] create -e -s /servers/node &quot;node2&quot;</span><br><span class="line">Created /servers/node0000000001</span><br></pre></td></tr></table></figure>
+
+<p>（3）观察 Idea 控制台变化</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[node1, node2]</span><br></pre></td></tr></table></figure>
+
+<p>（4）执行删除操作</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 11] delete /servers/node0000000000</span><br></pre></td></tr></table></figure>
+
+<p>（5）观察 Idea 控制台变化</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[node2]</span><br></pre></td></tr></table></figure>
+
+<h4 id="在-Idea-上操作增加减少服务器"><a href="#在-Idea-上操作增加减少服务器" class="headerlink" title="在 Idea 上操作增加减少服务器"></a>在 Idea 上操作增加减少服务器</h4><p>（1）启动 DistributeClient 客户端</p>
+<p>（2）启动 DistributeServer 服务</p>
+<p>​		Edit Configurations配置DistributeServer 的Program arguments，如node2</p>
+<p>（3）DistributeServer 控制台输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node2 is online /servers/server0000000002</span><br><span class="line">node2 is working </span><br></pre></td></tr></table></figure>
+
+<p>（4）DistributeClient控制台输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[node2]</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="ZooKeeper-分布式锁案例"><a href="#ZooKeeper-分布式锁案例" class="headerlink" title="ZooKeeper 分布式锁案例"></a>ZooKeeper 分布式锁案例</h1><p>什么叫做分布式锁？</p>
+<p>比如说”进程 1”在使用该资源的时候，会先去获得锁，”进程 1”获得锁以后会对该资源保持独占，这样其他进程就无法访问该资源，”进程 1”用完该资源以后就将锁释放掉，让其他进程来获得锁，那么通过这个锁机制，我们就能保证了分布式系统中多个进程能够有序的访问该临界资源。那么我们把这个分布式环境下的这个锁叫作分布式锁。</p>
+<h2 id="原生-Zookeeper-实现分布式锁案例"><a href="#原生-Zookeeper-实现分布式锁案例" class="headerlink" title="原生 Zookeeper 实现分布式锁案例"></a>原生 Zookeeper 实现分布式锁案例</h2><p><img src="/2021/09/10/Zookeeper%E6%A1%88%E4%BE%8B/image-20221223173024339.png" alt="image-20221223173024339"></p>
+<h3 id="分布式锁实现"><a href="#分布式锁实现" class="headerlink" title="分布式锁实现"></a>分布式锁实现</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.zkcase2;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.data.Stat;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.Collections;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.CountDownLatch;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DistributedLock</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">connectString</span> <span class="operator">=</span> <span class="string">&quot;node1:2181,node2:2181,node3:2181&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">sessionTimeout</span> <span class="operator">=</span> <span class="number">2000</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">ZooKeeper</span> <span class="variable">zk</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">rootNode</span> <span class="operator">=</span> <span class="string">&quot;locks&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">subNode</span> <span class="operator">=</span> <span class="string">&quot;seq-&quot;</span>;</span><br><span class="line">    <span class="comment">// 当前 client 等待的子节点</span></span><br><span class="line">    <span class="keyword">private</span> String waitPath;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">CountDownLatch</span> <span class="variable">connectLatch</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CountDownLatch</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="comment">//ZooKeeper 节点等待</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">CountDownLatch</span> <span class="variable">waitLatch</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CountDownLatch</span>(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String currentNode;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 和 zk 服务建立连接，并创建根节点</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DistributedLock</span><span class="params">()</span> <span class="keyword">throws</span> IOException, InterruptedException, KeeperException &#123;</span><br><span class="line">        zk = <span class="keyword">new</span> <span class="title class_">ZooKeeper</span>(connectString, sessionTimeout, <span class="keyword">new</span> <span class="title class_">Watcher</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">process</span><span class="params">(WatchedEvent watchedEvent)</span> &#123;</span><br><span class="line">                <span class="comment">// 连接建立时, 打开 latch, 唤醒 wait 在该 latch 上的线程</span></span><br><span class="line">                <span class="keyword">if</span> (watchedEvent.getState() == Event.KeeperState.SyncConnected) &#123;</span><br><span class="line">                    connectLatch.countDown();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 发生了 waitPath 的删除事件</span></span><br><span class="line">                <span class="keyword">if</span> (watchedEvent.getType() == Event.EventType.NodeDeleted &amp;&amp; watchedEvent.getPath().equals(waitPath)) &#123;</span><br><span class="line">                    waitLatch.countDown();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//等待连接建立</span></span><br><span class="line">        connectLatch.await();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取根节点状态</span></span><br><span class="line">        <span class="type">Stat</span> <span class="variable">stat</span> <span class="operator">=</span> zk.exists(<span class="string">&quot;/&quot;</span> + rootNode, <span class="literal">false</span>);</span><br><span class="line">        <span class="comment">//如果根节点不存在，则创建根节点，根节点类型为永久节点</span></span><br><span class="line">        <span class="keyword">if</span> (stat == <span class="literal">null</span>) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;根节点不存在&quot;</span>);</span><br><span class="line">            zk.create(<span class="string">&quot;/&quot;</span> + rootNode, <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">0</span>], ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//加锁</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">zkLock</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//在根节点下创建临时顺序节点，返回值为创建的节点路径</span></span><br><span class="line">            currentNode = zk.create(<span class="string">&quot;/&quot;</span> + rootNode + <span class="string">&quot;/&quot;</span> + subNode, <span class="literal">null</span>, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);</span><br><span class="line">            <span class="comment">// wait 一小会, 让结果更清晰一些</span></span><br><span class="line">            Thread.sleep(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 注意, 没有必要监听&quot;/locks&quot;的子节点的变化情况</span></span><br><span class="line">            List&lt;String&gt; childrenNodes = zk.getChildren(<span class="string">&quot;/&quot;</span> + rootNode, <span class="literal">false</span>);</span><br><span class="line">            <span class="comment">//列表中只有一个子节点, 那肯定就是 currentNode , 说明client 获得锁</span></span><br><span class="line">            <span class="keyword">if</span> (childrenNodes.size() == <span class="number">1</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//对根节点下的所有临时顺序节点进行从小到大排序</span></span><br><span class="line">                Collections.sort(childrenNodes);</span><br><span class="line">                <span class="comment">//当前节点名称</span></span><br><span class="line">                <span class="type">String</span> <span class="variable">thisNode</span> <span class="operator">=</span> currentNode.substring((<span class="string">&quot;/&quot;</span> + rootNode + <span class="string">&quot;/&quot;</span>).length());</span><br><span class="line">                <span class="comment">//获取当前节点的位置</span></span><br><span class="line">                <span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> childrenNodes.indexOf(thisNode);</span><br><span class="line">                <span class="keyword">if</span> (index == -<span class="number">1</span>) &#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;数据异常&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (index == <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="comment">// index == 0, 说明 thisNode 在列表中最小, 当前client 获得锁</span></span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">//  获得排名比 currentNode 前 1 位的节点</span></span><br><span class="line">                    <span class="built_in">this</span>.waitPath = <span class="string">&quot;/&quot;</span> + rootNode + <span class="string">&quot;/&quot;</span> + childrenNodes.get(index - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">                    <span class="comment">//在 waitPath 上注册监听器, 当 waitPath 被删除时, zookeeper 会回调监听器的 process 方法</span></span><br><span class="line">                    zk.getData(waitPath, <span class="literal">true</span>, <span class="keyword">new</span> <span class="title class_">Stat</span>());</span><br><span class="line">                    <span class="comment">//进入等待锁状态</span></span><br><span class="line">                    waitLatch.await();</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (KeeperException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">zkUnlock</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            zk.delete(<span class="built_in">this</span>.currentNode, -<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (InterruptedException | KeeperException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="分布式锁测试"><a href="#分布式锁测试" class="headerlink" title="分布式锁测试"></a>分布式锁测试</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.zkcase2;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.KeeperException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DistributedLockTest</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException, IOException, KeeperException &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">DistributedLock</span> <span class="variable">lock1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DistributedLock</span>();</span><br><span class="line">        <span class="keyword">final</span> <span class="type">DistributedLock</span> <span class="variable">lock2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DistributedLock</span>();</span><br><span class="line">        <span class="comment">//创建两个线程</span></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    lock1.zkLock();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程1获取锁&quot;</span>);</span><br><span class="line">                    Thread.sleep(<span class="number">5</span> * <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">                    lock1.zkUnlock();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程1释放锁&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    lock2.zkLock();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程2获取锁&quot;</span>);</span><br><span class="line">                    Thread.sleep(<span class="number">5</span> * <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">                    lock2.zkUnlock();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程2释放锁&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">线程2获取锁</span><br><span class="line">线程2释放锁</span><br><span class="line">线程1获取锁</span><br><span class="line">线程1释放锁</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Curator-框架实现分布式锁案例"><a href="#Curator-框架实现分布式锁案例" class="headerlink" title="Curator 框架实现分布式锁案例"></a>Curator 框架实现分布式锁案例</h2><h3 id="原生的Zookeeper-Java-API-开发存在的问题"><a href="#原生的Zookeeper-Java-API-开发存在的问题" class="headerlink" title="原生的Zookeeper Java API 开发存在的问题"></a>原生的Zookeeper Java API 开发存在的问题</h3><p>（1）会话连接是异步的，需要自己去处理。比如使用 CountDownLatch</p>
+<p>（2）Watch 需要重复注册，不然就不能生效</p>
+<p>（3）开发的复杂性还是比较高的</p>
+<p>（4）不支持多节点删除和创建。需要自己去递归</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>Curator 是一个专门解决分布式锁的框架，解决了原生Zookeeper JavaAPI 开发分布式遇到的问题。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.zkcase3;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.curator.RetryPolicy;</span><br><span class="line"><span class="keyword">import</span> org.apache.curator.framework.CuratorFramework;</span><br><span class="line"><span class="keyword">import</span> org.apache.curator.framework.CuratorFrameworkFactory;</span><br><span class="line"><span class="keyword">import</span> org.apache.curator.framework.recipes.locks.InterProcessLock;</span><br><span class="line"><span class="keyword">import</span> org.apache.curator.framework.recipes.locks.InterProcessMutex;</span><br><span class="line"><span class="keyword">import</span> org.apache.curator.retry.ExponentialBackoffRetry;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CuratorLockTest</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">rootNode</span> <span class="operator">=</span> <span class="string">&quot;/locks&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">connectString</span> <span class="operator">=</span> <span class="string">&quot;node1:2181,node2:2181,node3:2181&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">connectionTimeout</span> <span class="operator">=</span> <span class="number">2000</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">sessionTimeout</span> <span class="operator">=</span> <span class="number">2000</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">CuratorLockTest</span>().test();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">InterProcessLock</span> <span class="variable">lock1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InterProcessMutex</span>(getCuratorFramework(), rootNode);</span><br><span class="line">        <span class="keyword">final</span> <span class="type">InterProcessLock</span> <span class="variable">lock2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InterProcessMutex</span>(getCuratorFramework(), rootNode);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    lock1.acquire();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程 1 获取锁&quot;</span>);</span><br><span class="line">                    lock1.acquire();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程 1 再次获取锁&quot;</span>);</span><br><span class="line">                    Thread.sleep(<span class="number">5</span> * <span class="number">1000</span>);</span><br><span class="line">                    lock1.release();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程 1 释放锁&quot;</span>);</span><br><span class="line">                    lock1.release();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程 1 再次释放锁&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    lock2.acquire();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程 2 获取锁&quot;</span>);</span><br><span class="line">                    lock2.acquire();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程 2 再次获取锁&quot;</span>);</span><br><span class="line">                    Thread.sleep(<span class="number">5</span> * <span class="number">1000</span>);</span><br><span class="line">                    lock2.release();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程 2 释放锁&quot;</span>);</span><br><span class="line">                    lock2.release();</span><br><span class="line">                    System.out.println(<span class="string">&quot;线程 2 再次释放锁&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> CuratorFramework <span class="title function_">getCuratorFramework</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">//重试策略，初试时间 3 秒，重试 3 次</span></span><br><span class="line">        <span class="type">RetryPolicy</span> <span class="variable">policy</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ExponentialBackoffRetry</span>(<span class="number">3000</span>, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">CuratorFramework</span> <span class="variable">client</span> <span class="operator">=</span> CuratorFrameworkFactory.builder()</span><br><span class="line">                .connectString(connectString)</span><br><span class="line">                .connectionTimeoutMs(connectionTimeout)</span><br><span class="line">                .sessionTimeoutMs(sessionTimeout)</span><br><span class="line">                .retryPolicy(policy).build();</span><br><span class="line"></span><br><span class="line">        client.start();</span><br><span class="line">        System.out.println(<span class="string">&quot;zookeeper 初始化完成...&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> client;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">zookeeper 初始化完成...</span><br><span class="line">zookeeper 初始化完成...</span><br><span class="line">线程 1 获取锁</span><br><span class="line">线程 1 再次获取锁</span><br><span class="line">线程 1 释放锁</span><br><span class="line">线程 1 再次释放锁</span><br><span class="line">线程 2 获取锁</span><br><span class="line">线程 2 再次获取锁</span><br><span class="line">线程 2 释放锁</span><br><span class="line">线程 2 再次释放锁</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/09/07/Zookeeper%E9%9B%86%E7%BE%A4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1232,406 +1639,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/08/17/Swagger3%E4%BD%BF%E7%94%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/17/Swagger3%E4%BD%BF%E7%94%A8/" class="post-title-link" itemprop="url">Swagger使用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-08-17 23:00:02" itemprop="dateCreated datePublished" datetime="2021-08-17T23:00:02+08:00">2021-08-17</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Swagger3-使用"><a href="#Swagger3-使用" class="headerlink" title="Swagger3 使用"></a>Swagger3 使用</h3><h4 id="添加依赖"><a href="#添加依赖" class="headerlink" title="添加依赖"></a>添加依赖</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>Swagger 是一个遵循了 OpenAPI 规范的一项技术，而 springfox 则是这项技术的具体实现。</p>
-<h4 id="开启Swagger"><a href="#开启Swagger" class="headerlink" title="开启Swagger"></a>开启Swagger</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableOpenApi</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MallApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(MallApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="配置摘要信息"><a href="#配置摘要信息" class="headerlink" title="配置摘要信息"></a>配置摘要信息</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.builders.RequestHandlerSelectors;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.spi.DocumentationType;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.spring.web.plugins.Docket;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SwaggerConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Docket <span class="title function_">createRestApi</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Docket</span>(DocumentationType.OAS_30)</span><br><span class="line">                .apiInfo(apiInfo())</span><br><span class="line">                .select()</span><br><span class="line">                .apis(RequestHandlerSelectors.basePackage(<span class="string">&quot;com.macro.mall.controller&quot;</span>))</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> ApiInfo <span class="title function_">apiInfo</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ApiInfoBuilder</span>()</span><br><span class="line">                .title(<span class="string">&quot;SwaggerUI演示&quot;</span>)</span><br><span class="line">                .description(<span class="string">&quot;mall&quot;</span>)</span><br><span class="line">                .version(<span class="string">&quot;1.0.0&quot;</span>)</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="访问Swagger"><a href="#访问Swagger" class="headerlink" title="访问Swagger"></a>访问Swagger</h4><p><a target="_blank" rel="noopener" href="http://localhost:8080/swagger-ui/">http://localhost:8080/swagger-ui/</a></p>
-<h3 id="Swagger2使用"><a href="#Swagger2使用" class="headerlink" title="Swagger2使用"></a>Swagger2使用</h3><h4 id="添加依赖-1"><a href="#添加依赖-1" class="headerlink" title="添加依赖"></a>添加依赖</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger-ui<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="开启Swagger-1"><a href="#开启Swagger-1" class="headerlink" title="开启Swagger"></a>开启Swagger</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableSwagger2</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MallTinyApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(MallTinyApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="配置摘要信息-1"><a href="#配置摘要信息-1" class="headerlink" title="配置摘要信息"></a>配置摘要信息</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.builders.ApiInfoBuilder;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.builders.RequestHandlerSelectors;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.service.ApiInfo;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.spi.DocumentationType;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.spring.web.plugins.Docket;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.swagger2.annotations.EnableSwagger2;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableSwagger2</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SwaggerConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Docket <span class="title function_">createRestApi</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Docket</span>(DocumentationType.SWAGGER_2)</span><br><span class="line">                .apiInfo(apiInfo())</span><br><span class="line">                .select()</span><br><span class="line">                .apis(RequestHandlerSelectors.basePackage(<span class="string">&quot;com.macro.mall&quot;</span>))</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ApiInfo <span class="title function_">apiInfo</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ApiInfoBuilder</span>()</span><br><span class="line">                .title(<span class="string">&quot;SwaggerUI演示&quot;</span>)</span><br><span class="line">                .description(<span class="string">&quot;mall&quot;</span>)</span><br><span class="line">                .version(<span class="string">&quot;1.0.0&quot;</span>)</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="访问Swagger-1"><a href="#访问Swagger-1" class="headerlink" title="访问Swagger"></a>访问Swagger</h4><p><a target="_blank" rel="noopener" href="http://localhost:8080/swagger-ui.html">http://localhost:8080/swagger-ui.html</a></p>
-<h3 id="生产环境"><a href="#生产环境" class="headerlink" title="生产环境"></a>生产环境</h3><p>生产环境中要关闭接口文档的显示</p>
-<p>在application.properties或application.yml中设置</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">springfox:</span></span><br><span class="line">  <span class="attr">documentation:</span></span><br><span class="line">    <span class="attr">enabled:</span> <span class="literal">true</span> <span class="comment">#在生产环境中要设置swagger-ui的enabled值为false,用来关闭文档的显示</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="Swagger注解的使用说明"><a href="#Swagger注解的使用说明" class="headerlink" title="Swagger注解的使用说明"></a>Swagger注解的使用说明</h3><h4 id="Api"><a href="#Api" class="headerlink" title="@Api"></a>@Api</h4><blockquote>
-<p>@Api：用在请求的类上，表示对类的说明</p>
-<p>​		tags &#x3D; “说明该类的作用”， 可以在UI界面上看到的注解“</p>
-<p>​		value &#x3D; ”该参数没有什么意义，在UI上也可以看到，所以不需要配置“</p>
-</blockquote>
-<h4 id="ApiOperation"><a href="#ApiOperation" class="headerlink" title="@ApiOperation"></a>@ApiOperation</h4><blockquote>
-<p>@ApiOperation：用在请求的方法上，说明方法用途、作用</p>
-<p>​		value &#x3D; ”说明方法的用途、作用“</p>
-<p>​		notes &#x3D; ”方法的备注说明“</p>
-</blockquote>
-<h4 id="ApiImplicitParams"><a href="#ApiImplicitParams" class="headerlink" title="@ApiImplicitParams"></a>@ApiImplicitParams</h4><blockquote>
-<p>@ApiImplicitParams：用在请求方法上，表示一组参数说明</p>
-<p>​		@ApiImplicitParam：用在@ApiImplicitParams注解中，指定一个请求参数的各个方面</p>
-<p>​				name：参数名</p>
-<p>​				value：参数的汉字说明、解释</p>
-<p>​				required：参数是否必须传</p>
-<p>​				paramType：参数放在哪个地方</p>
-<p>​						header  &#x3D;&#x3D;&#x3D;&gt; 请求参数的获取： @RequestHeader</p>
-<p>​						query    &#x3D;&#x3D;&#x3D;&gt; 请求参数的获取： @RequestParam</p>
-<p>​						path（用于restful接口） &#x3D;&#x3D;&#x3D;&gt; 请求参数的获取：@PathVariable</p>
-<p>​						div（不常用）</p>
-<p>​						form（不常用）</p>
-<p>​				dataType：参数类型，默认String，其他值Integer</p>
-<p>​				defaultValue：参数的默认值</p>
-</blockquote>
-<h4 id="ApiResponses"><a href="#ApiResponses" class="headerlink" title="@ApiResponses"></a>@ApiResponses</h4><blockquote>
-<p>@ApiResponses：用在请求方法上，表示一组响应</p>
-<p>​		@ApiResponse：用在@ApiResponses中，一般表达一个错误的响应信息</p>
-<p>​				code：数字，例如：400</p>
-<p>​				message：信息</p>
-<p>​				response：抛出的异常类</p>
-</blockquote>
-<h4 id="ApiModel"><a href="#ApiModel" class="headerlink" title="@ApiModel"></a>@ApiModel</h4><blockquote>
-<p>@ApiModel：用于响应类上，表示一个返回相应数据的信息</p>
-</blockquote>
-<h4 id="ApiModelProperty"><a href="#ApiModelProperty" class="headerlink" title="@ApiModelProperty"></a>@ApiModelProperty</h4><blockquote>
-<p>@ApiModelProperty：用在属性上，描述相应类的属性</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Api(tags = &quot;商品品牌管理&quot;)</span></span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/brand&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PmsBrandController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> PmsBrandService pmsBrandService;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">LOGGER</span> <span class="operator">=</span> LoggerFactory.getLogger(PmsBrandController.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation(value = &quot;获取所有商品列表&quot;)</span></span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;listAll&quot;, method = RequestMethod.GET)</span></span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="keyword">public</span> CommonResult&lt;List&lt;PmsBrand&gt;&gt; <span class="title function_">getBrandList</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> CommonResult.success(pmsBrandService.listAllBrand());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation(&quot;添加品牌&quot;)</span></span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/create&quot;, method = RequestMethod.POST)</span></span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="keyword">public</span> CommonResult <span class="title function_">createBrand</span><span class="params">(<span class="meta">@RequestBody</span> PmsBrand pmsBrand)</span> &#123;</span><br><span class="line">        CommonResult commonResult;</span><br><span class="line">        <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> pmsBrandService.createBrand(pmsBrand);</span><br><span class="line">        <span class="keyword">if</span> (count == <span class="number">1</span>) &#123;</span><br><span class="line">            commonResult = CommonResult.success(pmsBrand);</span><br><span class="line">            LOGGER.debug(<span class="string">&quot;createbrand success: &#123;&#125;&quot;</span>, pmsBrand);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            commonResult = CommonResult.failed(<span class="string">&quot;操作失败&quot;</span>);</span><br><span class="line">            LOGGER.debug(<span class="string">&quot;createbrand failed: &#123;&#125;&quot;</span>, pmsBrand);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> commonResult;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation(&quot;更新指定id的品牌信息&quot;)</span></span><br><span class="line">    <span class="meta">@PostMapping(value = &quot;/update/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="keyword">public</span> CommonResult <span class="title function_">updateBrand</span><span class="params">(<span class="meta">@PathVariable(&quot;id&quot;)</span> Long id, <span class="meta">@RequestBody</span> PmsBrand pmsBrandDto, BindingResult result)</span> &#123;</span><br><span class="line">        CommonResult commonResult;</span><br><span class="line">        <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> pmsBrandService.updateBrand(id, pmsBrandDto);</span><br><span class="line">        <span class="keyword">if</span> (count == <span class="number">1</span>) &#123;</span><br><span class="line">            commonResult = CommonResult.success(pmsBrandDto);</span><br><span class="line">            LOGGER.debug(<span class="string">&quot;updateBrand success: &#123;&#125;&quot;</span>, pmsBrandDto);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            commonResult = CommonResult.failed(<span class="string">&quot;操作失败&quot;</span>);</span><br><span class="line">            LOGGER.debug(<span class="string">&quot;updateBrand failed: &#123;&#125;&quot;</span>, pmsBrandDto);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> commonResult;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/08/15/Hadoop-Yarn/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/15/Hadoop-Yarn/" class="post-title-link" itemprop="url">Hadoop-Yarn</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-08-15 09:07:01" itemprop="dateCreated datePublished" datetime="2021-08-15T09:07:01+08:00">2021-08-15</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="YARN概述"><a href="#YARN概述" class="headerlink" title="YARN概述"></a>YARN概述</h1><p>YARN （Yet Another Resource Negotiator，另一种资源协调者），是一个通用的资源管理系统和调度平台，可为上层应用提供统一的资源管理和调度。</p>
-<h1 id="YARN架构、组件"><a href="#YARN架构、组件" class="headerlink" title="YARN架构、组件"></a>YARN架构、组件</h1><h2 id="YARN架构图"><a href="#YARN架构图" class="headerlink" title="YARN架构图"></a>YARN架构图</h2><img src="/2021/08/15/Hadoop-Yarn/image-20221213153344431.png" alt="image-20221213153344431" style="zoom:80%;">
-
-<h2 id="YARN组件"><a href="#YARN组件" class="headerlink" title="YARN组件"></a>YARN组件</h2><p><strong>ResourceManager（RM）</strong></p>
-<p>YARN集群中的主角色，决定系统中所有应用程序之间资源分配的最终权限，即最终仲裁者。接收用户的作业提交，并通过NM分配、管理各个机器上的计算资源。</p>
-<p><strong>NodeManager（NM）</strong></p>
-<p>YARN中的从角色，一台机器上一个，负责管理本机器上的计算资源。根据RM命令，启动Container容器、监视容器的资源使用情况。并且向RM主角色汇报资源使用情况。</p>
-<p><strong>ApplicationMaster（AM）</strong></p>
-<p>用户提交的每个应用程序均包含一个AM。负责程序内部各阶段的资源申请，监督程序的执行情况。</p>
-<p><strong>Client</strong></p>
-<p><strong>Container容器</strong></p>
-<h1 id="程序提交YARN交互流程"><a href="#程序提交YARN交互流程" class="headerlink" title="程序提交YARN交互流程"></a>程序提交YARN交互流程</h1><h2 id="核心交互流程"><a href="#核心交互流程" class="headerlink" title="核心交互流程"></a>核心交互流程</h2><ul>
-<li>MR作业提交  Client -&gt; RM</li>
-<li>资源的申请  MrAppMaster -&gt; RM</li>
-<li>MR作业状态汇报 Container （Map|Reduce Task） -&gt; Container (MrAppMaster)</li>
-<li>节点的状态汇报 NM -&gt; RM</li>
-</ul>
-<h2 id="整体概述"><a href="#整体概述" class="headerlink" title="整体概述"></a>整体概述</h2><p>当用户向YARN中提交一个应用程序后，YARN将分成两个阶段运行该应用程序。</p>
-<p>第一阶段：客户申请资源启动运行本次程序的ApplicationMaster。</p>
-<p>第二阶段：ApplicationMaster根据本次程序内部具体情况，为它申请资源，并监控它的整个运行过程，直到运行完成。</p>
-<p><img src="/2021/08/15/Hadoop-Yarn/image-20221213154706877.png" alt="image-20221213154706877"></p>
-<h2 id="MR提交YARN交互流程"><a href="#MR提交YARN交互流程" class="headerlink" title="MR提交YARN交互流程"></a>MR提交YARN交互流程</h2><ol>
-<li>用户通过客户端向YARN中ResourceManager提交应用程序。</li>
-<li>ResourceManager为该应用程序分配第一个Container（容器），并与对应的NodeManager通信，要求它在这个Container中启动这个应用程序的ApplicationMaster。</li>
-<li>ApplicationMaster启动成功后，首先向ResourceManager注册并保持通信，这样用户可以直接通过ResourceManager查看应用程序的运行状态。</li>
-<li>AM为本次程序内部的各个Task任务向RM申请资源，并监控它的运行状态。</li>
-<li>一旦ApplicationMaster申请到资源后，便与对应的NodeManager通信，要求它启动任务。</li>
-<li>NodeManager为任务设置好运行环境后，将任务启动命令写到一个脚本中，并通过运行该脚本启动任务。</li>
-<li>各个任务通过某个RPC协议向ApplicationMaster汇报自己的状态和进度，以让ApplicationMaster随时掌握各个任务的运行状态，从而可以在任务失败时重新启动任务。在应用程序运行过程中，用户可以随时通过RPC向ApplicationMaster查询应用程序的当前运行状态。</li>
-<li>应用程序运行完成后，ApplicationMaster向ResourceManager注销并关闭自己。</li>
-</ol>
-<h1 id="YARN资源调度器Scheduler"><a href="#YARN资源调度器Scheduler" class="headerlink" title="YARN资源调度器Scheduler"></a>YARN资源调度器Scheduler</h1><h2 id="YARN资源调度器Scheduler-1"><a href="#YARN资源调度器Scheduler-1" class="headerlink" title="YARN资源调度器Scheduler"></a>YARN资源调度器Scheduler</h2><p>YARN调度程序的工作是根据一些定义的策略为应用程序分配资源。<br>在YARN中，负责给应用程序分配资源的就是Scheduler，它是ResourceManager的核心组件之一。Scheduler完全专用于调度作业，它无法跟踪应用程序的状态。<br>一般而言，调度是一个难题，并且没有一个“最佳”策略，为此，YARN提供了多种调度器和可配置的策略供选择。</p>
-<h2 id="调度器策略"><a href="#调度器策略" class="headerlink" title="调度器策略"></a>调度器策略</h2><h3 id="三种调度器"><a href="#三种调度器" class="headerlink" title="三种调度器"></a>三种调度器</h3><h4 id="FIFO-Scheduler（先进先出调度器）"><a href="#FIFO-Scheduler（先进先出调度器）" class="headerlink" title="FIFO Scheduler（先进先出调度器）"></a>FIFO Scheduler（先进先出调度器）</h4><p>先提交的应用先运行。调度工作不考虑优先级和范围，适用于负载较低的小规模集群<br>优点：无需配置、先到先得、易于执行<br>缺点：任务的优先级不会变高，因此优先级高的作业需要等待，不适合共享集群。很少使用</p>
-<h4 id="Capacity-Scheduler（容量调度器）（YARN默认）"><a href="#Capacity-Scheduler（容量调度器）（YARN默认）" class="headerlink" title="Capacity Scheduler（容量调度器）（YARN默认）"></a>Capacity Scheduler（容量调度器）（YARN默认）</h4><p>允许多个组织共享整个集群资源，每个组织可以获得集群的一部分计算能力。通过为每个组织分配专门的队列，然后再为每个队列分配一定的集群资源，这样整个集群可以通过设置多个队列的方式给多个组织提供服务了。<br>Capacity可以理解成一个个的资源队列，这个资源队列是用户自己去分配的。队列内部又可以垂直划分，这样一个组织内部的多个成员就可以共享这个队列资源了，在一个队列内部，资源的调度是采用先进先出策略。<br>Capacity Scheduler调度器以队列为单位划分资源。简单通俗点来说，就是一个个队列有独立的资源，队列的结构和资源是可以进行配置的。<br><strong>特性优势</strong></p>
-<ul>
-<li>层次化的队列设计</li>
-<li>容量保证</li>
-<li>安全</li>
-<li>弹性分配</li>
-</ul>
-<p>	</p>
-<h4 id="Fair-Scheduler（公平调度器）"><a href="#Fair-Scheduler（公平调度器）" class="headerlink" title="Fair Scheduler（公平调度器）"></a>Fair Scheduler（公平调度器）</h4><p>提供了YARN应用程序公平的共享大型集群中资源的另一种方式。使所有应用在平均情况下随着时间的流逝可以获得相等的资源份额。<br>设计目标是为所有的应用分配公平的资源（对公平的定义通过参数来设置）。<br>公平调度可以在多个队列间工作，允许资源共享和抢占。<br><strong>特性优势</strong></p>
-<ul>
-<li>分层队列</li>
-<li>基于用户或组的队列映射</li>
-<li>资源抢占</li>
-<li>保证最小配额</li>
-<li>允许资源共享</li>
-<li>默认不限制每个队列和用户可以同时运行应用的数量</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/08/14/Hadoop-MapReduce/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/14/Hadoop-MapReduce/" class="post-title-link" itemprop="url">Hadoop-MapReduce</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-08-14 10:17:09" itemprop="dateCreated datePublished" datetime="2021-08-14T10:17:09+08:00">2021-08-14</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="分布式计算分而治之思想"><a href="#分布式计算分而治之思想" class="headerlink" title="分布式计算分而治之思想"></a>分布式计算分而治之思想</h1><h2 id="分布式计算"><a href="#分布式计算" class="headerlink" title="分布式计算"></a>分布式计算</h2><p>分布式计算是一种计算方法，它将应用分解成许多小的部分，分配给多台计算机进行处理。从而节约整体计算时间，提高计算效率。</p>
-<h2 id="MapReduce思想"><a href="#MapReduce思想" class="headerlink" title="MapReduce思想"></a>MapReduce思想</h2><p>MapReduce思想核心：<strong>先分再合，分而治之</strong>。即把一个复杂的问题，按照一定的“分解”方法分为等价的规模较小的若干部分，然后逐个解决，分别找出各部分的结果，然后把各部分的结果组成整个问题的最终结果。</p>
-<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213101954806.png" alt="image-20221213101954806"></p>
-<ul>
-<li>Map表示第一阶段，负责“拆分”：即把复杂的任务分解成若干个“简单的子任务”来处理。可以进行拆分的前提是这些小任务可以并行计算，彼此间几乎没有依赖关系。</li>
-<li>Reduce表示第二阶段，负责“合并”：即对map阶段的结果进行全局汇总。</li>
-<li>这两个阶段合起来就是MapReduce思想的体现。</li>
-</ul>
-<h2 id="大数据处理场景"><a href="#大数据处理场景" class="headerlink" title="大数据处理场景"></a>大数据处理场景</h2><p>采用MapReduce分而治之策略，首先Map阶段进行拆分，把大数据拆分成若个份小数据，多个程序同时并行计算产生中间结果；然后Reduce聚合阶段，通过程序对并行的结果进行最终的汇总计算，得出最终结果。</p>
-<p><strong>不可拆分的计算任务或相互间有依赖关系的数据无法进行并行计算</strong></p>
-<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213102715695.png" alt="image-20221213102715695"></p>
-<h2 id="构建抽象编程模型"><a href="#构建抽象编程模型" class="headerlink" title="构建抽象编程模型"></a>构建抽象编程模型</h2><ul>
-<li><p>MapReduce借鉴了函数式语言中的思想，用Map和Reduce两个函数提供了高层的并行编程抽象模型。</p>
-<p>map：对一组数据元素进行某种重复式的处理</p>
-<p>reduce：对Map的中间结果进行某种进一步的结果处理</p>
-<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213103050117.png" alt="image-20221213103050117"></p>
-</li>
-<li><p>MapReduce中定义了如下的Map和Reduce两个抽象的编程接口，由用户去编程实现：</p>
-<p>map：（k1; v1) -&gt; (k2; v2)</p>
-<p>reduce：(k2: [v2]) -&gt; (k3; v3)</p>
-</li>
-<li><p>通过以上两个编程接口，可以看出MapReduce处理的数据类型是&lt;key, value&gt;键值对。</p>
-</li>
-</ul>
-<h2 id="统一架构，隐藏底层细节"><a href="#统一架构，隐藏底层细节" class="headerlink" title="统一架构，隐藏底层细节"></a>统一架构，隐藏底层细节</h2><p>MapReduce设计并统一了计算框架，隐藏了绝大多数系统层面的处理细节。</p>
-<h1 id="MapReduce介绍"><a href="#MapReduce介绍" class="headerlink" title="MapReduce介绍"></a>MapReduce介绍</h1><p>Hadoop MapReduce是一个分布式计算框架，用于轻松编写分布式应用程序，这些应用程序以可靠，容错的方式并行处理大型硬件集群（多节点）上的大量数据（TB级别）。</p>
-<p>MapReduce是一种面向海量数据处理的一种指导思想，也是一种用于大规模数据进行分布式计算的编程模型。</p>
-<p><strong>MapReduce特点</strong></p>
-<ul>
-<li><p>易于编程</p>
-<p>提供了用于二次开发的接口</p>
-</li>
-<li><p>良好的扩展</p>
-<p>可以通过增加机器（计算节点）来扩展它的计算能力</p>
-</li>
-<li><p>高容错性</p>
-<p>分布式搭建和部署，当某一个节点出现故障时，可以把上面的任务转移到另一个节点上运行，不影响整个任务。这个过程Hadoop内部完成</p>
-</li>
-<li><p>适合海量数据的离线处理</p>
-<p>可以处理GB、TB、PB级别数据</p>
-</li>
-</ul>
-<p><strong>MapReduce局限性</strong></p>
-<ul>
-<li>实时计算性能差</li>
-<li>不能进行流式计算</li>
-</ul>
-<h1 id="MapReduce实例进程"><a href="#MapReduce实例进程" class="headerlink" title="MapReduce实例进程"></a>MapReduce实例进程</h1><p>一个完整的MapReduce程序在分布式运行时有三类</p>
-<ul>
-<li>MRAppMaster：负责整个MR程序的过程调度及状态协调</li>
-<li>MapTask：负责map阶段的整个数据处理流程</li>
-<li>ReduceTask：负责reduce阶段的整个数据处理流程</li>
-</ul>
-<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213110013345.png" alt="image-20221213110013345"></p>
-<h1 id="MapReduce阶段组成"><a href="#MapReduce阶段组成" class="headerlink" title="MapReduce阶段组成"></a>MapReduce阶段组成</h1><ul>
-<li>一个MapReduce编程模型只能包含一个Map阶段和一个Reduce阶段，或者只有Map阶段。</li>
-<li>不能有很多个Map阶段、多个Reduce阶段的情形。</li>
-<li>如果用户的业务逻辑非常复杂，那就只能多个MapReduce程序串行运行。</li>
-</ul>
-<img src="/2021/08/14/Hadoop-MapReduce/image-20221213111404853.png" alt="image-20221213111404853" style="zoom: 80%;">
-
-
-
-<h1 id="MapReduce数据类型"><a href="#MapReduce数据类型" class="headerlink" title="MapReduce数据类型"></a>MapReduce数据类型</h1><p>整个MapReduce程序中，数据都是以KV兼职对的形式流转的。</p>
-<p>在实际编程解决各种业务问题中，需要考虑每个阶段的输入输出kv分别是什么。</p>
-<p>MapReduce中内置了很多默认属性，比如排序、分组等，都和数据的k有关。</p>
-<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213113122471.png" alt="image-20221213113122471"></p>
-<h1 id="MapReduce执行流程"><a href="#MapReduce执行流程" class="headerlink" title="MapReduce执行流程"></a>MapReduce执行流程</h1><h2 id="MapReduce整体执行流程图"><a href="#MapReduce整体执行流程图" class="headerlink" title="MapReduce整体执行流程图"></a>MapReduce整体执行流程图</h2><p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213142024380.png" alt="image-20221213142024380"></p>
-<h2 id="Map阶段执行流程"><a href="#Map阶段执行流程" class="headerlink" title="Map阶段执行流程"></a>Map阶段执行流程</h2><ul>
-<li>第一阶段：把输入目录下文件按照一定的标准逐个进行逻辑切片，形成切片规划。默认Split size &#x3D; Block size （128M），每一个切片由一个MapTask处理。（getSplits）</li>
-<li>第二阶段：对切片中的数据按照一定的规则读取解析返回&lt;key, value&gt;对。默认是按行读取数据。key是每一行的起始位置偏移量，value是本行的文本内容。（TextInutFormat）</li>
-<li>第三阶段：调用Mapper类中的map方法处理数据。每读取解析出来的一个&lt;key, value&gt;，调用一次map方法。</li>
-<li>第四阶段：按照一定的规则对map输出的键值对进行分区partition。默认不分区，因为只有一个reducetask。分区的数量就是reducetask运行的数量。</li>
-<li>第五阶段：Map输出数据写入内存缓冲区，达到比例溢出到磁盘上。溢出spill的时候根据key进行排序sort。默认根据key字典排序。</li>
-<li>第六阶段：对所有溢出文件进行最终的merge合并，成为一个文件。</li>
-</ul>
-<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213142808652.png" alt="image-20221213142808652"></p>
-<h2 id="Reduce阶段执行流程"><a href="#Reduce阶段执行流程" class="headerlink" title="Reduce阶段执行流程"></a>Reduce阶段执行流程</h2><ul>
-<li>第一阶段：ReduceTask会主动从MapTask复制拉取属于需要自己处理的数据。</li>
-<li>第二阶段：把拉取来的数据，全部进行merge合并，即把分散的数据合并成一个大的数据。再对合并后的数据排序。</li>
-<li>第三阶段：对排序后的键值对调用reduce方法。键相等的键值对调用一次reduce方法。最后把这些输出的键值对写入到HDFS文件中。</li>
-</ul>
-<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213143229439.png" alt="image-20221213143229439"></p>
-<h2 id="Shuffle机制"><a href="#Shuffle机制" class="headerlink" title="Shuffle机制"></a>Shuffle机制</h2><h3 id="shuffle概念"><a href="#shuffle概念" class="headerlink" title="shuffle概念"></a>shuffle概念</h3><p>Shuffle的本意是洗牌、混洗的意思，把一组有规则地数据尽量打乱成无规则地数据。</p>
-<p>在MapReduce中，Shuffle更像是洗牌的逆过程，指的是将map端的无规则输出按指定的规则“打乱”成具有一定规则的数据，以便reduce端接收处理。</p>
-<p>一般把从Map产生输出开始到Reduce取得数据作为输入之前的过程称之为shuffle。</p>
-<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213144448734.png" alt="image-20221213144448734"></p>
-<h3 id="Map端Shuffle"><a href="#Map端Shuffle" class="headerlink" title="Map端Shuffle"></a>Map端Shuffle</h3><p>Collect阶段：将MapTask的结果收集输出到默认大小为100M的环形缓冲区，保存之前会对key进行分区的计算，默认Hash分区。</p>
-<p>Spill阶段：当内存的数据达到一定的阈值的时候，就会将数据写入磁盘，在将数据写入磁盘之前需要对数据进行一次排序的操作，如果配置了combiner，还会将有相同分区号和key的数据进行排序。</p>
-<p>Merge阶段：把所有溢出的文件进行一次合并操作，以确保一个MapTask最终只产生一个中间数据文件。</p>
-<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213144901309.png" alt="image-20221213144901309"></p>
-<h3 id="Reduce端Shuffle"><a href="#Reduce端Shuffle" class="headerlink" title="Reduce端Shuffle"></a>Reduce端Shuffle</h3><p>Copy阶段：ReduceTask启动Fetcher线程到已经完成MapTask的节点上复制一份属于自己的数据。</p>
-<p>Merge阶段：在ReduceTask远程复制数据的同时，会在后台开启两个线程对内存到本地的数据文件进行合并操作。</p>
-<p>Sort阶段：在对数据进行合并的同时，会进行排序操作，由于MapTask阶段已经对数据进行了局部的排序，ReduceTask只需保证Copy的数据的最终整体有效性即可。</p>
-<p><img src="/2021/08/14/Hadoop-MapReduce/image-20221213145258144.png" alt="image-20221213145258144"></p>
-<h3 id="shuffle机制弊病"><a href="#shuffle机制弊病" class="headerlink" title="shuffle机制弊病"></a>shuffle机制弊病</h3><p>Shuffle是MapReduce成的核心与精髓，是MapReduce的灵魂所在。</p>
-<p>Shuffle也是MapReduce被诟病最多的地方。MapReduce相比较于Spark、Flink计算引擎慢的原因，根Shuffle机制有很大的关系。Shuffle频繁涉及到数据在内存、磁盘之间的多次往复。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1699,14 +1710,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">147</span>
+          <span class="site-state-item-count">153</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-count">32</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
