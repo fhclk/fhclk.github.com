@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fhclk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="概述 使用缓存需要注意几个关键指标：缓存键集合大小、缓存空间的大小以及缓存的使用寿命。这三个指标决定了缓存的有效性、缓存的使用效率、缓存实现的效果。缓存的类型主要有代理缓存、反向代理缓存、 CDN 缓存和对象缓存几种。 不是所有的数据都适合使用缓存，使用缓存的时候需要注意以下几点。  数据频繁修改，这类数据使用缓存效果比较差。 数据没有热点，这类数据缓存的命中率比较差。 数据不一致，因为缓存的数据">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式缓存">
+<meta property="og:url" content="http://fhclk.github.io/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/index.html">
+<meta property="og:site_name" content="拾荒者">
+<meta property="og:description" content="概述 使用缓存需要注意几个关键指标：缓存键集合大小、缓存空间的大小以及缓存的使用寿命。这三个指标决定了缓存的有效性、缓存的使用效率、缓存实现的效果。缓存的类型主要有代理缓存、反向代理缓存、 CDN 缓存和对象缓存几种。 不是所有的数据都适合使用缓存，使用缓存的时候需要注意以下几点。  数据频繁修改，这类数据使用缓存效果比较差。 数据没有热点，这类数据缓存的命中率比较差。 数据不一致，因为缓存的数据">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgotOV13Eh2AUjPjAAEIXLhmsGo317.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgoB5l13VbiAHhPSAABoymphrNs072.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgotOV13Eh6AeZaQAABY4_ZmeQk831.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgotOV13VcWAYl8OAAC1Z4DMJ1E846.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgoB5l13VcuAQoUeAACKaiIOlJc476.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgotOV13VnaAfPm9AAC46bZcN0w341.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgoB5l13Eh6AXvePAAGOZ4Q8scY773.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgotOV13ExOAP6m3AAB1BADrv1M771.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgoB5l13ExOAQ4DyAADxZOykZ5k976.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgotOV13ExSAWhCFAACFNPzM4Q8959.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgoB5l13V3yAaDSfAACw9us7nBY044.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgotOV13ExWAGFH2AACSu5nTgAw967.png">
+<meta property="article:published_time" content="2021-05-14T07:44:28.000Z">
+<meta property="article:modified_time" content="2023-04-14T16:00:27.448Z">
+<meta property="article:author" content="fhclk">
+<meta property="article:tag" content="架构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://fhclk.github.io/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgotOV13Eh2AUjPjAAEIXLhmsGo317.png">
+
+<link rel="canonical" href="http://fhclk.github.io/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>分布式缓存 | 拾荒者</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拾荒者</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">昨夜西风凋碧树，独上高楼，望尽天涯路</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          分布式缓存
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-14 15:44:28" itemprop="dateCreated datePublished" datetime="2021-05-14T15:44:28+08:00">2021-05-14</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p><img src="/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgotOV13Eh2AUjPjAAEIXLhmsGo317.png"></p>
+<p>使用缓存需要注意几个关键指标：缓存键集合大小、缓存空间的大小以及缓存的使用寿命。这三个指标决定了缓存的有效性、缓存的使用效率、缓存实现的效果。缓存的类型主要有代理缓存、反向代理缓存、 CDN 缓存和对象缓存几种。</p>
+<p>不是所有的数据都适合使用缓存，使用缓存的时候需要注意以下几点。</p>
+<ul>
+<li>数据频繁修改，这类数据使用缓存效果比较差。</li>
+<li>数据没有热点，这类数据缓存的命中率比较差。</li>
+<li>数据不一致，因为缓存的数据和数据库的数据是不同步的，可能存在数据不一致的情况，如果业务场景对数据一致性要求非常高，这个时候使用缓存也要注意。</li>
+<li>缓存雪崩，当缓存崩溃的时候，可能会导致整个系统的崩溃，这也是使用缓存中要注意的一个事项。</li>
+</ul>
+<h1 id="缓存提高性能的优势"><a href="#缓存提高性能的优势" class="headerlink" title="缓存提高性能的优势"></a>缓存提高性能的优势</h1><p>缓存是架构性能优化的最重要的手段，使用缓存来提升系统性能主要有三方面优势。</p>
+<ol>
+<li>第一个方面是缓存的数据来自于内存，访问速度更快。我们知道数据从内存中读取要比磁盘上读取速度会更快，所以使用缓存从内存中读取数据会使系统获得更快的响应性能，系统的访问速度会更快，处理速度也会更快。</li>
+<li>第二个方面是缓存中存储的数据形态通常是最终的结果形态，减少资源消耗。比如说，我们缓存一个网页、一个对象，这些数据通常是我们计算过的结果。从缓存中读取数据跟从磁盘中或者数据库中直接读取数据不同，从数据库中读取的数据要进行加工处理，生成我们最终的结果，而从缓存中读取的数据通常都是直接的最终结果。因此，使用缓存中的数据可以减少 CPU 的资源消耗，不需要进行中间的计算，可以进一步提高响应的特性。</li>
+<li>第三个方面是使用缓存可以降低数据库磁盘或者网络的负载压力。不需要从外部的 IO 设备中去读取数据，这些数据直接从本地缓存或内存中读取，减少 IO 设备的访问压力。我们知道 IO 设备是最容易出现瓶颈的地方，减少这些设备的访问压力、负载压力，可以更好地提升整个系统的处理能力。</li>
+</ol>
+<h1 id="缓存数据存储（Hash-表）"><a href="#缓存数据存储（Hash-表）" class="headerlink" title="缓存数据存储（Hash 表）"></a>缓存数据存储（Hash 表）</h1><p>缓存是存储在内存中的，那么如何从内存中快速获取一个数据呢？</p>
+<p>缓存使用的数据结构主要是哈希（Hash）表。我们看一下哈希表实现的机制。哈希表最终的存储形式通常是一个顺序表，也就是一个数组结构。数组结构的特点是在内存中连续存储分配。那么，当我们要在哈希表中存储一个数据的时候，哈希表通常是以 key、value 这样的数据结构进行存储的。当我们把一个 key、value 数据结构存储在一个哈希表中的时候，主要的存储过程大致如下图所示。       </p>
+<p><img src="/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgoB5l13VbiAHhPSAABoymphrNs072.png"></p>
+<p>首先，我们拿到 key、value 数据结构，在上图的例子中，key 是字符串 abc，value 是字符串 hello，我们先计算 key 的哈希值，比如字符串 abc 的 hashcode 算出来是 101 这样一个整型值。往下，计算哈希值 101 对应的 hash 表索引就要对 8 取模。此处 8 指什么？哈希表真正的物理存储是一个数组，我们建的哈希表长度是 8，如上图所示。101 对 8 取模余 5，这个 5 就是数组下标的索引值，我们就可以把 abc hello 这样一个 key、value 值存储在下标为 5 的数组记录中。这一步是最关键的，通常我们所谓的哈希算法也就是指这一步，即如何把一个哈希值转换成在数组中对应的位置。这个例子我们使用的是余数哈希，实践中最常用的也是余数哈希。</p>
+<p>将来，当我们要进行数据读取的时候，只要给定 key abc，还是用这样一个算法过程，先求取它的 hash code 101，然后再对 8 取模。因为数组的长度不变，对 8 取模以后依然是余 5，那么我们到数字下标中去找 5 的这个位置，就可以找到前面存储进去的 abc 对应的 value 值。</p>
+<p>通过哈希表可以使整个数据存储或检索效率时间复杂都是 O(1)。所以即使存储非常大的几百万上千万的数据量，通过哈希表也可以非常快地进行数据的查找和读写。通过这种手段缓存可以获得较快的读写访问特性，比数据库中的读写速度要快得多。</p>
+<h1 id="缓存的关键指标——命中率"><a href="#缓存的关键指标——命中率" class="headerlink" title="缓存的关键指标——命中率"></a>缓存的关键指标——命中率</h1><p>影响缓存特性的一个关键指标是缓存的命中率。缓存的主要特点是一次写入多次读出，通过这种手段减少对数据库的使用，尽快从缓存中读取数据，提高性能。所以缓存是否有效，主要就是看它一次写进去的缓存能不能够多次去读出来响应业务的请求，这个判断指标就叫作缓存的命中率。</p>
+<p>缓存命中率怎么算呢？查询得到正确缓存结果除以总的查询次数，得到的比值就是缓存命中率，比如说十次查询九次都能够得到缓存的正确结果，命中率就是 90%。</p>
+<p>影响缓存命中率的主要因素有三个，分别是：</p>
+<ul>
+<li>缓存键集合大小</li>
+<li>内存空间大小</li>
+<li>缓存的寿命</li>
+</ul>
+<h2 id="缓存键集合大小"><a href="#缓存键集合大小" class="headerlink" title="缓存键集合大小"></a>缓存键集合大小</h2><p>缓存中的每个对象都是通过缓存键进行识别的。刚才 abc hello 这个例子里 abc 就是一个缓存的键，键是缓存中唯一的识别符，定位一个对象的唯一方式就是对缓存键进行精确的匹配。</p>
+<p>比如说我们想缓存每个商品的在线商品信息，就需要使用商品 ID 作为缓存键。换句话说，缓存键空间是你的应用能够生成的所有键的数量。从统计数字上看，应用生成的唯一键越多，重用的机会越小。比如说根据 IP 地址缓存天气数据，可能需要 40 多亿个键。但是如果基于国家缓存天气数据，那么只需要几百个缓存键就够了，全世界也不过就几百个国家。</p>
+<p>所以要尽可能减少缓存键的数量，键的数量越少，缓存的效率越高。设计缓存的时候要关注缓存键是如何进行设计的，它的整个的集合范围，限定在一个既能够高效使用，又可以减少它的数量，这个时候缓存的性能是最好的。</p>
+<h2 id="缓存内存空间大小"><a href="#缓存内存空间大小" class="headerlink" title="缓存内存空间大小"></a>缓存内存空间大小</h2><p>缓存可以使用的内存空间决定了缓存对象平均大小和缓存对象的数量。因为缓存通常是存储在内存中的，缓存对象可用的内存空间相对来说比较昂贵，而且受到严格限制。</p>
+<p>如果想缓存更多的对象，就需要先删除老的对象，再添加新的对象。而这些老的对象被删除掉，就会影响到缓存的命中率。所以物理上缓存的空间越大，缓存的对象越多，缓存的命中率也就越高。</p>
+<h2 id="缓存对象生存时间（缓存寿命）"><a href="#缓存对象生存时间（缓存寿命）" class="headerlink" title="缓存对象生存时间（缓存寿命）"></a>缓存对象生存时间（缓存寿命）</h2><p>缓存对象的生存时间称为 TTL。对象缓存的时间越长，被重用的可能性就越高。使缓存失效的方法有两种：一种是超时失效；一种是清除失效，也就是实时清除。如下图所示。</p>
+<p><img src="/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgotOV13Eh6AeZaQAABY4_ZmeQk831.png"></p>
+<p>所谓的超时失效是在构建缓存，即写缓存的时候，每个缓存对象都设置一个超时时间，在超时之前访问缓存就会返回缓存的数据，而一旦超时，缓存就失效了，这时候再访问缓存，就会返回空。</p>
+<p>而实时清除是说，当有缓存对象更新的时候，直接通知缓存将已经被更新了的数据进行清除。清除了以后，应用程序下一次访问这个缓存对象键的时候，就不得不到数据库中去查找读取，这个时候就会得到最新的数据，因为更新总是更新在数据库里的。</p>
+<p>还有一种，虽然时间上还没有失效但是新的对象要写入缓存，而内存空间不够了，这个时候就需要将一些老的缓存对象清理掉，为新的缓存对象腾出空间。</p>
+<p>内存空间清除主要使用的算法是 LRU 算法，LRU 算法就是最近最久未用算法，也就是说清除那些最近最久没有被访问过的对象。这个算法使用链表结构实现的，所有的缓存对象都放在同一个链表上。当一个对象被访问的时候，就把这个对象移到整个链表的头部。当需要通过 LRU 算法清除那些最近最久未用对象的时候，只需要从队列的尾部进行查找，越是在队列尾部的，越是最近最久没有被访问过的，也就是优先清除的，腾出的内存空间让新对象加入进来。</p>
+<h1 id="缓存的主要类型"><a href="#缓存的主要类型" class="headerlink" title="缓存的主要类型"></a>缓存的主要类型</h1><h2 id="代理缓存"><a href="#代理缓存" class="headerlink" title="代理缓存"></a>代理缓存</h2><p>代理缓存是在应用程序—端的代理，缓存在客户端—端的，代理客户端访问互联网。它的主要作用是互联网访问代理。但是同时因为他代理了所有的客户端 HTTP 请求，所以它可以进行页面缓存，如果有一些其他的客户端已经访问过这个网页，那么当新的客户端连接的时候，就可以通过代理缓存中的数据直接返回，避免对数据中心的访问。</p>
+<p><img src="/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgotOV13VcWAYl8OAAC1Z4DMJ1E846.png"></p>
+<p>代理缓存是存在客户端一端的缓存，我们无法进行管理。所以代理缓存虽然存在，但是通常不作为我们系统架构中的一部分，我们能够管理的是反向代理缓存。</p>
+<h2 id="反向代理缓存"><a href="#反向代理缓存" class="headerlink" title="反向代理缓存"></a>反向代理缓存</h2><p><img src="/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgoB5l13VcuAQoUeAACKaiIOlJc476.png"></p>
+<p>代理缓存是代理用户上网的，而反向代理则是代理数据中心输出的，是反向代理的。所以反向代理缓存是存在于系统数据中心里的，它是数据中心的统一入口，代理整个数据中心其他服务器的应用处理。</p>
+<p>用户通过互联网连接到数据中心的时候，连接的通常是一个反向代理服务器，反向代理服务器根据用户的请求，在本地的反向代理缓存中查找是否有用户请求的数据，如果有就直接返回这个数据，如果没有再把这个请求向下继续转发，请求后面的应用服务器去处理生成数据。</p>
+<p>反向代理缓存可以多层反向代理缓存的形式出现。因为我们的应用服务器也是经过分层的，在处理的前端通常是一个前端服务器，后面有 Web 服务器，之后有应用服务器，再后还有其他的各类服务器。在这样一个分层的服务器结构里，我们可以对每一层的服务器都进行反向代理缓存。</p>
+<p>如下图所示，前端 Web 服务器和 Web 服务器分为两层，用户请求接入的时候，先接入前端 Web 服务器，其上可以加一层反向代理服务器来代理前端 Web 服务器的 HTTP 请求。如果用户请求的数据已经包含在这个反向代理服务器中，就可以直接返回；如果没有，就再把 HTTP 请求提交给前端 Web 服务器，前端 Web 服务器会把请求发给后面的 Web 服务器。在 Web 服务器和前端 Web 服务器之间还可以再加一层反向代理服务器。如果前端 Web 服务器的请求在这一层的反向代理服务器中存在，那么这一层反向代理服务器可以直接将数据返还；如果不存在，再将请求下发给 Web 服务器。</p>
+<p><img src="/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgotOV13VnaAfPm9AAC46bZcN0w341.png"></p>
+<p>通过这样的方式，极大地减少了前端 Web 服务器或者是 Web 服务器的访问压力，同时提高了系统的响应性能。</p>
+<h2 id="内容分发网络-CDN-缓存"><a href="#内容分发网络-CDN-缓存" class="headerlink" title="内容分发网络 CDN 缓存"></a>内容分发网络 CDN 缓存</h2><p>所谓的 CDN 是指在用户请求的前端（尽量前的前端）为用户提供数据服务。CDN 并不存在于我们的数据中心，也不存在于用户的访问系统一端，它介于两者之间，作为网络服务商的缓存服务。用户进行互联网访问的时候，需要通过互联网网络服务商提供的网络链接才能够连接到数据中心，那么网络服务商就可以在自己提供的网络服务的机房里进行一次缓存操作，提供一次缓存服务。如下图所示。</p>
+<p><img src="/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgoB5l13Eh6AXvePAAGOZ4Q8scY773.png"></p>
+<p>客户端第一次访问 example.com 的时候，访问数据中心，数据中心返回 HTML 页面以后，客户端解析 HTML，HTML 里面还各种 js 文件、css 文件、图片等，这些静态资源访问的就是 CDN 服务器。CDN 服务器检查自己是否有需要的静态资源，如果有，就立即返回给客户端；如果没有，就自己访问数据中心，获得需要的静态资源后，缓存在 CDN 服务器上后，再返回客户端。</p>
+<p>所以 CDN 缓存也叫作网络访问的“第一跳”，用户请求先到达的是互联网网络服务商的机房。在机房里面部署 CDN 服务器，提供缓存服务。如果 CDN 中存在用户请求的 Web 响应内容，那么就可以直接通过 CDN 进行返回；如果 CDN 中不存在，那么 CDN 会把这个请求通过后面的网络连接，把它发到系统的数据中心去。数据中心返回的结果依然是先通过 CDN 服务器，CDN 服务器就可以把数据缓存在自己的本地，供后面的用户请求操作响应。</p>
+<blockquote>
+<p>DN有两种，一种是自己的服务器部署在运营商的机房，CDN服务管理自己做，这台服务器想怎么操作怎么操作，一种是CDN云服务，购买CDN容量后，由CDN服务商提供CDN服务，自己是完全不能控制。<br>反向代理是部署在数据中心服务器前面的一个代理，不能部署在不同区域，除非你在那个区域建了数据中心。</p>
+</blockquote>
+<h1 id="通读缓存"><a href="#通读缓存" class="headerlink" title="通读缓存"></a>通读缓存</h1><p>上面讲到的代理缓存、反向代理缓存、CDN 缓存，都是通读缓存。它代理了用户的请求，也就是说用户在访问数据的时候，总是要通过通读缓存。</p>
+<p>当通读缓存中有需要访问的数据的时候，直接就把这个数据返回；如果没有，再由通读缓存向真正的数据提供者发出请求。其中重要的一点是客户端连接的是通读缓存，而不是生成响应的原始服务器，客户端并不知道真正的原始服务器在哪里，不会直接连接原始服务器，而是由通读缓存进行代理。</p>
+<h1 id="旁路缓存"><a href="#旁路缓存" class="headerlink" title="旁路缓存"></a>旁路缓存</h1><p>和通读缓存相对应的叫作旁路缓存。前面提到的 key、value 这样的对象缓存就属于旁路缓存。旁路缓存和通读缓存不同。旁路缓存是客户端先访问旁路缓存中是否有自己想要的数据，如果旁路缓存中没有需要的数据，那么由客户端自己去访问真正的数据服务提供者，获取数据。客户端获得数据以后，会自己把这个数据写入到旁路缓存中，这样下一次或者其他客户端去读取旁路缓存的时候就可以获得想要的数据了。</p>
+<p><img src="/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgotOV13ExOAP6m3AAB1BADrv1M771.png"></p>
+<p>各种介质数据访问的延迟，以便对数据的存储、缓存的特性以及数据的访问延迟有一个感性的认识。</p>
+<p><img src="/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgoB5l13ExOAQ4DyAADxZOykZ5k976.png"></p>
+<p>如上图所示，访问本地内存大概需要 100ns 的时间；使用 SSD 磁盘进行搜索，大概需要 10万ns 时间；数据包在同一个数据中心来回一次的时间，也就是在同一个路由环境里进行一次访问，大概需要 50万ns 时间，也就是 0.5ms；使用非 SSD 磁盘进行一次搜索，大概需要 1000万ns，也就是 10ms 的时间；按顺序从网络中读取 1MB 的数据也是需要 10ms 的时间；按顺序从传统的机械磁盘，即非 SSD 磁盘，读取 1MB 数据，大概需要 30ms 的时间；跨越大西洋进行一次网络数据传输，一个来回大概需要 150ms 的时间。其中，1s 等于 1000ms，等于 10亿ns。</p>
+<h1 id="合理使用缓存对象"><a href="#合理使用缓存对象" class="headerlink" title="合理使用缓存对象"></a>合理使用缓存对象</h1><p>缓存虽然效率非常高，使用缓存也非常简单，但是缓存并不是无所不能的，使用缓存的时候需要注意合理使用缓存对象。</p>
+<h2 id="注意频繁修改的数据"><a href="#注意频繁修改的数据" class="headerlink" title="注意频繁修改的数据"></a>注意频繁修改的数据</h2><p>缓存数据是为一次写入多次读取准备的，但是如果写入的数据很快就被修改掉了，数据还没来得及读取就已经失效或者更新了，系统的负担就会很重，使用缓存也就没有太多的意义。一般说来，数据的读写比例至少在 2:1 以上，缓存才有意义。</p>
+<h2 id="注意没有热点的访问数据"><a href="#注意没有热点的访问数据" class="headerlink" title="注意没有热点的访问数据"></a>注意没有热点的访问数据</h2><p>上面提到缓存是一次写入多次读取的数据，但是如果写入的数据并不会被多次读取，也就是所谓的没有热点，这时候使用缓存也是没有意义的。</p>
+<p>我们常见的、日常使用的数据通常都是有热点的。比如说在淘宝中，那些热门的商品可能会被几百万几千万次的访问，那些冷门的商品可能一次访问都没有，热门商品数据就是有热点的，就需要缓存。在微博中也是，那些微博大V们的微博会被几百万几千万的粉丝访问，他们的微博数据也是有热点的，而那些没有几个粉丝的博主的微博，几乎不会被访问，这些数据是没有热点的。所以缓存存储的就是淘宝上那些热门的商品，微博上那些大V的微博，它们都是有热点的缓存，这些数据都能实现一次写入多次甚至非常多次的读取，这种缓存就有效果。但还是有一些业务场景数据是没有热点的，那么这一类业务场景数据就不需要使用缓存。</p>
+<h2 id="注意数据不一致和脏读"><a href="#注意数据不一致和脏读" class="headerlink" title="注意数据不一致和脏读"></a>注意数据不一致和脏读</h2><p>缓存中的数据有可能和主存储数据库中的数据不一致。这个问题主要是通过失效时间来解决的，也就是说这个业务能够容忍的失效时间之内，保持缓存中的数据和数据库中的数据不一致，比如说淘宝的商品数据，如果卖家在对商品的数据进行了编辑，这个时候可能买家是看不到这些被更新过的数据的，可能需要几分钟的时间，比如是 3 分钟，那么 3 分钟之内，卖家编辑的数据买家是看不到的，但这种延迟通常是可以接受的。</p>
+<p>如果某些业务场景对更新非常敏感，必须要实时看到，这个时候就不能够使用失效时间进行缓存过期处理了，可能需要进行失效通知。当数据进行更新的时候，立即清除缓存中的数据，下次访问这个数据的时候，缓存必须要重新从主数据库中去加载，才能够得到最新的数据。</p>
+<h2 id="注意缓存雪崩"><a href="#注意缓存雪崩" class="headerlink" title="注意缓存雪崩"></a>注意缓存雪崩</h2><p>因为热点数据主要是从缓存中去读取的，而热点数据是数据访问压力最大的一类数据。这些数据都从缓存中读取，极大地降低了数据库的访问压力。</p>
+<p>而数据库整个系统也是在有缓存的情况下进行设计的，数据库的处理能力是强依赖缓存的。如果缓存忽然崩溃了，那么所有的访问压力就都会传递到数据库上去。数据库不能够承受这样的访问压力，可能也会崩溃。数据库崩溃了以后，应用程序访问不到数据库，请求不断超时，负载压力不断升高，应用程序服务器也会崩溃，最后导致整个网站所有服务器崩溃。这就是缓存雪崩。这种情况下系统甚至无法启动，因为系统启动后，新的访问压力又过来，依然是那么大，还是会崩溃。</p>
+<p>这时候重启缓存也是没有用的，因为重启的话缓存中是没有数据的。我们刚才也讲到，对象缓存是通过加载数据库中的数据并写入到缓存中才有数据的。重新启动的缓存没有数据，它就不能够承担提供数据读操作的能力。所以，对缓存有重点依赖的系统，需要特别关注缓存的可用性。缓存用的部分数据丢失可以到数据库中加载，但是如果全部的缓存数据都丢失了，可能导致整个系统都会崩溃，特别需要注意。</p>
+<h1 id="分布式对象缓存"><a href="#分布式对象缓存" class="headerlink" title="分布式对象缓存"></a>分布式对象缓存</h1><p>下面看一下分布式对象缓存，如下图所示。</p>
+<p><img src="/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgotOV13ExSAWhCFAACFNPzM4Q8959.png"></p>
+<p>分布式对象缓存是系统架构中比较重要的一部分内容。所谓的分布式对象缓存是指对象缓存以一个分布式集群的方式对外提供服务，多个应用系统使用同一个分布式对象缓存提供的缓存服务。这里的缓存服务器是由多台服务器组成的，这些服务器共同构成了一个集群对外提供服务。所以使用分布式对象缓存的一个重要问题就是，数据进行读写操作的时候，如何找到正确的缓存服务器进行读写操作。如果第一次写入数据的时候写入的是 A 服务器，但是数据进行缓存读操作的时候访问的是 B 服务器，就不能够正确地查找到数据，缓存也就没有了效果。</p>
+<p>那么，如何才能找到正确的缓存服务器呢？以 Memcached 服务器集群为例，我们来看一下分布式对象的缓存模型，如下图。</p>
+<p><img src="/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgoB5l13V3yAaDSfAACw9us7nBY044.png"></p>
+<p>当需要进行分布式缓存访问的时候，依然是以 Key、value 这样的数据结构进行访问。如上图所示的例子中就是 BEIJING 作为 Key，一个 DATA 数据作为它的 value。当需要进行分布式对象访问的时候，应用程序需要使用分布式对象缓存的客户端 SDK。比如说 Memcached 提供的一个客户端 API 程序进行访问，客户端 API 程序会使用自己的路由算法进行路由选择，选择其中的某一台服务器，找到这台服务器的 IP 地址和端口以后，通过通讯模块和相对应的服务器进行通信。</p>
+<p>因为进行路由选择的时候，就是使用缓存对象的 key 进行计算。下一次使用相同的 key 使用相同路由算法进行计算的时候，算出来的服务器依然还是前面计算出来的这个服务器。所以通过这种方法可以访问到正确的服务器进行数据读写。服务器越多，提供的缓存空间就越大，实现的缓存效果也就越好。通过集群的方式，提供了更多的缓存空间。</p>
+<p>那么，路由算法又是如何进行服务器路由选择的？主要算法依然是上面讲到的哈希表的路由算法，也就是取模算法。</p>
+<p>比如说，我们这里缓存服务器集群中有 3 台服务器，key 的哈希值对 3 取模得到的余数一定在 0、1、2 三个数据之间，那么每一个数字都对应着一台服务器，根据这个数字查找对应的服务器 IP 地址就可以了。使用余数取模这种方式进行路由计算非常简单，但这种算法也有一个问题，就是当服务器进行扩容的时候，比如说我们当前的服务器集群有 3 台服务器，如果我们 3 台服务器不够用了，需要添加 1 台服务器，这个时候对 3 取模就会变成对 4 去取模，导致的后果就是以前对 3 取模的时候写入的数据，对 4 取模的时候可能就查找不到了。</p>
+<p>上面也讲过缓存雪崩的情况，实际上如果使用取模算法进行服务器添加，因为除数的变化会导致和缓存雪崩一样的后果，也就是说前面写入缓存服务器集群中的缓存数据，添加了 1 台服务器后很多数据都找不到了，类似于雪崩，最后会导致整个服务器集群都崩溃。</p>
+<p>我们添加服务器的主要目的是提高它的处理能力，但是不正确的操作可能会导致整个集群都失效。解决这个问题的主要手段是使用一致性哈希算法。</p>
+<h1 id="一致性哈希算法"><a href="#一致性哈希算法" class="headerlink" title="一致性哈希算法"></a>一致性哈希算法</h1><p>一致性哈希和余数哈希不同，一致性哈希首先是构建一个一致性哈希环的结构。一致性哈希环的大小是 0～2 的 32 次方减 1，实际上就是我们计算机中无符号整型值的取值范围，这个取值范围的 0 和最后一个值 2 的 32 次方减 1 首尾相连，就构成了一个一致性哈希环，如下图所示。</p>
+<p><img src="/2021/05/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/CgotOV13ExWAGFH2AACSu5nTgAw967.png"></p>
+<p>对每个服务器的节点取模，求它的哈希值并把这个哈希值放到环上，所有的服务器都取哈希值放到环上，每一次进行服务器查找路由计算的时候，把 key 也取它的哈希值，取到哈希值以后把 key 放到环上，顺时针查找距离它最近的服务器的节点是哪一个，它的路由节点就是哪一个。通过这种方式也可以实现，key 不变的情况下找到的总是相同的服务器。这种一致性哈希算法除了可以实现像余数哈希一样的路由效果以外，对服务器的集群扩容效果也非常好。</p>
+<p>在一致性哈希环上进行服务器扩容的时候，新增加一个节点不需要改动前面取模算法里的除数，导致最后的取值结果全部混乱，它只需要在哈希环里根据新的服务器节点的名称计算它的哈希值，把哈希值放到这个环上就可以了。放到环上后，它不会影响到原先节点的哈希值，也不会影响到原先服务器在哈希环上的分布，它只会影响到离它最近的服务器，比如上图中 NODE3 是新加入的服务器，那么它只会影响到 NODE1，原先访问 NODE1 的 key 会访问到 NODE3 上，也就是说对缓存的影响是比较小的，它只会影响到缓存里面的一小段。如果缓存中一小部分数据受到了影响，不能够正确的命中，那么可以去数据库中读取，而数据库的压力只要在它的负载能力之内，也不会崩溃，系统就可以正常运行。所以通过一致性哈希算法可以实现缓存服务器的顺利伸缩扩容。</p>
+<p>但是一致性哈希算法有着致命的缺陷。我们知道哈希值其实是一个随机值，把一个随机值放到一个环上以后，可能是不均衡的，也就是说某两个服务器可能距离很近，而和其它的服务器距离很远，这个时候就会导致有些服务器的负载压力特别大，有些服务器的负载压力非常小。同时在进行扩容的时候，比如说加入一个节点 3，它影响的只是节点 1，而我们实际上希望加入一个服务器节点的时候，它能够分摊其它所有服务器的访问压力和数据冲突。</p>
+<p>所以对这个算法需要进行一些改进，改进办法就是使用虚拟节点。也就是说我们这一个服务器节点放入到一致性哈希环上的时候，并不是把真实的服务器的哈希值放到环上，而是将一个服务器虚拟成若干个虚拟节点，把这些虚拟节点的 hash 值放到环上去。在实践中通常是把一个服务器节点虚拟成 200 个虚拟节点，然后把 200 个虚拟节点放到环上。key 依然是顺时针的查找距离它最近的虚拟节点，找到虚拟节点以后，根据映射关系找到真正的物理节点。</p>
+<p>第一，可以解决我们刚才提到的负载不均衡的问题，因为有更多的虚拟节点在环上，所以它们之间的距离总体来说大致是相近的。第二，在加入一个新节点的时候，是加入多个虚拟节点的，比如 200 个虚拟节点，那么加入进来以后环上的每个节点都可能会受到影响，从而分摊原先每个服务器的一部分负载。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>缓存的主要优点是实现方法比较简单，同时提升的效果又非常明显。所以缓存是架构性能优化的一个重要手段。</p>
+<p>影响缓存的主要指标是缓存命中率。影响命中率的几个关键因素是缓存键集合的大小、缓存空间的大小和缓存对象的存在时间，也就是缓存的寿命。缓存的主要类型有代理缓存、反向代理缓存、CDN 缓存，这三类缓存叫作通读缓存。</p>
+<p>客户端使用通读缓存的时候，不需要知道后面真实的数据存储服务器在哪里，只需要访问通读缓存，由通读缓存去访问真正的数据提供服务器。另一类缓存就是旁路缓存。这类缓存就是我们在系统架构中常用的对象缓存。使用旁路缓存的时候，应用程序一方面需要知道缓存，需要连接缓存服务器，通过缓存服务器去查找数据，如果缓存服务器中没有查到数据，那么就自己去连接数据库，从数据库中去查找数据，并且在返回数据以后，还要把这个数据当作缓存写入到缓存服务器中去，以便于下一次读取的时候从缓存中读取。</p>
+<p>缓存虽然对系统性能提升非常明显，但是也还是需要对缓存进行合理的使用，在合适的场景下进行使用。第一点是关注频繁修改的数据，如果一个数据经常被修改，那么使用缓存可能就价值不大；第二点是缓存要有热点，因为缓存的空间总是有限的，只能存储一小部分的数据，如果被访问的数据概率都是一样的，没有热点，数据极有可能写入缓存以后很快又被清除掉了，没有被读取过，体现不出来缓存的价值；还有两点分别是注意缓存雪崩和关注缓存的数据一致性。</p>
+<p>分布式对象缓存是我们分布式架构中用的比较多的一种缓存。使用分布式缓存要注意的是：缓存的路由算法是如何实现的？比较重要的、用的比较广泛的是一致性哈希算法。</p>
+<p>总之，缓存是无处不在的。在整个计算机系统中，在各个地方，只要你能够想得到的，都可以使用缓存来提升性能，甚至应用程序、一段代码中都可以使用缓存。所以我们要多关注缓存的使用，同时也要关注使用缓存的那些注意点。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <!-- <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"># 架构</a> -->
+              <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"><i class="fa fa-tag"></i>  架构</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/13/%E6%9E%B6%E6%9E%84%E7%9A%84%E6%BC%94%E8%BF%9B/" rel="prev" title="架构的演进">
+      <i class="fa fa-chevron-left"></i> 架构的演进
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/05/16/%E5%88%86%E5%B8%83%E5%BC%8F%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" rel="next" title="分布式消息队列">
+      分布式消息队列 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:1rem;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E6%8F%90%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="nav-number">2.</span> <span class="nav-text">缓存提高性能的优势</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%EF%BC%88Hash-%E8%A1%A8%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">缓存数据存储（Hash 表）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E7%9A%84%E5%85%B3%E9%94%AE%E6%8C%87%E6%A0%87%E2%80%94%E2%80%94%E5%91%BD%E4%B8%AD%E7%8E%87"><span class="nav-number">4.</span> <span class="nav-text">缓存的关键指标——命中率</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E9%94%AE%E9%9B%86%E5%90%88%E5%A4%A7%E5%B0%8F"><span class="nav-number">4.1.</span> <span class="nav-text">缓存键集合大小</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E5%86%85%E5%AD%98%E7%A9%BA%E9%97%B4%E5%A4%A7%E5%B0%8F"><span class="nav-number">4.2.</span> <span class="nav-text">缓存内存空间大小</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E5%AF%B9%E8%B1%A1%E7%94%9F%E5%AD%98%E6%97%B6%E9%97%B4%EF%BC%88%E7%BC%93%E5%AD%98%E5%AF%BF%E5%91%BD%EF%BC%89"><span class="nav-number">4.3.</span> <span class="nav-text">缓存对象生存时间（缓存寿命）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E7%9A%84%E4%B8%BB%E8%A6%81%E7%B1%BB%E5%9E%8B"><span class="nav-number">5.</span> <span class="nav-text">缓存的主要类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%90%86%E7%BC%93%E5%AD%98"><span class="nav-number">5.1.</span> <span class="nav-text">代理缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%BC%93%E5%AD%98"><span class="nav-number">5.2.</span> <span class="nav-text">反向代理缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AE%B9%E5%88%86%E5%8F%91%E7%BD%91%E7%BB%9C-CDN-%E7%BC%93%E5%AD%98"><span class="nav-number">5.3.</span> <span class="nav-text">内容分发网络 CDN 缓存</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9A%E8%AF%BB%E7%BC%93%E5%AD%98"><span class="nav-number">6.</span> <span class="nav-text">通读缓存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%97%81%E8%B7%AF%E7%BC%93%E5%AD%98"><span class="nav-number">7.</span> <span class="nav-text">旁路缓存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%88%E7%90%86%E4%BD%BF%E7%94%A8%E7%BC%93%E5%AD%98%E5%AF%B9%E8%B1%A1"><span class="nav-number">8.</span> <span class="nav-text">合理使用缓存对象</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E9%A2%91%E7%B9%81%E4%BF%AE%E6%94%B9%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="nav-number">8.1.</span> <span class="nav-text">注意频繁修改的数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E6%B2%A1%E6%9C%89%E7%83%AD%E7%82%B9%E7%9A%84%E8%AE%BF%E9%97%AE%E6%95%B0%E6%8D%AE"><span class="nav-number">8.2.</span> <span class="nav-text">注意没有热点的访问数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E6%95%B0%E6%8D%AE%E4%B8%8D%E4%B8%80%E8%87%B4%E5%92%8C%E8%84%8F%E8%AF%BB"><span class="nav-number">8.3.</span> <span class="nav-text">注意数据不一致和脏读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9"><span class="nav-number">8.4.</span> <span class="nav-text">注意缓存雪崩</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AF%B9%E8%B1%A1%E7%BC%93%E5%AD%98"><span class="nav-number">9.</span> <span class="nav-text">分布式对象缓存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95"><span class="nav-number">10.</span> <span class="nav-text">一致性哈希算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">11.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fhclk"
+      src="/images/avatar1.png">
+  <p class="site-author-name" itemprop="name">fhclk</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">160</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fhclk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fhclk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fhclk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>
