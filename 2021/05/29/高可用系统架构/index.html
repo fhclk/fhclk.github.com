@@ -23,30 +23,30 @@
   <meta name="description" content="概述  互联网系统可用性度量，即如何用指标来衡量系统的可用性，以及进行可用性管理时的一些手段。 高可用架构策略，主要包括负载均衡、备份与失效转移、消息队列隔离、限流与降级、异地多活这样几种架构方法。 高可用运维，如何在开发测试发布以及系统运行过程中，保障系统的高可用，包括自动化部署、自动化监控、自动化测试、预发布测试这几个方面。  系统高可用的挑战 一个互联网应用想要完整地呈现在最终用户的面前，需">
 <meta property="og:type" content="article">
 <meta property="og:title" content="高可用系统架构">
-<meta property="og:url" content="http://fhclk.github.io/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/index.html">
+<meta property="og:url" content="http://fhclk.github.io/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/index.html">
 <meta property="og:site_name" content="拾荒者">
 <meta property="og:description" content="概述  互联网系统可用性度量，即如何用指标来衡量系统的可用性，以及进行可用性管理时的一些手段。 高可用架构策略，主要包括负载均衡、备份与失效转移、消息队列隔离、限流与降级、异地多活这样几种架构方法。 高可用运维，如何在开发测试发布以及系统运行过程中，保障系统的高可用，包括自动化部署、自动化监控、自动化测试、预发布测试这几个方面。  系统高可用的挑战 一个互联网应用想要完整地呈现在最终用户的面前，需">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://fhclk.github.io/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13NhmAVDZqAAKvYM6OQbU322.png">
-<meta property="og:image" content="http://fhclk.github.io/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13TjWAcbwLAAOWnFopnts060.png">
-<meta property="og:image" content="http://fhclk.github.io/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13NhuAay7PAANuWKPiFK8545.png">
-<meta property="og:image" content="http://fhclk.github.io/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13TleAGkEbAAMjmfjdqT4222.png">
-<meta property="og:image" content="http://fhclk.github.io/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13ToGAOH4DAANP56h82n8245.png">
-<meta property="og:image" content="http://fhclk.github.io/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13NhuABboPAANF16k_Zus646.png">
-<meta property="og:image" content="http://fhclk.github.io/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13XS-ABhWJAAXmqw3pev8732.png">
-<meta property="og:image" content="http://fhclk.github.io/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13NhyAZztaAACvmUe0VZI668.png">
-<meta property="og:image" content="http://fhclk.github.io/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13NhyADh9_AACC0HK0g6k701.png">
-<meta property="og:image" content="http://fhclk.github.io/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13XWCAMVCMAAXGZAuzLs8203.png">
-<meta property="og:image" content="http://fhclk.github.io/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13XaiAV3hlAAV3nLAn3Pg963.png">
-<meta property="og:image" content="http://fhclk.github.io/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13Nh2AMDiGAAEHM7DJ1so485.png">
-<meta property="article:published_time" content="2023-05-29T15:01:33.000Z">
-<meta property="article:modified_time" content="2023-04-23T15:52:54.392Z">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13NhmAVDZqAAKvYM6OQbU322.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13TjWAcbwLAAOWnFopnts060.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13NhuAay7PAANuWKPiFK8545.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13TleAGkEbAAMjmfjdqT4222.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13ToGAOH4DAANP56h82n8245.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13NhuABboPAANF16k_Zus646.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13XS-ABhWJAAXmqw3pev8732.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13NhyAZztaAACvmUe0VZI668.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13NhyADh9_AACC0HK0g6k701.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13XWCAMVCMAAXGZAuzLs8203.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13XaiAV3hlAAV3nLAn3Pg963.png">
+<meta property="og:image" content="http://fhclk.github.io/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13Nh2AMDiGAAEHM7DJ1so485.png">
+<meta property="article:published_time" content="2021-05-29T15:01:33.000Z">
+<meta property="article:modified_time" content="2023-04-24T15:24:33.824Z">
 <meta property="article:author" content="fhclk">
 <meta property="article:tag" content="架构">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://fhclk.github.io/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13NhmAVDZqAAKvYM6OQbU322.png">
+<meta name="twitter:image" content="http://fhclk.github.io/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13NhmAVDZqAAKvYM6OQbU322.png">
 
-<link rel="canonical" href="http://fhclk.github.io/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">
+<link rel="canonical" href="http://fhclk.github.io/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">
 
 
 <script id="page-configurations">
@@ -170,7 +170,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar1.png">
@@ -193,7 +193,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-05-29 23:01:33" itemprop="dateCreated datePublished" datetime="2023-05-29T23:01:33+08:00">2023-05-29</time>
+              <time title="创建时间：2021-05-29 23:01:33" itemprop="dateCreated datePublished" datetime="2021-05-29T23:01:33+08:00">2021-05-29</time>
             </span>
 
           
@@ -207,7 +207,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p><img src="/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13NhmAVDZqAAKvYM6OQbU322.png"></p>
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p><img src="/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13NhmAVDZqAAKvYM6OQbU322.png"></p>
 <ol>
 <li>互联网系统可用性度量，即如何用指标来衡量系统的可用性，以及进行可用性管理时的一些手段。</li>
 <li>高可用架构策略，主要包括负载均衡、备份与失效转移、消息队列隔离、限流与降级、异地多活这样几种架构方法。</li>
@@ -226,26 +226,26 @@
 <p>这里面需要注意的一个点是，当我们提到一个应用服务器不可用的时候，并不仅仅是指应用服务器的硬件故障，或者是系统故障导致的系统宕机，更多的可能是应用程序在发布，因为应用程序要发布，必须要关闭以前的应用程序进程，拷贝新的程序代码，重新启动应用程序，这个时间可能需要几分钟或者十几分钟的时间，那么这段时间这台应用服务器对外看起来就是不可用的。</p>
 <p>而这样的发布在互联网场景中是非常频繁的，一周有几次，甚至一天都有几次这样的发布。应用服务器是需要频繁停机的。所以在架构设计的时候，你不光要考虑到真正的服务器硬件或者系统故障导致的宕级，还要考虑到应用程序发布导致的系统停机，而这个可能更加频繁。</p>
 <h3 id="负载均衡实现方法"><a href="#负载均衡实现方法" class="headerlink" title="负载均衡实现方法"></a>负载均衡实现方法</h3><h4 id="HTTP-重定向负载均衡"><a href="#HTTP-重定向负载均衡" class="headerlink" title="HTTP 重定向负载均衡"></a>HTTP 重定向负载均衡</h4><p>比较简单的一种是 HTTP 重定向负载均衡，也就是来自用户的 HTTP 请求到达负载均衡服务器以后，负载均衡服务器根据某种负载均衡算法计算一个新的服务器，通过 HTTP 重定向响应，将新的 IP 地址发送给用户浏览器，用户浏览器收到重定向响应以后，重新发送请求到真正的应用服务器，以此来实现负载均衡。工作原理如下图所示。</p>
-<p><img src="/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13TjWAcbwLAAOWnFopnts060.png"></p>
+<p><img src="/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13TjWAcbwLAAOWnFopnts060.png"></p>
 <p>HTTP 重定向负载均衡的优点是它的设计比较简单，最简单的 HTTP 重定向负载均衡服务器，可能只需要几十行代码就可以完成。但是它的缺点是，用户完成一次访问需要两次请求数据中心，一次请求负载均衡服务器，一次是请求应用服务器；另一个问题是因为响应要重定向到真正的应用服务器，所以需要把应用服务器的 IP 地址暴露给外部用户，这样可能会导致安全性的问题。</p>
 <h4 id="DNS-负载均衡"><a href="#DNS-负载均衡" class="headerlink" title="DNS 负载均衡"></a>DNS 负载均衡</h4><p>另一种实现负载均衡的策略是 DNS 负载均衡。我们知道浏览器访问我们数据中心的时候，通常是用域名进行访问，HTTP 协议则必须知道 IP 地址才能建立通信连接，那么域名是如何转换成 IP 地址的呢？就是通过 DNS 服务器来完成。当用户从浏览器发起发起 HTTP 请求的时候，他输入域名，首先要到 DNS 域名服务器进行域名解析，解析得到 IP 地址以后，用户才能够根据 IP 地址建立 HTTP 连接，访问真正的数据中心的应用服务器，那么就可以在 DNS 域名解析的时候进行负载均衡，不同的浏览器进行解析的时候，返回不同的 IP 地址，从而实现负载均衡。工作原理如下图所示。</p>
-<p><img src="/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13NhuAay7PAANuWKPiFK8545.png"></p>
+<p><img src="/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13NhuAay7PAANuWKPiFK8545.png"></p>
 <p>目前主要的 DNS 服务商和 DNS 软件都支持 DNS 域名解析负载均衡。DNS 域名解析负载均衡的主要问题有两个方面。一方面它依然是要将 Web 服务器的 IP 地址暴露给浏览器，产生安全问题。另一方面，很多时候，DNS 域名解析服务器是在互联网应用系统之外的一个服务器，它由域名解析服务商提供，不在我们的控制范围之内，所以当我们的服务器不可用的时候，DNS 域名解析服务器并不知道，它依然会将用户请求分发过来。而且域名解析并不是每一次请求都进行解析的，即使我们去域名解析服务商的机器上去更新了域名解析对应的 IP 列表，这个更新也不会立即生效，依然会有大量的请求到达我们的应用服务器。那么这些已经宕机的、不可用的服务器就无法完成用户的需求，在用户看起来就是我们的系统不可用。</p>
 <p>虽然 DNS 域名解析负载均衡有这样的一些问题，但是在实践中大型互联网系统几乎都使用域名解析负载均衡，主要原因是在于，这些大型互联网系统，比如像淘宝、Facebook、百度这些系统，根据域名解析出来的 IP 地址，并不是真正的 Web 服务器 IP 地址，是负载均衡服务器的 IP 地址，也就是说这些大型互联网系统，它们都采用了两级负载均衡机制，DNS 域名解析进行一次负载均衡解析出来的 IP 地址是负载均衡服务器的 IP 地址，然后由负载均衡服务器，再做一次负载均衡，将用户的请求分发到应用服务器，这样的话，我们的应用服务器的 IP 地址就不会暴露出去。同时由于负载均衡服务器通常是比较高可用的，也不存在应用程序发布的问题，所以很少有可用性方面的问题。</p>
 <h4 id="反向代理负载均衡"><a href="#反向代理负载均衡" class="headerlink" title="反向代理负载均衡"></a>反向代理负载均衡</h4><p>负载均衡的另外一种实现是反向代理负载均衡。我们前面提到用户请求到达数据中心以后，最先到达的就是反向代理服务器。反向代理服务器，除了可以提供请求的缓存功能以外，还可以进行负载均衡，将用户的请求分发到不同的服务器上面去。反向代理是工作在 HTTP 协议层上的一个服务器，所以它代理的也是 HTTP 的请求和响应。而 HTTP 协议相对说来，作为互联网第七层的一个协议，它的协议比较重，效率比较低，所以反向代理负载均衡通常用在小规模的互联网系统上，只有几台或者十几台服务器的规模。工作原理如图所示。</p>
-<p><img src="/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13TleAGkEbAAMjmfjdqT4222.png"></p>
+<p><img src="/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13TleAGkEbAAMjmfjdqT4222.png"></p>
 <h4 id="IP-层负载均衡（四层负载均衡）"><a href="#IP-层负载均衡（四层负载均衡）" class="headerlink" title="IP 层负载均衡（四层负载均衡）"></a>IP 层负载均衡（四层负载均衡）</h4><p>如果规模再大一点的集群，通常就不会再使用反向代理服务器进行负载均衡。在七层网络通讯之下的另外一种负载均衡方法是在 IP 层进行负载均衡，IP 层是网络通讯协议的第四层，所以有时候叫四层负载均衡。它的主要工作原理是当用户的请求到达负载均衡服务器以后，负载均衡服务器会拿到 TCP&#x2F;IP 的数据包，对数据包的 IP 地址进行转换，修改 IP 地址，将其修改为 Web 服务器的 IP 地址，然后把数据包重新发送出去。如下图所示。</p>
-<p><img src="/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13ToGAOH4DAANP56h82n8245.png"></p>
+<p><img src="/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13ToGAOH4DAANP56h82n8245.png"></p>
 <p>因为 IP 地址已经是 Web 服务器的 IP 地址，所以这个数据包会重新路由到应用服务器上，以此来实现负载均衡。IP 层负载均衡，比我们刚才提到的工作在第七层的反向代理负载均衡效率要高得多。但是它依然有一个缺陷，就是不管是请求还是响应的数据包都要通过负载均衡服务器进行 IP 地址转换，才能够正确地进行数据分发，或者正确地响应到用户的客户端浏览器。请求的数据通常比较小，一个 URL 或者是一个简单的表单，但是响应的数据不管是 HTML 还是图片，JS、CSS 这样的资源文件通常都会比较大，因此负载均衡服务器会成为响应数据的流量瓶颈。</p>
 <h4 id="数据链路层负载均衡"><a href="#数据链路层负载均衡" class="headerlink" title="数据链路层负载均衡"></a>数据链路层负载均衡</h4><p>为了解决这个问题，将负载均衡的数据传输，再往下放一层，放到了数据链路层，实现数据链路层的负载均衡。在这一层上，负载均衡服务器并不修改数据包的 IP 地址，而是修改网卡的 MAC 地址。而应用服务器和负载均衡服务器都使用相同的虚拟 IP 地址，这样 IP 路由就不会受到影响，但是网卡会根据自己的 MAC 地址选择负载均衡发送到自己的网卡的数据包，交给对应的应用服务器去处理，处理结束以后，当他把响应的数据包发送到网络上的时候，因为 IP 地址没有修改过，所以这个响应会直接到达用户的浏览器，而不会再经过负载均衡服务器。工作原理如下图所示。</p>
-<p><img src="/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13NhuABboPAANF16k_Zus646.png"></p>
+<p><img src="/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13NhuABboPAANF16k_Zus646.png"></p>
 <p>这种通信方式我们从上图看是一个三角形，所以也被形象地称为三角模式。数据链路层的负载均衡是目前大型互联网系统中使用得最多的负载均衡方案。在 Linux 内核中也支持数据链路层负载均衡，也就是说可以用一台 Linux 服务器去配置实现数据链路层负载均衡，通过负载均衡实现应用服务器的高可用。</p>
 <h2 id="数据库复制与失效转移"><a href="#数据库复制与失效转移" class="headerlink" title="数据库复制与失效转移"></a>数据库复制与失效转移</h2><p>数据库的高可用要比应用服务器复杂很多，因为应用服务器是无状态的，请求可以分发到任何一台服务器去处理，而数据库上必须存储有正确的数据才能将请求分发给它。对于数据库的高可用，通常是使用数据库复制与失效转移来完成的。我们在分布式数据库存储这一讲中提到过 MySQL 的主主复制，以及 MySQL 的主从复制。</p>
 <p>因为有数据复制，所以用户请求可以访问到不同的从服务器上，当某一台从服务器宕机的时候，系统的读操作不会受到影响，实现数据库读操作高可用。而如果实现了主主复制，那么当主服务器宕机的时候，写请求连接到另外一台主服务器上，实现数据库的写操作高可用，而数据库部署的时候，可以同时部署如下图所示这样的主主复制和主从复制，也就是实现数据库的读写都高可用。</p>
-<p><img src="/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13XS-ABhWJAAXmqw3pev8732.png"></p>
+<p><img src="/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13XS-ABhWJAAXmqw3pev8732.png"></p>
 <h2 id="消息队列隔离"><a href="#消息队列隔离" class="headerlink" title="消息队列隔离"></a>消息队列隔离</h2><p>系统高可用的另一种策略是使用消息队列实现异步解耦，即消息队列隔离。我们在分布式消息队列一讲中也提到过这种架构方式的高可用。</p>
 <p>一方面，消息的生产者和消费者通过消息队列进行隔离，那么如果消费者出现故障的时候，生产者可以继续向消息队列发送消息，而不会感知到消费者的故障，等消费者恢复正常以后再去到消息队列中消费消息，所以从用户处理的视角看，系统一直是可用的。</p>
-<p><img src="/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13NhyAZztaAACvmUe0VZI668.png"></p>
+<p><img src="/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13NhyAZztaAACvmUe0VZI668.png"></p>
 <p>另一方面，由于分布式消息队列具有削峰填谷的作用，所以在高并发的时候，消息的生产者可以将消息缓存在分布式消息队列中，消费者可以慢慢地到消息队列中去处理，而不会将瞬时的高并发负载压力直接施加到整个系统上，导致系统崩溃。</p>
 <h2 id="限流和降级"><a href="#限流和降级" class="headerlink" title="限流和降级"></a>限流和降级</h2><p>系统高可用的另一个策略是限流和降级。主要针对的是，在高并发场景下，如果系统的访问量超过了系统的承受能力，如何对系统进行保护？</p>
 <p>限流是指对进入系统的用户请求进行限流处理，如果访问量超过了系统的最大处理能力，就会丢弃一部分的用户请求，保证整个系统可用，保证大部分用户是可以访问系统的。这样虽然有一部分用户的请求被丢弃，产生了部分不可用，但还是好过整个系统崩溃，所有的用户都不可用要好。</p>
@@ -259,16 +259,16 @@
 <h1 id="高可用运维"><a href="#高可用运维" class="headerlink" title="高可用运维"></a>高可用运维</h1><h2 id="自动化测试"><a href="#自动化测试" class="headerlink" title="自动化测试"></a>自动化测试</h2><p>除了高可用的架构，还有保障系统高可用的运维。</p>
 <p>其中一种高可用的运维是自动化测试。对于一个成熟的互联网系统，任何一次代码变更，都可能需要执行大量的回归测试，才能够保证系统没有 bug，而这种更新又是非常频繁的，如果依赖手工操作，测试效率和测试资源都难以满足如此大量的回归测试需求。所以对于成熟的互联网产品，很多时候采用自动化测试，通过自动化脚本自动对 APP 或者是服务接口进行测试。</p>
 <p>一开始的时候要写自动化的测试脚本，工作量会比较大，投入也会比较大。但是随着脚本的不断的积累，自动化测试的成本会比手工测试的成本要更低。一般说来，在实践中，对于比较成熟的互联网产品，也就是说每次变更相对影响比较小的互联网产品，使用自动化测试是比较划算的。自动化测试和手工测试的总体成本对比如下图。</p>
-<p><img src="/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13NhyADh9_AACC0HK0g6k701.png"></p>
+<p><img src="/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgotOV13NhyADh9_AACC0HK0g6k701.png"></p>
 <h2 id="自动化监控"><a href="#自动化监控" class="headerlink" title="自动化监控"></a>自动化监控</h2><p>还有一种是自动化监控。系统在线上运行的时候，必须要实时的监控系统的各项指标，包括业务指标和技术指标。业务指标包括用户访问量、订单量、查询量这些主要的业务指标，技术指标包括 CPU、磁盘、内存的使用率等。通过这些指标可以实时监控业务是否正常，系统是否正常。如果指标不正常，通过监控报警的手段，通知相关的人员，还可以在自动化监控的基础上去，触发自动化的运维工具，进行自动化的系统修复。</p>
-<p><img src="/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13XWCAMVCMAAXGZAuzLs8203.png"></p>
+<p><img src="/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13XWCAMVCMAAXGZAuzLs8203.png"></p>
 <h2 id="预发布"><a href="#预发布" class="headerlink" title="预发布"></a>预发布</h2><p>高可用运维的另一种手段是预发布。虽然在系统上线之前，系统在代码更新以后，要经过测试才会上线，但是还有一些情况在测试环境是无法复现的。比如对第三方服务的调用，数据库结构的变更，以及一些线上的配置参数变更等等，只有线上才能够发现。</p>
 <p>但是一旦发布到线上以后，如果有这些问题，就会导致系统不可用，解决方法就是进行预发布。在线上的服务器集群里面有一台服务器，是专门的预发布服务器，这台服务器不配置在负载均衡服务器，也就是说外部的用户是无法访问到这台服务器的，但是这台服务器跟其它的应用服务器，使用的配置、连接的数据库、连接的第三方服务都是完全一样的，它是一个完全线上的一个服务器，而这个服务器只有内部的工程师才可以访问到。</p>
 <p>在系统发布的时候，先发布到这台预发布服务器上，然后工程师通过域名绑定的方式，直接访问这台服务器，进行一些关键的业务操作，看系统是否正常。如果正常，那么就将代码同步到其它的服务器上，这时候外部服务器才能够访问到最新的代码。如果发现问题，那么就可以重新进行修复。这个问题虽然是线上的，但是并不会影响到外部用户的使用。预发布的工作原理如下图。</p>
-<p><img src="/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13XaiAV3hlAAV3nLAn3Pg963.png"></p>
+<p><img src="/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13XaiAV3hlAAV3nLAn3Pg963.png"></p>
 <h2 id="灰度发布"><a href="#灰度发布" class="headerlink" title="灰度发布"></a>灰度发布</h2><p>对于大型互联网系统，虽然有前面的各种保障措施，但还是可能发生上线以后用户报告出现故障，对于用户报告的故障或者监控到的故障，就需要对系统进行回滚到原来的代码，系统退回到前一个版本。但是对于大型互联网系统而言，它的服务器特别多，可能有数万台服务器，这个时候即使是进行系统回滚，也可能要花很长的时间。这段时间系统一直处于某种不可用的故障状态。</p>
 <p>为了避免上述情况，大型互联网系统，会使用一种灰度发布的手段，也就是说每天都只发布一部分服务器，如果出现问题，那么只需要回滚这一部分服务器就可以。发布以后观察一天，第二天再发布一部分服务器。如果没有故障报告，那么就继续发布，如果有故障报告就进行回滚，减少故障的影响力和影响时间。灰度发布流程如下图。</p>
-<p><img src="/2023/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13Nh2AMDiGAAEHM7DJ1so485.png"></p>
+<p><img src="/2021/05/29/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/CgoB5l13Nh2AMDiGAAEHM7DJ1so485.png"></p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>系统可用性是通过可用性指标来进行衡量的。当我们说一个系统 4 个 9 可用的时候，就是指这个系统 99.99% 的时间都是可用的，也就意味着一年中的不可用时间只占 53 分钟。</p>
 <p>为了对故障进行管理和考核，很多互联网企业还引入了故障分这样一个手段。保障系统高可用的主要策略有应用服务器的负载均衡、数据库的备份与失效转移、消息队列隔离，限流、降级以及异地多活的多机房架构。</p>
 <p>除了这些高可用的架构策略，还通过一系列的自动化手段，实现运维的高可用，包括自动化测试、自动化监控，预发布以及灰度发布这些手段。</p>
@@ -291,10 +291,13 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/03/14/%E6%9E%84%E5%BB%BA%E9%AB%98%E5%B9%B6%E5%8F%91%E7%9A%84%E6%89%A3%E5%87%8F%E6%9C%8D%E5%8A%A1/" rel="prev" title="构建高并发的扣减服务">
-      <i class="fa fa-chevron-left"></i> 构建高并发的扣减服务
+    <a href="/2021/05/26/%E9%AB%98%E6%80%A7%E8%83%BD%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" rel="prev" title="高性能系统架构">
+      <i class="fa fa-chevron-left"></i> 高性能系统架构
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/07/14/Spring-Boot-%E7%9F%A5%E8%AF%86%E6%B8%85%E5%8D%95/" rel="next" title="Spring Boot 知识清单">
+      Spring Boot 知识清单 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
