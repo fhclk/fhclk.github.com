@@ -151,6 +151,282 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/12/24/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%BA%94%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/24/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%BA%94%E7%94%A8/" class="post-title-link" itemprop="url">云原生应用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-24 11:40:45" itemprop="dateCreated datePublished" datetime="2020-12-24T11:40:45+08:00">2020-12-24</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="云原生应用的概念"><a href="#云原生应用的概念" class="headerlink" title="云原生应用的概念"></a>云原生应用的概念</h1><p>云原生应用的概念由云和原生两个部分组成，云在这里指的是云平台，也就是平台即服务（Platform as a Service，PaaS）；原生应用指的是专门针对云平台而设计和实现的，充分利用了云平台的特性。应用的微服务可以专注于实现业务逻辑，而把微服务架构的复杂度交给云平台来解决。</p>
+<p>原生这个词在软件开发中有它独特的含义。原生通常意味着高效和难以移植。原生意味着针对特定的平台而设计，可以充分利用平台的特性，因此运行起来非常高效；同样意味着与特定平台的深度绑定，很难移植到其他平台。云原生应用同样具有这两个特征，对于云原生应用来说，难移植并不是一个问题，毕竟迁移到云平台之后，不会再想迁移回去。</p>
+<h1 id="云原生应用的特征"><a href="#云原生应用的特征" class="headerlink" title="云原生应用的特征"></a>云原生应用的特征</h1><h2 id="单一代码库"><a href="#单一代码库" class="headerlink" title="单一代码库"></a>单一代码库</h2><p>云原生应用必须有单一的代码库，并在版本管理系统中进行追踪。单一代码库可以是一个代码仓库，也可以是共享同一根目录的多个代码仓库，其重要性在于每一个代码提交（Commit）都会对应一个不可变的构建版本。在每次代码提交之后，持续集成流程会被触发，最终产生一系列的应用容器镜像，这就在代码提交和构建版本之间建立了一对一的对应关系，这种一对一的关系保证了每个构建版本都是可追踪的，可以比较不同版本之间的代码变化。</p>
+<p>对于微服务架构的应用来说，每个应用由多个服务组成，这些服务应该由单一的代码库进行管理，这保证了构建版本的稳定性。如果一个改动涉及到多个服务，则这个改动应该在一次代码提交中完成对所有相关服务的修改；如果服务的代码分散在多个代码库中，则一个改动会被分成多个代码提交，每个代码提交都会触发一次持续集成流程，产生对应服务的构建版本，这些服务的构建版本只包含了部分改动，是不完整的。在应用部署时，有的服务可能包含了部分改动，而有的服务则没有，这使得部署的应用实际上是不能工作的。因此，微服务架构的应用应该使用单一代码库。</p>
+<h2 id="API-优先"><a href="#API-优先" class="headerlink" title="API 优先"></a>API 优先</h2><p>云原生应用应该采用 API 优先的设计策略。微服务架构的应用使用公开 API 来作为服务的对外接口，API 屏蔽了服务的内部实现细节。API 优先的设计策略指的是在设计阶段，应该首先设计 API 并确定 API 的细节。API 的设计过程需要多个团队的参与，包括 API 的实现者和可能的使用者，这些团队在充分讨论中最终完成 API 的定义。API 可以使用 OpenAPI 规范描述，从该规范中可以生成 API 文档和进行测试的模拟服务器。</p>
+<p>API 优先的策略保证了 API 的稳定性，同时可以减少不必要的后期修改。因为 API 是服务之间的接口，修改 API 就意味着相关的内部实现、测试用例和 API 的使用者都需要进行修改，如果在应用开发中出现了必须修改 API 的情况，那造成的影响是很大的。API 优先确保了尽可能减少在开发中对 API 进行修改。</p>
+<p>API 优先的另外一个好处是可以提高开发效率。API 确定之后，可以利用工具生成文档和模拟服务器，API 的使用者可以根据文档来编写使用 API 的代码。利用 Swagger 这样的工具，甚至可以直接生成访问 API 的代码。测试人员可以编写 API 相关的测试用例，并用模拟服务器运行测试。不同的团队可以并行工作，从而提高效率。</p>
+<h2 id="依赖管理"><a href="#依赖管理" class="headerlink" title="依赖管理"></a>依赖管理</h2><p>云原生应用应该管理自己的依赖，Java 开发人员对依赖管理应该并不陌生，常用的 Java 构建工具 Maven 和 Gradle 都提供了依赖管理的支持。在开发过程中，只需要利用构建工具的支持即可；在管理依赖时，则需要区分应用自带的依赖和运行环境提供的依赖。云原生应用通常会包含全部所需的依赖，尤其是以容器形式运行的应用，典型的例子是微服务的 REST API。云原生应用会自带嵌入式的 Tomcat 这样的服务器来提供 HTTP 服务。</p>
+<h2 id="设计、构建、发布和运行"><a href="#设计、构建、发布和运行" class="headerlink" title="设计、构建、发布和运行"></a>设计、构建、发布和运行</h2><p>云原生应用应该有完整的设计、构建、发布和运行流程，如下图所示。</p>
+<p><img src="/2020/12/24/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%BA%94%E7%94%A8/Ciqah156_QSAfQBzAABOU7Y65d4141.png"></p>
+<h3 id="设计"><a href="#设计" class="headerlink" title="设计"></a>设计</h3><p>设计在云原生应用的开发中必不可少。传统应用通常采用瀑布式的开发流程，瀑布式的开发流程中会分配足够的时间进行设计。云原生应用一般采用敏捷软件开发流程，但是这并不意味着设计变得不再重要，只不过设计过程变成了一个迭代的过程，而且每次设计的范围较小，通常只需要对某些新特性进行设计。</p>
+<h3 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h3><p>构建阶段从单一代码库中创建出带版本号的二进制工件，构建过程通常由持续集成服务器来完成，每个构建都必须有唯一不变的版本号，构建出来的二进制工件也是不可变的。这就保证了同一个构建版本在经过测试之后，被部署的版本与测试过的版本保持一致。</p>
+<h3 id="发布"><a href="#发布" class="headerlink" title="发布"></a>发布</h3><p>把构建出来的工件推送到云平台之上，就得到了一个发布版本，发布版本中包含与部署环境相关的配置信息。云原生应用在部署时，通常有开发、测试和生产 3 个环境，在每个环境上的配置信息都不尽相同。发布版本也是不可变的，有唯一的发布号。每一个构建版本都可能对应多个发布版本。</p>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>运行阶段在云平台之上运行应用，运行的方式取决于云平台，可以是虚拟机或容器。云平台负责管理应用的运行，包括监控应用运行状态、处理失败的情况和动态水平扩展等。</p>
+<h2 id="代码、配置和凭据"><a href="#代码、配置和凭据" class="headerlink" title="代码、配置和凭据"></a>代码、配置和凭据</h2><p>代码、配置和凭据是云原生应用开发中创建的三种不同类型的实体。代码包括源代码和相关资源文件；配置是与部署环境相关的配置信息，通常以 XML、YAML、JSON 或属性文件的形式出现，配置中包含的信息包括第三方服务的连接方式、数据库连接信息和应用自身的配置属性等；凭据指的是密码、私钥和 API 密钥等敏感信息。</p>
+<p>代码和配置的区别在于，代码不会随着部署环境而变化，而配置则相反。在实践中，应该尽可能把配置从应用中分离出来，进行外部化管理，构建出来的二进制工件中不包含任何配置信息，实际的配置值在部署时根据环境来确定。在运行时，一般使用环境变量来传递配置值，还可以使用类似 Spring Cloud Config 这样的专门配置服务器来管理配置值。凭据都应该从源代码仓库中删除。</p>
+<h2 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h2><p>日志是应用开发中不可或缺的部分。与传统应用不同的是，云原生应用并不需要对日志的输出方式进行很多配置，只是简单地把日志写到标准输出流（stdout）和标准错误流（stderr）。日志的收集和处理由云平台上的其他服务来提供，这把应用开发人员从日志管理相关的任务中解放出来。云平台上的日志管理服务非常多，开源的典型实现包括 Elastic 技术栈（ElasticSearch + LogStash + Kibana）和 Fluentd。</p>
+<h2 id="随时可丢弃"><a href="#随时可丢弃" class="headerlink" title="随时可丢弃"></a>随时可丢弃</h2><p>云原生应用的生命周期可能是短暂的，随时可能被终止。云平台可能会随时启动和停止应用的实例，这就要求云原生应用的启动和停止速度都要非常快。当应用的负载突然增大时，可以快速地启动新的实例来处理请求；当应用的实例出现问题时，可以快速启动一个新的实例作为替代。快速停止应用和快速启动应用一样重要，快速停止应用保证了资源可以被及时释放。</p>
+<h2 id="支撑服务"><a href="#支撑服务" class="headerlink" title="支撑服务"></a>支撑服务</h2><p>云原生应用的运行离不开支撑服务。支撑服务是一个宽泛的概念，包括数据库、消息中间件、缓存、用户认证和授权、存储等。连接这些支撑服务的配置信息应该被抽离出来，在运行时根据部署环境提供实际值。</p>
+<h2 id="环境等同"><a href="#环境等同" class="headerlink" title="环境等同"></a>环境等同</h2><p>云原生应用的不同部署环境应该是等同的。开发、测试和生产环境之间不应该有差异，环境的等同性保证了云原生应用可以快速的进行部署，这一特征与构建工件的不变性是相辅相成的，两者缺一不可。有了这两个特征之后，每一个唯一版本的构建工件可以被依次部署到不同的环境，在测试环境上经过测试的版本，可以直接部署到生产环境。我们可以确定应用在生产环境上的行为与测试环境中一样。</p>
+<h2 id="管理任务"><a href="#管理任务" class="headerlink" title="管理任务"></a>管理任务</h2><p>云原生应用运行中可能会需要执行一些管理任务，比如生成报表或者执行一次性的数据查询等，这些任务通常并不属于业务流程的一部分，更多的是为了管理和运维的需要。这些任务在执行中会用到云原生应用所依赖的支撑服务，对于这些任务，应该创建独立的应用，并在同样的云平台上运行。对于定期执行的任务，可以充分利用云平台的支持，比如，Kubernetes 提供了对定时任务（CronJob）的支持。</p>
+<p>以生成报表为例，可以创建一个独立的应用来读取数据库并生成报表，该应用可以有自己独立的容器镜像。如果报表生成是手动触发的，该应用应该独立运行，并提供一个 API 接口来允许外部触发。如果报表生成是定期的，应用部署时可以创建相应的定时任务来运行容器，在容器启动时自动生成报表，生成完毕之后，容器运行结束。下图说明了这两种触发方式的区别，圆角矩形的边框表示应用的边界。</p>
+<p><img src="/2020/12/24/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%BA%94%E7%94%A8/Cgq2xl56_QSAWystAACJk5oFHN0431.png"></p>
+<h2 id="端口绑定"><a href="#端口绑定" class="headerlink" title="端口绑定"></a>端口绑定</h2><p>云原生应用在运行时并不负责管理实际的端口绑定，而是由云平台统一管理。比如，一个基于 Spring Boot 的微服务应用通常在 8080 端口运行 HTTP 服务，当应用运行在云平台上时，这个端口只是虚拟机或容器内的端口，并不是外部用户或其他服务访问时的实际端口。云平台对网络进行统一管理，负责分配实际的端口，云平台同时提供了相应的机制来发现访问服务的实际地址和端口。</p>
+<h2 id="无状态进程"><a href="#无状态进程" class="headerlink" title="无状态进程"></a>无状态进程</h2><p>云原生应用应该是无状态的。所有的状态信息都应该从应用中抽离出来，并保存在支撑服务中，比如数据库中。正因为应用是无状态的，才可以由云平台快速的启动和停止，并进行垂直或水平扩展。</p>
+<h2 id="并发性"><a href="#并发性" class="headerlink" title="并发性"></a>并发性</h2><p>云原生应用使用水平扩展来并发运行多个实例，使用负载均衡来把请求分配到某个实例进行处理。</p>
+<h2 id="遥测数据"><a href="#遥测数据" class="headerlink" title="遥测数据"></a>遥测数据</h2><p>云原生应用需要收集一系列遥测数据，包括应用性能指标、运行状态和日志等，这些遥测数据，对于云平台和应用来说同等重要。云平台可以用性能指标来进行自动水平扩展，比如，Kubernetes 支持 Pod 的自动水平扩展，当 CPU 的利用率超过预定的阈值时，会自动启动新的 Pod 来处理请求。性能指标分成两类：一类是业务无关的，比如请求的数量、请求的处理速度、以及平均的请求处理时间等；第二类是业务相关的，需要应用根据业务需求进行收集，比如处理的订单数量和不同商品的销售情况等。云原生应用通常会创建仪表盘来实时展示整体的运行状态，方便运维人员进行监控。</p>
+<h2 id="认证和授权"><a href="#认证和授权" class="headerlink" title="认证和授权"></a>认证和授权</h2><p>云原生应用应该是安全的，安全应该在应用的设计阶段就充分考虑。在实现中，可以使用基于角色的访问控制（RBAC）来保护 API，已经有大量的开源框架来帮助实现认证和授权。</p>
+<p>在理想情况下，云原生应用应该具备上述全部 15 个特征，但是在实际的开发中，不一定能够做到。开发团队可以根据需要，选择对应用最重要的特征来实现。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/12/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" class="post-title-link" itemprop="url">微服务</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-12 10:11:36" itemprop="dateCreated datePublished" datetime="2020-12-12T10:11:36+08:00">2020-12-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="微服务定义"><a href="#微服务定义" class="headerlink" title="微服务定义"></a>微服务定义</h4><p>微服务架构是一种架构风格和架构思想，它倡导我们在传统软件应用架构的基础上，将系统业务按照功能拆分为更加细粒度的服务，所拆分的每一个服务都是一个独立的应用，这些应用对外提供公共的API，可以独立承担对外服务的职责，通过此种思想方式所开发的软件服务实体就是“微服务”，而围绕着微服务思想构建的一系列体系结构(包括开发、测试、部署等)。</p>
+<h5 id="微服务优缺点"><a href="#微服务优缺点" class="headerlink" title="微服务优缺点"></a>微服务优缺点</h5><h6 id="微服务特点一：快速响应需求变化"><a href="#微服务特点一：快速响应需求变化" class="headerlink" title="微服务特点一：快速响应需求变化"></a>微服务特点一：快速响应需求变化</h6><p>采用单体巨型非微服务架构有个问题，系统里面的业务模块非常多，大家一 起发布、修改、编译很难进行协调，很难做到敏捷开发、发 布、上线。</p>
+<p>微服务本质上是小微程序，相比较来说，很重要的特点是拆分概念。微服务首先是拆分，把大的拆成小的，把整体拆成部分。每个部分单独开发迭代。</p>
+<blockquote>
+<p>微服务的优点：拆完以后更灵活，各个子系统可以独立开发、独立测试、独立部署、独立进程，最后再集成。</p>
+</blockquote>
+<p>独立开发拆分以后自主性更强了，独立开发、独立测试、独立部署、独立进程，是 微服务快速响应业务需求变化的重要特点。</p>
+<h6 id="微服务特点二：敏捷开发、敏捷运维DevOps"><a href="#微服务特点二：敏捷开发、敏捷运维DevOps" class="headerlink" title="微服务特点二：敏捷开发、敏捷运维DevOps"></a>微服务特点二：敏捷开发、敏捷运维DevOps</h6><blockquote>
+<p>微服务的优点：本质上是拆完以后更好开发。</p>
+</blockquote>
+<p>总结如下：</p>
+<ol>
+<li>易于替换；</li>
+<li>独立部署；</li>
+<li>专注某个任务；</li>
+<li>高度解耦；</li>
+<li>基于功能进行组织：商品、支付、评论、机票、新闻、酒店、游戏等；</li>
+<li>服务可以使用不同的语言、系统、平台；</li>
+<li>通信使用语言中立的协议，通常是http；</li>
+<li>独立技术栈；</li>
+<li>易于测试；</li>
+</ol>
+<h4 id="微服务Microservice的设计原则"><a href="#微服务Microservice的设计原则" class="headerlink" title="微服务Microservice的设计原则"></a>微服务Microservice的设计原则</h4><blockquote>
+<p>需求第一</p>
+</blockquote>
+<p>一定要以需求为出发点。所有的架构好与坏一定是相对的，相对他处的一个需求背景。因为微服务架构能够在某些业务场景中具备优势，所以它相比传统的架构，他有一些优点但是同时也存在着缺点，它不完美。 </p>
+<blockquote>
+<p>单一职责</p>
+</blockquote>
+<p>我们的服务尽量是体现单一职责的思想，粒度不是越细越好，也不是越 粗越好。</p>
+<blockquote>
+<p>协议统一</p>
+</blockquote>
+<p>尽量去统一协议，目前的协议主要是 rest。</p>
+<blockquote>
+<p>独立开发</p>
+</blockquote>
+<p>独立开发一般咱们这里面提到的我们说的是模块拆分以后开发人员一般是独立我们按照模块进行拆分，然后每个人负责一块，每个人熟悉一块代码和逻辑业务逻辑这样的话开发时间都会相对来说高很多。</p>
+<blockquote>
+<p>独立部署</p>
+</blockquote>
+<p>独立部署这也是微服架构的很重要的一个原则，微服务架构拆分以后又会出现可能很多程序很多进程，而且每一个模块不是所有的都更新只需要迭代我那一块就行了，就是体现了我们说叫分而治之的这样一个思想，大家一起统一部署。</p>
+<h4 id="微服务Microservice的拆分原则"><a href="#微服务Microservice的拆分原则" class="headerlink" title="微服务Microservice的拆分原则"></a>微服务Microservice的拆分原则</h4><ol>
+<li><p>按照业务模块拆分</p>
+</li>
+<li><p>DDD思路可以借鉴，不能照搬</p>
+<p>DDD 本身不是架构设计模式，DDD 是一种但是在向对象设计的一个思想或者原则，它是用来解决复杂业务逻辑的一个拆分问题的，它本身并不解决整个架构层次的问题，它是解决业务层的，理解这一点。</p>
+</li>
+<li><p>单一职责（Single Responsibility）</p>
+</li>
+</ol>
+<h4 id="微服务设计的关注点"><a href="#微服务设计的关注点" class="headerlink" title="微服务设计的关注点"></a>微服务设计的关注点</h4><ol>
+<li>并发性</li>
+<li>可用性</li>
+<li>安全性</li>
+<li>密等性</li>
+<li>重用性</li>
+</ol>
+<h4 id="微服务架构设计的5大考量"><a href="#微服务架构设计的5大考量" class="headerlink" title="微服务架构设计的5大考量"></a>微服务架构设计的5大考量</h4><ol>
+<li>微服务拆分</li>
+<li>微服务高可用</li>
+<li>微数据安全</li>
+<li>微服务数据同步</li>
+<li>微服务监控</li>
+</ol>
+<h4 id="微服务的经典设计模式"><a href="#微服务的经典设计模式" class="headerlink" title="微服务的经典设计模式"></a>微服务的经典设计模式</h4><h5 id="微服务架构设计模式"><a href="#微服务架构设计模式" class="headerlink" title="微服务架构设计模式"></a>微服务架构设计模式</h5><ol>
+<li>业务分解：DDD模式</li>
+<li>DataBase PerService 每数据库单服务</li>
+<li>API Gateway pattern API网关模式</li>
+<li>Client-side 和 Remote Procedure Invocation 模式</li>
+<li>Messaging 和 Procedure Invocation 模式</li>
+<li>Single Service per Host 和 Multiple Services per Host 模式</li>
+<li>AOP: Microservice chassis pattern</li>
+<li>Externalized Configuration</li>
+<li>Service Component Test 和 Service Integration Contract Test</li>
+<li>Circuit Breaker 断路器模式</li>
+<li>Access Token 访问令牌模式</li>
+<li>观察者模式： Distributed tracing、 Health check API</li>
+<li>UI模式：MVC、MVP、MVVM模式</li>
+</ol>
+<p><img src="/2020/12/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1/image-20210820095240441.png" alt="image-20210820095240441"></p>
+<p>如图所示，以微服务架构为中心向外发散，有许多设计模式，正下方有两个，一个叫客户端发现，一个叫服务端发现，服务的注册和发现机制也是一个设计模式，微服架构属于更复杂的分布架构，里面也会用到消息通信，通过消息和数据库、其他微服务进行消息补偿。 </p>
+<p>网关的微服务太多，只有一个出口，需要给它同一个代理；安全问题，如图中Access token，和令牌相关的；另外还有高并发的熔断限流，circuit breaker 叫断路器模式，熔断相关，分布式日志、分布式加策、追踪、服务拆分模式、单数据库模式、单实例、单数据库模式多服务共享数据库模式、服务编排模式、统一配置模式等等。</p>
+<p>这里主要是分布式架构领域相关的设计模式，还有分布式事务模式，一般用的都是补偿的方式。 </p>
+<p>服务拆分的一般借鉴 DDD 模式，但不是照搬，不能完全等同。</p>
+<h5 id="微服务设计模式分类"><a href="#微服务设计模式分类" class="headerlink" title="微服务设计模式分类"></a>微服务设计模式分类</h5><h6 id="应用架构模式"><a href="#应用架构模式" class="headerlink" title="应用架构模式"></a>应用架构模式</h6><ol>
+<li>单点登录</li>
+<li>注册发现</li>
+<li>熔断限流</li>
+<li>断路器</li>
+<li>网关模式</li>
+<li>消息补偿模式</li>
+<li>令牌模式</li>
+</ol>
+<h6 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h6><ol>
+<li>分库 Single Service</li>
+<li>共库多 Service</li>
+<li>多库同步</li>
+<li>事务性补偿</li>
+</ol>
+<h6 id="日志追踪模式"><a href="#日志追踪模式" class="headerlink" title="日志追踪模式"></a>日志追踪模式</h6><ol>
+<li><p>观察者模式 paterns</p>
+</li>
+<li><p>Log aggregation</p>
+</li>
+<li><p>Application metrics</p>
+</li>
+<li><p>Audit logging</p>
+</li>
+<li><p>Distributed tracing</p>
+</li>
+<li><p>Exception tracking</p>
+</li>
+<li><p>Health check API</p>
+</li>
+<li><p>Log deployments and changes</p>
+</li>
+<li><p>分布式链路追踪模式</p>
+</li>
+</ol>
+<h6 id="UI模式"><a href="#UI模式" class="headerlink" title="UI模式"></a>UI模式</h6><ol>
+<li>MVC</li>
+<li>MVP</li>
+<li>MVVM</li>
+<li>Server-side page fragment composition</li>
+<li>Client-side UI composition</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/11/01/Redis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1449,622 +1725,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/" class="post-title-link" itemprop="url">Elasticsearch基本操作</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-10-17 20:23:21" itemprop="dateCreated datePublished" datetime="2020-10-17T20:23:21+08:00">2020-10-17</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="数据格式"><a href="#数据格式" class="headerlink" title="数据格式"></a>数据格式</h1><p>Elasticsearch 是面向文档型数据库，一条数据在这里就是一个文档。</p>
-<p>Elasticsearch 里存储文档数据和关系型数据库 MySQL 存储数据的概念进行一个类比。</p>
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206103351648.png" alt="image-20230206103351648"></p>
-<p>ES 里的 Index 可以看做一个库，而 Types 相当于表，Documents 则相当于表的行。这里 Types 的概念已经被逐渐弱化，Elasticsearch 6.X 中，一个 index 下已经只能包含一个type，Elasticsearch 7.X 中, Type 的概念已经被删除了。</p>
-<p>用 JSON 作为文档序列化的格式，比如一条用户信息：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"> <span class="attr">&quot;name&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;John&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;sex&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;Male&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;age&quot;</span> <span class="punctuation">:</span> <span class="number">25</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;birthDate&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1990/05/01&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;about&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;I love to go rock climbing&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;interests&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span> <span class="string">&quot;sports&quot;</span><span class="punctuation">,</span> <span class="string">&quot;music&quot;</span> <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="HTTP操作"><a href="#HTTP操作" class="headerlink" title="HTTP操作"></a>HTTP操作</h1><h2 id="索引操作"><a href="#索引操作" class="headerlink" title="索引操作"></a>索引操作</h2><h3 id="创建索引"><a href="#创建索引" class="headerlink" title="创建索引"></a>创建索引</h3><p>对比关系型数据库，创建索引就等同于创建数据库。</p>
-<p>在 Postman 中，向 ES 服务器发 <strong>PUT</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping">http://127.0.0.1:9200/shopping</a></p>
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206145740756.png" alt="image-20230206145740756"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"> &quot;acknowledged&quot;【响应结果】: true, # true 操作成功</span><br><span class="line"> &quot;shards_acknowledged&quot;【分片结果】: true, # 分片操作成功</span><br><span class="line"> &quot;index&quot;【索引名称】: &quot;shopping&quot;</span><br><span class="line">&#125;</span><br><span class="line"># 注意：创建索引库的分片数默认 1 片，在 7.0.0 之前的 Elasticsearch 版本中，默认 5 片</span><br></pre></td></tr></table></figure>
-
-
-
-<p>如果重复添加索引，会返回错误信息</p>
-<h3 id="查看所有索引"><a href="#查看所有索引" class="headerlink" title="查看所有索引"></a>查看所有索引</h3><p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/_cat/indices?v">http://127.0.0.1:9200/_cat/indices?v</a></p>
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206150041594.png" alt="image-20230206150041594"></p>
-<p>这里请求路径中的_cat 表示查看的意思，indices 表示索引，所以整体含义就是查看当前 ES服务器中的所有索引，就好像 MySQL 中的 show tables 。</p>
-<table>
-<thead>
-<tr>
-<th>表头</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>health</td>
-<td>当前服务器健康状态：green(集群完整) yellow(单点正常、集群不完整) red(单点不正常)</td>
-</tr>
-<tr>
-<td>status</td>
-<td>索引打开、关闭状态</td>
-</tr>
-<tr>
-<td>index</td>
-<td>索引名</td>
-</tr>
-<tr>
-<td>uuid</td>
-<td>索引统一编号</td>
-</tr>
-<tr>
-<td>pri</td>
-<td>主分片数量</td>
-</tr>
-<tr>
-<td>rep</td>
-<td>副本数量</td>
-</tr>
-<tr>
-<td>docs.count</td>
-<td>可用文档数量</td>
-</tr>
-<tr>
-<td>docs.deleted</td>
-<td>文档删除状态（逻辑删除）</td>
-</tr>
-<tr>
-<td>store.size</td>
-<td>主分片和副分片整体占空间大小</td>
-</tr>
-<tr>
-<td>pri.store.size</td>
-<td>主分片占空间大小</td>
-</tr>
-</tbody></table>
-<h3 id="查看单个索引"><a href="#查看单个索引" class="headerlink" title="查看单个索引"></a>查看单个索引</h3><p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping">http://127.0.0.1:9200/shopping</a></p>
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206150428413.png" alt="image-20230206150428413"></p>
-<p>查看索引向 ES 服务器发送的请求路径和创建索引是一致的。但是 HTTP 方法不一致。</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"> <span class="string">&quot;shopping&quot;</span>【索引名】<span class="punctuation">:</span> <span class="punctuation">&#123;</span> </span><br><span class="line"> 	<span class="string">&quot;aliases&quot;</span>【别名】<span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"> 	<span class="string">&quot;mappings&quot;</span>【映射】<span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"> 	<span class="string">&quot;settings&quot;</span>【设置】<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"> 		<span class="string">&quot;index&quot;</span>【设置 - 索引】<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"> 			<span class="string">&quot;creation_date&quot;</span>【设置 - 索引 - 创建时间】<span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line"> 			<span class="string">&quot;number_of_shards&quot;</span>【设置 - 索引 - 主分片数量】<span class="punctuation">:</span> <span class="string">&quot;1&quot;</span><span class="punctuation">,</span></span><br><span class="line"> 			<span class="string">&quot;number_of_replicas&quot;</span>【设置 - 索引 - 副分片数量】<span class="punctuation">:</span> <span class="string">&quot;1&quot;</span><span class="punctuation">,</span></span><br><span class="line"> 			<span class="string">&quot;uuid&quot;</span>【设置 - 索引 - 唯一标识】<span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line"> 			<span class="string">&quot;version&quot;</span>【设置 - 索引 - 版本】<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"> 				<span class="attr">&quot;created&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span></span><br><span class="line"> 			<span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"> 			<span class="string">&quot;provided_name&quot;</span>【设置 - 索引 - 名称】<span class="punctuation">:</span> <span class="string">&quot;shopping&quot;</span></span><br><span class="line"> 		<span class="punctuation">&#125;</span></span><br><span class="line"> 	<span class="punctuation">&#125;</span></span><br><span class="line"> <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h3 id="删除索引"><a href="#删除索引" class="headerlink" title="删除索引"></a>删除索引</h3><p>在 Postman 中，向 ES 服务器发 <strong>DELETE</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping">http://127.0.0.1:9200/shopping</a></p>
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206150901094.png" alt="image-20230206150901094"></p>
-<h2 id="文档操作"><a href="#文档操作" class="headerlink" title="文档操作"></a>文档操作</h2><h3 id="创建文档"><a href="#创建文档" class="headerlink" title="创建文档"></a>创建文档</h3><p>这里的文档可以类比为关系型数据库中的表数据，添加的数据格式为 JSON 格式。</p>
-<p>在 Postman 中，向 ES 服务器发 <strong>POST</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping/_doc">http://127.0.0.1:9200/shopping/_doc</a></p>
-<p>请求体内容为：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"> <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span><span class="string">&quot;小米手机&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span><span class="string">&quot;小米&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;images&quot;</span><span class="punctuation">:</span><span class="string">&quot;http://www.gulixueyuan.com/xm.jpg&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span><span class="number">3999.00</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206151219129.png" alt="image-20230206151219129"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"> &quot;_index&quot;【索引】: &quot;shopping&quot;,</span><br><span class="line"> &quot;_type&quot;【类型-文档】: &quot;_doc&quot;,</span><br><span class="line"> &quot;_id&quot;【唯一标识】: &quot;Xhsa2ncBlvF_7lxyCE9G&quot;, #可以类比为 MySQL 中的主键，随机生成</span><br><span class="line"> &quot;_version&quot;【版本】: 1,</span><br><span class="line"> &quot;result&quot;【结果】: &quot;created&quot;, #这里的 create 表示创建成功</span><br><span class="line"> &quot;_shards&quot;【分片】: &#123;</span><br><span class="line"> 	&quot;total&quot;【分片 - 总数】: 2,</span><br><span class="line"> 	&quot;successful&quot;【分片 - 成功】: 1,</span><br><span class="line"> 	&quot;failed&quot;【分片 - 失败】: 0</span><br><span class="line"> &#125;,</span><br><span class="line"> &quot;_seq_no&quot;: 0,</span><br><span class="line"> &quot;_primary_term&quot;: 1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>上面的数据创建后，由于没有指定数据唯一性标识（ID），默认情况下，ES 服务器会随机生成一个。</p>
-<p>如果想要自定义唯一性标识，需要在创建时指定：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping/_doc/1">http://127.0.0.1:9200/shopping/_doc/1</a></p>
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206151426330.png" alt="image-20230206151426330"></p>
-<p>注意：如果增加数据时明确数据主键，那么请求方式也可以为 PUT</p>
-<h3 id="查看文档"><a href="#查看文档" class="headerlink" title="查看文档"></a>查看文档</h3><p>查看文档时，需要指明文档的唯一性标识，类似于 MySQL 中数据的主键查询</p>
-<p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping/_doc/1">http://127.0.0.1:9200/shopping/_doc/1</a></p>
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206151609922.png" alt="image-20230206151609922"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"> &quot;_index&quot;【索引】: &quot;shopping&quot;,</span><br><span class="line"> &quot;_type&quot;【文档类型】: &quot;_doc&quot;,</span><br><span class="line"> &quot;_id&quot;: &quot;1&quot;,</span><br><span class="line"> &quot;_version&quot;: 2,</span><br><span class="line"> &quot;_seq_no&quot;: 2,</span><br><span class="line"> &quot;_primary_term&quot;: 2,</span><br><span class="line"> &quot;found&quot;【查询结果】: true, # true 表示查找到，false 表示未查找到</span><br><span class="line"> &quot;_source&quot;【文档源信息】: &#123;</span><br><span class="line"> 	&quot;title&quot;: &quot;华为手机&quot;,</span><br><span class="line"> 	&quot;category&quot;: &quot;华为&quot;,</span><br><span class="line"> 	&quot;images&quot;: &quot;http://www.gulixueyuan.com/hw.jpg&quot;,</span><br><span class="line"> 	&quot;price&quot;: 4999.00</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h3 id="修改文档"><a href="#修改文档" class="headerlink" title="修改文档"></a>修改文档</h3><p>和新增文档一样，输入相同的 URL 地址请求，如果请求体变化，会将原有的数据内容覆盖</p>
-<p>在 Postman 中，向 ES 服务器发 <strong>POST</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping/_doc/1">http://127.0.0.1:9200/shopping/_doc/1</a></p>
-<p>请求体内容为:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"> <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span><span class="string">&quot;华为手机&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span><span class="string">&quot;华为&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;images&quot;</span><span class="punctuation">:</span><span class="string">&quot;http://www.images.com/hw.jpg&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span><span class="number">4999.00</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206152057963.png" alt="image-20230206152057963"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"> &quot;_index&quot;: &quot;shopping&quot;,</span><br><span class="line"> &quot;_type&quot;: &quot;_doc&quot;,</span><br><span class="line"> &quot;_id&quot;: &quot;1&quot;,</span><br><span class="line"> &quot;_version&quot;【版本】: 2,</span><br><span class="line"> &quot;result&quot;【结果】: &quot;updated&quot;, # updated 表示数据被更新</span><br><span class="line"> &quot;_shards&quot;: &#123;</span><br><span class="line"> 	&quot;total&quot;: 2,</span><br><span class="line"> 	&quot;successful&quot;: 1,</span><br><span class="line"> 	&quot;failed&quot;: 0</span><br><span class="line"> &#125;,</span><br><span class="line"> &quot;_seq_no&quot;: 2,</span><br><span class="line"> &quot;_primary_term&quot;: 2</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h3 id="修改字段"><a href="#修改字段" class="headerlink" title="修改字段"></a>修改字段</h3><p>修改数据时，也可以只修改某一给条数据的局部信息。</p>
-<p>在 Postman 中，向 ES 服务器发 <strong>POST</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping/_update/1">http://127.0.0.1:9200/shopping/_update/1</a></p>
-<p>请求体内容为：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span> </span><br><span class="line"> <span class="attr">&quot;doc&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span><span class="number">3000.00</span></span><br><span class="line"> <span class="punctuation">&#125;</span> </span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206152437514.png" alt="image-20230206152437514"></p>
-<p>查看修改结果</p>
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206152558972.png" alt="image-20230206152558972"></p>
-<h3 id="删除文档"><a href="#删除文档" class="headerlink" title="删除文档"></a>删除文档</h3><p>删除一个文档不会立即从磁盘上移除，它只是被标记成已删除（逻辑删除）。</p>
-<p>在 Postman 中，向 ES 服务器发 <strong>DELETE</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping/_doc/1">http://127.0.0.1:9200/shopping/_doc/1</a></p>
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206152703378.png" alt="image-20230206152703378"></p>
-<h3 id="条件删除文档"><a href="#条件删除文档" class="headerlink" title="条件删除文档"></a>条件删除文档</h3><p>一般删除数据都是根据文档的唯一性标识进行删除，实际操作时，也可以根据条件对多条数据进行删除。</p>
-<p>分别增加多条数据:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"> <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span><span class="string">&quot;小米手机&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span><span class="string">&quot;小米&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;images&quot;</span><span class="punctuation">:</span><span class="string">&quot;http://www.gulixueyuan.com/xm.jpg&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span><span class="number">4000.00</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"> &quot;title&quot;:&quot;华为手机&quot;,</span><br><span class="line"> &quot;category&quot;:&quot;华为&quot;,</span><br><span class="line"> &quot;images&quot;:&quot;http://www.gulixueyuan.com/hw.jpg&quot;,</span><br><span class="line"> &quot;price&quot;:4000.00</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>向 ES 服务器发 <strong>POST</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping/_delete_by_query">http://127.0.0.1:9200/shopping/_delete_by_query</a></p>
-<p>请求体内容为：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"> <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line"> 	<span class="attr">&quot;match&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line"> 		<span class="attr">&quot;price&quot;</span><span class="punctuation">:</span><span class="number">4000.00</span></span><br><span class="line"> 	<span class="punctuation">&#125;</span></span><br><span class="line"> <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206153206959.png" alt="image-20230206153206959"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"> &quot;took&quot;【耗时】: 175,</span><br><span class="line"> &quot;timed_out&quot;【是否超时】: false,</span><br><span class="line"> &quot;total&quot;【总数】: 2,</span><br><span class="line"> &quot;deleted&quot;【删除数量】: 2,</span><br><span class="line"> &quot;batches&quot;: 1,</span><br><span class="line"> &quot;version_conflicts&quot;: 0,</span><br><span class="line"> &quot;noops&quot;: 0,</span><br><span class="line"> &quot;retries&quot;: &#123;</span><br><span class="line"> &quot;bulk&quot;: 0,</span><br><span class="line"> &quot;search&quot;: 0</span><br><span class="line"> &#125;,</span><br><span class="line"> &quot;throttled_millis&quot;: 0,</span><br><span class="line"> &quot;requests_per_second&quot;: -1.0,</span><br><span class="line"> &quot;throttled_until_millis&quot;: 0,</span><br><span class="line"> &quot;failures&quot;: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="映射操作"><a href="#映射操作" class="headerlink" title="映射操作"></a>映射操作</h2><p>有了索引库，等于有了数据库中的 database。</p>
-<p>接下来就需要建索引库(index)中的映射了，类似于数据库(database)中的表结构(table)。</p>
-<p>创建数据库表需要设置字段名称，类型，长度，约束等；索引库也一样，需要知道这个类型下有哪些字段，每个字段有哪些约束信息，这就叫做映射(mapping)。</p>
-<h3 id="创建映射"><a href="#创建映射" class="headerlink" title="创建映射"></a>创建映射</h3><p>在 Postman 中，向 ES 服务器发 <strong>PUT</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student/_mapping">http://127.0.0.1:9200/student/_mapping</a></p>
-<p>请求体内容为：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;index&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">true</span></span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;sex&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;index&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">false</span></span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;long&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;index&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">false</span></span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206162028436.png" alt="image-20230206162028436"></p>
-<p>映射数据说明：</p>
-<ul>
-<li><p>字段名：任意填写，下面指定许多属性，例如：title、subtitle、images、price</p>
-</li>
-<li><p>type：类型，Elasticsearch 中支持的数据类型非常丰富，说几个关键的：</p>
-<p>a. String 类型，又分两种：</p>
-<p>​	text：可分词</p>
-<p>​	keyword：不可分词，数据会作为完整字段进行匹配</p>
-<p>b. Numerical：数值类型，分两类</p>
-<p>​	基本数据类型：long、integer、short、byte、double、float、half_float</p>
-<p>​	浮点数的高精度类型：scaled_float</p>
-<p>c. Date：日期类型</p>
-<p>d. Array：数组类型</p>
-<p>e. Object：对象</p>
-</li>
-<li><p>index：是否索引，默认为 true，也就是说你不进行任何配置，所有字段都会被索引。</p>
-<p>true：字段会被索引，则可以用来进行搜索</p>
-<p>false：字段不会被索引，不能用来搜索</p>
-</li>
-<li><p>store：是否将数据进行独立存储，默认为 false</p>
-<p>原始的文本会存储在_source 里面，默认情况下其他提取出来的字段都不是独立存储的，是从_source 里面提取出来的。当然你也可以独立的存储某个字段，只要设置”store”: true 即可，获取独立存储的字段要比从_source 中解析快得多，但是也会占用更多的空间，所以要根据实际业务需求来设置。</p>
-</li>
-<li><p>analyzer：分词器，这里的 ik_max_word 即使用 ik 分词器</p>
-</li>
-</ul>
-<h3 id="查看映射"><a href="#查看映射" class="headerlink" title="查看映射"></a>查看映射</h3><p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student/_mapping">http://127.0.0.1:9200/student/_mapping</a></p>
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206162834538.png" alt="image-20230206162834538"></p>
-<h3 id="索引映射关联"><a href="#索引映射关联" class="headerlink" title="索引映射关联"></a>索引映射关联</h3><p>在 Postman 中，向 ES 服务器发 <strong>PUT</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1">http://127.0.0.1:9200/student1</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;settings&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;mappings&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;index&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">true</span></span></span><br><span class="line">            <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;sex&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;index&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">false</span></span></span><br><span class="line">            <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;long&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;index&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">false</span></span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206163034113.png" alt="image-20230206163034113"></p>
-<p>查看映射</p>
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206163133609.png" alt="image-20230206163133609"></p>
-<h2 id="高级查询"><a href="#高级查询" class="headerlink" title="高级查询"></a>高级查询</h2><p>Elasticsearch 提供了基于 JSON 提供完整的查询 DSL 来定义查询。</p>
-<p>定义数据</p>
-<p>POST请求：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student/_doc/1001">http://127.0.0.1:9200/student/_doc/1001</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;nickname&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sex&quot;</span><span class="punctuation">:</span><span class="string">&quot;男&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">30</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>POST请求：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student/_doc/1002">http://127.0.0.1:9200/student/_doc/1002</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;lisi&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;nickname&quot;</span><span class="punctuation">:</span><span class="string">&quot;lisi&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sex&quot;</span><span class="punctuation">:</span><span class="string">&quot;男&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">20</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>POST请求：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student/_doc/1003">http://127.0.0.1:9200/student/_doc/1003</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;lilan&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;nickname&quot;</span><span class="punctuation">:</span><span class="string">&quot;lilan&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sex&quot;</span><span class="punctuation">:</span><span class="string">&quot;女&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">40</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>POST请求：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student/_doc/1004">http://127.0.0.1:9200/student/_doc/1004</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan1&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;nickname&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan1&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sex&quot;</span><span class="punctuation">:</span><span class="string">&quot;男&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">50</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>POST请求：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student/_doc/1005">http://127.0.0.1:9200/student/_doc/1005</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan2&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;nickname&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan2&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sex&quot;</span><span class="punctuation">:</span><span class="string">&quot;男&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">30</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>POST请求：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student/_doc/1006">http://127.0.0.1:9200/student/_doc/1006</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;hanmei&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;nickname&quot;</span><span class="punctuation">:</span><span class="string">&quot;hanmei&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sex&quot;</span><span class="punctuation">:</span><span class="string">&quot;女&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">30</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="查询所有文档"><a href="#查询所有文档" class="headerlink" title="查询所有文档"></a>查询所有文档</h3><p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"> <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"> <span class="attr">&quot;match_all&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line"> <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"># <span class="string">&quot;query&quot;</span>：这里的 query 代表一个查询对象，里面可以有不同的查询属性</span><br><span class="line"># <span class="string">&quot;match_all&quot;</span>：查询类型，例如：match_all(代表查询所有)， match，term， range 等等</span><br><span class="line"># <span class="punctuation">&#123;</span>查询条件<span class="punctuation">&#125;</span>：查询条件会根据类型的不同，写法也有差异</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206164201312.png" alt="image-20230206164201312"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;took【查询花费时间，单位毫秒】&quot;:1116,</span><br><span class="line">    &quot;timed_out【是否超时】&quot;:false,</span><br><span class="line">    &quot;_shards【分片信息】&quot;:&#123;</span><br><span class="line">        &quot;total【总数】&quot;:1,</span><br><span class="line">        &quot;successful【成功】&quot;:1,</span><br><span class="line">        &quot;skipped【忽略】&quot;:0,</span><br><span class="line">        &quot;failed【失败】&quot;:0</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;hits【搜索命中结果】&quot;:&#123;</span><br><span class="line">        &quot;total【搜索条件匹配的文档总数】&quot;:&#123;</span><br><span class="line">            &quot;value【总命中计数的值】&quot;:3,</span><br><span class="line">            &quot;relation【计数规则】&quot;:&quot;eq&quot;   # eq 表示计数准确， gte 表示计数不准确</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;max_score【匹配度分值】&quot;:1,</span><br><span class="line">        &quot;hits【命中结果集合】&quot;:[</span><br><span class="line"></span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h3 id="匹配查询"><a href="#匹配查询" class="headerlink" title="匹配查询"></a>匹配查询</h3><p>match 匹配类型查询，会把查询条件进行分词，然后进行查询，多个词条之间是 or 的关系在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206164754859.png" alt="image-20230206164754859"></p>
-<h3 id="字段匹配查询"><a href="#字段匹配查询" class="headerlink" title="字段匹配查询"></a>字段匹配查询</h3><p>multi_match 与 match 类似，不同的是它可以在多个字段中查询。</p>
-<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;multi_match&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;fields&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;name&quot;</span><span class="punctuation">,</span> <span class="string">&quot;nickname&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206165017696.png" alt="image-20230206165017696"></p>
-<h3 id="关键字精确查询"><a href="#关键字精确查询" class="headerlink" title="关键字精确查询"></a>关键字精确查询</h3><p>term 查询，精确的关键词匹配查询，不对查询条件进行分词。</p>
-<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;term&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;value&quot;</span><span class="punctuation">:</span> <span class="string">&quot;zhangsan&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206165218315.png" alt="image-20230206165218315"></p>
-<h3 id="多关键字精确查询"><a href="#多关键字精确查询" class="headerlink" title="多关键字精确查询"></a>多关键字精确查询</h3><p>terms 查询和 term 查询一样，但它允许你指定多值进行匹配。</p>
-<p>如果这个字段包含了指定值中的任何一个值，那么这个文档满足条件，类似于 mysql 的 in。</p>
-<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;terms&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;zhangsan&quot;</span><span class="punctuation">,</span> <span class="string">&quot;lisi&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206170632371.png" alt="image-20230206170632371"></p>
-<h3 id="指定查询字段"><a href="#指定查询字段" class="headerlink" title="指定查询字段"></a>指定查询字段</h3><p>默认情况下，Elasticsearch 在搜索的结果中，会把文档中保存在_source 的所有字段都返回。</p>
-<p>如果我们只想获取其中的部分字段，我们可以添加_source 的过滤。</p>
-<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;_source&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;name&quot;</span><span class="punctuation">,</span> <span class="string">&quot;nickname&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;terms&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;zhangsan&quot;</span><span class="punctuation">,</span> <span class="string">&quot;lisi&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206170922978.png" alt="image-20230206170922978"></p>
-<h3 id="过滤字段"><a href="#过滤字段" class="headerlink" title="过滤字段"></a>过滤字段</h3><p>也可以通过：</p>
-<ul>
-<li><p>includes：来指定想要显示的字段</p>
-</li>
-<li><p>excludes：来指定不想要显示的字段</p>
-</li>
-</ul>
-<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;_source&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;includes&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;name&quot;</span><span class="punctuation">,</span> <span class="string">&quot;nickname&quot;</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;terms&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;zhangsan&quot;</span><span class="punctuation">,</span> <span class="string">&quot;lisi&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206171120699.png" alt="image-20230206171120699"></p>
-<p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;_source&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;excludes&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;name&quot;</span><span class="punctuation">,</span> <span class="string">&quot;nickname&quot;</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;terms&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;zhangsan&quot;</span><span class="punctuation">,</span> <span class="string">&quot;lisi&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206171303348.png" alt="image-20230206171303348"></p>
-<h3 id="组合查询"><a href="#组合查询" class="headerlink" title="组合查询"></a>组合查询</h3><p><code>bool</code>把各种其它查询通过<code>must</code>（必须 ）、<code>must_not</code>（必须不）、<code>should</code>（应该）的方式进行组合</p>
-<p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;bool&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;must&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="punctuation">&#123;</span></span><br><span class="line">                    <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">                        <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan&quot;</span></span><br><span class="line">                    <span class="punctuation">&#125;</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;must_not&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="punctuation">&#123;</span></span><br><span class="line">                    <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">                        <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="string">&quot;40&quot;</span></span><br><span class="line">                    <span class="punctuation">&#125;</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;should&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="punctuation">&#123;</span></span><br><span class="line">                    <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">                        <span class="attr">&quot;sex&quot;</span><span class="punctuation">:</span><span class="string">&quot;男&quot;</span></span><br><span class="line">                    <span class="punctuation">&#125;</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206175510246.png" alt="image-20230206175510246"></p>
-<h3 id="范围查询"><a href="#范围查询" class="headerlink" title="范围查询"></a>范围查询</h3><p>range 查询找出那些落在指定区间内的数字或者时间。range 查询允许以下字符</p>
-<table>
-<thead>
-<tr>
-<th>操作符</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>gt</td>
-<td>大于&gt;</td>
-</tr>
-<tr>
-<td>get</td>
-<td>大于等于&gt;&#x3D;</td>
-</tr>
-<tr>
-<td>lt</td>
-<td>小于&lt;</td>
-</tr>
-<tr>
-<td>lte</td>
-<td>小于等于&lt;&#x3D;</td>
-</tr>
-</tbody></table>
-<p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;range&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;gte&quot;</span><span class="punctuation">:</span><span class="number">30</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;lte&quot;</span><span class="punctuation">:</span><span class="number">35</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206214259442.png" alt="image-20230206214259442"></p>
-<h3 id="模糊查询"><a href="#模糊查询" class="headerlink" title="模糊查询"></a>模糊查询</h3><p>返回包含与搜索字词相似的字词的文档。</p>
-<p>编辑距离是将一个术语转换为另一个术语所需的一个字符更改的次数。这些更改可以包括：</p>
-<ul>
-<li><p>更改字符（box → fox）</p>
-</li>
-<li><p>删除字符（black → lack）</p>
-</li>
-<li><p>插入字符（sic → sick）</p>
-</li>
-<li><p>转置两个相邻字符（act → cat）</p>
-</li>
-</ul>
-<p>为了找到相似的术语，fuzzy 查询会在指定的编辑距离内创建一组搜索词的所有可能的变体或扩展。然后查询返回每个扩展的完全匹配。</p>
-<p>通过 fuzziness 修改编辑距离。一般使用默认值 AUTO，根据术语的长度生成编辑距离。</p>
-<p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;fuzzy&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;value&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206214616103.png" alt="image-20230206214616103"></p>
-<p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student/_search">http://127.0.0.1:9200/student/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;fuzzy&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;value&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;fuzziness&quot;</span><span class="punctuation">:</span> <span class="number">2</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206214839523.png" alt="image-20230206214839523"></p>
-<h3 id="单字段排序"><a href="#单字段排序" class="headerlink" title="单字段排序"></a>单字段排序</h3><p>sort 可以让我们按照不同的字段进行排序，并且通过 order 指定排序的方式。desc 降序，asc升序。</p>
-<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;zhangsan&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sort&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;order&quot;</span><span class="punctuation">:</span> <span class="string">&quot;desc&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206215149058.png" alt="image-20230206215149058"></p>
-<h3 id="多字段排序"><a href="#多字段排序" class="headerlink" title="多字段排序"></a>多字段排序</h3><p>假定我们想要结合使用 age 和 _score 进行查询，并且匹配的结果首先按照年龄排序，然后按照相关性得分排序</p>
-<p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;match_all&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sort&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;order&quot;</span><span class="punctuation">:</span> <span class="string">&quot;desc&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;_score&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;order&quot;</span><span class="punctuation">:</span> <span class="string">&quot;desc&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206215339747.png" alt="image-20230206215339747"></p>
-<h3 id="高亮查询"><a href="#高亮查询" class="headerlink" title="高亮查询"></a>高亮查询</h3><p>在进行关键字搜索时，搜索出的内容中的关键字会显示不同的颜色，称之为高亮。</p>
-<p>Elasticsearch 可以对查询内容中的关键字部分，进行标签和样式(高亮)的设置。</p>
-<p>在使用 match 查询的同时，加上一个 highlight 属性：</p>
-<ul>
-<li><p>pre_tags：前置标签</p>
-</li>
-<li><p>post_tags：后置标签</p>
-</li>
-<li><p>fields：需要高亮的字段</p>
-</li>
-<li><p>title：这里声明 title 字段需要高亮，后面可以为这个字段设置特有配置，也可以空</p>
-</li>
-</ul>
-<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;zhangsan&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;highlight&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;pre_tags&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&lt;font clolor=&#x27;red&#x27;&gt;&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;post_tags&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&lt;/font&gt;&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;fields&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206215724720.png" alt="image-20230206215724720"></p>
-<h3 id="分页查询"><a href="#分页查询" class="headerlink" title="分页查询"></a>分页查询</h3><p>from：当前页的起始索引，默认从 0 开始。 from &#x3D; (pageNum - 1) * size</p>
-<p>size：每页显示多少条</p>
-<p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;match_all&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sort&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;order&quot;</span><span class="punctuation">:</span> <span class="string">&quot;desc&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;from&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">2</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206215933073.png" alt="image-20230206215933073"></p>
-<h3 id="聚合查询"><a href="#聚合查询" class="headerlink" title="聚合查询"></a>聚合查询</h3><p>聚合允许使用者对 es 文档进行统计分析，类似与关系型数据库中的 group by，当然还有很</p>
-<p>多其他的聚合，例如取最大值、平均值等等。</p>
-<ul>
-<li>对某个字段取最大值 max</li>
-</ul>
-<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;aggs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;max_age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;max&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;field&quot;</span><span class="punctuation">:</span> <span class="string">&quot;age&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206220218081.png" alt="image-20230206220218081"></p>
-<p>对某个字段取最小值 min</p>
-<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;aggs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;min_age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;min&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;field&quot;</span><span class="punctuation">:</span> <span class="string">&quot;age&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206220340743.png" alt="image-20230206220340743"></p>
-<ul>
-<li>对某个字段求和 sum</li>
-</ul>
-<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;aggs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;sum_age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;sum&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;field&quot;</span><span class="punctuation">:</span> <span class="string">&quot;age&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206220509120.png" alt="image-20230206220509120"></p>
-<ul>
-<li>对某个字段取平均值 avg</li>
-</ul>
-<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;aggs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;avg_age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;avg&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;field&quot;</span><span class="punctuation">:</span> <span class="string">&quot;age&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206220629367.png" alt="image-20230206220629367"></p>
-<ul>
-<li>对某个字段的值进行去重之后再取总数</li>
-</ul>
-<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;aggs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;distinct_age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;cardinality&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;field&quot;</span><span class="punctuation">:</span> <span class="string">&quot;age&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206220806376.png" alt="image-20230206220806376"></p>
-<ul>
-<li>State 聚合</li>
-</ul>
-<p>stats 聚合，对某个字段一次性返回 count，max，min，avg 和 sum 五个指标</p>
-<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;aggs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;stats_age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;stats&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;field&quot;</span><span class="punctuation">:</span> <span class="string">&quot;age&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206220913646.png" alt="image-20230206220913646"></p>
-<h3 id="桶聚合查询"><a href="#桶聚合查询" class="headerlink" title="桶聚合查询"></a>桶聚合查询</h3><p>桶聚和相当于 sql 中的 group by 语句</p>
-<ul>
-<li>terms 聚合，分组统计</li>
-</ul>
-<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;aggs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;age_groupby&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;terms&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;field&quot;</span><span class="punctuation">:</span> <span class="string">&quot;age&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206221041463.png" alt="image-20230206221041463"></p>
-<ul>
-<li>在 terms 分组下再进行聚合</li>
-</ul>
-<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;aggs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;age_groupby&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;terms&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;field&quot;</span><span class="punctuation">:</span> <span class="string">&quot;age&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;aggs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;sum_age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                    <span class="attr">&quot;sum&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                        <span class="attr">&quot;field&quot;</span><span class="punctuation">:</span> <span class="string">&quot;age&quot;</span></span><br><span class="line">                    <span class="punctuation">&#125;</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206221252476.png" alt="image-20230206221252476"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/10/16/Elasticsearch%E5%AE%89%E8%A3%85/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/16/Elasticsearch%E5%AE%89%E8%A3%85/" class="post-title-link" itemprop="url">Elasticsearch安装</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-10-16 20:06:21" itemprop="dateCreated datePublished" datetime="2020-10-16T20:06:21+08:00">2020-10-16</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Elasticsearch 的官方地址：<a target="_blank" rel="noopener" href="https://www.elastic.co/cn/">https://www.elastic.co/cn/</a></p>
-<p>下载地址：<a target="_blank" rel="noopener" href="https://www.elastic.co/cn/downloads/past-releases#elasticsearch">https://www.elastic.co/cn/downloads/past-releases#elasticsearch</a></p>
-<p><strong>Windows下安装</strong></p>
-<p>解压即安装完毕，解压后的 Elasticsearch 的目录结构如下</p>
-<p><img src="/2020/10/16/Elasticsearch%E5%AE%89%E8%A3%85/image-20230206094501464.png" alt="image-20230206094501464"></p>
-<table>
-<thead>
-<tr>
-<th>目录</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>bin</td>
-<td>可执行脚本目录</td>
-</tr>
-<tr>
-<td>config</td>
-<td>配置目录</td>
-</tr>
-<tr>
-<td>jdk</td>
-<td>内置 JDK 目录</td>
-</tr>
-<tr>
-<td>lib</td>
-<td>类库</td>
-</tr>
-<tr>
-<td>logs</td>
-<td>日志目录</td>
-</tr>
-<tr>
-<td>modules</td>
-<td>模块目录</td>
-</tr>
-<tr>
-<td>plugins</td>
-<td>插件目录</td>
-</tr>
-</tbody></table>
-<p>解压后，进入 bin 文件目录，点击 elasticsearch.bat 文件启动 ES 服务。</p>
-<p><img src="/2020/10/16/Elasticsearch%E5%AE%89%E8%A3%85/image-20230206095419183.png" alt="image-20230206095419183"></p>
-<p><strong>注意</strong>：9300 端口为 Elasticsearch 集群间组件的通信端口，9200 端口为浏览器访问的 http协议RESTful端口。</p>
-<p>打开浏览器（推荐使用谷歌浏览器），输入地址：<a href="http://localhost:9200，测试结果">http://localhost:9200，测试结果</a></p>
-<p><img src="/2020/10/16/Elasticsearch%E5%AE%89%E8%A3%85/image-20230206095630931.png" alt="image-20230206095630931"></p>
-<p><strong>注意</strong></p>
-<p>Elasticsearch 是使用 java 开发的，且ES 需要 JDK 版本 1.8 以上，默认安装包带有 jdk 环境，如果系统配置 JAVA_HOME，那么使用系统默认的 JDK，如果没有配置使用自带的 JDK，一般建议使用系统配置的 JDK。</p>
-<p>双击启动窗口闪退，通过路径访问追踪错误，如果是“空间不足”，请修改config&#x2F;jvm.options 配置文件。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 设置 JVM 初始内存为 1G。此值可以设置与-Xmx 相同，以避免每次垃圾回收完成后 JVM 重新分配内存</span><br><span class="line"># Xms represents the initial size of total heap space</span><br><span class="line"># 设置 JVM 最大可用内存为 1G</span><br><span class="line"># Xmx represents the maximum size of total heap space</span><br><span class="line">-Xms1g</span><br><span class="line">-Xmx1g</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2132,7 +1796,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">160</span>
+          <span class="site-state-item-count">162</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

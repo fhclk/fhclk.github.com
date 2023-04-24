@@ -151,6 +151,163 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/" class="post-title-link" itemprop="url">Flink运行时架构</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-08 20:03:21" itemprop="dateCreated datePublished" datetime="2022-04-08T20:03:21+08:00">2022-04-08</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Flink运行时组件"><a href="#Flink运行时组件" class="headerlink" title="Flink运行时组件"></a>Flink运行时组件</h1><h2 id="作业管理器（JobManager）"><a href="#作业管理器（JobManager）" class="headerlink" title="作业管理器（JobManager）"></a>作业管理器（JobManager）</h2><ul>
+<li><p>控制一个应用程序执行的主进程，也就是说，每个应用程序都会被一个不同的JobManager 所控制执行。</p>
+</li>
+<li><p>JobManager 会先接收到要执行的应用程序，这个应用程序会包括：作业图（JobGraph）、逻辑数据流图（logical dataflow graph）和打包了所有的类、库和其它资源的JAR包。</p>
+</li>
+<li><p>JobManager 会把JobGraph转换成一个物理层面的数据流图，这个图被叫做“执行图”（ExecutionGraph），包含了所有可以并发执行的任务。</p>
+</li>
+<li><p>JobManager 会向资源管理器（ResourceManager）请求执行任务必要的资源，也就是任务管理器（TaskManager）上的插槽（slot）。一旦它获取到了足够的资源，就会将执行图分发到真正运行它们的TaskManager上。而在运行过程中，JobManager会负责所有需要中央协调的操作，比如说检查点（checkpoints）的协调。</p>
+</li>
+</ul>
+<h2 id="任务管理器（TaskManager）"><a href="#任务管理器（TaskManager）" class="headerlink" title="任务管理器（TaskManager）"></a>任务管理器（TaskManager）</h2><ul>
+<li><p>Flink中的工作进程。通常在Flink中会有多个TaskManager运行，每一个TaskManager都包含了一定数量的插槽（slots）。插槽的数量限制了TaskManager能够执行的任务数量。</p>
+</li>
+<li><p>启动之后，TaskManager会向资源管理器注册它的插槽；收到资源管理器的指令后，TaskManager就会将一个或者多个插槽提供给JobManager调用。JobManager就可以向插槽分配任务（tasks）来执行了。</p>
+</li>
+<li><p>在执行过程中，一个TaskManager可以跟其它运行同一应用程序的TaskManager交换数据。</p>
+</li>
+</ul>
+<h2 id="资源管理器（ResourceManager）"><a href="#资源管理器（ResourceManager）" class="headerlink" title="资源管理器（ResourceManager）"></a>资源管理器（ResourceManager）</h2><ul>
+<li><p>主要负责管理任务管理器（TaskManager）的插槽（slot），TaskManger 插槽是Flink中定义的处理资源单元。</p>
+</li>
+<li><p>Flink为不同的环境和资源管理工具提供了不同资源管理器，比如YARN、Mesos、K8s，以及standalone部署。</p>
+</li>
+<li><p>当JobManager申请插槽资源时，ResourceManager会将有空闲插槽的TaskManager分配给JobManager。如果ResourceManager没有足够的插槽来满足JobManager的请求，它还可以向资源提供平台发起会话，以提供启动TaskManager进程的容器。</p>
+</li>
+</ul>
+<h2 id="分发器（Dispacher）"><a href="#分发器（Dispacher）" class="headerlink" title="分发器（Dispacher）"></a>分发器（Dispacher）</h2><ul>
+<li><p>可以跨作业运行，它为应用提交提供了REST接口。</p>
+</li>
+<li><p>当一个应用被提交执行时，分发器就会启动并将应用移交给一个JobManager。</p>
+</li>
+<li><p>Dispatcher也会启动一个Web UI，用来方便地展示和监控作业执行的信息。</p>
+</li>
+<li><p>Dispatcher在架构中可能并不是必需的，这取决于应用提交运行的方式。</p>
+</li>
+</ul>
+<h1 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h1><p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230108223719006.png" alt="image-20230108223719006"></p>
+<h1 id="作业提交流程"><a href="#作业提交流程" class="headerlink" title="作业提交流程"></a>作业提交流程</h1><p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115170314557.png" alt="image-20230115170314557"></p>
+<h2 id="Standalone模式作业提交流程"><a href="#Standalone模式作业提交流程" class="headerlink" title="Standalone模式作业提交流程"></a>Standalone模式作业提交流程</h2><p>会话模式</p>
+<p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115210857012.png" alt="image-20230115210857012"></p>
+<h2 id="YARN模式作业提交流程"><a href="#YARN模式作业提交流程" class="headerlink" title="YARN模式作业提交流程"></a>YARN模式作业提交流程</h2><p>会话模式</p>
+<p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115211021376.png" alt="image-20230115211021376"></p>
+<p>单作业模式</p>
+<p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115211429146.png" alt="image-20230115211429146"></p>
+<h1 id="重要概念"><a href="#重要概念" class="headerlink" title="重要概念"></a>重要概念</h1><h2 id="程序和数据流（DataFlow）"><a href="#程序和数据流（DataFlow）" class="headerlink" title="程序和数据流（DataFlow）"></a>程序和数据流（DataFlow）</h2><p>所有的Flink程序都是由三部分组成：Source、Transformation和Sink。</p>
+<p>Source负责读取数据源，Transformation利用各种算子进行加工处理，Sink负责输出。</p>
+<img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115213603733.png" alt="image-20230115213603733" style="zoom:67%;">
+
+<p>在运行时，Flink上运行的程序会被映射成“逻辑数据流”（dataflows），它包含了source、transformation、sink。</p>
+<p>每一个dataflow以一个或多个sources开始以一个或多个sink结束。dataflow类似于任意的有向无环图（DAG）。</p>
+<p>在大部分情况下，程序中转换运算（transformations）跟dataflow中的算子（operator）是一一对应的关系。</p>
+<img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230115214233131.png" alt="image-20230115214233131" style="zoom:67%;">
+
+
+
+<h2 id="并行度（Parallelism）"><a href="#并行度（Parallelism）" class="headerlink" title="并行度（Parallelism）"></a>并行度（Parallelism）</h2><p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116122736986.png" alt="image-20230116122736986"></p>
+<p>每一个算子（operator）可以包含一个或多个子任务（operator subtask），这些子任务在不同的线程、不同的物理机或不同的容器中完全独立地执行。</p>
+<p>一个特定算子地子任务（subtask）的个数被称之为其并行度（parallelism）。</p>
+<p>代码中设置并行度有几种方式，一种是直接在算子上设置；一种是在StreamExecutionEnvironment上设置，这种设置是全局设置，但不推荐这种方法设置并行度。</p>
+<h2 id="数据传输模式"><a href="#数据传输模式" class="headerlink" title="数据传输模式"></a>数据传输模式</h2><ul>
+<li>一个程序中，不同的算子可能具有不同的并行度。</li>
+<li>算子之间传输数据的形式可以是one-to-one（forwarding）的模式，也可以是redistributing的模式，具体是哪一种，取决于算子的种类。</li>
+<li>One-to-one：stream维护着分区及元素的顺序（比如source和map之间）。这意味着map算子的子任务看到的元素的个数及顺序跟source算子的子任务生产的元素的个数、顺序相同。map、filter、flatMap等算子都是one-to-one的对应关系。</li>
+<li>Redistributing：stream的分区会发生改变。每一个算子的子任务依据所选择的transformation发送数据到不同的目标任务。例如，keyBy基于hashCode重分区、而broadcast和rebalance会随机重新分区，这些算子都会引起redistribute过程，而redistribute过程就类似于Spark中的shuffle过程。</li>
+</ul>
+<h2 id="算子链（Operator-Chains）"><a href="#算子链（Operator-Chains）" class="headerlink" title="算子链（Operator Chains）"></a>算子链（Operator Chains）</h2><p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116164848641.png" alt="image-20230116164848641"></p>
+<ul>
+<li>Flink采用了一种称为任务链的优化技术，可以在特定条件下减少本地通信的开销。为了满足任务链的要求，必须将两个或多个算子设为相同的并行度，并通过本地转发（local forward）的方式进行连接。</li>
+<li>相同并行度one-to-one操作，Flink这样相连的算子链接在一起形成一个task，原来的算子称为里面的subtask。</li>
+<li>并行度相同，并且是one-to-one操作，两个条件缺一不可。</li>
+</ul>
+<h2 id="执行图"><a href="#执行图" class="headerlink" title="执行图"></a>执行图</h2><ul>
+<li>Flink中的执行图可以分成四层：StreamGraph -&gt; JobGrapth -&gt; ExecutionGraph -&gt; 物理执行图</li>
+<li>StreamGraph：是根据用户通过Stream API编写的代码生成的最初的图。用来表示程序的拓扑结构。</li>
+<li>JobGraph：StreamGraph经过优化后生成了JobGraph，提交给JobManager的数据结构。主要的优化为，将多个符合条件的节点chain在一起作为一个节点。</li>
+<li>ExecutionGraph：JobManager根据JobGraph生成ExecutionGraph。ExecutionGraph是JobGraph的并行化版本，是调度层最核心的数据结构。</li>
+<li>物理执行图：JobManager根据ExecutionGraph对Job进行调度后，在各个TaskManager上部署Task后形成的“图”，并不是一个具体的数据结构。</li>
+</ul>
+<p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116171054322.png" alt="image-20230116171054322"></p>
+<p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116170759873.png" alt="image-20230116170759873"></p>
+<p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116170914958.png" alt="image-20230116170914958"></p>
+<h2 id="任务（Task）和任务槽（Task-Slots）"><a href="#任务（Task）和任务槽（Task-Slots）" class="headerlink" title="任务（Task）和任务槽（Task Slots）"></a>任务（Task）和任务槽（Task Slots）</h2><p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116194255123.png" alt="image-20230116194255123"></p>
+<p>Flink中每一个TaskManager都是一个JVM进程，它可能会在独立的线程上执行一个或多个子任务。</p>
+<p>为了控制一个TaskManager能接收多少个task，TaskManager通过task slot来进行控制（一个TaskManager至少有一个slot）</p>
+<h2 id="任务共享Slot"><a href="#任务共享Slot" class="headerlink" title="任务共享Slot"></a>任务共享Slot</h2><p><img src="/2022/04/08/Flink%E8%BF%90%E8%A1%8C%E6%97%B6%E6%9E%B6%E6%9E%84/image-20230116195243234.png" alt="image-20230116195243234"></p>
+<p>默认情况下，Flink运行子任务共享slot。这样的结果是，一个slot可以保存作业的整个管道。</p>
+<p>当我们将资源密集型和非密集型的任务放到一个slot中，它们就可以自行分配资源占用的比例，从而保证最重的活平均分配给所有的TaskManager。</p>
+<h2 id="Slot和并行度"><a href="#Slot和并行度" class="headerlink" title="Slot和并行度"></a>Slot和并行度</h2><p><strong>Task Slot</strong></p>
+<ul>
+<li>静态概念，是指TaskManager具有的并发执行能力</li>
+<li>通过参数taskmanager.numberOfTaskSlots进行配置</li>
+</ul>
+<p><strong>并行度（parallelism）</strong></p>
+<ul>
+<li>动态概念，也就是TaskManager运行程序时实际使用的并发能力</li>
+<li>通过参数parallelism.default进行配置</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/04/05/Flink%E9%83%A8%E7%BD%B2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1128,437 +1285,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/" class="post-title-link" itemprop="url">Kafka消费者</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-14 19:50:49" itemprop="dateCreated datePublished" datetime="2022-03-14T19:50:49+08:00">2022-03-14</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Kafka消费方式"><a href="#Kafka消费方式" class="headerlink" title="Kafka消费方式"></a>Kafka消费方式</h1><p><strong>pull（拉）模 式：</strong></p>
-<p>consumer采用从broker中主动拉取数据。<br>Kafka采用这种方式。</p>
-<p><strong>push（推）模式：</strong></p>
-<p>Kafka没有采用这种方式，因为由broker决定消息发送速率，很难适应所有消费者的消费速率。例如推送的速度是50m&#x2F;s，Consumer1、Consumer2就来不及处理消息。</p>
-<blockquote>
-<p>pull模式不足之处是，如 果Kafka没有数据，消费者可能会陷入循环中，一直返回空数据。</p>
-</blockquote>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230129170544843.png" alt="image-20230129170544843"></p>
-<h1 id="Kafka-消费者工作流程"><a href="#Kafka-消费者工作流程" class="headerlink" title="Kafka 消费者工作流程"></a>Kafka 消费者工作流程</h1><h2 id="Kafka-消费者总体工作流程"><a href="#Kafka-消费者总体工作流程" class="headerlink" title="Kafka 消费者总体工作流程"></a>Kafka 消费者总体工作流程</h2><p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230129170857457.png" alt="image-20230129170857457"></p>
-<h2 id="消费者组原理"><a href="#消费者组原理" class="headerlink" title="消费者组原理"></a>消费者组原理</h2><h3 id="消费者组"><a href="#消费者组" class="headerlink" title="消费者组"></a>消费者组</h3><p>Consumer Group（CG）：消费者组，由多个consumer组成。形成一个消费者组的条件，是所有消费者的groupid相同。</p>
-<ul>
-<li>消费者组内每个消费者负责消费不同分区的数据，一个分区只能由一个组内消费者消费。</li>
-<li>消费者组之间互不影响。所有的消费者都属于某个消费者组，即消费者组是逻辑上的一个订阅者。</li>
-</ul>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230129173612911.png" alt="image-20230129173612911"></p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230129173806525.png" alt="image-20230129173806525"></p>
-<h3 id="消费者组初始化流程"><a href="#消费者组初始化流程" class="headerlink" title="消费者组初始化流程"></a>消费者组初始化流程</h3><p>coordinator：辅助实现消费者组的初始化和分区的分配。<br>coordinator节点选择 &#x3D; groupid的hashcode值 % 50（ <em>consumer_offsets的分区数量）</em><br>例如： groupid的hashcode值 &#x3D; 1，1% 50 &#x3D; 1，那么consumer_offsets 主题的1号分区，在哪个broker上，就选择这个节点的coordinator作为这个消费者组的老大。消费者组下的所有的消费者提交offset的时候就往这个分区去提交offset。</p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230129174335217.png" alt="image-20230129174335217"></p>
-<h3 id="消费者组详细消费流程"><a href="#消费者组详细消费流程" class="headerlink" title="消费者组详细消费流程"></a>消费者组详细消费流程</h3><p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230129174512599.png" alt="image-20230129174512599"></p>
-<h3 id="消费者重要参数"><a href="#消费者重要参数" class="headerlink" title="消费者重要参数"></a>消费者重要参数</h3><table>
-<thead>
-<tr>
-<th>参数名称</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>bootstrap.servers</td>
-<td>向 Kafka 集群建立初始连接用到的 host&#x2F;port 列表。</td>
-</tr>
-<tr>
-<td>key.deserializer和value.deserializer</td>
-<td>指定接收消息的 key 和 value 的反序列化类型。一定要写全类名。</td>
-</tr>
-<tr>
-<td>group.id</td>
-<td>标记消费者所属的消费者组。</td>
-</tr>
-<tr>
-<td>enable.auto.commit</td>
-<td>默认值为 true，消费者会自动周期性地向服务器提交偏移量。</td>
-</tr>
-<tr>
-<td>auto.commit.interval.ms</td>
-<td>如果设置了 enable.auto.commit 的值为 true， 则该值定义了消费者偏移量向 Kafka 提交的频率，默认 5s。</td>
-</tr>
-<tr>
-<td>auto.offset.reset</td>
-<td>当 Kafka 中没有初始偏移量或当前偏移量在服务器中不存在（如，数据被删除了），该如何处理？ earliest：自动重置偏移量到最早的偏移量。 latest：默认，自动重置偏移量为最新的偏移量。 none：如果消费组原来的（previous）偏移量不存在，则向消费者抛异常。 anything：向消费者抛异常。</td>
-</tr>
-<tr>
-<td>offsets.topic.num.partitions</td>
-<td>__consumer_offsets 的分区数，默认是 50 个分区。</td>
-</tr>
-<tr>
-<td>heartbeat.interval.ms</td>
-<td>Kafka 消费者和 coordinator 之间的心跳时间，默认 3s。该条目的值必须小于 session.timeout.ms ，也不应该高于session.timeout.ms 的 1&#x2F;3。</td>
-</tr>
-<tr>
-<td>session.timeout.ms</td>
-<td>Kafka 消费者和 coordinator 之间连接超时时间，默认 45s。超过该值，该消费者被移除，消费者组执行再平衡。</td>
-</tr>
-<tr>
-<td>max.poll.interval.ms</td>
-<td>消费者处理消息的最大时长，默认是 5 分钟。超过该值，该消费者被移除，消费者组执行再平衡。</td>
-</tr>
-<tr>
-<td>fetch.min.bytes</td>
-<td>默认 1 个字节。消费者获取服务器端一批消息最小的字节数。</td>
-</tr>
-<tr>
-<td>fetch.max.wait.ms</td>
-<td>默认 500ms。如果没有从服务器端获取到一批数据的最小字节数。该时间到，仍然会返回数据。</td>
-</tr>
-<tr>
-<td>fetch.max.bytes</td>
-<td>默认 Default: 52428800（50 m）。消费者获取服务器端一批消息最大的字节数。如果服务器端一批次的数据大于该值（50m）仍然可以拉取回来这批数据，因此，这不是一个绝对最大值。一批次的大小受 message.max.bytes （broker config）or max.message.bytes （topic config）影响。</td>
-</tr>
-<tr>
-<td>max.poll.records</td>
-<td>一次 poll 拉取数据返回消息的最大条数，默认是 500 条。</td>
-</tr>
-</tbody></table>
-<h1 id="消费者API"><a href="#消费者API" class="headerlink" title="消费者API"></a>消费者API</h1><h2 id="独立消费者案例（订阅主题）"><a href="#独立消费者案例（订阅主题）" class="headerlink" title="独立消费者案例（订阅主题）"></a>独立消费者案例（订阅主题）</h2><ol>
-<li><p>需求</p>
-<p>创建一个独立消费者，消费 first 主题中数据。</p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230129222637115.png" alt="image-20230129222637115"></p>
-<p><strong>注意：</strong>在消费者 API 代码中必须配置消费者组 id。命令行启动消费者不填写消费者组id 会被自动填写随机的消费者组 id。</p>
-</li>
-<li><p>实现</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.kafka.consumer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerConfig;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecord;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecords;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.KafkaConsumer;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.common.serialization.StringDeserializer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.Duration;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CustomConsumer</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 1.创建消费者配置对象</span></span><br><span class="line">        <span class="type">Properties</span> <span class="variable">properties</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.给配置对象添加参数</span></span><br><span class="line">        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, <span class="string">&quot;node1:9092&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 配置序列化，必须</span></span><br><span class="line">        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line">        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 配置消费者组（组名任意） 必须</span></span><br><span class="line">        properties.put(ConsumerConfig.GROUP_ID_CONFIG, <span class="string">&quot;test&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3.创建消费者对象</span></span><br><span class="line">        KafkaConsumer&lt;String, String&gt; kafkaConsumer = <span class="keyword">new</span> <span class="title class_">KafkaConsumer</span>&lt;String, String&gt;(properties);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 注册要消费的主题（可以消费多个主题）</span></span><br><span class="line">        ArrayList&lt;String&gt; topics = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        topics.add(<span class="string">&quot;first&quot;</span>);</span><br><span class="line">        kafkaConsumer.subscribe(topics);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 拉取数据打印</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            <span class="comment">// 设置1s中消费一批数据</span></span><br><span class="line">            ConsumerRecords&lt;String, String&gt; consumerRecords = kafkaConsumer.poll(Duration.ofSeconds(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (ConsumerRecord&lt;String, String&gt; consumerRecord: consumerRecords) &#123;</span><br><span class="line">                System.out.println(consumerRecord);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>测试</p>
-<p>a. 在Idea中执行消费者程序。</p>
-<p>b. 在 Kafka 集群控制台，创建 Kafka 生产者，并输入数据。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-console-producer.sh --bootstrap-server node1:9092 --topic first</span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">hello kafka</span></span><br><span class="line"><span class="meta prompt_">&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>c. 在 IDEA 控制台观察接收到的数据。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ConsumerRecord(topic = first, partition = 2, leaderEpoch = 17, offset = 16, CreateTime = 1675002175897, serialized key size = -1, serialized value size = 11, headers = RecordHeaders(headers = [], isReadOnly = false), key = null, value = hello kafka)</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="独立消费者案例（订阅分区）"><a href="#独立消费者案例（订阅分区）" class="headerlink" title="独立消费者案例（订阅分区）"></a>独立消费者案例（订阅分区）</h2><ol>
-<li><p>需求</p>
-<p>创建一个独立消费者，消费 first 主题 0 号分区的数据。</p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230129222802804.png" alt="image-20230129222802804"></p>
-</li>
-<li><p>实现</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.kafka.consumer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerConfig;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecord;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecords;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.KafkaConsumer;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.common.TopicPartition;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.common.serialization.StringDeserializer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.Duration;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CustomConsumerPartition</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 1.创建消费者配置对象</span></span><br><span class="line">        <span class="type">Properties</span> <span class="variable">properties</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.给配置对象添加参数</span></span><br><span class="line">        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, <span class="string">&quot;node1:9092&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 配置序列化，必须</span></span><br><span class="line">        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line">        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 配置消费者组（组名任意） 必须</span></span><br><span class="line">        properties.put(ConsumerConfig.GROUP_ID_CONFIG, <span class="string">&quot;test&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3.创建消费者对象</span></span><br><span class="line">        KafkaConsumer&lt;String, String&gt; kafkaConsumer = <span class="keyword">new</span> <span class="title class_">KafkaConsumer</span>&lt;&gt;(properties);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 消费某个主题的某个分区数据</span></span><br><span class="line">        ArrayList&lt;TopicPartition&gt; topicPartitions = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        topicPartitions.add(<span class="keyword">new</span> <span class="title class_">TopicPartition</span>(<span class="string">&quot;first&quot;</span>, <span class="number">0</span>));</span><br><span class="line">        kafkaConsumer.assign(topicPartitions);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 拉取数据打印</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            <span class="comment">// 设置1s中消费一批数据</span></span><br><span class="line">            ConsumerRecords&lt;String, String&gt; consumerRecords = kafkaConsumer.poll(Duration.ofSeconds(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (ConsumerRecord&lt;String, String&gt; consumerRecord: consumerRecords) &#123;</span><br><span class="line">                System.out.println(consumerRecord);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>测试</p>
-<p>a. 在 IDEA 中执行消费者程序。</p>
-<p>b. 在 IDEA 中执行生产者程序 CustomProducerCallbackPartitions（见Kafka生产者）在控制台观察生成几个 0 号分区的数据。</p>
-<p>c. 在 IDEA 控制台，观察接收到的数据，只能消费到 0 号分区数据表示正确。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ConsumerRecord(topic = first, partition = 0, leaderEpoch = 0, offset = 2, CreateTime = 1675005390152, serialized key size = -1, serialized value size = 6, headers = RecordHeaders(headers = [], isReadOnly = false), key = null, value = kafka0)</span><br><span class="line">ConsumerRecord(topic = first, partition = 0, leaderEpoch = 0, offset = 3, CreateTime = 1675005390165, serialized key size = -1, serialized value size = 6, headers = RecordHeaders(headers = [], isReadOnly = false), key = null, value = kafka3)</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="消费者组案例"><a href="#消费者组案例" class="headerlink" title="消费者组案例"></a>消费者组案例</h3><ol>
-<li><p>需求</p>
-<p>测试同一个主题的分区数据，只能由一个消费者组中的一个消费。</p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230129232001641.png" alt="image-20230129232001641"></p>
-</li>
-<li><p>实现</p>
-<p>a. 复制一份基础消费者的代码，在 IDEA 中同时启动，即可启动同一个消费者组中的两个消费者。</p>
-<p>b. 启动代码中的生产者发送消息，在 IDEA 控制台即可看到两个消费者在消费不同分区的数据（如果只发生到一个分区，可以在发送时增加延迟代码 Thread.sleep(2)）。</p>
-<p>c. 重新发送到一个全新的主题中，由于默认创建的主题分区数为 1，可以看到只能有一个消费者消费到数据。</p>
-</li>
-</ol>
-<h1 id="经验"><a href="#经验" class="headerlink" title="经验"></a>经验</h1><h2 id="分区的分配以及再平衡"><a href="#分区的分配以及再平衡" class="headerlink" title="分区的分配以及再平衡"></a>分区的分配以及再平衡</h2><p>1、一个consumer group中有多个consumer组成，一个 topic有多个partition组成，现在的问题是，到底由哪个consumer来消费哪个partition的数据。<br>2、Kafka有四种主流的分区分配策略： Range、RoundRobin、Sticky、CooperativeSticky。可以通过配置参数partition.assignment.strategy，修改分区的分配策略。默认策略是Range + CooperativeSticky。Kafka可以同时使用多个分区分配策略。</p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130091307148.png" alt="image-20230130091307148"></p>
-<table>
-<thead>
-<tr>
-<th>参数名称</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>heartbeat.interval.ms</td>
-<td>Kafka 消费者和 coordinator 之间的心跳时间，默认 3s。该条目的值必须小于 session.timeout.ms，也不应该高于session.timeout.ms 的 1&#x2F;3。</td>
-</tr>
-<tr>
-<td>session.timeout.ms</td>
-<td>Kafka 消费者和 coordinator 之间连接超时时间，默认 45s。超过该值，该消费者被移除，消费者组执行再平衡。</td>
-</tr>
-<tr>
-<td>max.poll.interval.ms</td>
-<td>消费者处理消息的最大时长，默认是 5 分钟。超过该值，该消费者被移除，消费者组执行再平衡。</td>
-</tr>
-<tr>
-<td>partition.assignment.strategy</td>
-<td>消费者分区分配策略 ， 默认策略是 Range + CooperativeSticky。Kafka 可以同时使用多个分区分配策略。可以选择的策略包括： Range 、 RoundRobin 、 Sticky 、CooperativeSticky</td>
-</tr>
-</tbody></table>
-<h3 id="Range以及再平衡"><a href="#Range以及再平衡" class="headerlink" title="Range以及再平衡"></a>Range以及再平衡</h3><h4 id="Range分区策略原理"><a href="#Range分区策略原理" class="headerlink" title="Range分区策略原理"></a>Range分区策略原理</h4><p>Range 是对每个 topic 而言的。<br>首先对同一个 topic 里面的分区按照序号进行排序，并对消费者按照字母顺序进行排序。<br>假如现在有 7 个分区，3 个消费者，排序后的分区将会是0,1,2,3,4,5,6；消费者排序完之后将会是C0,C1,C2。<br>例如，7&#x2F;3 &#x3D; 2 余 1 ，除不尽，那么消费者 C0 便会多消费 1 个分区。 8&#x2F;3&#x3D;2余2，除不尽，那么C0和C1分别多消费一个。<br>通过 partitions数&#x2F;consumer数 来决定每个消费者应该消费几个分区。如果除不尽，那么前面几个消费者将会多消费 1 个分区。</p>
-<p>注意：如果只是针对 1 个 topic 而言，C0消费者多消费1个分区影响不是很大。但是如果有 N 多个 topic，那么针对每个 topic，消费者 C0都将多消费 1 个分区，topic越多，C0消费的分区会比其他消费者明显多消费 N 个分区。</p>
-<blockquote>
-<p>容易产生数据倾斜！ </p>
-</blockquote>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130093639216.png" alt="image-20230130093639216"></p>
-<h4 id="Range分区分配策略案例"><a href="#Range分区分配策略案例" class="headerlink" title="Range分区分配策略案例"></a>Range分区分配策略案例</h4><ol>
-<li><p>修改first主题的分区数为7</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-topics.sh --bootstrap-server node1:9092 --alter --topic first --partitions 7</span><br><span class="line">(base) [root@node1 kafka]# ./bin/kafka-topics.sh --bootstrap-server node1:9092 --describe --topic first</span><br><span class="line">Topic: first    TopicId: lF9HqKnNSB2dlBesNt48lA PartitionCount: 7       ReplicationFactor: 3    Configs: </span><br><span class="line">        Topic: first    Partition: 0    Leader: 0       Replicas: 0,1,2 Isr: 2,1,0</span><br><span class="line">        Topic: first    Partition: 1    Leader: 2       Replicas: 2,0,1 Isr: 2,0,1</span><br><span class="line">        Topic: first    Partition: 2    Leader: 2       Replicas: 1,2,0 Isr: 2,0,1</span><br><span class="line">        Topic: first    Partition: 3    Leader: 0       Replicas: 0,2,1 Isr: 0,2,1</span><br><span class="line">        Topic: first    Partition: 4    Leader: 1       Replicas: 1,0,2 Isr: 1,0,2</span><br><span class="line">        Topic: first    Partition: 5    Leader: 2       Replicas: 2,1,0 Isr: 2,1,0</span><br><span class="line">        Topic: first    Partition: 6    Leader: 0       Replicas: 0,1,2 Isr: 0,1,2</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>注意：分区数可以增加，但是不能减少。</p>
-</blockquote>
-</li>
-<li><p>复制 CustomConsumer 类，创建 CustomConsumer2。这样可以由三个消费者CustomConsumer、CustomConsumer1、CustomConsumer2 组成消费者组，组名都为“test”，同时启动 3 个消费者。</p>
-</li>
-<li><p>启动 CustomProducer 生产者，发送 500 条消息，随机发送到不同的分区。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.kafka.producer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.producer.KafkaProducer;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.producer.ProducerConfig;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.producer.ProducerRecord;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CustomProducer</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 1.创建kafka生产者的配置对象</span></span><br><span class="line">        <span class="type">Properties</span> <span class="variable">properties</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.配置bootstrap.servers</span></span><br><span class="line">        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, <span class="string">&quot;node1:9092&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// key,value 序列化（必须）：key.serializer，value.serializer</span></span><br><span class="line">        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, <span class="string">&quot;org.apache.kafka.common.serialization.StringSerializer&quot;</span>);</span><br><span class="line"></span><br><span class="line">        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, <span class="string">&quot;org.apache.kafka.common.serialization.StringSerializer&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3.创建kafka生产者对象</span></span><br><span class="line">        KafkaProducer&lt;String, String&gt; kafkaProducer = <span class="keyword">new</span> <span class="title class_">KafkaProducer</span>&lt;String, String&gt;(properties);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4.调用send发送消息</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">7</span>; i++) &#123;</span><br><span class="line">            kafkaProducer.send(<span class="keyword">new</span> <span class="title class_">ProducerRecord</span>&lt;&gt;(<span class="string">&quot;first&quot;</span>, i, <span class="string">&quot;test&quot;</span>, <span class="string">&quot;msg&quot;</span> + i));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 5.关闭资源</span></span><br><span class="line">        kafkaProducer.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>说明：Kafka 默认的分区分配策略就是 Range + CooperativeSticky，所以不需要修改策略。</p>
-</li>
-<li><p>观看 3 个消费者分别消费哪些分区的数据。</p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130114829286.png" alt="image-20230130114829286"></p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130114942375.png" alt="image-20230130114942375"></p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130115021210.png" alt="image-20230130115021210"></p>
-</li>
-</ol>
-<h4 id="Range分区分配再平衡案例"><a href="#Range分区分配再平衡案例" class="headerlink" title="Range分区分配再平衡案例"></a>Range分区分配再平衡案例</h4><ul>
-<li><p>停止掉 0 号消费者，快速重新发送消息观看结果（45s 以内，越快越好）。<br>1 号消费者：消费到 6、5 号分区数据。<br>2 号消费者：消费到 0、2、1 号分区数据。<br>0 号消费者的任务会整体被分配到 1 号消费者或者 2 号消费者。45s后，1号消费者消费到4号分区的数据，2号消费者消费到3号分区的数据。</p>
-<blockquote>
-<p>说明：0 号消费者挂掉后，消费者组需要按照超时时间 45s 来判断它是否退出，所以需要等待，时间到了 45s 后，判断它真的退出就会把任务分配给其他 broker 执行。 </p>
-</blockquote>
-</li>
-<li><p>再次重新发送消息观看结果（45s 以后）。<br>1 号消费者：消费到 6、4、5 号分区数据。<br>2 号消费者：消费到 0、3、2、1 号分区数据。</p>
-<blockquote>
-<p>说明：消费者 0 已经被踢出消费者组，所以重新按照 range 方式分配。</p>
-</blockquote>
-</li>
-</ul>
-<h3 id="RoundRobin以及再平衡"><a href="#RoundRobin以及再平衡" class="headerlink" title="RoundRobin以及再平衡"></a>RoundRobin以及再平衡</h3><h4 id="RoundRobin分区策略原理"><a href="#RoundRobin分区策略原理" class="headerlink" title="RoundRobin分区策略原理"></a>RoundRobin分区策略原理</h4><p>RoundRobin 针对集群中所有Topic而言。<br>RoundRobin 轮询分区策略，是把所有的 partition 和所有的consumer 都列出来，然后按照 hashcode 进行排序，最后通过轮询算法来分配 partition 给到各个消费者。</p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130131058021.png" alt="image-20230130131058021"></p>
-<h4 id="RoundRobin分区分配策略案例"><a href="#RoundRobin分区分配策略案例" class="headerlink" title="RoundRobin分区分配策略案例"></a>RoundRobin分区分配策略案例</h4><ol>
-<li><p>依次在 CustomConsumer、CustomConsumer1、CustomConsumer2 三个消费者代码中修改分区分配策略为 RoundRobin。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 修改分区分配策略</span></span><br><span class="line">properties.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, <span class="string">&quot;org.apache.kafka.clients.consumer.RoundRobinAssignor&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>重启 3 个消费者，重复发送消息的步骤，观看分区结果。</p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130132304831.png" alt="image-20230130132304831"></p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130132336762.png" alt="image-20230130132336762"></p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130132406113.png" alt="image-20230130132406113"></p>
-</li>
-</ol>
-<h4 id="RoundRobin分区分配再平衡案例"><a href="#RoundRobin分区分配再平衡案例" class="headerlink" title="RoundRobin分区分配再平衡案例"></a>RoundRobin分区分配再平衡案例</h4><ul>
-<li><p>停止掉 0 号消费者，快速重新发送消息观看结果（45s 以内，越快越好）。<br>1 号消费者：消费到 2、5 号分区数据<br>2 号消费者：消费到 4、1 号分区数据<br>0 号消费者的任务会按照 RoundRobin 的方式，把数据轮询分成 0 、6 和 3 号分区数据，分别由 1 号消费者或者 2 号消费者消费。</p>
-<blockquote>
-<p>说明：0 号消费者挂掉后，消费者组需要按照超时时间 45s 来判断它是否退出，所以需要等待，时间到了 45s 后，判断它真的退出就会把任务分配给其他 broker 执行。</p>
-</blockquote>
-</li>
-<li><p>再次重新发送消息观看结果（45s 以后）。<br>1 号消费者：消费到 0、2、4、6 号分区数据<br>2 号消费者：消费到 1、3、5 号分区数据</p>
-<blockquote>
-<p>说明：消费者 0 已经被踢出消费者组，所以重新按照 RoundRobin 方式分配。</p>
-</blockquote>
-</li>
-</ul>
-<h3 id="Sticky以及再平衡"><a href="#Sticky以及再平衡" class="headerlink" title="Sticky以及再平衡"></a>Sticky以及再平衡</h3><h4 id="粘性分区定义"><a href="#粘性分区定义" class="headerlink" title="粘性分区定义"></a>粘性分区定义</h4><p>可以理解为分配的结果带有“粘性的”。即在执行一次新的分配之前，考虑上一次分配的结果，尽量少的调整分配的变动，可以节省大量的开销。<br>粘性分区是 Kafka 从 0.11.x 版本开始引入这种分配策略，首先会尽量均衡的放置分区到消费者上面，在出现同一消费者组内消费者出现问题的时候，会尽量保持原有分配的分区不变化。</p>
-<h4 id="Sticky分区分配案例"><a href="#Sticky分区分配案例" class="headerlink" title="Sticky分区分配案例"></a>Sticky分区分配案例</h4><ol>
-<li><p>需求</p>
-<p>设置主题为 first，7 个分区；准备 3 个消费者，采用粘性分区策略，并进行消费，观察消费分配情况。然后再停止其中一个消费者，再次观察消费分配情况。</p>
-</li>
-<li><p>修改分区分配策略为粘性。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 修改分区分配策略</span></span><br><span class="line">ArrayList&lt;String&gt; startegys = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">startegys.add(<span class="string">&quot;org.apache.kafka.clients.consumer.StickyAssignor&quot;</span>);</span><br><span class="line"></span><br><span class="line">properties.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, startegys);</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>使用同样的生产者发送 500 条消息。</p>
-<p>可以看到会尽量保持分区的个数近似划分分区。</p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130134128847.png" alt="image-20230130134128847"></p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130134159190.png" alt="image-20230130134159190"></p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130134229764.png" alt="image-20230130134229764"></p>
-</li>
-</ol>
-<h4 id="Sticky分区分配再平衡案例"><a href="#Sticky分区分配再平衡案例" class="headerlink" title="Sticky分区分配再平衡案例"></a>Sticky分区分配再平衡案例</h4><ul>
-<li><p>停止掉 0 号消费者，快速重新发送消息观看结果（45s 以内，越快越好）。<br>1 号消费者：消费到 6、4、5 号分区数据。<br>2 号消费者：消费到 3、2 号分区数据。<br>0 号消费者的任务会按照粘性规则，尽可能均衡的随机分成 0 和 1 号分区数据，分别由 2号消费者或者 1 号消费者消费。</p>
-<blockquote>
-<p>说明：0 号消费者挂掉后，消费者组需要按照超时时间 45s 来判断它是否退出，所以需要等待，时间到了 45s 后，判断它真的退出就会把任务分配给其他 broker 执行。</p>
-</blockquote>
-</li>
-<li><p>再次重新发送消息观看结果（45s 以后）。<br>1 号消费者：消费到 6、4、1、5 号分区数据。<br>2 号消费者：消费到 0、3、2 号分区数据。</p>
-<blockquote>
-<p>说明：消费者 0 已经被踢出消费者组，所以重新按照粘性方式分配。</p>
-</blockquote>
-</li>
-</ul>
-<h1 id="offset-位移"><a href="#offset-位移" class="headerlink" title="offset 位移"></a>offset 位移</h1><h2 id="offset的默认维护位置"><a href="#offset的默认维护位置" class="headerlink" title="offset的默认维护位置"></a>offset的默认维护位置</h2><p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130135755657.png" alt="image-20230130135755657"></p>
-<p>__consumer_offsets 主题里面采用 key 和 value 的方式存储数据。key 是 group.id+topic+分区号，value 就是当前 offset 的值。每隔一段时间，kafka 内部会对这个 topic 进行compact，也就是每个 group.id+topic+分区号就保留最新数据。</p>
-<h3 id="消费offset案例"><a href="#消费offset案例" class="headerlink" title="消费offset案例"></a>消费offset案例</h3><ol>
-<li><p>思想：__consumer_offsets 为 Kafka 中的 topic，那就可以通过消费者进行消费。</p>
-</li>
-<li><p>在配置文件 config&#x2F;consumer.properties 中添加配置 exclude.internal.topics&#x3D;false，默认是 true，表示不能消费系统主题。为了查看该系统主题数据，所以该参数修改为 false。</p>
-</li>
-<li><p>采用命令行方式，创建一个新的 topic。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-topics.sh --bootstrap-server node1:9092 --create --topic five --partitions 2 --replication-factor 2</span><br><span class="line">Created topic five.</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>启动生产者往five生产数据。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-console-producer.sh --bootstrap-server node1:9092 --topic five</span><br><span class="line"><span class="meta prompt_">&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>启动消费者消费five数据。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-console-consumer.sh --bootstrap-server node1:9092 --topic five --group five-test</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>查看消费者消费主题__consumer_offsets。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(base) [root@node1 kafka]# ./bin/kafka-console-consumer.sh --topic __consumer_offsets --bootstrap-server node1:9092 --consumer.config config/consumer.properties --formatter &quot;kafka.coordinator.group.GroupMetadataManager\$OffsetsMessageFormatter&quot; --from-beginning</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="自动提交offset"><a href="#自动提交offset" class="headerlink" title="自动提交offset"></a>自动提交offset</h2><p>为了使我们能够专注于自己的业务逻辑，Kafka提供了自动提交offset的功能。<br>自动提交offset的相关参数：</p>
-<ul>
-<li>enable.auto.commit：是否开启自动提交offset功能，默认是true</li>
-<li>auto.commit.interval.ms：自动提交offset的时间间隔，默认是5s</li>
-</ul>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130143646759.png" alt="image-20230130143646759"></p>
-<table>
-<thead>
-<tr>
-<th>参数名称</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>enable.auto.commit</td>
-<td>默认值为 true，消费者会自动周期性地向服务器提交偏移量。</td>
-</tr>
-<tr>
-<td>auto.commit.interval.ms</td>
-<td>如果设置了 enable.auto.commit 的值为 true， 则该值定义了消费者偏移量向 Kafka 提交的频率，默认 5s。</td>
-</tr>
-</tbody></table>
-<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.kafka.consumer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerConfig;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecord;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecords;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.KafkaConsumer;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.common.serialization.StringDeserializer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.Duration;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CustomConsumerAutoOffset</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 1.创建消费者配置对象</span></span><br><span class="line">        <span class="type">Properties</span> <span class="variable">properties</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.给配置对象添加参数</span></span><br><span class="line">        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, <span class="string">&quot;node1:9092&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 配置序列化，必须</span></span><br><span class="line">        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line">        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 配置消费者组（组名任意） 必须</span></span><br><span class="line">        properties.put(ConsumerConfig.GROUP_ID_CONFIG, <span class="string">&quot;test&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 是否自动提交offset</span></span><br><span class="line">        properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, <span class="literal">true</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 提交offset的时间周期1000ms，默认5s</span></span><br><span class="line">        properties.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3.创建消费者对象</span></span><br><span class="line">        KafkaConsumer&lt;String, String&gt; kafkaConsumer = <span class="keyword">new</span> <span class="title class_">KafkaConsumer</span>&lt;String, String&gt;(properties);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 注册要消费的主题（可以消费多个主题）</span></span><br><span class="line">        ArrayList&lt;String&gt; topics = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        topics.add(<span class="string">&quot;first&quot;</span>);</span><br><span class="line">        kafkaConsumer.subscribe(topics);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 拉取数据打印</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            <span class="comment">// 设置1s中消费一批数据</span></span><br><span class="line">            ConsumerRecords&lt;String, String&gt; consumerRecords = kafkaConsumer.poll(Duration.ofSeconds(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (ConsumerRecord&lt;String, String&gt; consumerRecord: consumerRecords) &#123;</span><br><span class="line">                System.out.println(consumerRecord);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="手动提交offset"><a href="#手动提交offset" class="headerlink" title="手动提交offset"></a>手动提交offset</h2><p>虽然自动提交offset十分简单便利，但由于其是基于时间提交的，开发人员难以把握offset提交的时机。因此Kafka还提供了手动提交offset的API。<br>手动提交offset的方法有两种：分别是commitSync（同步提交）和commitAsync（异步提交）。两者的相同点是，都会将本次提交的一批数据最高的偏移量提交；不同点是，同步提交阻塞当前线程，一直到提交成功，并且会自动失败重试（由不可控因素导致，也会出现提交失败）；而异步提交则没有失败重试机制，故有可能提交失败。</p>
-<ul>
-<li>commitSync（同步提交）：必须等待offset提交完毕，再去消费下一批数据。</li>
-<li>commitAsync（异步提交） ：发送完提交offset请求后，就开始消费下一批数据了。</li>
-</ul>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130145741104.png" alt="image-20230130145741104"></p>
-<h3 id="同步提交offset"><a href="#同步提交offset" class="headerlink" title="同步提交offset"></a>同步提交offset</h3><p>由于同步提交 offset 有失败重试机制，故更加可靠，但是由于一直等待提交结果，提交的效率比较低。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.kafka.consumer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerConfig;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecord;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecords;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.KafkaConsumer;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.common.serialization.StringDeserializer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.Duration;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CustomConsumerByHandSync</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 1.创建消费者配置对象</span></span><br><span class="line">        <span class="type">Properties</span> <span class="variable">properties</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.给配置对象添加参数</span></span><br><span class="line">        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, <span class="string">&quot;node1:9092&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 配置序列化，必须</span></span><br><span class="line">        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line">        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 配置消费者组（组名任意） 必须</span></span><br><span class="line">        properties.put(ConsumerConfig.GROUP_ID_CONFIG, <span class="string">&quot;test&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 是否自动提交offset</span></span><br><span class="line">        properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3.创建消费者对象</span></span><br><span class="line">        KafkaConsumer&lt;String, String&gt; kafkaConsumer = <span class="keyword">new</span> <span class="title class_">KafkaConsumer</span>&lt;String, String&gt;(properties);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 注册要消费的主题（可以消费多个主题）</span></span><br><span class="line">        ArrayList&lt;String&gt; topics = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        topics.add(<span class="string">&quot;first&quot;</span>);</span><br><span class="line">        kafkaConsumer.subscribe(topics);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 拉取数据打印</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            <span class="comment">// 设置1s中消费一批数据</span></span><br><span class="line">            ConsumerRecords&lt;String, String&gt; consumerRecords = kafkaConsumer.poll(Duration.ofSeconds(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (ConsumerRecord&lt;String, String&gt; consumerRecord: consumerRecords) &#123;</span><br><span class="line">                System.out.println(consumerRecord);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 同步提交offset</span></span><br><span class="line">            kafkaConsumer.commitSync();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="异步提交offset"><a href="#异步提交offset" class="headerlink" title="异步提交offset"></a>异步提交offset</h3><p>虽然同步提交 offset 更可靠一些，但是由于其会阻塞当前线程，直到提交成功。因此吞吐量会受到很大的影响。因此更多的情况下，会选用异步提交 offset 的方式。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.kafka.consumer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerConfig;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecord;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecords;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.KafkaConsumer;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.common.serialization.StringDeserializer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.Duration;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CustomConsumerByHandAsync</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 1.创建消费者配置对象</span></span><br><span class="line">        <span class="type">Properties</span> <span class="variable">properties</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.给配置对象添加参数</span></span><br><span class="line">        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, <span class="string">&quot;node1:9092&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 配置序列化，必须</span></span><br><span class="line">        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line">        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 配置消费者组（组名任意） 必须</span></span><br><span class="line">        properties.put(ConsumerConfig.GROUP_ID_CONFIG, <span class="string">&quot;test&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 是否自动提交offset</span></span><br><span class="line">        properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3.创建消费者对象</span></span><br><span class="line">        KafkaConsumer&lt;String, String&gt; kafkaConsumer = <span class="keyword">new</span> <span class="title class_">KafkaConsumer</span>&lt;String, String&gt;(properties);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 注册要消费的主题（可以消费多个主题）</span></span><br><span class="line">        ArrayList&lt;String&gt; topics = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        topics.add(<span class="string">&quot;first&quot;</span>);</span><br><span class="line">        kafkaConsumer.subscribe(topics);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 拉取数据打印</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            <span class="comment">// 设置1s中消费一批数据</span></span><br><span class="line">            ConsumerRecords&lt;String, String&gt; consumerRecords = kafkaConsumer.poll(Duration.ofSeconds(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (ConsumerRecord&lt;String, String&gt; consumerRecord: consumerRecords) &#123;</span><br><span class="line">                System.out.println(consumerRecord);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 异步提交offset</span></span><br><span class="line">            kafkaConsumer.commitAsync();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="指定-Offset消费"><a href="#指定-Offset消费" class="headerlink" title="指定 Offset消费"></a><strong>指定</strong> Offset消费</h2><p>auto.offset.reset &#x3D; earliest | latest | none 默认是 latest。<br>当 Kafka 中没有初始偏移量（消费者组第一次消费）或服务器上不再存在当前偏移量时（例如该数据已被删除），该怎么办？<br>（1）earliest：自动将偏移量重置为最早的偏移量，–from-beginning。<br>（2）latest（默认值）：自动将偏移量重置为最新偏移量。<br>（3）none：如果未找到消费者组的先前偏移量，则向消费者抛出异常。</p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130151047260.png" alt="image-20230130151047260"></p>
-<p>（4）任意指定 offset 位移开始消费</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.kafka.consumer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerConfig;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecord;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.ConsumerRecords;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.KafkaConsumer;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.common.TopicPartition;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.common.serialization.StringDeserializer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.Duration;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.HashSet;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"><span class="keyword">import</span> java.util.Set;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CustomConsumerSeek</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 1.创建消费者配置对象</span></span><br><span class="line">        <span class="type">Properties</span> <span class="variable">properties</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.给配置对象添加参数</span></span><br><span class="line">        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, <span class="string">&quot;node1:9092&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 配置序列化，必须</span></span><br><span class="line">        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line">        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 配置消费者组（组名任意） 必须</span></span><br><span class="line">        properties.put(ConsumerConfig.GROUP_ID_CONFIG, <span class="string">&quot;test2&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3.创建消费者对象</span></span><br><span class="line">        KafkaConsumer&lt;String, String&gt; kafkaConsumer = <span class="keyword">new</span> <span class="title class_">KafkaConsumer</span>&lt;String, String&gt;(properties);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 注册要消费的主题（可以消费多个主题）</span></span><br><span class="line">        ArrayList&lt;String&gt; topics = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        topics.add(<span class="string">&quot;first&quot;</span>);</span><br><span class="line">        kafkaConsumer.subscribe(topics);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Set&lt;TopicPartition&gt; assignment = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (assignment.size() == <span class="number">0</span>) &#123;</span><br><span class="line">            kafkaConsumer.poll(Duration.ofSeconds(<span class="number">1</span>));</span><br><span class="line">            <span class="comment">//  获取消费者分区分配信息（有了分区分配信息才能开始消费）</span></span><br><span class="line">            assignment = kafkaConsumer.assignment();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 遍历所有分区，并指定 offset 从 1000 的位置开始消费</span></span><br><span class="line">        <span class="keyword">for</span>(TopicPartition tp: assignment) &#123;</span><br><span class="line">            kafkaConsumer.seek(tp, <span class="number">1000</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 消费数据</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            <span class="comment">// 设置1s中消费一批数据</span></span><br><span class="line">            ConsumerRecords&lt;String, String&gt; consumerRecords = kafkaConsumer.poll(Duration.ofSeconds(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (ConsumerRecord&lt;String, String&gt; consumerRecord: consumerRecords) &#123;</span><br><span class="line">                System.out.println(consumerRecord);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>注意：每次执行完，需要修改消费者组名；</p>
-<h2 id="指定时间消费"><a href="#指定时间消费" class="headerlink" title="指定时间消费"></a>指定时间消费</h2><p>需求：在生产环境中，会遇到最近消费的几个小时数据异常，想重新按照时间消费。例如要求按照时间消费前一天的数据，怎么处理？</p>
-<p>实现：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.st.kafka.consumer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.clients.consumer.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.common.TopicPartition;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.common.internals.Topic;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.common.serialization.StringDeserializer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.Duration;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CustomConsumerForTime</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 1.创建消费者配置对象</span></span><br><span class="line">        <span class="type">Properties</span> <span class="variable">properties</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.给配置对象添加参数</span></span><br><span class="line">        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, <span class="string">&quot;node1:9092&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 配置序列化，必须</span></span><br><span class="line">        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line">        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 配置消费者组（组名任意） 必须</span></span><br><span class="line">        properties.put(ConsumerConfig.GROUP_ID_CONFIG, <span class="string">&quot;test2&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3.创建消费者对象</span></span><br><span class="line">        KafkaConsumer&lt;String, String&gt; kafkaConsumer = <span class="keyword">new</span> <span class="title class_">KafkaConsumer</span>&lt;String, String&gt;(properties);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 注册要消费的主题（可以消费多个主题）</span></span><br><span class="line">        ArrayList&lt;String&gt; topics = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        topics.add(<span class="string">&quot;first&quot;</span>);</span><br><span class="line">        kafkaConsumer.subscribe(topics);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Set&lt;TopicPartition&gt; assignment = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (assignment.size() == <span class="number">0</span>) &#123;</span><br><span class="line">            kafkaConsumer.poll(Duration.ofSeconds(<span class="number">1</span>));</span><br><span class="line">            <span class="comment">//  获取消费者分区分配信息（有了分区分配信息才能开始消费）</span></span><br><span class="line">            assignment = kafkaConsumer.assignment();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        HashMap&lt;TopicPartition, Long&gt; timestampToSearch = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 封装集合存储，每个分区对应一天前的数据</span></span><br><span class="line">        <span class="keyword">for</span>(TopicPartition tp: assignment) &#123;</span><br><span class="line">            timestampToSearch.put(tp, System.currentTimeMillis() - <span class="number">1</span> * <span class="number">24</span> * <span class="number">3600</span> * <span class="number">1000</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取从 1 天前开始消费的每个分区的 offset</span></span><br><span class="line">        Map&lt;TopicPartition, OffsetAndTimestamp&gt; offsets = kafkaConsumer.offsetsForTimes((timestampToSearch));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 遍历每个分区，对每个分区设置消费时间。</span></span><br><span class="line">        <span class="keyword">for</span> (TopicPartition tp: assignment) &#123;</span><br><span class="line">            <span class="type">OffsetAndTimestamp</span> <span class="variable">offsetAndTimestamp</span> <span class="operator">=</span> offsets.get(tp);</span><br><span class="line">            <span class="comment">// 根据时间指定开始消费的位置</span></span><br><span class="line">            <span class="keyword">if</span> (offsetAndTimestamp != <span class="literal">null</span>) &#123;</span><br><span class="line">                kafkaConsumer.seek(tp, offsetAndTimestamp.offset());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 消费数据</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            ConsumerRecords&lt;String, String&gt; consumerRecords = kafkaConsumer.poll(Duration.ofSeconds(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (ConsumerRecord&lt;String, String&gt; consumerRecord: consumerRecords) &#123;</span><br><span class="line">                System.out.println(consumerRecord);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="漏消费和重复消费"><a href="#漏消费和重复消费" class="headerlink" title="漏消费和重复消费"></a>漏消费和重复消费</h2><p><strong>重复消费：</strong>已经消费了数据，但是 offset 没提交。</p>
-<p><strong>漏消费：</strong>先提交 offset 后消费，有可能会造成数据的漏消费。</p>
-<ul>
-<li><p>场景：重复消费。自动提交offset引起。</p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130154319259.png" alt="image-20230130154319259"></p>
-</li>
-<li><p>场景：漏消费。设置offset为手动提交，当offset被提交时，数据还在内存中未落盘，此时刚好消费者线程被kill掉，那么offset已经提交，但是数据未处理，导致这部分内存中的数据丢失。</p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130154429908.png" alt="image-20230130154429908"></p>
-</li>
-</ul>
-<p>怎么能做到既不漏消费也不重复消费呢？<strong>消费者事务</strong>。</p>
-<h1 id="经验-1"><a href="#经验-1" class="headerlink" title="经验"></a>经验</h1><h2 id="消费者事务"><a href="#消费者事务" class="headerlink" title="消费者事务"></a>消费者事务</h2><p>如果想完成Consumer端的精准一次性消费，那么需要Kafka消费端将消费过程和提交offset过程做原子绑定。此时我们需要将Kafka的offset保存到支持事务的自定义介质（比如MySQL）。</p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130154904806.png" alt="image-20230130154904806"></p>
-<h2 id="数据积压（消费者如何提高吞吐量）"><a href="#数据积压（消费者如何提高吞吐量）" class="headerlink" title="数据积压（消费者如何提高吞吐量）"></a>数据积压（消费者如何提高吞吐量）</h2><ul>
-<li><p>如果是Kafka消费能力不足，则可以考虑增加Topic的分区数，并且同时提升消费组的消费者数量，消费者数 &#x3D; 分区数。（两者缺一不可）</p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130155110392.png" alt="image-20230130155110392"></p>
-</li>
-<li><p>如果是下游的数据处理不及时：提高每批次拉取的数量。批次拉取数据过少（拉取数据&#x2F;处理时间 &lt; 生产速度），使处理的数据小于生产的数据，也会造成数据积压。</p>
-<p><img src="/2022/03/14/Kafka%E6%B6%88%E8%B4%B9%E8%80%85/image-20230130155212100.png" alt="image-20230130155212100"></p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>参数名称</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>fetch.max.bytes</td>
-<td>默认 Default: 52428800（50 m）。消费者获取服务器端一批消息最大的字节数。如果服务器端一批次的数据大于该值（50m）仍然可以拉取回来这批数据，因此，这不是一个绝对最大值。一批次的大小受 message.max.bytes （broker config）or max.message.bytes （topic config）影响。</td>
-</tr>
-<tr>
-<td>max.poll.records</td>
-<td>一次 poll 拉取数据返回消息的最大条数，默认是 500 条</td>
-</tr>
-</tbody></table>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1626,7 +1356,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">160</span>
+          <span class="site-state-item-count">162</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

@@ -151,6 +151,618 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/" class="post-title-link" itemprop="url">Elasticsearch基本操作</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-17 20:23:21" itemprop="dateCreated datePublished" datetime="2020-10-17T20:23:21+08:00">2020-10-17</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="数据格式"><a href="#数据格式" class="headerlink" title="数据格式"></a>数据格式</h1><p>Elasticsearch 是面向文档型数据库，一条数据在这里就是一个文档。</p>
+<p>Elasticsearch 里存储文档数据和关系型数据库 MySQL 存储数据的概念进行一个类比。</p>
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206103351648.png" alt="image-20230206103351648"></p>
+<p>ES 里的 Index 可以看做一个库，而 Types 相当于表，Documents 则相当于表的行。这里 Types 的概念已经被逐渐弱化，Elasticsearch 6.X 中，一个 index 下已经只能包含一个type，Elasticsearch 7.X 中, Type 的概念已经被删除了。</p>
+<p>用 JSON 作为文档序列化的格式，比如一条用户信息：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"> <span class="attr">&quot;name&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;John&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;sex&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;Male&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;age&quot;</span> <span class="punctuation">:</span> <span class="number">25</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;birthDate&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1990/05/01&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;about&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;I love to go rock climbing&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;interests&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span> <span class="string">&quot;sports&quot;</span><span class="punctuation">,</span> <span class="string">&quot;music&quot;</span> <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="HTTP操作"><a href="#HTTP操作" class="headerlink" title="HTTP操作"></a>HTTP操作</h1><h2 id="索引操作"><a href="#索引操作" class="headerlink" title="索引操作"></a>索引操作</h2><h3 id="创建索引"><a href="#创建索引" class="headerlink" title="创建索引"></a>创建索引</h3><p>对比关系型数据库，创建索引就等同于创建数据库。</p>
+<p>在 Postman 中，向 ES 服务器发 <strong>PUT</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping">http://127.0.0.1:9200/shopping</a></p>
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206145740756.png" alt="image-20230206145740756"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"> &quot;acknowledged&quot;【响应结果】: true, # true 操作成功</span><br><span class="line"> &quot;shards_acknowledged&quot;【分片结果】: true, # 分片操作成功</span><br><span class="line"> &quot;index&quot;【索引名称】: &quot;shopping&quot;</span><br><span class="line">&#125;</span><br><span class="line"># 注意：创建索引库的分片数默认 1 片，在 7.0.0 之前的 Elasticsearch 版本中，默认 5 片</span><br></pre></td></tr></table></figure>
+
+
+
+<p>如果重复添加索引，会返回错误信息</p>
+<h3 id="查看所有索引"><a href="#查看所有索引" class="headerlink" title="查看所有索引"></a>查看所有索引</h3><p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/_cat/indices?v">http://127.0.0.1:9200/_cat/indices?v</a></p>
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206150041594.png" alt="image-20230206150041594"></p>
+<p>这里请求路径中的_cat 表示查看的意思，indices 表示索引，所以整体含义就是查看当前 ES服务器中的所有索引，就好像 MySQL 中的 show tables 。</p>
+<table>
+<thead>
+<tr>
+<th>表头</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>health</td>
+<td>当前服务器健康状态：green(集群完整) yellow(单点正常、集群不完整) red(单点不正常)</td>
+</tr>
+<tr>
+<td>status</td>
+<td>索引打开、关闭状态</td>
+</tr>
+<tr>
+<td>index</td>
+<td>索引名</td>
+</tr>
+<tr>
+<td>uuid</td>
+<td>索引统一编号</td>
+</tr>
+<tr>
+<td>pri</td>
+<td>主分片数量</td>
+</tr>
+<tr>
+<td>rep</td>
+<td>副本数量</td>
+</tr>
+<tr>
+<td>docs.count</td>
+<td>可用文档数量</td>
+</tr>
+<tr>
+<td>docs.deleted</td>
+<td>文档删除状态（逻辑删除）</td>
+</tr>
+<tr>
+<td>store.size</td>
+<td>主分片和副分片整体占空间大小</td>
+</tr>
+<tr>
+<td>pri.store.size</td>
+<td>主分片占空间大小</td>
+</tr>
+</tbody></table>
+<h3 id="查看单个索引"><a href="#查看单个索引" class="headerlink" title="查看单个索引"></a>查看单个索引</h3><p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping">http://127.0.0.1:9200/shopping</a></p>
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206150428413.png" alt="image-20230206150428413"></p>
+<p>查看索引向 ES 服务器发送的请求路径和创建索引是一致的。但是 HTTP 方法不一致。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"> <span class="string">&quot;shopping&quot;</span>【索引名】<span class="punctuation">:</span> <span class="punctuation">&#123;</span> </span><br><span class="line"> 	<span class="string">&quot;aliases&quot;</span>【别名】<span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"> 	<span class="string">&quot;mappings&quot;</span>【映射】<span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"> 	<span class="string">&quot;settings&quot;</span>【设置】<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"> 		<span class="string">&quot;index&quot;</span>【设置 - 索引】<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"> 			<span class="string">&quot;creation_date&quot;</span>【设置 - 索引 - 创建时间】<span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line"> 			<span class="string">&quot;number_of_shards&quot;</span>【设置 - 索引 - 主分片数量】<span class="punctuation">:</span> <span class="string">&quot;1&quot;</span><span class="punctuation">,</span></span><br><span class="line"> 			<span class="string">&quot;number_of_replicas&quot;</span>【设置 - 索引 - 副分片数量】<span class="punctuation">:</span> <span class="string">&quot;1&quot;</span><span class="punctuation">,</span></span><br><span class="line"> 			<span class="string">&quot;uuid&quot;</span>【设置 - 索引 - 唯一标识】<span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line"> 			<span class="string">&quot;version&quot;</span>【设置 - 索引 - 版本】<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"> 				<span class="attr">&quot;created&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span></span><br><span class="line"> 			<span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"> 			<span class="string">&quot;provided_name&quot;</span>【设置 - 索引 - 名称】<span class="punctuation">:</span> <span class="string">&quot;shopping&quot;</span></span><br><span class="line"> 		<span class="punctuation">&#125;</span></span><br><span class="line"> 	<span class="punctuation">&#125;</span></span><br><span class="line"> <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="删除索引"><a href="#删除索引" class="headerlink" title="删除索引"></a>删除索引</h3><p>在 Postman 中，向 ES 服务器发 <strong>DELETE</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping">http://127.0.0.1:9200/shopping</a></p>
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206150901094.png" alt="image-20230206150901094"></p>
+<h2 id="文档操作"><a href="#文档操作" class="headerlink" title="文档操作"></a>文档操作</h2><h3 id="创建文档"><a href="#创建文档" class="headerlink" title="创建文档"></a>创建文档</h3><p>这里的文档可以类比为关系型数据库中的表数据，添加的数据格式为 JSON 格式。</p>
+<p>在 Postman 中，向 ES 服务器发 <strong>POST</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping/_doc">http://127.0.0.1:9200/shopping/_doc</a></p>
+<p>请求体内容为：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"> <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span><span class="string">&quot;小米手机&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span><span class="string">&quot;小米&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;images&quot;</span><span class="punctuation">:</span><span class="string">&quot;http://www.gulixueyuan.com/xm.jpg&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span><span class="number">3999.00</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206151219129.png" alt="image-20230206151219129"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"> &quot;_index&quot;【索引】: &quot;shopping&quot;,</span><br><span class="line"> &quot;_type&quot;【类型-文档】: &quot;_doc&quot;,</span><br><span class="line"> &quot;_id&quot;【唯一标识】: &quot;Xhsa2ncBlvF_7lxyCE9G&quot;, #可以类比为 MySQL 中的主键，随机生成</span><br><span class="line"> &quot;_version&quot;【版本】: 1,</span><br><span class="line"> &quot;result&quot;【结果】: &quot;created&quot;, #这里的 create 表示创建成功</span><br><span class="line"> &quot;_shards&quot;【分片】: &#123;</span><br><span class="line"> 	&quot;total&quot;【分片 - 总数】: 2,</span><br><span class="line"> 	&quot;successful&quot;【分片 - 成功】: 1,</span><br><span class="line"> 	&quot;failed&quot;【分片 - 失败】: 0</span><br><span class="line"> &#125;,</span><br><span class="line"> &quot;_seq_no&quot;: 0,</span><br><span class="line"> &quot;_primary_term&quot;: 1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>上面的数据创建后，由于没有指定数据唯一性标识（ID），默认情况下，ES 服务器会随机生成一个。</p>
+<p>如果想要自定义唯一性标识，需要在创建时指定：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping/_doc/1">http://127.0.0.1:9200/shopping/_doc/1</a></p>
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206151426330.png" alt="image-20230206151426330"></p>
+<p>注意：如果增加数据时明确数据主键，那么请求方式也可以为 PUT</p>
+<h3 id="查看文档"><a href="#查看文档" class="headerlink" title="查看文档"></a>查看文档</h3><p>查看文档时，需要指明文档的唯一性标识，类似于 MySQL 中数据的主键查询</p>
+<p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping/_doc/1">http://127.0.0.1:9200/shopping/_doc/1</a></p>
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206151609922.png" alt="image-20230206151609922"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"> &quot;_index&quot;【索引】: &quot;shopping&quot;,</span><br><span class="line"> &quot;_type&quot;【文档类型】: &quot;_doc&quot;,</span><br><span class="line"> &quot;_id&quot;: &quot;1&quot;,</span><br><span class="line"> &quot;_version&quot;: 2,</span><br><span class="line"> &quot;_seq_no&quot;: 2,</span><br><span class="line"> &quot;_primary_term&quot;: 2,</span><br><span class="line"> &quot;found&quot;【查询结果】: true, # true 表示查找到，false 表示未查找到</span><br><span class="line"> &quot;_source&quot;【文档源信息】: &#123;</span><br><span class="line"> 	&quot;title&quot;: &quot;华为手机&quot;,</span><br><span class="line"> 	&quot;category&quot;: &quot;华为&quot;,</span><br><span class="line"> 	&quot;images&quot;: &quot;http://www.gulixueyuan.com/hw.jpg&quot;,</span><br><span class="line"> 	&quot;price&quot;: 4999.00</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="修改文档"><a href="#修改文档" class="headerlink" title="修改文档"></a>修改文档</h3><p>和新增文档一样，输入相同的 URL 地址请求，如果请求体变化，会将原有的数据内容覆盖</p>
+<p>在 Postman 中，向 ES 服务器发 <strong>POST</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping/_doc/1">http://127.0.0.1:9200/shopping/_doc/1</a></p>
+<p>请求体内容为:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"> <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span><span class="string">&quot;华为手机&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span><span class="string">&quot;华为&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;images&quot;</span><span class="punctuation">:</span><span class="string">&quot;http://www.images.com/hw.jpg&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span><span class="number">4999.00</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206152057963.png" alt="image-20230206152057963"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"> &quot;_index&quot;: &quot;shopping&quot;,</span><br><span class="line"> &quot;_type&quot;: &quot;_doc&quot;,</span><br><span class="line"> &quot;_id&quot;: &quot;1&quot;,</span><br><span class="line"> &quot;_version&quot;【版本】: 2,</span><br><span class="line"> &quot;result&quot;【结果】: &quot;updated&quot;, # updated 表示数据被更新</span><br><span class="line"> &quot;_shards&quot;: &#123;</span><br><span class="line"> 	&quot;total&quot;: 2,</span><br><span class="line"> 	&quot;successful&quot;: 1,</span><br><span class="line"> 	&quot;failed&quot;: 0</span><br><span class="line"> &#125;,</span><br><span class="line"> &quot;_seq_no&quot;: 2,</span><br><span class="line"> &quot;_primary_term&quot;: 2</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="修改字段"><a href="#修改字段" class="headerlink" title="修改字段"></a>修改字段</h3><p>修改数据时，也可以只修改某一给条数据的局部信息。</p>
+<p>在 Postman 中，向 ES 服务器发 <strong>POST</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping/_update/1">http://127.0.0.1:9200/shopping/_update/1</a></p>
+<p>请求体内容为：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span> </span><br><span class="line"> <span class="attr">&quot;doc&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span><span class="number">3000.00</span></span><br><span class="line"> <span class="punctuation">&#125;</span> </span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206152437514.png" alt="image-20230206152437514"></p>
+<p>查看修改结果</p>
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206152558972.png" alt="image-20230206152558972"></p>
+<h3 id="删除文档"><a href="#删除文档" class="headerlink" title="删除文档"></a>删除文档</h3><p>删除一个文档不会立即从磁盘上移除，它只是被标记成已删除（逻辑删除）。</p>
+<p>在 Postman 中，向 ES 服务器发 <strong>DELETE</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping/_doc/1">http://127.0.0.1:9200/shopping/_doc/1</a></p>
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206152703378.png" alt="image-20230206152703378"></p>
+<h3 id="条件删除文档"><a href="#条件删除文档" class="headerlink" title="条件删除文档"></a>条件删除文档</h3><p>一般删除数据都是根据文档的唯一性标识进行删除，实际操作时，也可以根据条件对多条数据进行删除。</p>
+<p>分别增加多条数据:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"> <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span><span class="string">&quot;小米手机&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span><span class="string">&quot;小米&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;images&quot;</span><span class="punctuation">:</span><span class="string">&quot;http://www.gulixueyuan.com/xm.jpg&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;price&quot;</span><span class="punctuation">:</span><span class="number">4000.00</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"> &quot;title&quot;:&quot;华为手机&quot;,</span><br><span class="line"> &quot;category&quot;:&quot;华为&quot;,</span><br><span class="line"> &quot;images&quot;:&quot;http://www.gulixueyuan.com/hw.jpg&quot;,</span><br><span class="line"> &quot;price&quot;:4000.00</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>向 ES 服务器发 <strong>POST</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/shopping/_delete_by_query">http://127.0.0.1:9200/shopping/_delete_by_query</a></p>
+<p>请求体内容为：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"> <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line"> 	<span class="attr">&quot;match&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line"> 		<span class="attr">&quot;price&quot;</span><span class="punctuation">:</span><span class="number">4000.00</span></span><br><span class="line"> 	<span class="punctuation">&#125;</span></span><br><span class="line"> <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206153206959.png" alt="image-20230206153206959"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"> &quot;took&quot;【耗时】: 175,</span><br><span class="line"> &quot;timed_out&quot;【是否超时】: false,</span><br><span class="line"> &quot;total&quot;【总数】: 2,</span><br><span class="line"> &quot;deleted&quot;【删除数量】: 2,</span><br><span class="line"> &quot;batches&quot;: 1,</span><br><span class="line"> &quot;version_conflicts&quot;: 0,</span><br><span class="line"> &quot;noops&quot;: 0,</span><br><span class="line"> &quot;retries&quot;: &#123;</span><br><span class="line"> &quot;bulk&quot;: 0,</span><br><span class="line"> &quot;search&quot;: 0</span><br><span class="line"> &#125;,</span><br><span class="line"> &quot;throttled_millis&quot;: 0,</span><br><span class="line"> &quot;requests_per_second&quot;: -1.0,</span><br><span class="line"> &quot;throttled_until_millis&quot;: 0,</span><br><span class="line"> &quot;failures&quot;: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="映射操作"><a href="#映射操作" class="headerlink" title="映射操作"></a>映射操作</h2><p>有了索引库，等于有了数据库中的 database。</p>
+<p>接下来就需要建索引库(index)中的映射了，类似于数据库(database)中的表结构(table)。</p>
+<p>创建数据库表需要设置字段名称，类型，长度，约束等；索引库也一样，需要知道这个类型下有哪些字段，每个字段有哪些约束信息，这就叫做映射(mapping)。</p>
+<h3 id="创建映射"><a href="#创建映射" class="headerlink" title="创建映射"></a>创建映射</h3><p>在 Postman 中，向 ES 服务器发 <strong>PUT</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student/_mapping">http://127.0.0.1:9200/student/_mapping</a></p>
+<p>请求体内容为：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;index&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">true</span></span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;sex&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;index&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">false</span></span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;long&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;index&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">false</span></span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206162028436.png" alt="image-20230206162028436"></p>
+<p>映射数据说明：</p>
+<ul>
+<li><p>字段名：任意填写，下面指定许多属性，例如：title、subtitle、images、price</p>
+</li>
+<li><p>type：类型，Elasticsearch 中支持的数据类型非常丰富，说几个关键的：</p>
+<p>a. String 类型，又分两种：</p>
+<p>​	text：可分词</p>
+<p>​	keyword：不可分词，数据会作为完整字段进行匹配</p>
+<p>b. Numerical：数值类型，分两类</p>
+<p>​	基本数据类型：long、integer、short、byte、double、float、half_float</p>
+<p>​	浮点数的高精度类型：scaled_float</p>
+<p>c. Date：日期类型</p>
+<p>d. Array：数组类型</p>
+<p>e. Object：对象</p>
+</li>
+<li><p>index：是否索引，默认为 true，也就是说你不进行任何配置，所有字段都会被索引。</p>
+<p>true：字段会被索引，则可以用来进行搜索</p>
+<p>false：字段不会被索引，不能用来搜索</p>
+</li>
+<li><p>store：是否将数据进行独立存储，默认为 false</p>
+<p>原始的文本会存储在_source 里面，默认情况下其他提取出来的字段都不是独立存储的，是从_source 里面提取出来的。当然你也可以独立的存储某个字段，只要设置”store”: true 即可，获取独立存储的字段要比从_source 中解析快得多，但是也会占用更多的空间，所以要根据实际业务需求来设置。</p>
+</li>
+<li><p>analyzer：分词器，这里的 ik_max_word 即使用 ik 分词器</p>
+</li>
+</ul>
+<h3 id="查看映射"><a href="#查看映射" class="headerlink" title="查看映射"></a>查看映射</h3><p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student/_mapping">http://127.0.0.1:9200/student/_mapping</a></p>
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206162834538.png" alt="image-20230206162834538"></p>
+<h3 id="索引映射关联"><a href="#索引映射关联" class="headerlink" title="索引映射关联"></a>索引映射关联</h3><p>在 Postman 中，向 ES 服务器发 <strong>PUT</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1">http://127.0.0.1:9200/student1</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;settings&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;mappings&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;index&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">true</span></span></span><br><span class="line">            <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;sex&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;index&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">false</span></span></span><br><span class="line">            <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;long&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;index&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">false</span></span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206163034113.png" alt="image-20230206163034113"></p>
+<p>查看映射</p>
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206163133609.png" alt="image-20230206163133609"></p>
+<h2 id="高级查询"><a href="#高级查询" class="headerlink" title="高级查询"></a>高级查询</h2><p>Elasticsearch 提供了基于 JSON 提供完整的查询 DSL 来定义查询。</p>
+<p>定义数据</p>
+<p>POST请求：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student/_doc/1001">http://127.0.0.1:9200/student/_doc/1001</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;nickname&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sex&quot;</span><span class="punctuation">:</span><span class="string">&quot;男&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">30</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>POST请求：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student/_doc/1002">http://127.0.0.1:9200/student/_doc/1002</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;lisi&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;nickname&quot;</span><span class="punctuation">:</span><span class="string">&quot;lisi&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sex&quot;</span><span class="punctuation">:</span><span class="string">&quot;男&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">20</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>POST请求：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student/_doc/1003">http://127.0.0.1:9200/student/_doc/1003</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;lilan&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;nickname&quot;</span><span class="punctuation">:</span><span class="string">&quot;lilan&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sex&quot;</span><span class="punctuation">:</span><span class="string">&quot;女&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">40</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>POST请求：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student/_doc/1004">http://127.0.0.1:9200/student/_doc/1004</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan1&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;nickname&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan1&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sex&quot;</span><span class="punctuation">:</span><span class="string">&quot;男&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">50</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>POST请求：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student/_doc/1005">http://127.0.0.1:9200/student/_doc/1005</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan2&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;nickname&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan2&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sex&quot;</span><span class="punctuation">:</span><span class="string">&quot;男&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">30</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>POST请求：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student/_doc/1006">http://127.0.0.1:9200/student/_doc/1006</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;hanmei&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;nickname&quot;</span><span class="punctuation">:</span><span class="string">&quot;hanmei&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sex&quot;</span><span class="punctuation">:</span><span class="string">&quot;女&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">30</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="查询所有文档"><a href="#查询所有文档" class="headerlink" title="查询所有文档"></a>查询所有文档</h3><p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"> <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"> <span class="attr">&quot;match_all&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line"> <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"># <span class="string">&quot;query&quot;</span>：这里的 query 代表一个查询对象，里面可以有不同的查询属性</span><br><span class="line"># <span class="string">&quot;match_all&quot;</span>：查询类型，例如：match_all(代表查询所有)， match，term， range 等等</span><br><span class="line"># <span class="punctuation">&#123;</span>查询条件<span class="punctuation">&#125;</span>：查询条件会根据类型的不同，写法也有差异</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206164201312.png" alt="image-20230206164201312"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;took【查询花费时间，单位毫秒】&quot;:1116,</span><br><span class="line">    &quot;timed_out【是否超时】&quot;:false,</span><br><span class="line">    &quot;_shards【分片信息】&quot;:&#123;</span><br><span class="line">        &quot;total【总数】&quot;:1,</span><br><span class="line">        &quot;successful【成功】&quot;:1,</span><br><span class="line">        &quot;skipped【忽略】&quot;:0,</span><br><span class="line">        &quot;failed【失败】&quot;:0</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;hits【搜索命中结果】&quot;:&#123;</span><br><span class="line">        &quot;total【搜索条件匹配的文档总数】&quot;:&#123;</span><br><span class="line">            &quot;value【总命中计数的值】&quot;:3,</span><br><span class="line">            &quot;relation【计数规则】&quot;:&quot;eq&quot;   # eq 表示计数准确， gte 表示计数不准确</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;max_score【匹配度分值】&quot;:1,</span><br><span class="line">        &quot;hits【命中结果集合】&quot;:[</span><br><span class="line"></span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="匹配查询"><a href="#匹配查询" class="headerlink" title="匹配查询"></a>匹配查询</h3><p>match 匹配类型查询，会把查询条件进行分词，然后进行查询，多个词条之间是 or 的关系在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206164754859.png" alt="image-20230206164754859"></p>
+<h3 id="字段匹配查询"><a href="#字段匹配查询" class="headerlink" title="字段匹配查询"></a>字段匹配查询</h3><p>multi_match 与 match 类似，不同的是它可以在多个字段中查询。</p>
+<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;multi_match&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;fields&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;name&quot;</span><span class="punctuation">,</span> <span class="string">&quot;nickname&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206165017696.png" alt="image-20230206165017696"></p>
+<h3 id="关键字精确查询"><a href="#关键字精确查询" class="headerlink" title="关键字精确查询"></a>关键字精确查询</h3><p>term 查询，精确的关键词匹配查询，不对查询条件进行分词。</p>
+<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;term&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;value&quot;</span><span class="punctuation">:</span> <span class="string">&quot;zhangsan&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206165218315.png" alt="image-20230206165218315"></p>
+<h3 id="多关键字精确查询"><a href="#多关键字精确查询" class="headerlink" title="多关键字精确查询"></a>多关键字精确查询</h3><p>terms 查询和 term 查询一样，但它允许你指定多值进行匹配。</p>
+<p>如果这个字段包含了指定值中的任何一个值，那么这个文档满足条件，类似于 mysql 的 in。</p>
+<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;terms&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;zhangsan&quot;</span><span class="punctuation">,</span> <span class="string">&quot;lisi&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206170632371.png" alt="image-20230206170632371"></p>
+<h3 id="指定查询字段"><a href="#指定查询字段" class="headerlink" title="指定查询字段"></a>指定查询字段</h3><p>默认情况下，Elasticsearch 在搜索的结果中，会把文档中保存在_source 的所有字段都返回。</p>
+<p>如果我们只想获取其中的部分字段，我们可以添加_source 的过滤。</p>
+<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;_source&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;name&quot;</span><span class="punctuation">,</span> <span class="string">&quot;nickname&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;terms&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;zhangsan&quot;</span><span class="punctuation">,</span> <span class="string">&quot;lisi&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206170922978.png" alt="image-20230206170922978"></p>
+<h3 id="过滤字段"><a href="#过滤字段" class="headerlink" title="过滤字段"></a>过滤字段</h3><p>也可以通过：</p>
+<ul>
+<li><p>includes：来指定想要显示的字段</p>
+</li>
+<li><p>excludes：来指定不想要显示的字段</p>
+</li>
+</ul>
+<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;_source&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;includes&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;name&quot;</span><span class="punctuation">,</span> <span class="string">&quot;nickname&quot;</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;terms&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;zhangsan&quot;</span><span class="punctuation">,</span> <span class="string">&quot;lisi&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206171120699.png" alt="image-20230206171120699"></p>
+<p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;_source&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;excludes&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;name&quot;</span><span class="punctuation">,</span> <span class="string">&quot;nickname&quot;</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;terms&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;zhangsan&quot;</span><span class="punctuation">,</span> <span class="string">&quot;lisi&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206171303348.png" alt="image-20230206171303348"></p>
+<h3 id="组合查询"><a href="#组合查询" class="headerlink" title="组合查询"></a>组合查询</h3><p><code>bool</code>把各种其它查询通过<code>must</code>（必须 ）、<code>must_not</code>（必须不）、<code>should</code>（应该）的方式进行组合</p>
+<p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;bool&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;must&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="punctuation">&#123;</span></span><br><span class="line">                    <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">                        <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan&quot;</span></span><br><span class="line">                    <span class="punctuation">&#125;</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;must_not&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="punctuation">&#123;</span></span><br><span class="line">                    <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">                        <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="string">&quot;40&quot;</span></span><br><span class="line">                    <span class="punctuation">&#125;</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;should&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                <span class="punctuation">&#123;</span></span><br><span class="line">                    <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">                        <span class="attr">&quot;sex&quot;</span><span class="punctuation">:</span><span class="string">&quot;男&quot;</span></span><br><span class="line">                    <span class="punctuation">&#125;</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206175510246.png" alt="image-20230206175510246"></p>
+<h3 id="范围查询"><a href="#范围查询" class="headerlink" title="范围查询"></a>范围查询</h3><p>range 查询找出那些落在指定区间内的数字或者时间。range 查询允许以下字符</p>
+<table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>gt</td>
+<td>大于&gt;</td>
+</tr>
+<tr>
+<td>get</td>
+<td>大于等于&gt;&#x3D;</td>
+</tr>
+<tr>
+<td>lt</td>
+<td>小于&lt;</td>
+</tr>
+<tr>
+<td>lte</td>
+<td>小于等于&lt;&#x3D;</td>
+</tr>
+</tbody></table>
+<p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;range&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;gte&quot;</span><span class="punctuation">:</span><span class="number">30</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;lte&quot;</span><span class="punctuation">:</span><span class="number">35</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206214259442.png" alt="image-20230206214259442"></p>
+<h3 id="模糊查询"><a href="#模糊查询" class="headerlink" title="模糊查询"></a>模糊查询</h3><p>返回包含与搜索字词相似的字词的文档。</p>
+<p>编辑距离是将一个术语转换为另一个术语所需的一个字符更改的次数。这些更改可以包括：</p>
+<ul>
+<li><p>更改字符（box → fox）</p>
+</li>
+<li><p>删除字符（black → lack）</p>
+</li>
+<li><p>插入字符（sic → sick）</p>
+</li>
+<li><p>转置两个相邻字符（act → cat）</p>
+</li>
+</ul>
+<p>为了找到相似的术语，fuzzy 查询会在指定的编辑距离内创建一组搜索词的所有可能的变体或扩展。然后查询返回每个扩展的完全匹配。</p>
+<p>通过 fuzziness 修改编辑距离。一般使用默认值 AUTO，根据术语的长度生成编辑距离。</p>
+<p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;fuzzy&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;value&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206214616103.png" alt="image-20230206214616103"></p>
+<p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student/_search">http://127.0.0.1:9200/student/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;fuzzy&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;value&quot;</span><span class="punctuation">:</span><span class="string">&quot;zhangsan&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;fuzziness&quot;</span><span class="punctuation">:</span> <span class="number">2</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206214839523.png" alt="image-20230206214839523"></p>
+<h3 id="单字段排序"><a href="#单字段排序" class="headerlink" title="单字段排序"></a>单字段排序</h3><p>sort 可以让我们按照不同的字段进行排序，并且通过 order 指定排序的方式。desc 降序，asc升序。</p>
+<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;zhangsan&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sort&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;order&quot;</span><span class="punctuation">:</span> <span class="string">&quot;desc&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206215149058.png" alt="image-20230206215149058"></p>
+<h3 id="多字段排序"><a href="#多字段排序" class="headerlink" title="多字段排序"></a>多字段排序</h3><p>假定我们想要结合使用 age 和 _score 进行查询，并且匹配的结果首先按照年龄排序，然后按照相关性得分排序</p>
+<p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;match_all&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sort&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;order&quot;</span><span class="punctuation">:</span> <span class="string">&quot;desc&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;_score&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;order&quot;</span><span class="punctuation">:</span> <span class="string">&quot;desc&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206215339747.png" alt="image-20230206215339747"></p>
+<h3 id="高亮查询"><a href="#高亮查询" class="headerlink" title="高亮查询"></a>高亮查询</h3><p>在进行关键字搜索时，搜索出的内容中的关键字会显示不同的颜色，称之为高亮。</p>
+<p>Elasticsearch 可以对查询内容中的关键字部分，进行标签和样式(高亮)的设置。</p>
+<p>在使用 match 查询的同时，加上一个 highlight 属性：</p>
+<ul>
+<li><p>pre_tags：前置标签</p>
+</li>
+<li><p>post_tags：后置标签</p>
+</li>
+<li><p>fields：需要高亮的字段</p>
+</li>
+<li><p>title：这里声明 title 字段需要高亮，后面可以为这个字段设置特有配置，也可以空</p>
+</li>
+</ul>
+<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;zhangsan&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;highlight&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;pre_tags&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&lt;font clolor=&#x27;red&#x27;&gt;&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;post_tags&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&lt;/font&gt;&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;fields&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206215724720.png" alt="image-20230206215724720"></p>
+<h3 id="分页查询"><a href="#分页查询" class="headerlink" title="分页查询"></a>分页查询</h3><p>from：当前页的起始索引，默认从 0 开始。 from &#x3D; (pageNum - 1) * size</p>
+<p>size：每页显示多少条</p>
+<p>在 Postman 中，向 ES 服务器发 <strong>GET</strong> 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;match_all&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sort&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;order&quot;</span><span class="punctuation">:</span> <span class="string">&quot;desc&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;from&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">2</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206215933073.png" alt="image-20230206215933073"></p>
+<h3 id="聚合查询"><a href="#聚合查询" class="headerlink" title="聚合查询"></a>聚合查询</h3><p>聚合允许使用者对 es 文档进行统计分析，类似与关系型数据库中的 group by，当然还有很</p>
+<p>多其他的聚合，例如取最大值、平均值等等。</p>
+<ul>
+<li>对某个字段取最大值 max</li>
+</ul>
+<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;aggs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;max_age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;max&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;field&quot;</span><span class="punctuation">:</span> <span class="string">&quot;age&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206220218081.png" alt="image-20230206220218081"></p>
+<p>对某个字段取最小值 min</p>
+<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;aggs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;min_age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;min&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;field&quot;</span><span class="punctuation">:</span> <span class="string">&quot;age&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206220340743.png" alt="image-20230206220340743"></p>
+<ul>
+<li>对某个字段求和 sum</li>
+</ul>
+<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;aggs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;sum_age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;sum&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;field&quot;</span><span class="punctuation">:</span> <span class="string">&quot;age&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206220509120.png" alt="image-20230206220509120"></p>
+<ul>
+<li>对某个字段取平均值 avg</li>
+</ul>
+<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;aggs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;avg_age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;avg&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;field&quot;</span><span class="punctuation">:</span> <span class="string">&quot;age&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206220629367.png" alt="image-20230206220629367"></p>
+<ul>
+<li>对某个字段的值进行去重之后再取总数</li>
+</ul>
+<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;aggs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;distinct_age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;cardinality&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;field&quot;</span><span class="punctuation">:</span> <span class="string">&quot;age&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206220806376.png" alt="image-20230206220806376"></p>
+<ul>
+<li>State 聚合</li>
+</ul>
+<p>stats 聚合，对某个字段一次性返回 count，max，min，avg 和 sum 五个指标</p>
+<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;aggs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;stats_age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;stats&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;field&quot;</span><span class="punctuation">:</span> <span class="string">&quot;age&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206220913646.png" alt="image-20230206220913646"></p>
+<h3 id="桶聚合查询"><a href="#桶聚合查询" class="headerlink" title="桶聚合查询"></a>桶聚合查询</h3><p>桶聚和相当于 sql 中的 group by 语句</p>
+<ul>
+<li>terms 聚合，分组统计</li>
+</ul>
+<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;aggs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;age_groupby&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;terms&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;field&quot;</span><span class="punctuation">:</span> <span class="string">&quot;age&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206221041463.png" alt="image-20230206221041463"></p>
+<ul>
+<li>在 terms 分组下再进行聚合</li>
+</ul>
+<p>在 Postman 中，向 ES 服务器发 GET 请求 ：<a target="_blank" rel="noopener" href="http://127.0.0.1:9200/student1/_search">http://127.0.0.1:9200/student1/_search</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;aggs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;age_groupby&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;terms&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;field&quot;</span><span class="punctuation">:</span> <span class="string">&quot;age&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;aggs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;sum_age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                    <span class="attr">&quot;sum&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                        <span class="attr">&quot;field&quot;</span><span class="punctuation">:</span> <span class="string">&quot;age&quot;</span></span><br><span class="line">                    <span class="punctuation">&#125;</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/17/Elasticsearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/image-20230206221252476.png" alt="image-20230206221252476"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/10/16/Elasticsearch%E5%AE%89%E8%A3%85/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/16/Elasticsearch%E5%AE%89%E8%A3%85/" class="post-title-link" itemprop="url">Elasticsearch安装</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-16 20:06:21" itemprop="dateCreated datePublished" datetime="2020-10-16T20:06:21+08:00">2020-10-16</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Elasticsearch 的官方地址：<a target="_blank" rel="noopener" href="https://www.elastic.co/cn/">https://www.elastic.co/cn/</a></p>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://www.elastic.co/cn/downloads/past-releases#elasticsearch">https://www.elastic.co/cn/downloads/past-releases#elasticsearch</a></p>
+<p><strong>Windows下安装</strong></p>
+<p>解压即安装完毕，解压后的 Elasticsearch 的目录结构如下</p>
+<p><img src="/2020/10/16/Elasticsearch%E5%AE%89%E8%A3%85/image-20230206094501464.png" alt="image-20230206094501464"></p>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bin</td>
+<td>可执行脚本目录</td>
+</tr>
+<tr>
+<td>config</td>
+<td>配置目录</td>
+</tr>
+<tr>
+<td>jdk</td>
+<td>内置 JDK 目录</td>
+</tr>
+<tr>
+<td>lib</td>
+<td>类库</td>
+</tr>
+<tr>
+<td>logs</td>
+<td>日志目录</td>
+</tr>
+<tr>
+<td>modules</td>
+<td>模块目录</td>
+</tr>
+<tr>
+<td>plugins</td>
+<td>插件目录</td>
+</tr>
+</tbody></table>
+<p>解压后，进入 bin 文件目录，点击 elasticsearch.bat 文件启动 ES 服务。</p>
+<p><img src="/2020/10/16/Elasticsearch%E5%AE%89%E8%A3%85/image-20230206095419183.png" alt="image-20230206095419183"></p>
+<p><strong>注意</strong>：9300 端口为 Elasticsearch 集群间组件的通信端口，9200 端口为浏览器访问的 http协议RESTful端口。</p>
+<p>打开浏览器（推荐使用谷歌浏览器），输入地址：<a href="http://localhost:9200，测试结果">http://localhost:9200，测试结果</a></p>
+<p><img src="/2020/10/16/Elasticsearch%E5%AE%89%E8%A3%85/image-20230206095630931.png" alt="image-20230206095630931"></p>
+<p><strong>注意</strong></p>
+<p>Elasticsearch 是使用 java 开发的，且ES 需要 JDK 版本 1.8 以上，默认安装包带有 jdk 环境，如果系统配置 JAVA_HOME，那么使用系统默认的 JDK，如果没有配置使用自带的 JDK，一般建议使用系统配置的 JDK。</p>
+<p>双击启动窗口闪退，通过路径访问追踪错误，如果是“空间不足”，请修改config&#x2F;jvm.options 配置文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 设置 JVM 初始内存为 1G。此值可以设置与-Xmx 相同，以避免每次垃圾回收完成后 JVM 重新分配内存</span><br><span class="line"># Xms represents the initial size of total heap space</span><br><span class="line"># 设置 JVM 最大可用内存为 1G</span><br><span class="line"># Xmx represents the maximum size of total heap space</span><br><span class="line">-Xms1g</span><br><span class="line">-Xmx1g</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/10/15/Elasticsearch%E6%A6%82%E8%BF%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1287,263 +1899,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/09/09/MySQL%E5%AD%98%E5%82%A8%E5%87%BD%E6%95%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/09/MySQL%E5%AD%98%E5%82%A8%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">MySQL存储函数</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-09-09 15:03:01" itemprop="dateCreated datePublished" datetime="2020-09-09T15:03:01+08:00">2020-09-09</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>MySQL存储函数（自定义函数），函数一般用于计算和返回一个值，可以将经常需要使用的计算或功能写成一个函数。存储函数和存储过程一样，都是在数据库中定义一些 SQL 语句的集合。</p>
-<h1 id="存储函数与存储过程的区别"><a href="#存储函数与存储过程的区别" class="headerlink" title="存储函数与存储过程的区别"></a>存储函数与存储过程的区别</h1><ol>
-<li>存储函数有且只有一个返回值，而存储过程可以有多个返回值，也可以没有返回值。</li>
-<li>存储函数只能有输入参数，而且不能带in, 而存储过程可以有多个in,out,inout参数。</li>
-<li>存储过程中的语句功能更强大，存储过程可以实现很复杂的业务逻辑，而函数有很多限制，如不能在函数中使用insert,update,delete,create等语句；</li>
-<li>存储函数只完成查询的工作，可接受输入参数并返回一个结果，也就是函数实现的功能针对性比较强。</li>
-<li>存储过程可以调用存储函数。但函数不能调用存储过程。</li>
-<li>存储过程一般是作为一个独立的部分来执行(call调用)。而函数可以作为查询语句的一个部分来调用.</li>
-</ol>
-<h1 id="创建存储函数"><a href="#创建存储函数" class="headerlink" title="创建存储函数"></a>创建存储函数</h1><p>格式：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">function</span> func_name ([param_name type[,...]])</span><br><span class="line"><span class="keyword">returns</span> type</span><br><span class="line">[characteristic ...] </span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    routine_body</span><br><span class="line"><span class="keyword">end</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">参数说明：</span></span><br><span class="line"><span class="comment">（1）func_name ：存储函数的名称。</span></span><br><span class="line"><span class="comment">（2）param_name type：可选项，指定存储函数的参数。type参数用于指定存储函数的参数类型，该类型可以是MySQL数据库中所有支持的类型。</span></span><br><span class="line"><span class="comment">（3）RETURNS type：指定返回值的类型。</span></span><br><span class="line"><span class="comment">（4）characteristic：可选项，指定存储函数的特性。</span></span><br><span class="line"><span class="comment">（5）routine_body：SQL代码内容。</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> <span class="keyword">global</span> log_bin_trust_function_creators<span class="operator">=</span><span class="literal">TRUE</span>; <span class="comment">-- 信任子程序的创建者</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">-- 创建存储函数-没有输输入参数</span></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">function</span> if <span class="keyword">exists</span> myfunc1_emp;</span><br><span class="line"> </span><br><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">function</span> myfunc1_emp() <span class="keyword">returns</span> <span class="type">int</span></span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">  <span class="keyword">declare</span> cnt <span class="type">int</span> <span class="keyword">default</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">select</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">into</span>  cnt <span class="keyword">from</span> emp;</span><br><span class="line">  <span class="keyword">return</span> cnt;</span><br><span class="line"><span class="keyword">end</span> $$</span><br><span class="line">delimiter ;</span><br><span class="line"><span class="comment">-- 调用存储函数</span></span><br><span class="line"><span class="keyword">select</span> myfunc1_emp();</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建存储过程-有输入参数</span></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">function</span> if <span class="keyword">exists</span> myfunc2_emp;</span><br><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">function</span> myfunc2_emp(in_empno <span class="type">int</span>) <span class="keyword">returns</span> <span class="type">varchar</span>(<span class="number">50</span>)</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">declare</span> out_name <span class="type">varchar</span>(<span class="number">50</span>);</span><br><span class="line">    <span class="keyword">select</span> ename <span class="keyword">into</span> out_name <span class="keyword">from</span> emp <span class="keyword">where</span>  empno <span class="operator">=</span> in_empno;</span><br><span class="line">    <span class="keyword">return</span> out_name;</span><br><span class="line"><span class="keyword">end</span> $$</span><br><span class="line">delimiter ;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">select</span> myfunc2_emp(<span class="number">1008</span>);</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2020/08/29/MySQL%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/08/29/MySQL%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" class="post-title-link" itemprop="url">MySQL存储过程</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-08-29 15:03:01" itemprop="dateCreated datePublished" datetime="2020-08-29T15:03:01+08:00">2020-08-29</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>简单的说，存储过程就是一组SQL语句集，功能强大，可以实现一些比较复杂的逻辑功能，类似于JAVA语言中的方法；存储过就是数据库 SQL 语言层面的代码封装与重用。</p>
-<h1 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h1><ul>
-<li>有输入输出参数，可以声明变量，有if&#x2F;else, case,while等控制语句，通过编写存储过程，可以实现复杂的逻辑功能；</li>
-<li>函数的普遍特性：模块化，封装，代码复用；</li>
-<li>速度快，只有首次执行需经过编译和优化步骤，后续被调用可以直接执行，省去以上步骤；</li>
-</ul>
-<h1 id="创建存储过程"><a href="#创建存储过程" class="headerlink" title="创建存储过程"></a>创建存储过程</h1><p>格式</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">delimiter 自定义结束符号</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> 储存名([ <span class="keyword">in</span> ,<span class="keyword">out</span> ,<span class="keyword">inout</span> ] 参数名 数据类形...)</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">  <span class="keyword">sql</span>语句</span><br><span class="line"><span class="keyword">end</span> 自定义的结束符号</span><br><span class="line">delimiter ;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 调用存储过程</span></span><br><span class="line"><span class="keyword">call</span> 存储名()</span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> proc01()</span><br><span class="line"><span class="keyword">BEGIN</span>	</span><br><span class="line">	<span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> emp;</span><br><span class="line"><span class="keyword">END</span> $$</span><br><span class="line">delimiter ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">call</span> proc01();</span><br></pre></td></tr></table></figure>
-
-<h1 id="MySQL操作-变量定义"><a href="#MySQL操作-变量定义" class="headerlink" title="MySQL操作 - 变量定义"></a>MySQL操作 - 变量定义</h1><h2 id="系统变量-全局变量"><a href="#系统变量-全局变量" class="headerlink" title="系统变量 - 全局变量"></a>系统变量 - 全局变量</h2><p>由系统提供，在整个数据库有效。</p>
-<p>格式：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">语法：</span><br><span class="line">@<span class="variable">@global</span>.var_name</span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查看全局变量</span></span><br><span class="line"><span class="keyword">show</span> <span class="keyword">global</span> VARIABLES;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查看某全局变量</span></span><br><span class="line"><span class="keyword">SELECT</span> @<span class="variable">@global</span>.auto_increment_increment;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> @<span class="variable">@global</span>.sort_buffer_size; <span class="comment">-- 262144</span></span><br><span class="line"><span class="comment">-- 修改全局变量的值</span></span><br><span class="line"><span class="keyword">set</span> <span class="keyword">GLOBAL</span> sort_buffer_size <span class="operator">=</span> <span class="number">40000</span>;</span><br><span class="line"><span class="keyword">SELECT</span> @<span class="variable">@global</span>.sort_buffer_size;</span><br><span class="line"><span class="keyword">set</span> @<span class="variable">@global</span>.sort_buffer_size <span class="operator">=</span> <span class="number">262144</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="系统变量-会话变量"><a href="#系统变量-会话变量" class="headerlink" title="系统变量 - 会话变量"></a>系统变量 - 会话变量</h2><p>由系统提供，当前会话（连接）有效 </p>
-<p>格式：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">语法：</span><br><span class="line">@<span class="variable">@session</span>.var_name</span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查看会话变量</span></span><br><span class="line"><span class="keyword">show</span> SESSION VARIABLES;</span><br><span class="line"><span class="comment">-- 查看某个会话变量</span></span><br><span class="line"><span class="keyword">select</span> @<span class="variable">@session</span>.auto_increment_increment;</span><br><span class="line"><span class="keyword">select</span> @<span class="variable">@session</span>.sort_buffer_size;</span><br><span class="line"><span class="comment">-- 修改会话变量的值</span></span><br><span class="line"><span class="keyword">set</span> session sort_buffer_size <span class="operator">=</span> <span class="number">40000</span>;</span><br><span class="line"><span class="keyword">SELECT</span> @<span class="variable">@session</span>.sort_buffer_size;</span><br><span class="line"><span class="keyword">set</span> @<span class="variable">@session</span>.sort_buffer_size <span class="operator">=</span> <span class="number">262144</span>;</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="存储过程传参"><a href="#存储过程传参" class="headerlink" title="存储过程传参"></a>存储过程传参</h1><h2 id="in"><a href="#in" class="headerlink" title="in"></a>in</h2><p>in 表示传入的参数， 可以传入数值或者变量，即使传入变量，并不会更改变量的值，可以内部更改，仅仅作用在函数范围内。</p>
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 封装有参数的存储过程，根据传入的编号查数据</span></span><br><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> dec_p01(<span class="keyword">in</span> param_empid <span class="type">int</span>)</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	<span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> emp <span class="keyword">where</span> emp_id <span class="operator">=</span> param_empid;</span><br><span class="line"><span class="keyword">END</span> $$</span><br><span class="line">delimiter ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">call</span> dec_p01(<span class="number">2</span>);</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="out"><a href="#out" class="headerlink" title="out"></a>out</h2><p>out 表示从存储过程内部传值给调用者</p>
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> dec_p03(<span class="keyword">in</span> p_empid <span class="type">int</span>, <span class="keyword">out</span> p_empname <span class="type">varchar</span>(<span class="number">20</span>))</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	<span class="keyword">SELECT</span> emp_name <span class="keyword">into</span> p_empname <span class="keyword">from</span> emp <span class="keyword">where</span> emp_id <span class="operator">=</span> p_empid;</span><br><span class="line"><span class="keyword">END</span> $$</span><br><span class="line">delimiter ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">call</span> dec_p03(<span class="number">2</span>, <span class="variable">@o</span>_ename);</span><br><span class="line"><span class="keyword">select</span> <span class="variable">@o</span>_ename;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="inout"><a href="#inout" class="headerlink" title="inout"></a>inout</h2><p>inout 表示从外部传入的参数经过修改后可以返回的变量，既可以使用传入变量的值也可以修改变量的值（即使函数执行完）</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> proc_03(<span class="keyword">INOUT</span> inout_ename <span class="type">varchar</span>(<span class="number">50</span>), <span class="keyword">INOUT</span> inout_sal <span class="type">int</span>)</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	<span class="keyword">select</span> concat(job, <span class="string">&#x27;_&#x27;</span>, inout_ename) <span class="keyword">INTO</span> inout_ename <span class="keyword">from</span> emp <span class="keyword">where</span> ename <span class="operator">=</span> inout_ename;</span><br><span class="line">	<span class="keyword">set</span> inout_sal <span class="operator">=</span> inout_sal <span class="operator">*</span> <span class="number">12</span>;</span><br><span class="line"><span class="keyword">END</span> $$</span><br><span class="line">delimiter ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span> <span class="variable">@inout</span>_ename <span class="operator">=</span> <span class="string">&#x27;ford&#x27;</span>;</span><br><span class="line"><span class="keyword">set</span> <span class="variable">@inout</span>_sal <span class="operator">=</span> <span class="number">10</span>;</span><br><span class="line"><span class="keyword">call</span> proc_03(<span class="variable">@inout</span>_ename, <span class="variable">@inout</span>_sal);</span><br><span class="line"><span class="keyword">SELECT</span> <span class="variable">@inout</span>_ename, <span class="variable">@inout</span>_sal;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="in，out，inout"><a href="#in，out，inout" class="headerlink" title="in，out，inout"></a>in，out，inout</h2><ul>
-<li>in 输入参数，意思说你的参数要传到存过过程的过程里面去，在存储过程中修改该参数的值不能被返回</li>
-<li>out 输出参数:该值可在存储过程内部被改变，并向外输出</li>
-<li>inout 输入输出参数，既能输入一个值又能传出来一个值)</li>
-</ul>
-<h1 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h1><h2 id="判断"><a href="#判断" class="headerlink" title="判断"></a>判断</h2><p>IF语句包含多个条件判断，根据结果为TRUE、FALSE执行语句，与编程语言中的if、else if、else语法类似，其语法格式如下：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 语法</span></span><br><span class="line">if search_condition_1 <span class="keyword">then</span> statement_list_1</span><br><span class="line">    [elseif search_condition_2 <span class="keyword">then</span> statement_list_2] ...</span><br><span class="line">    [<span class="keyword">else</span> statement_list_n]</span><br><span class="line"><span class="keyword">end</span> if</span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 输入学生的成绩，来判断成绩的级别：</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  score &lt; 60 :不及格</span></span><br><span class="line"><span class="comment">  score &gt;= 60  , score &lt;80 :及格</span></span><br><span class="line"><span class="comment">    score &gt;= 80 , score &lt; 90 :良好</span></span><br><span class="line"><span class="comment">    score &gt;= 90 , score &lt;= 100 :优秀</span></span><br><span class="line"><span class="comment">    score &gt; 100 :成绩错误</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> proc_if(<span class="keyword">in</span> score <span class="type">int</span>)</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	if score <span class="operator">&lt;</span> <span class="number">60</span></span><br><span class="line">		<span class="keyword">then</span> </span><br><span class="line">			<span class="keyword">select</span> <span class="string">&#x27;不及格&#x27;</span>;</span><br><span class="line">	ELSEIF score <span class="operator">&lt;</span> <span class="number">80</span></span><br><span class="line">		<span class="keyword">THEN</span></span><br><span class="line">			<span class="keyword">select</span> <span class="string">&#x27;及格&#x27;</span>;</span><br><span class="line">	ELSEIF score <span class="operator">&lt;</span> <span class="number">90</span></span><br><span class="line">		<span class="keyword">THEN</span></span><br><span class="line">			<span class="keyword">select</span> <span class="string">&#x27;良好&#x27;</span>;</span><br><span class="line">	ELSEIF score <span class="operator">&lt;=</span> <span class="number">100</span></span><br><span class="line">		<span class="keyword">THEN</span>	</span><br><span class="line">			<span class="keyword">select</span> <span class="string">&#x27;优秀&#x27;</span>;</span><br><span class="line">	<span class="keyword">ELSE</span></span><br><span class="line">			<span class="keyword">SELECT</span> <span class="string">&#x27;成绩错误&#x27;</span>;</span><br><span class="line">	<span class="keyword">end</span> IF;</span><br><span class="line"><span class="keyword">END</span> $$</span><br><span class="line">dimiter ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">call</span> proc_if(<span class="number">2</span>);</span><br><span class="line"><span class="keyword">call</span> proc_if(<span class="number">70</span>);</span><br><span class="line"><span class="keyword">call</span> proc_if(<span class="number">88</span>);</span><br><span class="line"><span class="keyword">call</span> proc_if(<span class="number">100</span>);</span><br><span class="line"><span class="keyword">call</span> proc_if(<span class="number">101</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 根据员工名字，判断薪资情况</span></span><br><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> proc_if_1(<span class="keyword">in</span> in_ename <span class="type">varchar</span>(<span class="number">20</span>))</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	<span class="keyword">declare</span> <span class="keyword">result</span> <span class="type">varchar</span>(<span class="number">20</span>);</span><br><span class="line">	<span class="keyword">declare</span> var_sal <span class="type">INT</span>;</span><br><span class="line">	<span class="keyword">select</span> sal <span class="keyword">into</span> var_sal <span class="keyword">from</span> emp <span class="keyword">where</span> ename <span class="operator">=</span> in_ename;</span><br><span class="line">	if var_sal <span class="operator">&lt;</span> <span class="number">1000</span></span><br><span class="line">		<span class="keyword">THEN</span></span><br><span class="line">			<span class="keyword">set</span> <span class="keyword">result</span> <span class="operator">=</span> <span class="string">&#x27;试用薪资&#x27;</span>;</span><br><span class="line">	elseif var_sal <span class="operator">&lt;</span> <span class="number">3000</span></span><br><span class="line">		<span class="keyword">THEN</span> </span><br><span class="line">			<span class="keyword">set</span> <span class="keyword">result</span> <span class="operator">=</span> <span class="string">&#x27;转正工资&#x27;</span>;</span><br><span class="line">	<span class="keyword">ELSE</span></span><br><span class="line">		<span class="keyword">set</span> <span class="keyword">result</span> <span class="operator">=</span> <span class="string">&#x27;元老工资&#x27;</span>;</span><br><span class="line">	<span class="keyword">end</span> if;</span><br><span class="line">	<span class="keyword">select</span> <span class="keyword">result</span>;</span><br><span class="line"><span class="keyword">end</span> $$</span><br><span class="line">delimiter ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">call</span> proc_if_1(<span class="string">&#x27;smith&#x27;</span>);</span><br><span class="line"><span class="keyword">call</span> proc_if_1(<span class="string">&#x27;blake&#x27;</span>);</span><br><span class="line"><span class="keyword">call</span> proc_if_1(<span class="string">&#x27;king&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="case"><a href="#case" class="headerlink" title="case"></a>case</h2><p>CASE是另一个条件判断的语句，类似于编程语言中的switch语法</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 语法一（类比java的switch）：</span></span><br><span class="line"><span class="keyword">case</span> case_value</span><br><span class="line">    <span class="keyword">when</span> when_value <span class="keyword">then</span> statement_list</span><br><span class="line">    [<span class="keyword">when</span> when_value <span class="keyword">then</span> statement_list] ...</span><br><span class="line">    [<span class="keyword">else</span> statement_list]</span><br><span class="line"><span class="keyword">end</span> <span class="keyword">case</span></span><br><span class="line"><span class="comment">-- 语法二：</span></span><br><span class="line"><span class="keyword">case</span></span><br><span class="line">    <span class="keyword">when</span> search_condition <span class="keyword">then</span> statement_list</span><br><span class="line">    [<span class="keyword">when</span> search_condition <span class="keyword">then</span> statement_list] ...</span><br><span class="line">    [<span class="keyword">else</span> statement_list]</span><br><span class="line"><span class="keyword">end</span> <span class="keyword">case</span></span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 语法一</span></span><br><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> proc14_case(<span class="keyword">in</span> pay_type <span class="type">int</span>)</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">  <span class="keyword">case</span> pay_type</span><br><span class="line">        <span class="keyword">when</span>  <span class="number">1</span> </span><br><span class="line">          <span class="keyword">then</span> </span><br><span class="line">              <span class="keyword">select</span> <span class="string">&#x27;微信支付&#x27;</span> ;</span><br><span class="line">        <span class="keyword">when</span>  <span class="number">2</span> <span class="keyword">then</span> <span class="keyword">select</span> <span class="string">&#x27;支付宝支付&#x27;</span> ;</span><br><span class="line">        <span class="keyword">when</span>  <span class="number">3</span> <span class="keyword">then</span> <span class="keyword">select</span> <span class="string">&#x27;银行卡支付&#x27;</span>;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">select</span> <span class="string">&#x27;其他方式支付&#x27;</span>;</span><br><span class="line">    <span class="keyword">end</span> <span class="keyword">case</span> ;</span><br><span class="line"><span class="keyword">end</span> $$</span><br><span class="line">delimiter ;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">call</span> proc14_case(<span class="number">2</span>);</span><br><span class="line"><span class="keyword">call</span> proc14_case(<span class="number">4</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 语法二</span></span><br><span class="line">delimiter  $$</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> proc_15_case(<span class="keyword">in</span> score <span class="type">int</span>)</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">  <span class="keyword">case</span></span><br><span class="line">  <span class="keyword">when</span> score <span class="operator">&lt;</span> <span class="number">60</span> </span><br><span class="line">      <span class="keyword">then</span></span><br><span class="line">          <span class="keyword">select</span> <span class="string">&#x27;不及格&#x27;</span>;</span><br><span class="line">    <span class="keyword">when</span>  score <span class="operator">&lt;</span> <span class="number">80</span></span><br><span class="line">      <span class="keyword">then</span></span><br><span class="line">          <span class="keyword">select</span> <span class="string">&#x27;及格&#x27;</span> ;</span><br><span class="line">    <span class="keyword">when</span> score <span class="operator">&gt;=</span> <span class="number">80</span> <span class="keyword">and</span> score <span class="operator">&lt;</span> <span class="number">90</span></span><br><span class="line">       <span class="keyword">then</span> </span><br><span class="line">           <span class="keyword">select</span> <span class="string">&#x27;良好&#x27;</span>;</span><br><span class="line">  <span class="keyword">when</span> score <span class="operator">&gt;=</span> <span class="number">90</span> <span class="keyword">and</span> score <span class="operator">&lt;=</span> <span class="number">100</span></span><br><span class="line">       <span class="keyword">then</span> </span><br><span class="line">           <span class="keyword">select</span> <span class="string">&#x27;优秀&#x27;</span>;</span><br><span class="line">     <span class="keyword">else</span></span><br><span class="line">       <span class="keyword">select</span> <span class="string">&#x27;成绩错误&#x27;</span>;</span><br><span class="line">  <span class="keyword">end</span> <span class="keyword">case</span>;</span><br><span class="line"><span class="keyword">end</span> $$</span><br><span class="line">delimiter  ;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">call</span> proc_15_case(<span class="number">88</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h2><ul>
-<li>循环是一段在程序中只出现一次,但可能会连续运行多次的代码。</li>
-<li>循环中的代码会运行特定的次数,或者是运行到特定条件成立时结束循环</li>
-</ul>
-<p>分类：</p>
-<ul>
-<li>while</li>
-<li>repeat</li>
-<li>loop</li>
-</ul>
-<p>循环控制</p>
-<ul>
-<li>leave 类似于 break，跳出，结束当前所在的循环</li>
-<li>iterate类似于 continue，继续，结束本次循环，继续下一次</li>
-</ul>
-<h3 id="while"><a href="#while" class="headerlink" title="while"></a>while</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">【标签:】while 循环条件 do</span><br><span class="line">    循环体;</span><br><span class="line"><span class="keyword">end</span> while【 标签】;</span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建测试表</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="keyword">user</span> (</span><br><span class="line">    uid <span class="type">int</span> <span class="keyword">primary</span> key,</span><br><span class="line">    username <span class="type">varchar</span> ( <span class="number">50</span> ),</span><br><span class="line">    password <span class="type">varchar</span> ( <span class="number">50</span> )</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- -------存储过程-while</span></span><br><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> proc_while(<span class="keyword">in</span> insertcount <span class="type">int</span>)</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">declare</span> i <span class="type">int</span> <span class="keyword">default</span> <span class="number">1</span>;</span><br><span class="line">    label:while i<span class="operator">&lt;=</span>insertcount do</span><br><span class="line">        <span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">user</span>(uid,username,`password`) <span class="keyword">values</span>(i,concat(<span class="string">&#x27;user-&#x27;</span>,i),<span class="string">&#x27;123456&#x27;</span>);</span><br><span class="line">        <span class="keyword">set</span> i<span class="operator">=</span>i<span class="operator">+</span><span class="number">1</span>;</span><br><span class="line">    <span class="keyword">end</span> while label;</span><br><span class="line"><span class="keyword">end</span> $$</span><br><span class="line">delimiter ;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">call</span> proc_while(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">user</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- -------存储过程-while + leave</span></span><br><span class="line"><span class="keyword">truncate</span> <span class="keyword">table</span> <span class="keyword">user</span>;</span><br><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> proc_while2(<span class="keyword">in</span> insertcount <span class="type">int</span>)</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">declare</span> i <span class="type">int</span> <span class="keyword">default</span> <span class="number">1</span>;</span><br><span class="line">    label:while i<span class="operator">&lt;=</span>insertcount do</span><br><span class="line">        <span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">user</span>(uid,username,`password`) <span class="keyword">values</span>(i,concat(<span class="string">&#x27;user-&#x27;</span>,i),<span class="string">&#x27;123456&#x27;</span>);</span><br><span class="line">        if i<span class="operator">=</span><span class="number">5</span> <span class="keyword">then</span> leave label;</span><br><span class="line">        <span class="keyword">end</span> if;</span><br><span class="line">        <span class="keyword">set</span> i<span class="operator">=</span>i<span class="operator">+</span><span class="number">1</span>;</span><br><span class="line">    <span class="keyword">end</span> while label;</span><br><span class="line"><span class="keyword">end</span> $$</span><br><span class="line">delimiter ;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">call</span> proc_while2(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">-- -------存储过程-while+iterate</span></span><br><span class="line"><span class="keyword">truncate</span> <span class="keyword">table</span> <span class="keyword">user</span>;</span><br><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> proc_while3(<span class="keyword">in</span> insertcount <span class="type">int</span>)</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">declare</span> i <span class="type">int</span> <span class="keyword">default</span> <span class="number">1</span>;</span><br><span class="line">    label:while i<span class="operator">&lt;=</span>insertcount do</span><br><span class="line">        <span class="keyword">set</span> i<span class="operator">=</span>i<span class="operator">+</span><span class="number">1</span>;</span><br><span class="line">        if i<span class="operator">=</span><span class="number">5</span> <span class="keyword">then</span> iterate label;</span><br><span class="line">        <span class="keyword">end</span> if;</span><br><span class="line">        <span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">user</span>(uid,username,`password`) <span class="keyword">values</span>(i,concat(<span class="string">&#x27;user-&#x27;</span>,i),<span class="string">&#x27;123456&#x27;</span>);</span><br><span class="line">    <span class="keyword">end</span> while label;</span><br><span class="line"><span class="keyword">end</span> $$</span><br><span class="line">delimiter ;</span><br><span class="line"><span class="keyword">call</span> proc_while3(<span class="number">10</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="repeat"><a href="#repeat" class="headerlink" title="repeat"></a>repeat</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[标签:]repeat </span><br><span class="line"> 循环体;</span><br><span class="line">until 条件表达式</span><br><span class="line"><span class="keyword">end</span> repeat [标签];</span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">truncate</span> <span class="keyword">table</span> <span class="keyword">user</span>;</span><br><span class="line"> </span><br><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> proc_repeat(<span class="keyword">in</span> insertCount <span class="type">int</span>)</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">     <span class="keyword">declare</span> i <span class="type">int</span> <span class="keyword">default</span> <span class="number">1</span>;</span><br><span class="line">     label:repeat</span><br><span class="line">         <span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">user</span>(uid, username, password) <span class="keyword">values</span>(i,concat(<span class="string">&#x27;user-&#x27;</span>,i),<span class="string">&#x27;123456&#x27;</span>);</span><br><span class="line">         <span class="keyword">set</span> i <span class="operator">=</span> i <span class="operator">+</span> <span class="number">1</span>;</span><br><span class="line">         until  i  <span class="operator">&gt;</span> insertCount</span><br><span class="line">     <span class="keyword">end</span> repeat label;</span><br><span class="line">     <span class="keyword">select</span> <span class="string">&#x27;循环结束&#x27;</span>;</span><br><span class="line"><span class="keyword">end</span> $$</span><br><span class="line">delimiter ;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">call</span> proc_repeat(<span class="number">100</span>);</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="loop"><a href="#loop" class="headerlink" title="loop"></a>loop</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[标签:] loop</span><br><span class="line">  循环体;</span><br><span class="line">  if 条件表达式 <span class="keyword">then</span> </span><br><span class="line">     leave [标签]; </span><br><span class="line">  <span class="keyword">end</span> if;</span><br><span class="line"><span class="keyword">end</span> loop;</span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- -------存储过程-循环控制-loop</span></span><br><span class="line"><span class="keyword">truncate</span> <span class="keyword">table</span> <span class="keyword">user</span>;</span><br><span class="line"> </span><br><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> proc_loop(<span class="keyword">in</span> insertCount <span class="type">int</span>) </span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">     <span class="keyword">declare</span> i <span class="type">int</span> <span class="keyword">default</span> <span class="number">1</span>;</span><br><span class="line">     label:loop</span><br><span class="line">         <span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">user</span>(uid, username, password) <span class="keyword">values</span>(i,concat(<span class="string">&#x27;user-&#x27;</span>,i),<span class="string">&#x27;123456&#x27;</span>);</span><br><span class="line">         <span class="keyword">set</span> i <span class="operator">=</span> i <span class="operator">+</span> <span class="number">1</span>;</span><br><span class="line">         if i <span class="operator">&gt;</span> <span class="number">5</span> </span><br><span class="line">          <span class="keyword">then</span> </span><br><span class="line">           leave label;</span><br><span class="line">         <span class="keyword">end</span> if;</span><br><span class="line">     <span class="keyword">end</span> loop label;</span><br><span class="line">     <span class="keyword">select</span> <span class="string">&#x27;循环结束&#x27;</span>;</span><br><span class="line"><span class="keyword">end</span> $$</span><br><span class="line">delimiter ;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">call</span> proc_loop(<span class="number">10</span>);</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="游标"><a href="#游标" class="headerlink" title="游标"></a>游标</h1><p>游标(cursor)是用来存储查询结果集的数据类型 , 在存储过程和函数中可以使用光标对结果集进行循环的处理。游标的使用包括光标的声明、OPEN、FETCH 和 CLOSE。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 声明语法</span></span><br><span class="line"><span class="keyword">declare</span> cursor_name <span class="keyword">cursor</span> <span class="keyword">for</span> select_statement</span><br><span class="line"><span class="comment">-- 打开语法</span></span><br><span class="line"><span class="keyword">open</span> cursor_name</span><br><span class="line"><span class="comment">-- 取值语法</span></span><br><span class="line"><span class="keyword">fetch</span> cursor_name <span class="keyword">into</span> var_name [, var_name] ...</span><br><span class="line"><span class="comment">-- 关闭语法</span></span><br><span class="line"><span class="keyword">close</span> cursor_name</span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> proc_cursor(<span class="keyword">in</span> in_dname <span class="type">varchar</span>(<span class="number">50</span>))</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line"> <span class="comment">-- 定义局部变量</span></span><br><span class="line"> <span class="keyword">declare</span> var_empno <span class="type">varchar</span>(<span class="number">50</span>);</span><br><span class="line"> <span class="keyword">declare</span> var_ename <span class="type">varchar</span>(<span class="number">50</span>);</span><br><span class="line"> <span class="keyword">declare</span> var_sal  <span class="type">decimal</span>(<span class="number">7</span>,<span class="number">2</span>);</span><br><span class="line"> </span><br><span class="line"> <span class="comment">-- 声明游标</span></span><br><span class="line"> <span class="keyword">declare</span> my_cursor <span class="keyword">cursor</span> <span class="keyword">for</span></span><br><span class="line">  <span class="keyword">select</span> empno , ename, sal </span><br><span class="line">    <span class="keyword">from</span>  dept a ,emp b</span><br><span class="line">    <span class="keyword">where</span> a.deptno <span class="operator">=</span> b.deptno <span class="keyword">and</span> a.dname <span class="operator">=</span> in_dname;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">-- 打开游标</span></span><br><span class="line">  <span class="keyword">open</span> my_cursor;</span><br><span class="line">  <span class="comment">-- 通过游标获取每一行数据</span></span><br><span class="line">  label:loop</span><br><span class="line">        <span class="keyword">fetch</span> my_cursor <span class="keyword">into</span> var_empno, var_ename, var_sal;</span><br><span class="line">        <span class="keyword">select</span> var_empno, var_ename, var_sal;</span><br><span class="line">    <span class="keyword">end</span> loop label;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">-- 关闭游标</span></span><br><span class="line">    <span class="keyword">close</span> my_cursor;</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">-- 调用存储过程</span></span><br><span class="line"><span class="keyword">call</span> proc_cursor(<span class="string">&#x27;销售部&#x27;</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="异常处理-HANDLER句柄"><a href="#异常处理-HANDLER句柄" class="headerlink" title="异常处理-HANDLER句柄"></a>异常处理-HANDLER句柄</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DECLARE</span> handler_action HANDLER</span><br><span class="line">    <span class="keyword">FOR</span> condition_value [, condition_value] ...</span><br><span class="line">    statement</span><br><span class="line"> </span><br><span class="line">handler_action: &#123;</span><br><span class="line">    CONTINUE</span><br><span class="line">  <span class="operator">|</span> EXIT</span><br><span class="line">  <span class="operator">|</span> UNDO</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">condition_value: &#123;</span><br><span class="line">    mysql_error_code</span><br><span class="line">  <span class="operator">|</span> condition_name</span><br><span class="line">  <span class="operator">|</span> <span class="keyword">SQLWARNING</span></span><br><span class="line">  <span class="operator">|</span> <span class="keyword">NOT</span> FOUND</span><br><span class="line">  <span class="operator">|</span> <span class="keyword">SQLEXCEPTION</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>注意：在语法中，变量声明、游标声明、handler声明是必须按照先后顺序书写的，否则创建存储过程出错。</p>
-<p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">drop</span> <span class="keyword">procedure</span> if <span class="keyword">exists</span> proc21_cursor_handler;</span><br><span class="line"><span class="comment">-- 需求：输入一个部门名，查询该部门员工的编号、名字、薪资 ，将查询的结果集添加游标</span></span><br><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> proc_cursor(<span class="keyword">in</span> in_dname <span class="type">varchar</span>(<span class="number">50</span>))</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">  <span class="comment">-- 定义局部变量</span></span><br><span class="line">    <span class="keyword">declare</span> var_empno <span class="type">int</span>;</span><br><span class="line">    <span class="keyword">declare</span> var_ename <span class="type">varchar</span>(<span class="number">50</span>);</span><br><span class="line">    <span class="keyword">declare</span> var_sal <span class="type">decimal</span>(<span class="number">7</span>,<span class="number">2</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">declare</span> flag <span class="type">int</span> <span class="keyword">default</span> <span class="number">1</span>; </span><br><span class="line">    </span><br><span class="line">    <span class="comment">-- 声明游标</span></span><br><span class="line">    <span class="keyword">declare</span> my_cursor <span class="keyword">cursor</span> <span class="keyword">for</span></span><br><span class="line">        <span class="keyword">select</span> empno,ename,sal</span><br><span class="line">        <span class="keyword">from</span> dept a, emp b</span><br><span class="line">        <span class="keyword">where</span> a.deptno <span class="operator">=</span> b.deptno <span class="keyword">and</span> a.dname <span class="operator">=</span> in_dname;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">-- 定义句柄，当数据未发现时将标记位设置为0</span></span><br><span class="line">    <span class="keyword">declare</span> continue handler <span class="keyword">for</span> <span class="keyword">NOT</span> FOUND <span class="keyword">set</span> flag <span class="operator">=</span> <span class="number">0</span>;   </span><br><span class="line">	<span class="comment">-- 打开游标</span></span><br><span class="line">    <span class="keyword">open</span> my_cursor;</span><br><span class="line">    <span class="comment">-- 通过游标获取值</span></span><br><span class="line">    label:loop</span><br><span class="line">        <span class="keyword">fetch</span> my_cursor <span class="keyword">into</span> var_empno, var_ename,var_sal;</span><br><span class="line">        <span class="comment">-- 判断标志位</span></span><br><span class="line">        if flag <span class="operator">=</span> <span class="number">1</span> <span class="keyword">then</span></span><br><span class="line">            <span class="keyword">select</span> var_empno, var_ename,var_sal;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            leave label;</span><br><span class="line">        <span class="keyword">end</span> if;</span><br><span class="line">    <span class="keyword">end</span> loop label;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">-- 关闭游标</span></span><br><span class="line">    <span class="keyword">close</span> my_cursor;</span><br><span class="line"><span class="keyword">end</span> $$;</span><br><span class="line"> </span><br><span class="line">delimiter ;</span><br><span class="line"><span class="keyword">call</span> proc_cursor_handler(<span class="string">&#x27;销售部&#x27;</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1611,7 +1970,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">160</span>
+          <span class="site-state-item-count">162</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

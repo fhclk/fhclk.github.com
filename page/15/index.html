@@ -151,6 +151,379 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2018/10/02/%E8%AF%BB%E3%80%8A%E8%81%8A%E5%87%BA%E6%9D%A5%E7%9A%84%E4%BC%81%E4%B8%9A%E5%B8%9D%E5%9B%BD%E3%80%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/10/02/%E8%AF%BB%E3%80%8A%E8%81%8A%E5%87%BA%E6%9D%A5%E7%9A%84%E4%BC%81%E4%B8%9A%E5%B8%9D%E5%9B%BD%E3%80%8B/" class="post-title-link" itemprop="url">读《聊出来的企业帝国:马化腾与腾讯管理模式》</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-10-02 10:49:50" itemprop="dateCreated datePublished" datetime="2018-10-02T10:49:50+08:00">2018-10-02</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2018/07/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar1.png">
+      <meta itemprop="name" content="fhclk">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾荒者">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/07/12/Android%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/" class="post-title-link" itemprop="url">Android代码规范</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-07-12 10:08:41" itemprop="dateCreated datePublished" datetime="2018-07-12T10:08:41+08:00">2018-07-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="常规规范"><a href="#常规规范" class="headerlink" title="常规规范"></a>常规规范</h4><ol>
+<li><p>不用0dp，而用0px，这样就可以在获取时避免系统进行换算，提升代码的执行效率。</p>
+</li>
+<li><p>字符串比较，用 <code> &quot;xxx&quot;.equals(object)</code>，而不是<code>object.equals(&quot;xxx&quot;)</code>，因为object可能为空。</p>
+</li>
+<li><p>尽量采用switch case来判断，如果不能再考虑if else，在多条件下switch case会更加简洁。</p>
+</li>
+<li><p>不推荐使用layout_marginLeft和layout_marginRight，推荐使用layout_marginStart和layout_marginEnd，padding同理。</p>
+</li>
+<li><p>如果在 layout_marginStart 和 layout_marginEnd 的值相同的情况下，使用 layout_marginHorizontal，而 layout_marginTop 和 layout_marginBottom 也同理，使用 layout_marginVertical，能用一句代码能做的事不要写两句，padding 属性也是同理。</p>
+</li>
+<li><p>在能满足需求的情况下，尽量用 invisible 来代替 gone，因为 gone 会触发当前整个 View 树进行重新测量和绘制。</p>
+</li>
+<li><p>api 和 implementation，在能满足使用的情况下，优先选用 implementation，因为这样可以减少一些编译时间。</p>
+</li>
+<li><p>ListView 和 RecyclerView 都能实现需求的前提下，优先选用 RecyclerView。</p>
+</li>
+<li><p>ScrollView 和 NestedScrollView 都能实现需求的前提下，优先选用 NestedScrollView，是因为 NestedScrollView 和 RecyclerView 支持相互嵌套，而 ScrollView 是不支持嵌套滚动的。</p>
+</li>
+<li><p>如果一个类不需要被继承，请直接用 final 进行修饰，如果一个字段在类初始化过程中已经赋值并且没有地方进行二次赋值，也应当用 final 修饰。</p>
+</li>
+<li><p>阿里巴巴代码约束插件，并及时地对插件所提示的代码警告进行处理或者抑制警告。</p>
+<p><em><a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/plugin/10046-alibaba-java-coding-guidelines">https://plugins.jetbrains.com/plugin/10046-alibaba-java-coding-guidelines</a></em></p>
+</li>
+<li><p>应用图标应该放在 mipmap 目录下，其他图片资源应当放到 drawable 目录下</p>
+</li>
+</ol>
+<h4 id="后台接口规范"><a href="#后台接口规范" class="headerlink" title="后台接口规范"></a>后台接口规范</h4><ol>
+<li>后台返回的 id 值，不要使用 int 或者 long 类型来接收，而应该用 string 类型来接收，因为不需要对这个 id 值进行运算，所以不需要关心它是什么类型的。</li>
+<li>后台返回的金额数值应该使用 String 来接收，而不能用浮点数来接收，因为 float 或者 double 在数值比较大的时候会容易丢失精度，并且还需要自己手动转换出想要保留的小数位，最好的方式是后台返回什么前端就展示什么，而到了运算的时候，则应该用 BigDecimal 类来进行转换和计算，当然金额在前端一般展示居多，运算的情况还算是比较少的。</li>
+<li>在定义后台返回的 Bean 类时，不应当将一些没有使用到的字段添加到代码中，因为这样会消耗性能，因为 Gson 是通过反射将后台字段赋值到 Java 字段中，所以应当避免一些不必要的字段解析，另外臃余的字段也会给排查问题造成一定的阻碍。</li>
+<li>如果后台给定的字段名不符合代码命名的时候，例如当遇到 student_name 这种命名时，应当使用 Gson 框架中的 @SerializedName 注解进行重命名。</li>
+<li>请求的接口参数和返回字段必须要写上注释，除此之外还应该备注对应的后台接口文档地址，以便后续能够更好地进行维护和迭代。</li>
+<li>后台返回的 Bean 类字段不能直接访问，而应该通过生成 Get 方法，然后使用这个 Get 方法来访问字段。</li>
+<li>接口请求成功的提示可以不显示，但请求失败的提示需要显示给到用户，否则会加大排查问题的难度，也极有可能会把问题掩盖掉，从而导致问题遗留到线上去。</li>
+</ol>
+<h4 id="变量命名规范"><a href="#变量命名规范" class="headerlink" title="变量命名规范"></a>变量命名规范</h4><ol>
+<li>严禁使用中文或者中文拼音进行命名</li>
+<li>使用驼峰命名风格（最好控制三个单词内）</li>
+<li>局部变量应用作用来命名</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">String name;</span><br><span class="line">TextView nameView;</span><br><span class="line">FrameLayout nameLayout;</span><br><span class="line"><span class="comment">//只有一个类型的控件时，也可以</span></span><br><span class="line">TextView textView;</span><br><span class="line">RecyclerView recyclerView;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>成员变量必须以m开头</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String mName;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>布尔值命名，不应该以is开头</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">boolean</span> <span class="variable">mDebug</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line"><span class="type">boolean</span> <span class="variable">debug</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>静态变量用s开头</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> Handler sHandler;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>常量则需要用大写，并且用下划线代替驼峰</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">TAG</span> <span class="operator">=</span> <span class="string">&quot;abc&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="包名命名规范"><a href="#包名命名规范" class="headerlink" title="包名命名规范"></a>包名命名规范</h4><ol>
+<li>不允许包名中携带英文大写</li>
+<li>包名应该以简洁的方式命名</li>
+<li>包名要按照模块或者作用来划分</li>
+<li>不要在某一包名下放置一些无关的类</li>
+</ol>
+<h4 id="方法命名规范"><a href="#方法命名规范" class="headerlink" title="方法命名规范"></a>方法命名规范</h4><ol>
+<li>initXX：初始化相关方法，使用 init 为前缀标识，如初始化布局 initView。</li>
+<li>isXX：方法返回值为 boolean 型的请使用 is 或 check 为前缀标识。</li>
+<li>getXX：返回某个值的方法，使用 get 为前缀标识，例如 getName。</li>
+<li>setXX：设置某个属性值，使用 set 为前缀标识，例如 setName。</li>
+<li>handlerXX&#x2F;processXX：对数据进行处理的方法，例如 handleMessage。</li>
+<li>displayXX&#x2F;showXX：弹出提示框和提示信息，例如 showDialog。</li>
+<li>updateXX：更新某个东西，例如 updateData。</li>
+<li>saveXX：保存某个东西，例如 saveData。</li>
+<li>resetXX：重置某个东西，例如 resetData。</li>
+<li>clearXX：清除某个东西，例如 clearData</li>
+<li>removeXX：移除数据或者视图等，例如 removeView。</li>
+<li>drawXX：绘制数据或效果相关的，使用 draw 前缀标识，例如 drawText。</li>
+</ol>
+<h4 id="类文件命名规范"><a href="#类文件命名规范" class="headerlink" title="类文件命名规范"></a>类文件命名规范</h4><p>业务模块以 模块 + 类型 来命名</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HomeActivity.java;</span><br><span class="line">SettingFragment.java;</span><br><span class="line">HomeAdapter.java;</span><br><span class="line">AddressDialog.java;</span><br></pre></td></tr></table></figure>
+
+<p>技术模块以类的 作用 来命名</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CrashHandler.java;</span><br><span class="line">PickerLayoutManager.java;</span><br></pre></td></tr></table></figure>
+
+<h4 id="接口命名规范"><a href="#接口命名规范" class="headerlink" title="接口命名规范"></a>接口命名规范</h4><p>如果是监听事件可以参考 View 的写法及命名</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">View</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> View.OnClickListener mListener;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setOnClickListener</span><span class="params">(OnClickListener listener)</span> &#123;</span><br><span class="line">        mListener = listener;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">OnClickListener</span> &#123;</span><br><span class="line">        <span class="keyword">void</span> <span class="title function_">onClick</span><span class="params">(View v)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果是回调事件可以参考 Handler 的写法及命名</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Handler</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Callback</span> &#123;</span><br><span class="line">        <span class="type">boolean</span> <span class="title function_">handleMessage</span><span class="params">(Message msg)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至于接口写在内部还是外部，具体可以视实际情况而定，如果功能比较庞大，就可以考虑抽取成外部的，只作用在某个类上的，则就可以直接写成内部的。</p>
+<h4 id="布局文件命名规范"><a href="#布局文件命名规范" class="headerlink" title="布局文件命名规范"></a>布局文件命名规范</h4><p>以 模块 + 类型 来命名</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">home_activity.xml</span><br><span class="line">setting_fragment.xml</span><br><span class="line">menu_item.xml</span><br><span class="line">address_dialog.xml</span><br></pre></td></tr></table></figure>
+
+<p>这样写的好处在于，由于 res 文件夹下是没有层级概念，通过前缀的命名可以帮助我们更好定位到同一模块下的资源<br>例如分享对话框中，有对话框 Root 布局和 Item 布局</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">share_dialog.xml（Root 布局）</span><br><span class="line">share_item.xml（Item 布局）</span><br></pre></td></tr></table></figure>
+
+<h4 id="资源文件命名规范"><a href="#资源文件命名规范" class="headerlink" title="资源文件命名规范"></a>资源文件命名规范</h4><p>如果是业务模块下的资源，以 模块 + 类型 来命名</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">share_link_ic.png（复制链接）</span><br><span class="line">share_moment_ic.png（分享到朋友圈）</span><br><span class="line">share_qq_ic.png（分享到 QQ 好友）</span><br><span class="line">share_qzone_ic.png（分享到 QQ 空间）</span><br><span class="line">share_wechat_ic.png（分享到微信好友）</span><br></pre></td></tr></table></figure>
+
+<p>如果和业务模块不相干的资源，以 作用 + 类型 来命名，例如通用的控件样式资源</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">button_rect_selector.xml（通用直角按钮样式）</span><br><span class="line">button_round_selector.xml（通用圆角按钮样式）</span><br></pre></td></tr></table></figure>
+
+<p>这种资源有一个共同特点，它不属于哪个模块，但是在不同模块都有用到，所以不能用业务的模块名作为文件名前缀。</p>
+<h4 id="接口实现规范"><a href="#接口实现规范" class="headerlink" title="接口实现规范"></a>接口实现规范</h4><p>一般情况下，我们会在类中这样实现接口，这样写的好处是，可以减少对象的创建，并且代码也比较美观。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">PasswordEditText</span> <span class="keyword">extends</span> <span class="title class_">EditText</span></span><br><span class="line">        <span class="keyword">implements</span> <span class="title class_">View</span>.OnTouchListener,</span><br><span class="line">        View.OnFocusChangeListener, TextWatcher &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">PasswordEditText</span><span class="params">(Context context, AttributeSet attrs, <span class="type">int</span> defStyleAttr)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">        setOnTouchListener(<span class="built_in">this</span>);</span><br><span class="line">        setOnFocusChangeListener(<span class="built_in">this</span>);</span><br><span class="line">        addTextChangedListener(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onFocusChange</span><span class="params">(View view, <span class="type">boolean</span> hasFocus)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onTouch</span><span class="params">(View view, MotionEvent event)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onTextChanged</span><span class="params">(CharSequence s, <span class="type">int</span> start, <span class="type">int</span> before, <span class="type">int</span> count)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">beforeTextChanged</span><span class="params">(CharSequence s, <span class="type">int</span> start, <span class="type">int</span> count, <span class="type">int</span> after)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterTextChanged</span><span class="params">(Editable s)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是有一个美中不足的地方，就是在实现的接口过多时，我们很难分辨是哪个方法是哪个接口的，这个时候可以使用注释的方式来解决这个问题，加上 @link 还可以帮助我们快速定位接口类在项目中所在的位置。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">PasswordEditText</span> <span class="keyword">extends</span> <span class="title class_">EditText</span></span><br><span class="line">        <span class="keyword">implements</span> <span class="title class_">View</span>.OnTouchListener,</span><br><span class="line">        View.OnFocusChangeListener, TextWatcher &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">PasswordEditText</span><span class="params">(Context context, AttributeSet attrs, <span class="type">int</span> defStyleAttr)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">        setOnTouchListener(<span class="built_in">this</span>);</span><br><span class="line">        setOnFocusChangeListener(<span class="built_in">this</span>);</span><br><span class="line">        addTextChangedListener(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * &#123;<span class="doctag">@link</span> OnFocusChangeListener&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onFocusChange</span><span class="params">(View view, <span class="type">boolean</span> hasFocus)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * &#123;<span class="doctag">@link</span> OnTouchListener&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onTouch</span><span class="params">(View view, MotionEvent event)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * &#123;<span class="doctag">@link</span> TextWatcher&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onTextChanged</span><span class="params">(CharSequence s, <span class="type">int</span> start, <span class="type">int</span> before, <span class="type">int</span> count)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">beforeTextChanged</span><span class="params">(CharSequence s, <span class="type">int</span> start, <span class="type">int</span> count, <span class="type">int</span> after)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterTextChanged</span><span class="params">(Editable s)</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="异常捕获规范"><a href="#异常捕获规范" class="headerlink" title="异常捕获规范"></a>异常捕获规范</h4><p>请不要使用此方式捕获异常，因为这种方式会把问题给隐藏掉，从而会加大后续排查问题的难度。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">	Xxx.xxx();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span>(Exception e) &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如需捕获异常，请用以下方式进行捕获，列出具体的异常类型，并在代码中输出对应的日志。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 捕获这个异常，避免程序崩溃</span></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 目前发现在 Android 7.1 主线程被阻塞之后弹吐司会导致崩溃，可使用 Thread.sleep(5000) 进行复现</span></span><br><span class="line">    <span class="comment">// 查看源码得知 Google 已经在 Android 8.0 已经修复了此问题</span></span><br><span class="line">    <span class="comment">// 主线程阻塞之后 Toast 也会被阻塞，Toast 因为显示超时导致 Window Token 失效</span></span><br><span class="line">    mHandler.handleMessage(msg);</span><br><span class="line">&#125; <span class="keyword">catch</span> (WindowManager.BadTokenException | IllegalStateException e) &#123;</span><br><span class="line">    <span class="comment">// android.view.WindowManager$BadTokenException：Unable to add window -- token android.os.BinderProxy is not valid; is your activity running?</span></span><br><span class="line">    <span class="comment">// java.lang.IllegalStateException：View android.widget.TextView has already been added to the window manager.</span></span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果这个异常不是通过方法 throws 关键字抛出，则需要在 try 块中说明崩溃的缘由，并注明抛出的异常信息。<br>有异常就一定要 try catch ？，这种想法其实是错的，例如我们项目用 Glide 加载图片会抛出以下异常：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Caused by: java.lang.IllegalArgumentException: You cannot start a load <span class="keyword">for</span> a destroyed activity</span><br><span class="line">   at com.bumptech.glide.manager.RequestManagerRetriever.assertNotDestroyed(RequestManagerRetriever.java:<span class="number">348</span>)</span><br><span class="line">   at com.bumptech.glide.manager.RequestManagerRetriever.get(RequestManagerRetriever.java:<span class="number">148</span>)</span><br><span class="line">   at com.bumptech.glide.Glide.with(Glide.java:<span class="number">826</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这是因为 Activity 的销毁了而去加载图片导致的（场景：异步执行图片加载），大多人的解决方式可能是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// Activity 销毁后执行加载图片会触发 crash</span></span><br><span class="line">    Glide.with(<span class="built_in">this</span>)</span><br><span class="line">            .load(url)</span><br><span class="line">            .into(mImageView);</span><br><span class="line">&#125; <span class="keyword">catch</span> (IllegalArgumentException e) &#123;</span><br><span class="line">    <span class="comment">// java.lang.IllegalArgumentException: You cannot start a load for a destroyed activity</span></span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>虽然这种方式可以解决 crash 的问题，但是显得不够严谨，Glide 抛异常给外层，其实无非就想告诉调用者，调用的时机错了，正确的处理方式不是直接捕获这个异常，而是应该在外层做好逻辑判断，避免会进入出现 crash的代码，正确的处理示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (isFinishing() || isDestroyed()) &#123;</span><br><span class="line">   <span class="comment">// Glide：You cannot start a load for a destroyed activity</span></span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line">Glide.with(<span class="built_in">this</span>)</span><br><span class="line">        .load(url)</span><br><span class="line">        .into(mImageView);</span><br></pre></td></tr></table></figure>
+
+<p>所以尽量不要通过 try catch 的方式来处理异常，除非外层真的判断不了，否则应该通过一些逻辑判断来避免进入一些会 crash 的代码。</p>
+<h4 id="Activity跳转约定"><a href="#Activity跳转约定" class="headerlink" title="Activity跳转约定"></a>Activity跳转约定</h4><p>应当将 Intent 中的 key 常量保存到一个管理类中，又或者定义在目标的 Activity 中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IntentKey</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** id */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ID</span> <span class="operator">=</span> <span class="string">&quot;id&quot;</span>;</span><br><span class="line">    <span class="comment">/** token */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">TOKEN</span> <span class="operator">=</span> <span class="string">&quot;token&quot;</span>;</span><br><span class="line">    <span class="comment">/** 订单 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ORDER</span> <span class="operator">=</span> <span class="string">&quot;order&quot;</span>;</span><br><span class="line">    <span class="comment">/** 余额 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">BALANCE</span> <span class="operator">=</span> <span class="string">&quot;balance&quot;</span>;</span><br><span class="line">    <span class="comment">/** 时间 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">TIME</span> <span class="operator">=</span> <span class="string">&quot;time&quot;</span>;</span><br><span class="line">    <span class="comment">/** URL */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">URL</span> <span class="operator">=</span> <span class="string">&quot;url&quot;</span>;</span><br><span class="line">    <span class="comment">/** 路径 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PATH</span> <span class="operator">=</span> <span class="string">&quot;path&quot;</span>;</span><br><span class="line">    <span class="comment">/** 其他 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">OTHER</span> <span class="operator">=</span> <span class="string">&quot;other&quot;</span>;</span><br><span class="line"></span><br><span class="line">    .....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果跳转的 Activity 需要传递参数，应该在目标的 Activity 中定义静态的 start 又或者 newIntent 方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">WebActivity</span> <span class="keyword">extends</span> <span class="title class_">Activity</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">start</span><span class="params">(Context context, String url)</span> &#123;</span><br><span class="line">        <span class="type">Intent</span> <span class="variable">intent</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Intent</span>(context, WebActivity.class);</span><br><span class="line">        intent.putExtra(IntentKey.URL, url);</span><br><span class="line">        context.startActivity(intent);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">WebActivity</span> <span class="keyword">extends</span> <span class="title class_">Activity</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Intent <span class="title function_">newIntent</span><span class="params">(Context context, String url)</span> &#123;</span><br><span class="line">        <span class="type">Intent</span> <span class="variable">intent</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Intent</span>(context, WebActivity.class);</span><br><span class="line">        intent.putExtra(IntentKey.URL, url);</span><br><span class="line">        <span class="keyword">return</span> intent;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果创建的 Fragment 需要传递参数，应该在目标的 Fragment 中定义静态的 newInstance 方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">WebFragment</span> <span class="keyword">extends</span> <span class="title class_">Fragment</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> WebFragment <span class="title function_">newInstance</span><span class="params">(String url)</span> &#123;</span><br><span class="line">        <span class="type">WebFragment</span> <span class="variable">fragment</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">WebFragment</span>();</span><br><span class="line">        <span class="type">Bundle</span> <span class="variable">bundle</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Bundle</span>();</span><br><span class="line">        bundle.putString(IntentKey.URL, url);</span><br><span class="line">        fragment.setArguments(bundle);</span><br><span class="line">        <span class="keyword">return</span> fragment;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果跳转的 Activity 或者创建的 Fragment 不需要传任何参数，可以不需要定义这些静态方法</p>
+<h4 id="第三方框架使用规范"><a href="#第三方框架使用规范" class="headerlink" title="第三方框架使用规范"></a>第三方框架使用规范</h4><p>集成一些第三方框架或者 SDK，必须注明作用和出处，以便出现问题时能够快速核查和反馈</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 权限请求框架：https://github.com/getActivity/XXPermissions</span></span><br><span class="line">implementation <span class="string">&#x27;com.hjq:xxpermissions:9.8&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>尽量不要选择功能相同的两套框架，应当引用最合适的一套框架进行开发。<br>使用第三方库必须要依赖指定的版本号，而不能使用 + 号来指定依赖库最新的版本号。<br>使用第三方开源库出现问题或者 Bug 时应及时通知到开源库的作者，如果没有及时回复就根据实际情况对问题进行修复。<br>尽量避免 Copy 第三方库的技术代码到项目中，特别是在放置到项目业务模块中，因为这样会增加项目的复杂度，从而降低可维护性。<br>如果出现问题不能找到开源库的作者，如果需要修改，应当将这些代码抽取到单独的 Module 中。<br>能用框架就用成熟框架，尽量不要自己编写或者修改框架，如果有需要，要对这块进行严格测试。</p>
+<h4 id="代码注释规范"><a href="#代码注释规范" class="headerlink" title="代码注释规范"></a>代码注释规范</h4><p>类注释规范：author 是创建者（必填项）、time 是创建时间（必填项）、desc 是类的描述（必填项），doc是文档地址（非必填），github 是开源地址（如果项目是开源的则必填，否则不填）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> *    author : xxx</span><br><span class="line"> *    time   : xxxx/xx/xx</span><br><span class="line"> *    desc   : xxx</span><br><span class="line"> *    doc    : xxx</span><br><span class="line"> */</span><br><span class="line">public final class Permission &#123;</span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>方法注释规范：方法注释可根据实际情况而定。</p>
+<p>字段注释规范：根据字段的作用而定</p>
+<h4 id="String-ID命名规范"><a href="#String-ID命名规范" class="headerlink" title="String ID命名规范"></a>String ID命名规范</h4><p>以 模块 + 功能 来命名</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 主界面 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;home_nav_index&quot;</span>&gt;</span>首页<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;home_nav_found&quot;</span>&gt;</span>发现<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;home_nav_message&quot;</span>&gt;</span>消息<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;home_nav_me&quot;</span>&gt;</span>我的<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;home_exit_hint&quot;</span>&gt;</span>再按一次退出<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 登录界面 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;login_register&quot;</span>&gt;</span>注册<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;login_phone_hint&quot;</span>&gt;</span>请输入手机号<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;login_password_hint&quot;</span>&gt;</span>请输入密码<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;login_forget&quot;</span>&gt;</span>忘记密码？<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;login_text&quot;</span>&gt;</span>登录<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;login_other&quot;</span>&gt;</span>其他登录方式<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 注册界面 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;register_title&quot;</span>&gt;</span>注册<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;register_hint&quot;</span>&gt;</span>手机号仅用于登录和保护账号安全<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;register_login&quot;</span>&gt;</span>登录<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;register_password_hint1&quot;</span>&gt;</span>设置密码<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;register_password_hint2&quot;</span>&gt;</span>再次输入密码<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;register_password_input_error&quot;</span>&gt;</span>两次密码输入不一致，请重新输入<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 设置界面 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;setting_title&quot;</span>&gt;</span>设置<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;setting_language_switchover&quot;</span>&gt;</span>语言切换<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;setting_language_simple&quot;</span>&gt;</span>简体中文<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;setting_language_complex&quot;</span>&gt;</span>繁体中文<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Anim-ID命名规范"><a href="#Anim-ID命名规范" class="headerlink" title="Anim ID命名规范"></a>Anim ID命名规范</h4><p>应用到某个模块 View</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">login_left_balloon_view.xml</span><br><span class="line">login_right_balloon_view.xml</span><br></pre></td></tr></table></figure>
+
+<p>应用到全局 Activity</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">left_in_activity.xml</span><br><span class="line">left_out_activity.xml</span><br></pre></td></tr></table></figure>
+
+<p>应用到全局 Dialog</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bottom_in_dialog.xml</span><br><span class="line">bottom_out_dialog.xml</span><br></pre></td></tr></table></figure>
+
+<h4 id="View-ID命名规范"><a href="#View-ID命名规范" class="headerlink" title="View ID命名规范"></a>View ID命名规范</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@+id/R.id.rg_login_type</span><br><span class="line">@+id/R.id.et_login_phone</span><br><span class="line">@+id/R.id.et_login_sms</span><br><span class="line">@+id/R.id.et_login_password</span><br><span class="line">@+id/R.id.btn_login_commit</span><br></pre></td></tr></table></figure>
+
+<p>View 和 Layout 控件缩写表，这里列举最常见的几个</p>
+<table>
+<thead>
+<tr>
+<th>TextView</th>
+<th>tv</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>EditText</td>
+<td>et</td>
+</tr>
+<tr>
+<td>Button</td>
+<td>btn</td>
+</tr>
+<tr>
+<td>ImageView</td>
+<td>iv</td>
+</tr>
+<tr>
+<td>ImageButton</td>
+<td>ib</td>
+</tr>
+<tr>
+<td>ListView</td>
+<td>lv</td>
+</tr>
+<tr>
+<td>RecyclerView</td>
+<td>rv</td>
+</tr>
+<tr>
+<td>RadioButton</td>
+<td>rb</td>
+</tr>
+<tr>
+<td>RadioGroup</td>
+<td>rg</td>
+</tr>
+<tr>
+<td>ProgressBar</td>
+<td>pb</td>
+</tr>
+<tr>
+<td>CheckBox</td>
+<td>cb</td>
+</tr>
+<tr>
+<td>TableLayout</td>
+<td>tl</td>
+</tr>
+<tr>
+<td>ScrollView</td>
+<td>sv</td>
+</tr>
+<tr>
+<td>LinearLayout</td>
+<td>ll</td>
+</tr>
+<tr>
+<td>RelativeLayout</td>
+<td>rl</td>
+</tr>
+<tr>
+<td>FrameLayout</td>
+<td>fl</td>
+</tr>
+</tbody></table>
+<h4 id="Style样式命名规范"><a href="#Style样式命名规范" class="headerlink" title="Style样式命名规范"></a>Style样式命名规范</h4><p>如果只是主题相关的样式，以 Theme 命名结尾，控件样式则以 Style 命名结尾，命名要求尽量简洁，并且需要有代码注释</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 应用主题样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;AppTheme&quot;</span> <span class="attr">parent</span>=<span class="string">&quot;Theme.AppCompat.DayNight.NoActionBar&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 全屏主题样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;FullScreenTheme&quot;</span> <span class="attr">parent</span>=<span class="string">&quot;AppTheme&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 闪屏页主题样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;SplashTheme&quot;</span> <span class="attr">parent</span>=<span class="string">&quot;FullScreenTheme&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 默认圆角按钮样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;ButtonStyle&quot;</span> <span class="attr">parent</span>=<span class="string">&quot;Widget.AppCompat.Button.Borderless&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 不带圆角按钮样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;RectButtonStyle&quot;</span> <span class="attr">parent</span>=<span class="string">&quot;ButtonStyle&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 默认文本框样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;EditTextStyle&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 验证码按钮样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;CountdownViewStyle&quot;</span>&gt;</span></span><br><span class="line">    .....</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="预览属性约定"><a href="#预览属性约定" class="headerlink" title="预览属性约定"></a>预览属性约定</h4><p>应该在布局文件根布局中定义 tools:context 属性，以便在布局文件中快速定位到对应的类</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">FrameLayout</span> <span class="attr">xmlns:android</span>=<span class="string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:app</span>=<span class="string">&quot;http://schemas.android.com/apk/res-auto&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tools</span>=<span class="string">&quot;http://schemas.android.com/tools&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:context</span>=<span class="string">&quot;.ui.activity.HomeActivity&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">FrameLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tools:context=&quot;.ui.activity.HomeActivity&quot;</span><br><span class="line"></span><br><span class="line">tools:context=&quot;.ui.fragment.SettingFragment&quot;</span><br><span class="line"></span><br><span class="line">tools:context=&quot;.ui.adapter.HomeAdapter&quot;</span><br><span class="line"></span><br><span class="line">tools:context=&quot;.ui.dialog.PersonDataDialog&quot;</span><br></pre></td></tr></table></figure>
+
+<p>此外，tools 属性还有各种各样的用途，例如 RecyclerView 的 tools 属性</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">androidx.recyclerview.widget.RecyclerView</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">&quot;@+id/rv_pay_list&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:overScrollMode</span>=<span class="string">&quot;never&quot;</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:listitem</span>=<span class="string">&quot;@layout/item_dialog_pay_password&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:itemCount</span>=<span class="string">&quot;9&quot;</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:layoutManager</span>=<span class="string">&quot;androidx.recyclerview.widget.GridLayoutManager&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:spanCount</span>=<span class="string">&quot;3&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>tools 这种命名不止可以应用于 RecyclerView，还可以应用于其他 View 的属性，比如常用的 TextView 和 ImageView</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:text</span>=<span class="string">&quot;学生姓名&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">ImageView</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">&quot;@+id/iv_home_course_image&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:src</span>=<span class="string">&quot;@drawable/bg_home_placeholder&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果某个 TextView 显示的字符串是一成不变的，那么可以直接定义在布局文件中，如果是动态变化的，那么应该使用 tools:text 预览属性，而不应该使用 android:text，其他布局属性也同理。</p>
+<h4 id="资源使用约定"><a href="#资源使用约定" class="headerlink" title="资源使用约定"></a>资源使用约定</h4><p><strong>String 硬编码规范</strong>：如果项目已经适配了多语种，则严禁写死在 Java 代码或者布局文件中，如果没有这块需求的话，也建议将 String 资源定义在 string.xml 文件，此项不强制要求，大家根据实际情况而定。<br><strong>Color 硬编码规范</strong>：在没有使用夜间模式的情况下，允许大部分 Color 值直接定义在布局文件中，但是如果某个色值引用得比较多（例如主题强调色、默认背景色等），需要抽取到 color.xml 文件中。<br><strong>Dimens 硬编码规范</strong>：允许写死在 Java 代码或者布局文件中，但是如果使用了通配符方案对屏幕进行适配，那么则不能直接写死。<br><strong>Style 样式规范</strong>：对于一些常用并且样式比较统一的控件，例如 Button、EditText 等，我们对这些控件的样式进行抽取到 style.xml 文件中来，避免属性重复定义。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  <div>
+  
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2018/05/25/read-fupan1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -990,267 +1363,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2017/10/22/%E9%AB%98%E6%95%88%E6%93%8D%E4%BD%9CDOM/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2017/10/22/%E9%AB%98%E6%95%88%E6%93%8D%E4%BD%9CDOM/" class="post-title-link" itemprop="url">高效操作DOM</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2017-10-22 20:58:31" itemprop="dateCreated datePublished" datetime="2017-10-22T20:58:31+08:00">2017-10-22</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="DOM介绍"><a href="#DOM介绍" class="headerlink" title="DOM介绍"></a>DOM介绍</h1><p>DOM（Document Object Model） 文档对象模型。</p>
-<p>是JavaScript操作HTML的接口。</p>
-<p>DOM V3标准主要由3个部分组成</p>
-<ul>
-<li>DOM节点</li>
-<li>DOM事件</li>
-<li>选择区域</li>
-</ul>
-<p>DOM节点概念区分：</p>
-<ul>
-<li>标签是HTML的基本单位，比如div、li、p、input等</li>
-<li>节点是DOM数的基本单位，有多种类型，比如注释节点、文本节点</li>
-<li>元素是节点中的一种，与HTML标签相应，比如p标签会对应p元素</li>
-</ul>
-<h1 id="DOM操作耗时"><a href="#DOM操作耗时" class="headerlink" title="DOM操作耗时"></a>DOM操作耗时</h1><h2 id="线程切换"><a href="#线程切换" class="headerlink" title="线程切换"></a>线程切换</h2><p>浏览器包括渲染引擎（浏览器内核）和JavaScript引擎，它们都是单线程，单线程的优势是开发方便，避免了多线程下的死锁、竞争等问题；劣势是失去了并发能力。</p>
-<p>浏览器为了避免两个引擎同时修改页面而造成渲染结果不一致的情况，这两个引擎具有互斥性，在某一个时刻只有一个引擎在运行，另一个引擎被阻塞。</p>
-<p>操作系统在进行线程切换时需要保存上一个线程执行时的状态信息，并读取下一个线程的状态信息，俗称上下文切换，这个操作相对而言是比较耗时的。</p>
-<p>从JavaScript引擎切换到渲染引擎执行相应操作后，再切换回JavaScript引擎继续执行，会带来性能损耗。</p>
-<h2 id="重新渲染"><a href="#重新渲染" class="headerlink" title="重新渲染"></a>重新渲染</h2><p>渲染过程中最耗时的两个步骤为重排（Reflow）与重绘（Repaint）。</p>
-<p>渲染页面是将HTML和CSS分别解析成DOM树和CSSOM树，然后合并进行排布，再绘制成我们可见的页面，如果在操作DOM时涉及到元素、样式的修改，就会引起渲染引擎重新计算样式生成CSSOM树，同时还有可能触发对元素的重新排布（简称“重排”）和重新绘制（简称“重绘”）</p>
-<p>影响到其他元素排布的操作就会引起重排，继而引发重绘。</p>
-<p>比如：</p>
-<ul>
-<li>修改元素边距、大小</li>
-<li>添加删除元素</li>
-<li>改变窗口大小</li>
-</ul>
-<p>与之相反的操作只会引起重绘</p>
-<p>比如：</p>
-<ul>
-<li>设置背景图片</li>
-<li>修改字体颜色</li>
-<li>改变visibility属性值</li>
-</ul>
-<h2 id="如何高效操作DOM"><a href="#如何高效操作DOM" class="headerlink" title="如何高效操作DOM"></a>如何高效操作DOM</h2><h3 id="在循环外操作元素"><a href="#在循环外操作元素" class="headerlink" title="在循环外操作元素"></a>在循环外操作元素</h3><p>不用在循环内操作元素，尽量在循环外操作元素。</p>
-<p><img src="/2017/10/22/%E9%AB%98%E6%95%88%E6%93%8D%E4%BD%9CDOM/image-20230319224635494.png" alt="image-20230319224635494"></p>
-<h3 id="批量操作元素"><a href="#批量操作元素" class="headerlink" title="批量操作元素"></a>批量操作元素</h3><p>比如创建10000个元素，在节点中直接添加耗时会非常多。如果拼接到字符串中，则相对较少。</p>
-<p><img src="/2017/10/22/%E9%AB%98%E6%95%88%E6%93%8D%E4%BD%9CDOM/image-20230319224706991.png" alt="image-20230319224706991"></p>
-<h3 id="缓存元素集合"><a href="#缓存元素集合" class="headerlink" title="缓存元素集合"></a>缓存元素集合</h3><p><img src="/2017/10/22/%E9%AB%98%E6%95%88%E6%93%8D%E4%BD%9CDOM/image-20230319224956526.png" alt="image-20230319224956526"></p>
-<p><img src="/2017/10/22/%E9%AB%98%E6%95%88%E6%93%8D%E4%BD%9CDOM/image-20230319225019237.png" alt="image-20230319225019237"></p>
-<h2 id="其他减少耗时的方法"><a href="#其他减少耗时的方法" class="headerlink" title="其他减少耗时的方法"></a>其他减少耗时的方法</h2><ul>
-<li>尽量不用使用复杂的匹配规则和复杂的样式。从而减少渲染引擎计算样式规则生成CSSOM树的时间</li>
-<li>尽量减少重排和重绘影响的区域</li>
-<li>使用CSS特效来实现动画效果</li>
-</ul>
-<h1 id="DOM事件"><a href="#DOM事件" class="headerlink" title="DOM事件"></a>DOM事件</h1><h2 id="防抖"><a href="#防抖" class="headerlink" title="防抖"></a>防抖</h2><p>搜索输入框，绑定input元素的键盘事件，然后在监听函数中发送AJAX请求。直接在事件方法里调用接口，这样会触发性能问题，每输入一个字符，都会在事件里响应，调用一次接口，而在实际中，用户输入完整字符后调用接口才是有效的。</p>
-<p>针对这种情况，需要一个“防抖”功能，为函数的执行设置一个合理的时间间隔，避免事件在时间间隔内频繁触发，同时又保证用户输入后能即时看到搜索结果。</p>
-<p><strong>setTimeout函数来让函数延迟执行</strong></p>
-<p><img src="/2017/10/22/%E9%AB%98%E6%95%88%E6%93%8D%E4%BD%9CDOM/image-20230319230223440.png" alt="image-20230319230223440"></p>
-<p>这个函数可以抽取成公共函数。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//公共防抖</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">debounce</span> = (<span class="params">func, wait=<span class="number">0</span></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> timeout = <span class="literal">null</span></span><br><span class="line">    <span class="keyword">let</span> args</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">debounced</span>(<span class="params">...arg</span>) &#123;</span><br><span class="line">        args = arg</span><br><span class="line">        <span class="keyword">if</span> (timeout) &#123;</span><br><span class="line">            <span class="built_in">clearTimeout</span>(timeout)</span><br><span class="line">            timeout = <span class="literal">null</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//Promise形式返回执行结果</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">res, rej</span>) =&gt;</span> &#123;</span><br><span class="line">            timeout = <span class="built_in">setTimeout</span>(<span class="title function_">async</span>() =&gt; &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="keyword">const</span> result = <span class="keyword">await</span> func.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args)</span><br><span class="line">                    <span class="title function_">res</span>(result)</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">                    <span class="title function_">rej</span>(e)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;, wait)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//允许取消</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">cancel</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="built_in">clearTimeout</span>(timeout)</span><br><span class="line">        timeout = <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//允许立即执行</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">flush</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="title function_">cancel</span>()</span><br><span class="line">        <span class="keyword">return</span> func.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args)</span><br><span class="line">    &#125;</span><br><span class="line">    debounced.<span class="property">cancel</span> = cancel</span><br><span class="line">    debounced.<span class="property">flush</span> = flush</span><br><span class="line">    <span class="keyword">return</span> debounced</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="节流"><a href="#节流" class="headerlink" title="节流"></a>节流</h2><p>场景：一个浏览页面，左侧目录，右侧文章，浏览文章时，左侧目录根据右侧浏览滚动位置高亮显示。</p>
-<p>实现：计算出每级目录对应文章内容的高度，根据距离来判断需要高亮的章节。在滚动事件里实时根据滚动距离去判断，但这会影响性能，一滚动就会触发计算。</p>
-<p><strong>“节流“功能</strong></p>
-<p>设置在指定一段时间内只调用一次函数，从而降低函数调用频率。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">throttle</span> = (<span class="params">func, wait=<span class="number">0</span>, execFirstCall</span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> timeout = <span class="literal">null</span></span><br><span class="line">    <span class="keyword">let</span> args</span><br><span class="line">    <span class="keyword">let</span> firstCallTimestamp</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">throttled</span>(<span class="params">...arg</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!firstCallTimestamp) </span><br><span class="line">            firstCallTimestamp = <span class="keyword">new</span> <span class="title class_">Date</span>().<span class="title function_">getTime</span>()</span><br><span class="line">        <span class="keyword">if</span> (!execFirstCall || !args) &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;set args&#x27;</span>, arg)</span><br><span class="line">            args = arg</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (timeout) &#123;</span><br><span class="line">            <span class="built_in">clearTimeout</span>(timeout)</span><br><span class="line">            timeout = <span class="literal">null</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//Promise形式返回执行结果</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="title function_">async</span>(res, rej) =&gt; &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">new</span> <span class="title class_">Date</span>().<span class="title function_">getTime</span>() - firstCallTimestamp &gt;= wait) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                   	<span class="keyword">const</span> result = <span class="keyword">await</span> func.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args)</span><br><span class="line">                    <span class="title function_">res</span>(result)</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">                    <span class="title function_">rej</span>(e)</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">finally</span> &#123;</span><br><span class="line">                    <span class="title function_">cancel</span>()</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                timeout = <span class="built_in">setTimeout</span>(<span class="title function_">async</span>() =&gt; &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        <span class="keyword">const</span> result = <span class="keyword">await</span> func.<span class="title function_">apply</span>(<span class="variable language_">this</span>,args)</span><br><span class="line">                        <span class="title function_">res</span>(result)</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">                        <span class="title function_">rej</span>(e)</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">finally</span> &#123;</span><br><span class="line">                        <span class="title function_">cancel</span>()</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;, firstCallTimestamp + wait - <span class="keyword">new</span> <span class="title class_">Date</span>().<span class="title function_">getTime</span>())</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//允许取消</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">cancel</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="built_in">clearTimeout</span>(timeout)</span><br><span class="line">        args = <span class="literal">null</span></span><br><span class="line">        timeout = <span class="literal">null</span></span><br><span class="line">        firstCallTimestamp = <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//允许立即执行</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">flush</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="title function_">cancel</span>()</span><br><span class="line">        <span class="keyword">return</span> func.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args)</span><br><span class="line">    &#125;</span><br><span class="line">    throttled.<span class="property">cancel</span> = cancel</span><br><span class="line">    throttled.<span class="property">flush</span> = flush</span><br><span class="line">    <span class="keyword">return</span> throttled</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="代理"><a href="#代理" class="headerlink" title="代理"></a>代理</h2><p><img src="/2017/10/22/%E9%AB%98%E6%95%88%E6%93%8D%E4%BD%9CDOM/image-20230319232609530.png" alt="image-20230319232609530"></p>
-<p>对上面代码中的”编辑“和”删除“进行事件监听。</p>
-<p>如果数据量一旦增大，事件绑定占用的内存以及执行时间将会成线性增加，其实这些事件监听函数逻辑一致，只是参数不同而已，我们可以以事件代理或事件委托来进行优化。</p>
-<p><strong>DOM事件触发流程</strong></p>
-<p><img src="/2017/10/22/%E9%AB%98%E6%95%88%E6%93%8D%E4%BD%9CDOM/image-20230319232907645.png" alt="image-20230319232907645"></p>
-<p><strong>代理事件</strong></p>
-<p>对list中的事件同一处理，通过参数来识别不同的item</p>
-<p><img src="/2017/10/22/%E9%AB%98%E6%95%88%E6%93%8D%E4%BD%9CDOM/image-20230319233155747.png" alt="image-20230319233155747"></p>
-<h2 id="关于DOM事件标准"><a href="#关于DOM事件标准" class="headerlink" title="关于DOM事件标准"></a>关于DOM事件标准</h2><p><img src="/2017/10/22/%E9%AB%98%E6%95%88%E6%93%8D%E4%BD%9CDOM/image-20230319233256667.png" alt="image-20230319233256667"></p>
-<p>上面三种方式的区别</p>
-<p>方式1和方式2会覆盖前面的事件</p>
-<p>推荐使用方式3，同一事件的监听函数互补影响，而且可以独立取消，调用顺序和监听顺序一致。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://fhclk.github.io/2017/10/19/HTML%E4%B8%AD%E6%98%93%E5%BF%BD%E7%95%A5%E7%9A%84%E6%A0%87%E7%AD%BE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar1.png">
-      <meta itemprop="name" content="fhclk">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拾荒者">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2017/10/19/HTML%E4%B8%AD%E6%98%93%E5%BF%BD%E7%95%A5%E7%9A%84%E6%A0%87%E7%AD%BE/" class="post-title-link" itemprop="url">HTML中易忽略的标签</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2017-10-19 20:02:26" itemprop="dateCreated datePublished" datetime="2017-10-19T20:02:26+08:00">2017-10-19</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="meta标签"><a href="#meta标签" class="headerlink" title="meta标签"></a>meta标签</h1><h2 id="自动刷新-x2F-跳转"><a href="#自动刷新-x2F-跳转" class="headerlink" title="自动刷新&#x2F;跳转"></a>自动刷新&#x2F;跳转</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Refresh&quot;</span> <span class="attr">content</span>=<span class="string">&quot;5;URL=page2.html&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>假设要实现PPT自动播放的功能，只需在每个页面的meta标签内设置好下一个页面地址即可。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Refresh&quot;</span> <span class="attr">content</span>=<span class="string">&quot;60&quot;</span> &gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>比如每隔一分钟就需要刷新页面的大屏幕监控，也可以通过meta标签来实现，只需去掉后面的URL。</p>
-<blockquote>
-<p>使用这种方式，刷新和跳转是不可取消的，对刷新时间间隔或者需要手动取消的，推荐使用JavaScript定时器来实现。</p>
-<p>如果只是想实现页面的定时刷新或跳转（比如某些页面缺乏访问权限，在x秒后跳回首页这样的场景），建议使用meta标签</p>
-</blockquote>
-<h1 id="title标签"><a href="#title标签" class="headerlink" title="title标签"></a>title标签</h1><h2 id="Hack手段：消息提醒"><a href="#Hack手段：消息提醒" class="headerlink" title="Hack手段：消息提醒"></a>Hack手段：消息提醒</h2><p>B&#x2F;S架构在处理某些场景，比如即时通信时，会变得比较麻烦，因为前后端通信深度依赖HTTP协议，而HTTP协议是采用”请求-响应“模式。一种低效的解决方案是客户端通过轮询机制获取最新消息，（HTML5下可以使用WebSocket协议）</p>
-<p>HTML5标准发布之前，浏览器没有开放图标闪烁、弹出系统消息之类的接口，只能借助一些Hack手段，比如修改title标签来达到类似的效果。代码如下</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> msgNum = <span class="number">1</span> <span class="comment">//条数</span></span><br><span class="line"><span class="keyword">let</span> count = <span class="number">0</span> <span class="comment">//计数器</span></span><br><span class="line"><span class="keyword">const</span> inerval = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    count = (count + <span class="number">1</span>) % <span class="number">2</span></span><br><span class="line">    <span class="keyword">if</span> (msgNum === <span class="number">0</span>) &#123;</span><br><span class="line">        doucument.<span class="property">title</span> += <span class="string">&#x27;聊天页面&#x27;</span></span><br><span class="line">        <span class="built_in">clearInterval</span>(interval)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> refix = count % <span class="number">2</span> ? <span class="string">`新消息(<span class="subst">$&#123;msgNum&#125;</span>)`</span> : <span class="string">&quot;&quot;</span></span><br><span class="line">    doucument.<span class="property">title</span> = <span class="string">`<span class="subst">$&#123;prefix&#125;</span>聊天页面`</span></span><br><span class="line">&#125;, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>HTML5中可以使用Web notifications API弹出系统消息。</p>
-<p>动态修改title标签，还可以将一些关键信息显示在标签上，（比如下载时的进度、当前操作步骤等）</p>
-<h1 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h1><p>性能问题的两方面原因：渲染速度慢、请求时间长。</p>
-<p>合理地利用标签，可以在一定程度上提升渲染速度以及减少请求时间。</p>
-<h1 id="script标签"><a href="#script标签" class="headerlink" title="script标签"></a>script标签</h1><h2 id="调整加载顺序提升渲染速度"><a href="#调整加载顺序提升渲染速度" class="headerlink" title="调整加载顺序提升渲染速度"></a>调整加载顺序提升渲染速度</h2><p>渲染引擎在解析HTML时，若遇到script标签引用文件，则会暂停解析过程，同时通知网络线程加载文件，文件加载后会切换至JavaScript引擎来执行对应代码，代码执行完成后切换至渲染引擎继续渲染页面。</p>
-<h2 id="script标签的3个属性"><a href="#script标签的3个属性" class="headerlink" title="script标签的3个属性"></a>script标签的3个属性</h2><ul>
-<li><p>async属性</p>
-<p>立即请求文件，但不阻塞渲染属性，文件加载完毕后阻塞渲染引擎并立即执行文件内容。</p>
-</li>
-<li><p>defer属性</p>
-<p>立即请求文件，但不阻塞渲染属性，等到解析完HTML之后再执行文件内容。</p>
-</li>
-<li><p>HTML5标准type属性</p>
-<p>对应的值为module。</p>
-<p>让浏览器按照ES6标准将文件当作模块进行解析，默认阻塞效果同defer，也可以配合async在请求完成后立即执行。</p>
-</li>
-</ul>
-<p><img src="/2017/10/19/HTML%E4%B8%AD%E6%98%93%E5%BF%BD%E7%95%A5%E7%9A%84%E6%A0%87%E7%AD%BE/image-20230319203320817.png" alt="image-20230319203320817"></p>
-<p>当渲染引擎解析HTML遇到script标签引入文件时，会立即渲染一次。</p>
-<p>构建工具会把编译好的引用JavaScript代码的script标签放入到body标签底部。当渲染引擎执行到body底部时会先将已解析的内容渲染出来，然后再去请求响应的JavaScript文件。</p>
-<p>如果时内联脚本（不通过src引用外部脚本文件），渲染引擎不好渲染。</p>
-<h1 id="link标签"><a href="#link标签" class="headerlink" title="link标签"></a>link标签</h1><h2 id="通过预处理提升渲染速度"><a href="#通过预处理提升渲染速度" class="headerlink" title="通过预处理提升渲染速度"></a>通过预处理提升渲染速度</h2><ul>
-<li><p>dns-prefetch</p>
-<p>当link标签的rel属性值为”dns-prefetch“时，浏览器会对某个域名预先进行DNS解析并缓存。当浏览器再访问同一域名的资源时，可以减少通过域名查询ip的过程，从而提升速度。</p>
-</li>
-<li><p>preconnect</p>
-<p>让浏览器在一个HTTP请求正式发给服务器前预先执行一些操作，包括DNS解析、TLS协商、TCP握手，通过消除往返延迟来为用户节省时间。</p>
-</li>
-<li><p>prefetch&#x2F;preload</p>
-<p>两个值都是让浏览器预先下载并缓存某个资源，但不同的是：prefetch可能会在浏览器忙时被忽略，而preload则是一定会被预先下载</p>
-</li>
-<li><p>prerender</p>
-<p>浏览器不仅会加载资源，还会解析执行页面，进行预渲染。</p>
-<p><img src="/2017/10/19/HTML%E4%B8%AD%E6%98%93%E5%BF%BD%E7%95%A5%E7%9A%84%E6%A0%87%E7%AD%BE/image-20230319204750649.png" alt="image-20230319204750649"></p>
-</li>
-</ul>
-<h1 id="搜索优化"><a href="#搜索优化" class="headerlink" title="搜索优化"></a>搜索优化</h1><h2 id="meta标签：提取关键信息"><a href="#meta标签：提取关键信息" class="headerlink" title="meta标签：提取关键信息"></a>meta标签：提取关键信息</h2><p>meta标签专门为搜索引擎设置一些描述信息，方便用户预览到搜索结果</p>
-<p>在实际工作中，推荐使用一些关键字工具来挑选，比如Google trends、站长工具</p>
-<h2 id="link标签：减少重复"><a href="#link标签：减少重复" class="headerlink" title="link标签：减少重复"></a>link标签：减少重复</h2><p>对于同一个页面会有多个网址，又或者存在某些重定向页面，比如：</p>
-<p><a target="_blank" rel="noopener" href="https://xx.com/a.html">https://xx.com/a.html</a></p>
-<p><a target="_blank" rel="noopener" href="https://xx.com/detail?id=a">https://xx.com/detail?id=a</a></p>
-<p>可以使用link标签，避免搜索引擎抓取相同页面的数据</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link href=&quot;https://xx.com/a.html&quot; rel=&quot;canonical&quot; &gt;</span><br></pre></td></tr></table></figure>
-
-<p>合并网址的方式：比如使用站点地图，或者在HTTP请求响应头部添加rel&#x3D;”canonical”</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  <div>
-  
-  </div>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/14/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/16/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/14/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/16/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1318,7 +1434,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">160</span>
+          <span class="site-state-item-count">162</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
